@@ -1,0 +1,105 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Operator {
+  id        String   @id @default(uuid())
+  name      String
+  code      String   @unique
+  logo      String?
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  vessels   Vessel[]
+  routes    Route[]
+}
+
+model Vessel {
+  id          String   @id @default(uuid())
+  name        String
+  imoNumber   String?  @unique
+  mmsi        String?  @unique
+  operatorId  String
+  operator    Operator @relation(fields: [operatorId], references: [id])
+  capacity    Int
+  status      String   @default("OFFLINE") // DOCKED, BOARDING, IN_TRANSIT, etc.
+  latitude    Float?
+  longitude   Float?
+  heading     Float?
+  speed       Float?
+  lastSeenAt  DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  trips       Trip[]
+}
+
+model Port {
+  id           String   @id @default(uuid())
+  name         String
+  code         String   @unique
+  latitude     Float
+  longitude    Float
+  city         String?
+  terminals    Terminal[]
+  routesOrigin Route[]  @relation("OriginPort")
+  routesDest   Route[]  @relation("DestinationPort")
+  stops        RouteStop[]
+}
+
+model Terminal {
+  id        String   @id @default(uuid())
+  portId    String
+  port      Port     @relation(fields: [portId], references: [id])
+  name      String
+  platforms String[] // "Pier 11", "Gate B"
+}
+
+model Route {
+  id                String   @id @default(uuid())
+  operatorId        String
+  operator          Operator @relation(fields: [operatorId], references: [id])
+  originPortId      String
+  originPort        Port     @relation("OriginPort", fields: [originPortId], references: [id])
+  destinationPortId String
+  destinationPort   Port     @relation("DestinationPort", fields: [destinationPortId], references: [id])
+  durationMinutes   Int
+  distanceKm        Float?
+  active            Boolean  @default(true)
+  stops             RouteStop[]
+  trips             Trip[]
+}
+
+model RouteStop {
+  id                  String   @id @default(uuid())
+  routeId             String
+  route               Route    @relation(fields: [routeId], references: [id])
+  portId              String
+  port                Port     @relation(fields: [portId], references: [id])
+  sequence            Int
+  scheduledArrival    Int?     // Offset in minutes from origin departure
+  scheduledDeparture  Int?     // Offset in minutes from origin departure
+}
+
+model Trip {
+  id                 String   @id @default(uuid())
+  routeId            String
+  route              Route    @relation(fields: [routeId], references: [id])
+  vesselId           String?
+  vessel             Vessel?  @relation(fields: [vesselId], references: [id])
+  scheduledDeparture DateTime
+  estimatedDeparture DateTime?
+  actualDeparture    DateTime?
+  scheduledArrival   DateTime
+  estimatedArrival   DateTime?
+  actualArrival      DateTime?
+  platform           String?
+  status             String   @default("SCHEDULED") // SCHEDULED, BOARDING, ON_TIME, DEPARTING_SOON, DELAYED
+  price              Decimal  @db.Decimal(10, 2)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
