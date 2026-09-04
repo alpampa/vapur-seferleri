@@ -4,7 +4,8 @@ import { useState, useEffect, useMemo } from "react";
 import { ScheduleCard } from "@/components/schedule/ScheduleCard";
 import { TripDetailsSheet } from "@/components/schedule/TripDetailsSheet";
 import type { ScheduleCardDto } from "@/app/page";
-import { Filter, Search, RotateCcw, MapPin, Navigation, ArrowLeftRight, Check, AlertTriangle } from "lucide-react";
+import { resolveDynamicTrip } from "@/lib/utils/dynamic-trip";
+import { Search, MapPin, Navigation, ArrowLeftRight, Check, AlertTriangle, ShieldCheck } from "lucide-react";
 
 // Istanbul Ferry Pier Coordinates (Latitude, Longitude)
 const PIER_COORDINATES: Record<string, { lat: number; lng: number; label: string }> = {
@@ -21,9 +22,9 @@ const PIER_COORDINATES: Record<string, { lat: number; lng: number; label: string
   "Maltepe": { lat: 40.9231, lng: 29.1306, label: "Maltepe İskelesi" }
 };
 
-// Haversine formula to compute distance in meters/kilometers
+// Haversine formula to compute distance in kilometers
 function calculateDistanceKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
-  const R = 6371; // Earth's radius in km
+  const R = 6371;
   const dLat = ((lat2 - lat1) * Math.PI) / 180;
   const dLon = ((lon2 - lon1) * Math.PI) / 180;
   const a =
@@ -54,6 +55,7 @@ export function ScheduleListClient({ schedules, serverTimeIso }: ScheduleListCli
   const [nearestPier, setNearestPier] = useState<{ name: string; distanceKm: number } | null>(null);
   const [geoStatus, setGeoStatus] = useState<"IDLE" | "LOCATING" | "ACTIVE" | "DENIED">("IDLE");
 
+  // High-precision reactive tick every 1000ms
   useEffect(() => {
     const interval = setInterval(() => {
       setNow(Date.now());
@@ -90,7 +92,7 @@ export function ScheduleListClient({ schedules, serverTimeIso }: ScheduleListCli
         if (closest) {
           setNearestPier(closest);
           setSelectedOrigin(closest.name);
-          setSelectedRoute("ALL"); // Reset route to show all trips from this pier
+          setSelectedRoute("ALL");
           setGeoStatus("ACTIVE");
         }
       },
@@ -102,28 +104,43 @@ export function ScheduleListClient({ schedules, serverTimeIso }: ScheduleListCli
     );
   };
 
-  // Compute unique origins
-  const uniqueOrigins = useMemo(() => {
-    const originsSet = new Set<string>();
-    schedules.forEach((s) => originsSet.add(s.origin));
-    return Array.from(originsSet);
-  }, [schedules]);
+  // 1. Resolve dynamic states for all schedules (Removes expired trips 30s after departure)
+  const activeSchedulesWithDyn = useMemo(() => {
+    return schedules
+      .map((s) => {
+        const dyn = resolveDynamicTrip(
+          s.origin,
+          s.destination,
+          s.departureTime,
+          s.targetTimeIso || new Date().toISOString(),
+          s.stops,
+          undefined,
+          now,
+          serverTimeIso
+        );
+        return {
+          schedule: s,
+          dyn
+        };
+      })
+      .filter(({ dyn }) => !dyn.isExpired); // Filter out expired trips
+  }, [schedules, now, serverTimeIso]);
 
-  // Compute unique routes available in the schedule list
+  // Compute unique routes from available active trips
   const uniqueRoutes = useMemo(() => {
     const routesSet = new Set<string>();
-    schedules.forEach((s) => {
-      routesSet.add(`${s.origin} ➔ ${s.destination}`);
+    activeSchedulesWithDyn.forEach(({ schedule, dyn }) => {
+      routesSet.add(`${schedule.origin} ➔ ${schedule.destination}`);
     });
     return Array.from(routesSet);
-  }, [schedules]);
+  }, [activeSchedulesWithDyn]);
 
   // Compute unique operators
   const uniqueOperators = useMemo(() => {
     const ops = new Set<string>();
-    schedules.forEach((s) => ops.add(s.operator));
+    activeSchedulesWithDyn.forEach(({ schedule }) => ops.add(schedule.operator));
     return Array.from(ops);
-  }, [schedules]);
+  }, [activeSchedulesWithDyn]);
 
   // Reverse current route direction (Swap)
   const swapDirection = () => {
@@ -131,25 +148,28 @@ export function ScheduleListClient({ schedules, serverTimeIso }: ScheduleListCli
     const parts = selectedRoute.split(" ➔ ");
     if (parts.length === 2) {
       const swappedKey = `${parts[1]} ➔ ${parts[0]}`;
-      // Check if opposite route exists
       if (uniqueRoutes.includes(swappedKey)) {
         setSelectedRoute(swappedKey);
       }
     }
   };
 
-  // Filter schedules
-  const filteredSchedules = useMemo(() => {
-    return schedules.filter((schedule) => {
+  // Filter schedules based on active state and user selection
+  const filteredList = useMemo(() => {
+    return activeSchedulesWithDyn.filter(({ schedule, dyn }) => {
       // Nearest pier / Origin filter
       if (selectedOrigin !== "ALL") {
-        if (schedule.origin !== selectedOrigin) return false;
+        const matchesInitial = schedule.origin === selectedOrigin;
+        const matchesCurrent = dyn.currentOrigin === selectedOrigin;
+        const matchesStop = schedule.stops?.some((st) => st.name === selectedOrigin);
+        if (!matchesInitial && !matchesCurrent && !matchesStop) return false;
       }
 
       // Route filter
       if (selectedRoute !== "ALL") {
-        const currentRouteKey = `${schedule.origin} ➔ ${schedule.destination}`;
-        if (currentRouteKey !== selectedRoute) return false;
+        const initialRouteKey = `${schedule.origin} ➔ ${schedule.destination}`;
+        const currentRouteKey = `${dyn.currentOrigin} ➔ ${dyn.destination}`;
+        if (initialRouteKey !== selectedRoute && currentRouteKey !== selectedRoute) return false;
       }
 
       // Operator filter
@@ -160,7 +180,7 @@ export function ScheduleListClient({ schedules, serverTimeIso }: ScheduleListCli
       // Search query filter
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase().trim();
-        const inOrigin = schedule.origin.toLowerCase().includes(q);
+        const inOrigin = schedule.origin.toLowerCase().includes(q) || dyn.currentOrigin.toLowerCase().includes(q);
         const inDest = schedule.destination.toLowerCase().includes(q);
         const inVessel = schedule.vessel.toLowerCase().includes(q);
         const inOperator = schedule.operator.toLowerCase().includes(q);
@@ -170,7 +190,7 @@ export function ScheduleListClient({ schedules, serverTimeIso }: ScheduleListCli
 
       return true;
     });
-  }, [schedules, selectedOrigin, selectedRoute, selectedOperator, searchQuery]);
+  }, [activeSchedulesWithDyn, selectedOrigin, selectedRoute, selectedOperator, searchQuery]);
 
   return (
     <>
@@ -225,7 +245,7 @@ export function ScheduleListClient({ schedules, serverTimeIso }: ScheduleListCli
                 : "bg-slate-800/80 text-slate-300 hover:bg-slate-700 border border-slate-700/60"
             }`}
           >
-            TÜM SEFERLER ({schedules.length})
+            AKTİF SEFERLER ({activeSchedulesWithDyn.length})
           </button>
 
           {/* Swap Button if route selected */}
@@ -242,7 +262,7 @@ export function ScheduleListClient({ schedules, serverTimeIso }: ScheduleListCli
 
           {/* Individual Routes */}
           {uniqueRoutes.map((routeKey) => {
-            const count = schedules.filter((s) => `${s.origin} ➔ ${s.destination}` === routeKey).length;
+            const count = activeSchedulesWithDyn.filter(({ schedule }) => `${schedule.origin} ➔ ${schedule.destination}` === routeKey).length;
             return (
               <button
                 key={routeKey}
@@ -287,7 +307,7 @@ export function ScheduleListClient({ schedules, serverTimeIso }: ScheduleListCli
       {/* Matching Results Header */}
       <div className="px-4 pt-3 pb-1 flex items-center justify-between text-xs font-bold text-slate-400">
         <span>
-          Görüntülenen Sefer: <strong className="text-white text-sm">{filteredSchedules.length}</strong>
+          Görüntülenen Sefer: <strong className="text-white text-sm">{filteredList.length}</strong>
         </span>
         {selectedRoute !== "ALL" ? (
           <span className="text-amber-300 font-extrabold bg-amber-950/60 border border-amber-500/30 px-2 py-0.5 rounded">
@@ -302,14 +322,15 @@ export function ScheduleListClient({ schedules, serverTimeIso }: ScheduleListCli
 
       {/* Schedules List */}
       <div className="px-4 flex flex-col gap-3 pb-10 mt-2">
-        {filteredSchedules.length > 0 ? (
-          filteredSchedules.map((schedule) => (
+        {filteredList.length > 0 ? (
+          filteredList.map(({ schedule }) => (
             <div
               key={schedule.id}
               onClick={() => setSelectedSchedule(schedule)}
               className="cursor-pointer transition-transform active:scale-[0.99]"
             >
               <ScheduleCard
+                id={schedule.id}
                 origin={schedule.origin}
                 destination={schedule.destination}
                 operator={schedule.operator}
@@ -330,9 +351,9 @@ export function ScheduleListClient({ schedules, serverTimeIso }: ScheduleListCli
           ))
         ) : (
           <div className="text-center py-16 bg-slate-900/60 border border-slate-800 rounded-2xl p-6 text-slate-400">
-            <p className="text-base font-bold text-slate-300">Seçilen kriterlere uygun sefer bulunamadı.</p>
+            <p className="text-base font-bold text-slate-300">Seçilen kriterlere uygun aktif sefer bulunamadı.</p>
             <p className="text-xs mt-1 text-slate-500">
-              Lütfen yukarıdaki filtreleri sıfırlayarak tüm seferleri görüntüleyin.
+              Kalkan seferler 30 saniye sonra listeden otomatik olarak kaldırılır.
             </p>
             <button
               onClick={() => {
@@ -343,7 +364,7 @@ export function ScheduleListClient({ schedules, serverTimeIso }: ScheduleListCli
               }}
               className="mt-4 px-4 py-2 bg-blue-600 text-white text-xs font-bold rounded-xl shadow-lg shadow-blue-500/20 hover:bg-blue-500"
             >
-              Tüm Seferleri Göster
+              Filtreleri Sıfırla
             </button>
           </div>
         )}
@@ -357,5 +378,3 @@ export function ScheduleListClient({ schedules, serverTimeIso }: ScheduleListCli
     </>
   );
 }
-
-

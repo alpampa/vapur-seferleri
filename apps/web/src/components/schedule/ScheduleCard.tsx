@@ -1,11 +1,13 @@
 "use client";
 
-import { Anchor, Navigation, ShieldCheck, Waves, Crown } from "lucide-react";
+import { Anchor, Navigation, ShieldCheck, Waves, Crown, Ship, Check } from "lucide-react";
 import { useEffect, useState } from "react";
+import { resolveDynamicTrip, DynamicTripResolution } from "@/lib/utils/dynamic-trip";
 
 export type TripStatus = "ON_TIME" | "DEPARTING_SOON" | "BOARDING" | "DELAYED" | "CANCELLED" | "IN_TRANSIT" | "ARRIVING" | "COMPLETED";
 
-interface ScheduleCardProps {
+export interface ScheduleCardProps {
+  id: string;
   origin: string;
   destination: string;
   operator: string;
@@ -21,6 +23,7 @@ interface ScheduleCardProps {
   price: string;
   progress: number;
   stops?: { name: string; time: string }[];
+  arrivalTime?: string;
 }
 
 export function TripStatusBadge({ status, delayText }: { status: TripStatus; delayText?: string }) {
@@ -103,83 +106,71 @@ function OperatorBranding({ operator }: { operator: string }) {
 }
 
 export function ScheduleCard(props: ScheduleCardProps) {
-  const [countdown, setCountdown] = useState<string | null>(null);
-  const [hasDeparted, setHasDeparted] = useState(false);
-  const [effectiveStatus, setEffectiveStatus] = useState<TripStatus>(props.status);
+  const [dynState, setDynState] = useState<DynamicTripResolution>(() => {
+    return resolveDynamicTrip(
+      props.origin,
+      props.destination,
+      props.departureTime,
+      props.targetTimeIso || new Date().toISOString(),
+      props.stops,
+      props.arrivalTime,
+      Date.now(),
+      props.serverTimeIso
+    );
+  });
 
   useEffect(() => {
-    if (!props.targetTimeIso || !props.serverTimeIso) return;
-    
-    const clientNow = Date.now();
-    const serverNow = new Date(props.serverTimeIso).getTime();
-    const offset = serverNow - clientNow;
-    const target = new Date(props.targetTimeIso).getTime();
-
-    const updateCountdown = () => {
-      const accurateNow = Date.now() + offset;
-      const diff = target - accurateNow;
-
-      // 1. Right after departure (0 to 10 mins after): Marked as recently departed
-      if (diff < 0 && diff > -10 * 60000) {
-        setHasDeparted(true);
-        setCountdown(null);
-        setEffectiveStatus("IN_TRANSIT");
-        return;
-      }
-
-      setHasDeparted(false);
-
-      // 2. Past trips (> 10 mins ago)
-      if (diff <= -10 * 60000) {
-        setCountdown(null);
-        setEffectiveStatus("COMPLETED");
-        return;
-      }
-
-      // 3. Imminent trips (0 to 15 mins before departure)
-      if (diff > 0 && diff <= 15 * 60000) {
-        const m = Math.floor(diff / 60000);
-        const s = Math.floor((diff % 60000) / 1000);
-        setCountdown(`${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`);
-        setEffectiveStatus(diff <= 5 * 60000 ? "BOARDING" : "DEPARTING_SOON");
-        return;
-      }
-
-      // 4. Future trips (> 15 mins)
-      setCountdown(null);
-      setEffectiveStatus(props.status === "COMPLETED" ? "ON_TIME" : props.status);
+    const update = () => {
+      const resolved = resolveDynamicTrip(
+        props.origin,
+        props.destination,
+        props.departureTime,
+        props.targetTimeIso || new Date().toISOString(),
+        props.stops,
+        props.arrivalTime,
+        Date.now(),
+        props.serverTimeIso
+      );
+      setDynState(resolved);
     };
 
-    updateCountdown();
-    const interval = setInterval(updateCountdown, 1000);
+    update();
+    const interval = setInterval(update, 1000);
     return () => clearInterval(interval);
-  }, [props.targetTimeIso, props.serverTimeIso, props.status]);
+  }, [props.origin, props.destination, props.departureTime, props.targetTimeIso, props.stops, props.arrivalTime, props.serverTimeIso]);
+
+  // If the trip has completely expired (30 seconds after its final departure leg), do not render
+  if (dynState.isExpired) {
+    return null;
+  }
+
+  const isDirect = !props.stops || props.stops.length === 0;
 
   return (
     <div className="bg-[#1e293b] hover:bg-[#24344d] border border-slate-700/80 hover:border-blue-500/50 rounded-2xl p-4 flex flex-col gap-3 text-white shadow-lg transition-all duration-200 relative overflow-hidden group">
       {/* Top Header Line: Departure Time, Route Title & Status Badge */}
       <div className="flex items-start justify-between gap-3 border-b border-slate-700/60 pb-3">
-        {/* Departure Time & Route */}
+        {/* Dynamic Departure Time & Active Leg Route */}
         <div className="flex items-center gap-3.5">
-          {/* Big Departure Time Box */}
+          {/* Big Departure Time Box (Updates dynamically to current station time) */}
           <div className="flex flex-col items-center justify-center bg-slate-900/90 border border-blue-500/30 rounded-xl px-3 py-1.5 min-w-[72px] shadow-inner">
             <span className="font-mono font-black text-2xl text-blue-400 leading-none tabular-nums tracking-tight">
-              {props.departureTime}
+              {dynState.currentDepartureTime}
             </span>
             <span className="text-[10px] font-bold text-slate-400 mt-0.5">
-              {props.departureTime12}
+              {dynState.currentDepartureTime12}
             </span>
           </div>
 
-          {/* Route Origin & Destination */}
+          {/* Dynamic Route Origin & Destination */}
           <div className="flex flex-col">
             <div className="flex items-center gap-2">
               <span className="font-black text-base sm:text-lg text-white tracking-tight">
-                {props.origin}
+                {dynState.currentOrigin}
               </span>
               <span className="text-blue-400 font-extrabold text-lg sm:text-xl">➔</span>
               <span className="font-black text-base sm:text-lg text-amber-300 tracking-tight">
-                {props.destination}
+                {dynState.destination}
               </span>
             </div>
             <div className="flex items-center gap-2 mt-0.5">
@@ -193,19 +184,20 @@ export function ScheduleCard(props: ScheduleCardProps) {
 
         {/* Status & Price Box */}
         <div className="flex flex-col items-end gap-1.5 shrink-0">
-          {hasDeparted ? (
-            <div className="px-3 py-1 rounded-md text-white text-[11px] font-black bg-rose-600 shadow-sm animate-pulse">
-              HAREKET ETTİ
+          {dynState.isDeparted ? (
+            <div className="px-3 py-1 rounded-md text-white text-[11px] font-black bg-rose-600 shadow-sm animate-pulse flex items-center gap-1">
+              <Ship size={13} />
+              <span>HAREKET ETTİ</span>
             </div>
-          ) : countdown ? (
-            <div className="flex flex-col items-end">
-              <span className="text-[10px] font-bold text-amber-400 uppercase tracking-wider">KALKIŞA</span>
-              <span className="text-amber-400 font-mono font-black text-lg tabular-nums leading-none">
-                {countdown}
+          ) : dynState.countdown ? (
+            <div className="flex flex-col items-end bg-amber-950/80 border border-amber-500/50 px-2.5 py-0.5 rounded-lg shadow-sm">
+              <span className="text-[9px] font-extrabold text-amber-400 uppercase tracking-wider">KALKIŞA</span>
+              <span className="text-amber-300 font-mono font-black text-base tabular-nums leading-tight animate-pulse">
+                {dynState.countdown}
               </span>
             </div>
           ) : (
-            <TripStatusBadge status={effectiveStatus} delayText={props.delayText} />
+            <TripStatusBadge status={dynState.status} delayText={props.delayText} />
           )}
 
           <div className="bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 font-black text-sm px-2.5 py-0.5 rounded-md shadow-sm">
@@ -214,45 +206,102 @@ export function ScheduleCard(props: ScheduleCardProps) {
         </div>
       </div>
 
-      {/* Bottom Line: Intermediate Stops & Platform Info */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-0.5">
-        {/* Stops / Route Waypoints */}
-        <div className="flex-1">
-          {props.stops && props.stops.length > 0 ? (
-            <div className="flex items-start sm:items-center gap-1.5 flex-wrap">
-              <span className="text-[11px] font-black text-amber-400 bg-amber-950/60 border border-amber-500/30 px-2 py-0.5 rounded uppercase tracking-wider shrink-0">
-                UĞRADIĞI DURAKLAR:
-              </span>
-              <div className="flex items-center gap-1.5 flex-wrap">
-                {props.stops.map((stop, idx) => (
-                  <span
-                    key={idx}
-                    className="inline-flex items-center gap-1 bg-slate-800/90 border border-slate-700 text-slate-100 text-xs font-bold px-2 py-1 rounded shadow-sm"
-                  >
-                    <span>{stop.name}</span>
-                    <span className="text-emerald-400 font-mono font-black">({stop.time})</span>
-                    {idx < (props.stops?.length || 0) - 1 && (
-                      <span className="text-slate-500 font-bold ml-1">•</span>
-                    )}
-                  </span>
-                ))}
-              </div>
-            </div>
-          ) : (
-            <div className="inline-flex items-center gap-1.5 bg-emerald-950/50 border border-emerald-500/30 text-emerald-300 text-xs font-black px-2.5 py-1 rounded">
-              <ShieldCheck size={14} className="text-emerald-400" />
-              <span>DİREKT SEFER (Ara Duraksız)</span>
-            </div>
-          )}
-        </div>
+      {/* Middle/Bottom: Metro / Marmaray Progressive Route Timeline */}
+      {!isDirect && dynState.waypoints && dynState.waypoints.length > 1 ? (
+        <div className="flex flex-col gap-1.5 pt-0.5">
+          <div className="flex items-center justify-between text-[11px] font-bold text-slate-400">
+            <span className="flex items-center gap-1 text-amber-400 font-black uppercase tracking-wider text-[10px]">
+              <Navigation size={11} className="text-amber-400" />
+              <span>DURAK VE GÜZERGAH İLERLEMESİ:</span>
+            </span>
+            <span className="text-[10px] text-slate-400 font-medium">
+              {dynState.waypoints.filter(w => w.state === "COMPLETED").length} / {dynState.waypoints.length} Durak Geçildi
+            </span>
+          </div>
 
-        {/* Platform & Terminal Info */}
-        <div className="flex items-center gap-2 shrink-0 self-end sm:self-auto text-xs font-bold text-slate-300 bg-slate-800/70 border border-slate-700/60 px-2.5 py-1 rounded-lg">
-          <span className="text-slate-400">İskele:</span>
-          <span className="text-blue-300 font-black">{props.platform}</span>
+          {/* Horizontal Metro / Marmaray Track */}
+          <div className="flex items-center gap-1 overflow-x-auto py-1 hide-scrollbar">
+            {dynState.waypoints.map((wp, wIdx) => {
+              const isCompleted = wp.state === "COMPLETED";
+              const isCurrent = wp.state === "CURRENT";
+              const isLast = wIdx === dynState.waypoints.length - 1;
+
+              return (
+                <div key={wIdx} className="flex items-center shrink-0">
+                  {/* Station Pill */}
+                  <div
+                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs transition-all shadow-sm ${
+                      isCompleted
+                        ? "bg-emerald-950/90 border border-emerald-500/50 text-emerald-300 font-bold"
+                        : isCurrent
+                        ? "bg-amber-400 text-slate-950 font-black ring-2 ring-amber-300/80 shadow-md shadow-amber-500/30 scale-[1.02]"
+                        : "bg-slate-900/90 border border-slate-800 text-slate-300 font-medium"
+                    }`}
+                  >
+                    {isCompleted ? (
+                      <span className="text-emerald-400 text-[11px] font-black">✓</span>
+                    ) : isCurrent ? (
+                      <span className="text-[10px] font-black animate-pulse flex items-center gap-0.5 text-slate-950">
+                        ➔ 🚢
+                      </span>
+                    ) : (
+                      <span className="w-1.5 h-1.5 rounded-full bg-slate-600"></span>
+                    )}
+
+                    <span className="tracking-tight">{wp.name}</span>
+                    <span
+                      className={`font-mono text-[10px] ${
+                        isCompleted
+                          ? "text-emerald-400/90 font-bold"
+                          : isCurrent
+                          ? "text-slate-950 underline font-black"
+                          : "text-slate-400 font-semibold"
+                      }`}
+                    >
+                      ({wp.time})
+                    </span>
+                  </div>
+
+                  {/* Connecting Track Segment */}
+                  {!isLast && (
+                    <div
+                      className={`w-3.5 sm:w-4 h-[3px] mx-0.5 rounded-full ${
+                        isCompleted
+                          ? "bg-emerald-500"
+                          : isCurrent
+                          ? "bg-gradient-to-r from-amber-400 via-amber-500 to-slate-700"
+                          : "bg-slate-700"
+                      }`}
+                    />
+                  )}
+                </div>
+              );
+            })}
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className="flex items-center justify-between gap-2 pt-0.5">
+          <div className="inline-flex items-center gap-1.5 bg-emerald-950/50 border border-emerald-500/30 text-emerald-300 text-xs font-black px-2.5 py-1 rounded">
+            <ShieldCheck size={14} className="text-emerald-400" />
+            <span>DİREKT SEFER (Ara Duraksız)</span>
+          </div>
+
+          <div className="flex items-center gap-2 text-xs font-bold text-slate-300 bg-slate-800/70 border border-slate-700/60 px-2.5 py-1 rounded-lg">
+            <span className="text-slate-400">İskele:</span>
+            <span className="text-blue-300 font-black">{props.platform}</span>
+          </div>
+        </div>
+      )}
+
+      {/* Direct Trips Footer Platform info when stops exist */}
+      {!isDirect && (
+        <div className="flex items-center justify-end text-xs font-bold text-slate-300 pt-0.5">
+          <div className="bg-slate-800/70 border border-slate-700/60 px-2.5 py-0.5 rounded-lg flex items-center gap-1.5">
+            <span className="text-slate-400">Kalkış İskelesi:</span>
+            <span className="text-blue-300 font-black">{props.platform}</span>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
-
