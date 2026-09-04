@@ -117,7 +117,9 @@ async function getSchedules(): Promise<SchedulesResponse | null> {
 
       $('table').eq(outIdx).find('tr').each((ri, row) => {
         const cells: string[] = [];
-        $(row).find('td, th').each((ci, cell) => cells.push($(cell).text().trim().replace(/\s+/g, ' ')));
+        $(row).find('td, th').each((ci, cell) => {
+          cells.push($(cell).text().trim().replace(/\s+/g, ' '));
+        });
         const kabTime = cells[0];
         if (kabTime && /^\d{2}:\d{2}$/.test(kabTime)) {
           const stops: { name: string; time: string }[] = [];
@@ -131,7 +133,9 @@ async function getSchedules(): Promise<SchedulesResponse | null> {
 
       $('table').eq(retIdx).find('tr').each((ri, row) => {
         const cells: string[] = [];
-        $(row).find('td, th').each((ci, cell) => cells.push($(cell).text().trim().replace(/\s+/g, ' ')));
+        $(row).find('td, th').each((ci, cell) => {
+          cells.push($(cell).text().trim().replace(/\s+/g, ' '));
+        });
         const buyukadaTime = cells[1];
         if (buyukadaTime && /^\d{2}:\d{2}$/.test(buyukadaTime)) {
           const stops: { name: string; time: string }[] = [];
@@ -152,7 +156,9 @@ async function getSchedules(): Promise<SchedulesResponse | null> {
 
       $('table').eq(ringFwd).find('tr').each((ri, row) => {
         const cells: string[] = [];
-        $(row).find('td, th').each((ci, cell) => cells.push($(cell).text().trim().replace(/\s+/g, ' ')));
+        $(row).find('td, th').each((ci, cell) => {
+          cells.push($(cell).text().trim().replace(/\s+/g, ' '));
+        });
         const bosTime = cells[0];
         if (bosTime && /^\d{2}:\d{2}$/.test(bosTime)) {
           const stops: { name: string; time: string }[] = [];
@@ -165,7 +171,9 @@ async function getSchedules(): Promise<SchedulesResponse | null> {
 
       $('table').eq(ringRev).find('tr').each((ri, row) => {
         const cells: string[] = [];
-        $(row).find('td, th').each((ci, cell) => cells.push($(cell).text().trim().replace(/\s+/g, ' ')));
+        $(row).find('td, th').each((ci, cell) => {
+          cells.push($(cell).text().trim().replace(/\s+/g, ' '));
+        });
         const buyukadaTime = cells[1];
         if (buyukadaTime && /^\d{2}:\d{2}$/.test(buyukadaTime)) {
           const stops: { name: string; time: string }[] = [];
@@ -182,7 +190,9 @@ async function getSchedules(): Promise<SchedulesResponse | null> {
       const $ = cheerio.load(resMMOut.data);
       $('table').first().find('tr').each((ri, row) => {
         const cells: string[] = [];
-        $(row).find('td, th').each((ci, cell) => cells.push($(cell).text().trim().replace(/\s+/g, ' ')));
+        $(row).find('td, th').each((ci, cell) => {
+          cells.push($(cell).text().trim().replace(/\s+/g, ' '));
+        });
         const t = cells[0];
         const routeDesc = cells[1];
         if (t && /^\d{2}:\d{2}$/.test(t)) {
@@ -202,7 +212,9 @@ async function getSchedules(): Promise<SchedulesResponse | null> {
       const $ = cheerio.load(resMMRet.data);
       $('table').first().find('tr').each((ri, row) => {
         const cells: string[] = [];
-        $(row).find('td, th').each((ci, cell) => cells.push($(cell).text().trim().replace(/\s+/g, ' ')));
+        $(row).find('td, th').each((ci, cell) => {
+          cells.push($(cell).text().trim().replace(/\s+/g, ' '));
+        });
         const t = cells[0];
         if (t && /^\d{2}:\d{2}$/.test(t)) {
           schedulesList.push(createDto(`mm-bos-ret-${ri}`, 'Büyükada', 'Bostancı', 'Mavi Marmara', 'Marmara-1', t, '₺65.00', 'Peron 1'));
