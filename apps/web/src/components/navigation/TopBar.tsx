@@ -19,10 +19,9 @@ export function TopBar() {
       });
       const dateFmt = new Intl.DateTimeFormat("tr-TR", {
         timeZone: "Europe/Istanbul",
-        weekday: "long",
+        weekday: "short",
         day: "numeric",
-        month: "long",
-        year: "numeric",
+        month: "short",
       });
       setTimeStr(timeFmt.format(now));
       setDateStr(dateFmt.format(now));
@@ -34,44 +33,41 @@ export function TopBar() {
   }, []);
 
   return (
-    <header className="px-4 pt-3 pb-3 text-white border-b border-white/10 bg-[#0f172a]/95 backdrop-blur-md sticky top-0 z-40 shadow-md">
-      {/* Brand & National Clock Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-        <div className="flex items-center gap-2.5">
-          <div className="bg-gradient-to-br from-blue-500 to-indigo-600 p-2 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20">
-            <Ship size={22} className="text-white" />
-          </div>
-          <div>
-            <h1 className="font-extrabold text-lg tracking-tight text-white flex items-center gap-2">
-              İSTANBUL VAPUR SEFERLERİ
-            </h1>
-            <p className="text-[11px] text-blue-300 font-semibold tracking-wider uppercase">
-              Resmi ve Canlı Sefer Takip Portalı
-            </p>
-          </div>
+    <header className="px-3.5 py-2.5 bg-[#070b14]/95 backdrop-blur-md border-b border-slate-800/80 sticky top-0 z-40 shadow-sm flex items-center justify-between">
+      {/* Brand Icon & Name */}
+      <div className="flex items-center gap-2">
+        <div className="bg-gradient-to-br from-blue-600 to-indigo-600 p-1.5 rounded-lg flex items-center justify-center shadow-md shadow-blue-500/20">
+          <Ship size={18} className="text-white" />
         </div>
-
-        {/* National Live Clock Box */}
-        <div className="bg-gradient-to-r from-slate-900 to-indigo-950 border border-blue-500/40 rounded-xl px-3.5 py-1.5 flex items-center justify-between sm:justify-end gap-3 shadow-inner">
-          <div className="flex items-center gap-1.5">
-            <Clock size={16} className="text-emerald-400 animate-pulse" />
-            <div className="flex flex-col">
-              <span className="text-[9px] font-black tracking-widest text-emerald-400 uppercase">
-                GERÇEK SAAT • GÜNLÜK ULUSAL SAAT
-              </span>
-              <span className="text-[11px] text-slate-300 font-medium">
-                {dateStr || "Yükleniyor..."}
-              </span>
-            </div>
-          </div>
-          <div className="bg-black/50 px-2.5 py-1 rounded-lg border border-emerald-500/30">
-            <span className="font-mono font-black text-emerald-400 text-base sm:text-lg tracking-wider tabular-nums">
-              {timeStr || "--:--:--"}
+        <div>
+          <h1 className="font-black text-sm tracking-tight text-white flex items-center gap-1.5 leading-none">
+            VAPUR SEFERLERİ
+            <span className="bg-emerald-500/20 text-emerald-400 text-[9px] font-extrabold px-1.5 py-0.5 rounded border border-emerald-500/30">
+              CANLI
             </span>
-          </div>
+          </h1>
+          <p className="text-[10px] text-slate-400 font-medium leading-tight mt-0.5">
+            İstanbul Resmi Deniz Ulaşım Portalı
+          </p>
+        </div>
+      </div>
+
+      {/* Compact Digital National Clock */}
+      <div className="flex items-center gap-2 bg-slate-900/90 border border-slate-800 px-2.5 py-1 rounded-lg">
+        <div className="flex flex-col items-end leading-tight">
+          <span className="text-[8px] font-black tracking-widest text-emerald-400 uppercase">
+            ULUSAL SAAT
+          </span>
+          <span className="text-[9px] text-slate-400 font-semibold">
+            {dateStr || "Bugün"}
+          </span>
+        </div>
+        <div className="font-mono font-black text-emerald-400 text-sm tracking-tight pl-1.5 border-l border-slate-800 tabular-nums">
+          {timeStr || "--:--:--"}
         </div>
       </div>
     </header>
   );
 }
+
 

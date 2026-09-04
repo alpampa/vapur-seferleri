@@ -141,14 +141,6 @@ export function ScheduleListClient({ schedules, serverTimeIso }: ScheduleListCli
   // Filter schedules
   const filteredSchedules = useMemo(() => {
     return schedules.filter((schedule) => {
-      // Time expiration check (-30 seconds)
-      if (schedule.targetTimeIso) {
-        const targetMs = new Date(schedule.targetTimeIso).getTime();
-        const serverNowMs = Date.now();
-        const diff = targetMs - serverNowMs;
-        if (diff < -30000) return false;
-      }
-
       // Nearest pier / Origin filter
       if (selectedOrigin !== "ALL") {
         if (schedule.origin !== selectedOrigin) return false;
@@ -182,186 +174,107 @@ export function ScheduleListClient({ schedules, serverTimeIso }: ScheduleListCli
 
   return (
     <>
-      {/* 1. Geolocation Location Bar */}
-      <div className="px-4 pt-2.5 pb-1 bg-[#090d16]">
-        {geoStatus === "ACTIVE" && nearestPier ? (
-          <div className="bg-gradient-to-r from-emerald-950/90 to-slate-900 border border-emerald-500/40 rounded-xl p-3 flex items-center justify-between shadow-lg">
-            <div className="flex items-center gap-2.5">
-              <div className="p-2 rounded-lg bg-emerald-500/20 text-emerald-400">
-                <MapPin size={18} className="animate-bounce" />
-              </div>
-              <div>
-                <div className="flex items-center gap-1.5">
-                  <span className="text-[10px] uppercase font-black tracking-widest text-emerald-400">
-                    KONUMUNUZA EN YAKIN İSKELE
-                  </span>
-                  <span className="bg-emerald-500/30 text-emerald-300 text-[10px] px-1.5 py-0.2 rounded font-mono font-bold">
-                    {nearestPier.distanceKm < 1 
-                      ? `${Math.round(nearestPier.distanceKm * 1000)} m` 
-                      : `${nearestPier.distanceKm.toFixed(1)} km`}
-                  </span>
-                </div>
-                <h4 className="text-sm font-black text-white mt-0.5">
-                  {nearestPier.name} Kalkışlı Seferler Listeleniyor
-                </h4>
-              </div>
-            </div>
-            <button
-              onClick={() => {
-                setSelectedOrigin("ALL");
-                setGeoStatus("IDLE");
-              }}
-              className="text-xs font-bold text-slate-400 hover:text-white bg-slate-800/80 px-2.5 py-1.5 rounded-lg border border-slate-700"
-            >
-              Tümünü Göster
-            </button>
-          </div>
-        ) : (
-          <div className="bg-slate-900/90 border border-slate-800 rounded-xl p-2.5 flex items-center justify-between gap-2 shadow-sm">
-            <div className="flex items-center gap-2">
-              <Navigation size={16} className="text-blue-400 shrink-0" />
-              <p className="text-xs text-slate-300 font-medium leading-tight">
-                Size en yakın iskeleden kalkan seferleri görmek ister misiniz?
-              </p>
-            </div>
-            <button
-              onClick={requestLocation}
-              disabled={geoStatus === "LOCATING"}
-              className="px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-600 hover:bg-blue-500 text-white shadow-md shadow-blue-500/20 transition-all flex items-center gap-1 shrink-0 disabled:opacity-50"
-            >
-              {geoStatus === "LOCATING" ? "Konum Alınıyor..." : "En Yakın İskele"}
-            </button>
-          </div>
-        )}
-      </div>
-
-      {/* 2. Route & Filter Bar Section */}
-      <div className="px-4 py-3 bg-[#0f172a]/95 backdrop-blur border-b border-slate-800 sticky top-[69px] z-30 space-y-2.5 shadow-md">
-        {/* Search Bar Input */}
-        <div className="relative">
-          <Search size={17} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-          <input
-            type="text"
-            placeholder="İskele, vapur adı veya ara durak ara (Örn: Bostancı, Heybeliada, Barış Manço)..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-9 py-2 bg-slate-900/90 border border-slate-700/80 rounded-xl text-white text-xs font-semibold placeholder:text-slate-500 focus:outline-none focus:border-blue-500 transition-colors shadow-inner"
-          />
-          {searchQuery && (
-            <button
-              onClick={() => setSearchQuery("")}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400 hover:text-white bg-slate-800 px-1.5 py-0.5 rounded"
-            >
-              ✕
-            </button>
-          )}
-        </div>
-
-        {/* Route Filter Chips */}
-        <div>
-          <div className="flex items-center justify-between mb-1.5">
-            <span className="text-[11px] font-black tracking-wider text-slate-300 uppercase flex items-center gap-1.5">
-              <Filter size={13} className="text-blue-400" />
-              ROTA SEÇİMİ (TIKLAYIN):
-            </span>
-            <div className="flex items-center gap-1.5">
-              {selectedRoute !== "ALL" && (
-                <button
-                  onClick={swapDirection}
-                  title="Gidiş-Dönüş Yönünü Değiştir"
-                  className="text-[10px] font-bold text-blue-400 hover:text-blue-300 flex items-center gap-1 bg-blue-950/60 border border-blue-500/40 px-2 py-0.5 rounded"
-                >
-                  <ArrowLeftRight size={11} />
-                  Yönü Değiştir
-                </button>
-              )}
-              {(selectedRoute !== "ALL" || selectedOrigin !== "ALL" || selectedOperator !== "ALL" || searchQuery) && (
-                <button
-                  onClick={() => {
-                    setSelectedRoute("ALL");
-                    setSelectedOrigin("ALL");
-                    setSelectedOperator("ALL");
-                    setSearchQuery("");
-                  }}
-                  className="text-[10px] font-bold text-amber-400 hover:text-amber-300 flex items-center gap-1 bg-amber-950/40 border border-amber-500/30 px-2 py-0.5 rounded"
-                >
-                  <RotateCcw size={11} />
-                  Sıfırla
-                </button>
-              )}
-            </div>
+      {/* Ultra Compact Filter & Search Bar */}
+      <div className="px-3 py-2 bg-[#0a0f1d]/95 backdrop-blur-md border-b border-slate-800 sticky top-[49px] z-30 space-y-2 shadow-md">
+        {/* Row 1: Search & Nearest Pier Button */}
+        <div className="flex items-center gap-2">
+          <div className="relative flex-1">
+            <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+            <input
+              type="text"
+              placeholder="İskele, vapur adı veya durak ara..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-9 pr-7 py-1.5 bg-slate-900 border border-slate-700/80 rounded-lg text-white text-xs font-semibold placeholder:text-slate-500 focus:outline-none focus:border-blue-500"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-slate-400 hover:text-white bg-slate-800 px-1 rounded"
+              >
+                ✕
+              </button>
+            )}
           </div>
 
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1.5 hide-scrollbar">
-            {/* All Routes Chip */}
-            <button
-              onClick={() => {
-                setSelectedRoute("ALL");
-                setSelectedOrigin("ALL");
-              }}
-              className={`px-3 py-1.5 rounded-lg text-xs font-black whitespace-nowrap transition-all shadow-sm ${
-                selectedRoute === "ALL" && selectedOrigin === "ALL"
-                  ? "bg-blue-600 text-white shadow-blue-500/30 border border-blue-400"
-                  : "bg-slate-800/80 text-slate-300 hover:bg-slate-700 border border-slate-700"
-              }`}
-            >
-              TÜM ROTALAR ({schedules.length})
-            </button>
-
-            {/* Individual Route Chips */}
-            {uniqueRoutes.map((routeKey) => {
-              const count = schedules.filter((s) => `${s.origin} ➔ ${s.destination}` === routeKey).length;
-              return (
-                <button
-                  key={routeKey}
-                  onClick={() => {
-                    setSelectedRoute(routeKey);
-                    setSelectedOrigin("ALL");
-                  }}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-black whitespace-nowrap transition-all shadow-sm flex items-center gap-1.5 ${
-                    selectedRoute === routeKey
-                      ? "bg-amber-500 text-slate-950 shadow-amber-500/30 border border-amber-300"
-                      : "bg-slate-800/80 text-slate-300 hover:bg-slate-700 hover:text-white border border-slate-700"
-                  }`}
-                >
-                  <span>{routeKey}</span>
-                  <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
-                    selectedRoute === routeKey ? "bg-black/30 text-slate-900" : "bg-slate-900 text-slate-400"
-                  }`}>
-                    {count}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Operator Filter Pills */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pt-0.5">
-          <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider shrink-0 mr-1">
-            FİRMA:
-          </span>
           <button
-            onClick={() => setSelectedOperator("ALL")}
-            className={`px-2.5 py-1 rounded-md text-[11px] font-bold whitespace-nowrap transition-all ${
-              selectedOperator === "ALL"
-                ? "bg-slate-200 text-slate-900 shadow-sm"
-                : "bg-slate-800/60 text-slate-400 hover:text-slate-200 border border-slate-700/60"
+            onClick={requestLocation}
+            disabled={geoStatus === "LOCATING"}
+            className={`px-2.5 py-1.5 rounded-lg text-[11px] font-bold whitespace-nowrap flex items-center gap-1 shrink-0 transition-colors shadow-sm ${
+              geoStatus === "ACTIVE"
+                ? "bg-emerald-600 text-white"
+                : "bg-blue-600 hover:bg-blue-500 text-white"
             }`}
           >
-            Tümü
+            <Navigation size={13} />
+            <span>{geoStatus === "LOCATING" ? "Aranıyor..." : geoStatus === "ACTIVE" && nearestPier ? nearestPier.name : "En Yakın İskele"}</span>
           </button>
+        </div>
+
+        {/* Row 2: Horizontal Route Chips & Swap */}
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-0.5 hide-scrollbar">
+          {/* All Routes */}
+          <button
+            onClick={() => {
+              setSelectedRoute("ALL");
+              setSelectedOrigin("ALL");
+            }}
+            className={`px-2.5 py-1 rounded-md text-[11px] font-black whitespace-nowrap transition-all shrink-0 ${
+              selectedRoute === "ALL" && selectedOrigin === "ALL"
+                ? "bg-blue-600 text-white shadow-sm"
+                : "bg-slate-800/80 text-slate-300 hover:bg-slate-700 border border-slate-700/60"
+            }`}
+          >
+            TÜM SEFERLER ({schedules.length})
+          </button>
+
+          {/* Swap Button if route selected */}
+          {selectedRoute !== "ALL" && (
+            <button
+              onClick={swapDirection}
+              title="Gidiş-Dönüş Değiştir"
+              className="px-2 py-1 bg-amber-500 text-slate-950 rounded-md text-[11px] font-black flex items-center gap-1 shrink-0 shadow-sm"
+            >
+              <ArrowLeftRight size={12} />
+              <span>Yönü Çevir</span>
+            </button>
+          )}
+
+          {/* Individual Routes */}
+          {uniqueRoutes.map((routeKey) => {
+            const count = schedules.filter((s) => `${s.origin} ➔ ${s.destination}` === routeKey).length;
+            return (
+              <button
+                key={routeKey}
+                onClick={() => {
+                  setSelectedRoute(routeKey);
+                  setSelectedOrigin("ALL");
+                }}
+                className={`px-2.5 py-1 rounded-md text-[11px] font-bold whitespace-nowrap transition-all shrink-0 flex items-center gap-1 ${
+                  selectedRoute === routeKey
+                    ? "bg-amber-400 text-slate-950 font-black shadow-sm"
+                    : "bg-slate-800/80 text-slate-300 hover:bg-slate-700 border border-slate-700/60"
+                }`}
+              >
+                <span>{routeKey}</span>
+                <span className={`text-[9px] px-1 rounded-full font-bold ${
+                  selectedRoute === routeKey ? "bg-black/30 text-slate-950" : "bg-slate-900 text-slate-400"
+                }`}>
+                  {count}
+                </span>
+              </button>
+            );
+          })}
+
+          {/* Operator Filter Pills inline */}
+          <span className="text-slate-600 font-bold px-1 shrink-0">|</span>
           {uniqueOperators.map((op) => (
             <button
               key={op}
-              onClick={() => setSelectedOperator(op)}
-              className={`px-2.5 py-1 rounded-md text-[11px] font-bold whitespace-nowrap transition-all ${
+              onClick={() => setSelectedOperator(selectedOperator === op ? "ALL" : op)}
+              className={`px-2 py-1 rounded-md text-[10px] font-bold whitespace-nowrap shrink-0 transition-all ${
                 selectedOperator === op
-                  ? op === "Şehir Hatları"
-                    ? "bg-red-600 text-white font-black shadow-sm"
-                    : op === "Mavi Marmara"
-                    ? "bg-sky-500 text-white font-black shadow-sm"
-                    : "bg-purple-600 text-white font-black shadow-sm"
+                  ? "bg-slate-100 text-slate-950 font-black shadow-sm"
                   : "bg-slate-800/60 text-slate-400 hover:text-slate-200 border border-slate-700/60"
               }`}
             >

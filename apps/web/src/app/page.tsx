@@ -246,21 +246,11 @@ export default async function Home() {
   const serverTimeIso = data?.serverTimeIso || new Date().toISOString();
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-[#070b14]">
       <TopBar />
       
-      <main className="flex-1 overflow-y-auto hide-scrollbar relative pb-[80px]">
-        {/* Title Section */}
-        <div className="px-4 mt-3 mb-1">
-          <h2 className="text-2xl font-black text-white tracking-tight">
-            Canlı Sefer Tarifeleri & Güzergahlar
-          </h2>
-          <p className="text-slate-400 text-xs font-semibold mt-0.5">
-            {data?.serverDateFormatted || new Intl.DateTimeFormat('tr-TR', { weekday: 'long', month: 'long', day: 'numeric', timeZone: 'Europe/Istanbul' }).format(new Date(serverTimeIso))} • Tüm firmaların güncel resmi tarifeleri
-          </p>
-        </div>
-
-        {/* Schedule Cards List via Client Component with Route Selectors */}
+      <main className="flex-1 overflow-y-auto hide-scrollbar relative pb-[76px]">
+        {/* Schedule Cards List via Client Component with Integrated Sleek Filters */}
         <ScheduleListClient schedules={schedules} serverTimeIso={serverTimeIso} />
       </main>
 
