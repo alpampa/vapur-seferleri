@@ -105,6 +105,7 @@ function OperatorBranding({ operator }: { operator: string }) {
 export function ScheduleCard(props: ScheduleCardProps) {
   const [countdown, setCountdown] = useState<string | null>(null);
   const [hasDeparted, setHasDeparted] = useState(false);
+  const [effectiveStatus, setEffectiveStatus] = useState<TripStatus>(props.status);
 
   useEffect(() => {
     if (!props.targetTimeIso || !props.serverTimeIso) return;
@@ -118,29 +119,41 @@ export function ScheduleCard(props: ScheduleCardProps) {
       const accurateNow = Date.now() + offset;
       const diff = target - accurateNow;
 
-      // Only mark departed if it passed by more than 1 minute AND less than 4 hours ago
-      if (diff < -60000 && diff > -4 * 3600000) {
+      // 1. Right after departure (0 to 10 mins after): Marked as recently departed
+      if (diff < 0 && diff > -10 * 60000) {
         setHasDeparted(true);
         setCountdown(null);
+        setEffectiveStatus("IN_TRANSIT");
         return;
       }
 
       setHasDeparted(false);
 
-      // Show countdown only if within 15 minutes of departure (0 to 15 mins)
+      // 2. Past trips (> 10 mins ago)
+      if (diff <= -10 * 60000) {
+        setCountdown(null);
+        setEffectiveStatus("COMPLETED");
+        return;
+      }
+
+      // 3. Imminent trips (0 to 15 mins before departure)
       if (diff > 0 && diff <= 15 * 60000) {
         const m = Math.floor(diff / 60000);
         const s = Math.floor((diff % 60000) / 1000);
         setCountdown(`${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`);
-      } else {
-        setCountdown(null);
+        setEffectiveStatus(diff <= 5 * 60000 ? "BOARDING" : "DEPARTING_SOON");
+        return;
       }
+
+      // 4. Future trips (> 15 mins)
+      setCountdown(null);
+      setEffectiveStatus(props.status === "COMPLETED" ? "ON_TIME" : props.status);
     };
 
     updateCountdown();
     const interval = setInterval(updateCountdown, 1000);
     return () => clearInterval(interval);
-  }, [props.targetTimeIso, props.serverTimeIso]);
+  }, [props.targetTimeIso, props.serverTimeIso, props.status]);
 
   return (
     <div className="bg-[#1e293b] hover:bg-[#24344d] border border-slate-700/80 hover:border-blue-500/50 rounded-2xl p-4 flex flex-col gap-3 text-white shadow-lg transition-all duration-200 relative overflow-hidden group">
@@ -192,7 +205,7 @@ export function ScheduleCard(props: ScheduleCardProps) {
               </span>
             </div>
           ) : (
-            <TripStatusBadge status={props.status} delayText={props.delayText} />
+            <TripStatusBadge status={effectiveStatus} delayText={props.delayText} />
           )}
 
           <div className="bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 font-black text-sm px-2.5 py-0.5 rounded-md shadow-sm">
