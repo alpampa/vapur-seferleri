@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { NotificationContainer } from "@/components/ui/NotificationToast";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -25,6 +26,7 @@ export default function RootLayout({
     <html lang="en" className="dark">
       <body className={`${inter.variable} font-sans antialiased bg-[var(--deep-navy)] text-[var(--text-primary)] min-h-screen pb-[env(safe-area-inset-bottom)]`}>
         {children}
+        <NotificationContainer />
       </body>
     </html>
   );

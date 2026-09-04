@@ -108,3 +108,14 @@ dist
 # OS metadata
 .DS_Store
 Thumbs.db
+
+# SQLite / Local Databases
+*.db
+*.db-journal
+dev.db
+
+# Temporary test scripts
+check.js
+scrape_test.js
+test-*.js
+

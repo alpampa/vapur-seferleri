@@ -1,10 +1,11 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, OnModuleDestroy } from '@nestjs/common';
 import { TrackingProvider, VesselPosition } from './tracking.provider';
 
 @Injectable()
-export class MockTrackingProvider implements TrackingProvider {
+export class MockTrackingProvider implements TrackingProvider, OnModuleDestroy {
   private readonly logger = new Logger(MockTrackingProvider.name);
-  
+  private intervalRef: NodeJS.Timeout;
+
   // Base positions roughly around NY and SF
   private mockPositions: Record<string, VesselPosition> = {
     'empire-state-mock': {
@@ -22,12 +23,18 @@ export class MockTrackingProvider implements TrackingProvider {
       heading: 320,
       speed: 15,
       timestamp: new Date().toISOString(),
-    }
+    },
   };
 
   constructor() {
     // Simulate movement
-    setInterval(() => this.simulateMovement(), 3000);
+    this.intervalRef = setInterval(() => this.simulateMovement(), 3000);
+  }
+
+  onModuleDestroy() {
+    if (this.intervalRef) {
+      clearInterval(this.intervalRef);
+    }
   }
 
   private simulateMovement() {

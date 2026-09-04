@@ -1,4 +1,12 @@
-export type TripStatus = "SCHEDULED" | "BOARDING" | "ON_TIME" | "DEPARTING_SOON" | "DELAYED" | "DEPARTED" | "ARRIVING" | "COMPLETED" | "CANCELLED";
+export type TripStatus =
+  | 'ON_TIME'
+  | 'DEPARTING_SOON'
+  | 'BOARDING'
+  | 'DELAYED'
+  | 'CANCELLED'
+  | 'IN_TRANSIT'
+  | 'ARRIVING'
+  | 'COMPLETED';
 
 export interface ScheduleCardDto {
   id: string;
@@ -9,17 +17,23 @@ export interface ScheduleCardDto {
   departureTime: string;
   departureTime12: string;
   status: TripStatus;
-  countdown?: string;
-  countdownSubtext?: string;
+  targetTimeIso?: string;
   delayText?: string;
   vessel: string;
   platform: string;
   price: string;
   progress: number;
+  stops?: { name: string; time: string }[];
+}
+
+export interface SchedulesResponse {
+  serverTimeIso: string;
+  serverDateFormatted?: string;
+  schedules: ScheduleCardDto[];
 }
 
 export interface ScheduleProvider {
-  getSchedules(): Promise<ScheduleCardDto[]>;
+  getSchedules(): Promise<SchedulesResponse>;
 }
 
 export const SCHEDULE_PROVIDER = 'SCHEDULE_PROVIDER';

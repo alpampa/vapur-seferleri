@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
 model Operator {
@@ -56,7 +56,7 @@ model Terminal {
   portId    String
   port      Port     @relation(fields: [portId], references: [id])
   name      String
-  platforms String[] // "Pier 11", "Gate B"
+  platforms String   // Changed from String[] to String for SQLite (comma separated)
 }
 
 model Route {
@@ -98,8 +98,9 @@ model Trip {
   estimatedArrival   DateTime?
   actualArrival      DateTime?
   platform           String?
+  stops              String?  // JSON string containing intermediate stops [{name, time}]
   status             String   @default("SCHEDULED") // SCHEDULED, BOARDING, ON_TIME, DEPARTING_SOON, DELAYED
-  price              Decimal  @db.Decimal(10, 2)
+  price              Float    // Changed from Decimal to Float for SQLite
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 }

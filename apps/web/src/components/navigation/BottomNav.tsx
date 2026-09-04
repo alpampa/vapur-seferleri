@@ -1,43 +1,85 @@
-import { Map as MapIcon, Calendar, MapPin, Ticket, Bell } from "lucide-react";
+"use client";
 
-export function BottomNav() {
+import { Calendar, Compass, Star, CloudRain, Bell } from "lucide-react";
+import { useState } from "react";
+
+interface BottomNavProps {
+  activeTab?: string;
+  onTabChange?: (tab: string) => void;
+}
+
+export function BottomNav({ activeTab = "schedules", onTabChange }: BottomNavProps) {
+  const [currentTab, setCurrentTab] = useState(activeTab);
+
+  const handleSelect = (tab: string) => {
+    setCurrentTab(tab);
+    if (onTabChange) onTabChange(tab);
+  };
+
   return (
-    <nav className="fixed bottom-0 w-full glass bg-white/5 border-t border-white/10 pb-[env(safe-area-inset-bottom)] z-50">
-      <div className="flex justify-between items-center px-6 h-[76px]">
-        {/* Map */}
-        <button className="flex flex-col items-center gap-1 text-[var(--text-muted)] hover:text-white transition-colors">
-          <MapIcon size={24} />
-          <span className="text-[10px] font-medium">Map</span>
-        </button>
-        
-        {/* Schedules */}
-        <button className="flex flex-col items-center gap-1 text-[var(--text-primary)] transition-colors">
-          <Calendar size={24} />
-          <span className="text-[10px] font-medium">Schedules</span>
-        </button>
-
-        {/* Live Map (Center Floating) */}
-        <div className="relative -top-5">
-          <button className="bg-[var(--primary-blue)] w-16 h-16 rounded-full flex flex-col items-center justify-center shadow-[0_4px_20px_rgba(38,150,255,0.4)] text-white hover:bg-[var(--bright-blue)] transition-colors border-4 border-[var(--deep-navy)]">
-            <MapPin size={24} fill="currentColor" className="text-white mb-0.5" />
-          </button>
-          <span className="absolute -bottom-5 left-1/2 -translate-x-1/2 text-[10px] font-medium text-[var(--primary-blue)] whitespace-nowrap">
-            Live Map
-          </span>
-        </div>
-
-        {/* Tickets */}
-        <button className="flex flex-col items-center gap-1 text-[var(--text-muted)] hover:text-white transition-colors">
-          <Ticket size={24} />
-          <span className="text-[10px] font-medium">Tickets</span>
+    <nav className="fixed bottom-0 left-0 right-0 max-w-lg mx-auto bg-[#090d16]/95 backdrop-blur-xl border-t border-slate-800/90 pb-[env(safe-area-inset-bottom)] z-50 shadow-2xl">
+      <div className="flex justify-around items-center px-3 h-[68px]">
+        {/* Seferler (Ana Akış) */}
+        <button
+          onClick={() => handleSelect("schedules")}
+          className={`flex flex-col items-center gap-1 transition-all ${
+            currentTab === "schedules"
+              ? "text-blue-400 scale-105 font-black"
+              : "text-slate-400 hover:text-slate-200 font-semibold"
+          }`}
+        >
+          <div className={`p-1.5 rounded-xl ${currentTab === "schedules" ? "bg-blue-500/20" : ""}`}>
+            <Calendar size={20} />
+          </div>
+          <span className="text-[10px] tracking-tight">Seferler</span>
         </button>
 
-        {/* Notifications */}
-        <button className="flex flex-col items-center gap-1 text-[var(--text-muted)] hover:text-white transition-colors">
-          <Bell size={24} />
-          <span className="text-[10px] font-medium">Notifications</span>
+        {/* Canlı Radar / İskeleler (Orta Vurgulu Buton) */}
+        <button
+          onClick={() => handleSelect("radar")}
+          className={`flex flex-col items-center gap-1 transition-all ${
+            currentTab === "radar"
+              ? "text-emerald-400 scale-105 font-black"
+              : "text-slate-400 hover:text-slate-200 font-semibold"
+          }`}
+        >
+          <div className={`p-1.5 rounded-xl ${currentTab === "radar" ? "bg-emerald-500/20" : ""}`}>
+            <Compass size={20} />
+          </div>
+          <span className="text-[10px] tracking-tight">İskeleler</span>
+        </button>
+
+        {/* Deniz Durumu / Lodos Uyarıları */}
+        <button
+          onClick={() => handleSelect("weather")}
+          className={`flex flex-col items-center gap-1 transition-all ${
+            currentTab === "weather"
+              ? "text-amber-400 scale-105 font-black"
+              : "text-slate-400 hover:text-slate-200 font-semibold"
+          }`}
+        >
+          <div className={`p-1.5 rounded-xl ${currentTab === "weather" ? "bg-amber-500/20" : ""}`}>
+            <CloudRain size={20} />
+          </div>
+          <span className="text-[10px] tracking-tight">Hava & Uyarı</span>
+        </button>
+
+        {/* Favori Rotalarım */}
+        <button
+          onClick={() => handleSelect("favorites")}
+          className={`flex flex-col items-center gap-1 transition-all ${
+            currentTab === "favorites"
+              ? "text-purple-400 scale-105 font-black"
+              : "text-slate-400 hover:text-slate-200 font-semibold"
+          }`}
+        >
+          <div className={`p-1.5 rounded-xl ${currentTab === "favorites" ? "bg-purple-500/20" : ""}`}>
+            <Star size={20} />
+          </div>
+          <span className="text-[10px] tracking-tight">Favorilerim</span>
         </button>
       </div>
     </nav>
   );
 }
+

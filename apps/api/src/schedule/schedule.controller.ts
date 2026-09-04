@@ -1,10 +1,11 @@
 import { Controller, Get, Inject } from '@nestjs/common';
-import { SCHEDULE_PROVIDER, ScheduleProvider } from './schedule.provider';
+import { SCHEDULE_PROVIDER, type ScheduleProvider } from './schedule.provider';
 
 @Controller('schedules')
 export class ScheduleController {
   constructor(
-    @Inject(SCHEDULE_PROVIDER) private readonly scheduleProvider: ScheduleProvider,
+    @Inject(SCHEDULE_PROVIDER)
+    private readonly scheduleProvider: ScheduleProvider,
   ) {}
 
   @Get()
