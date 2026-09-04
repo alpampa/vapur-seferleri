@@ -118,20 +118,17 @@ export function ScheduleCard(props: ScheduleCardProps) {
       const accurateNow = Date.now() + offset;
       const diff = target - accurateNow;
 
-      if (diff <= 0 && diff >= -30000) {
+      // Only mark departed if it passed by more than 1 minute AND less than 4 hours ago
+      if (diff < -60000 && diff > -4 * 3600000) {
         setHasDeparted(true);
         setCountdown(null);
-        return;
-      }
-      
-      if (diff < -30000) {
-        setHasDeparted(true);
         return;
       }
 
       setHasDeparted(false);
 
-      if (diff <= 300000) {
+      // Show countdown only if within 15 minutes of departure (0 to 15 mins)
+      if (diff > 0 && diff <= 15 * 60000) {
         const m = Math.floor(diff / 60000);
         const s = Math.floor((diff % 60000) / 1000);
         setCountdown(`${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`);
