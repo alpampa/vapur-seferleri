@@ -50,31 +50,7 @@ const Toast = ({ notification }: { notification: Notification }) => {
 };
 
 export function NotificationContainer() {
-  const { notifications, addNotification } = useNotificationStore();
-
-  // MOCK: Simulate incoming notifications randomly
-  useEffect(() => {
-    const mockMessages = [
-      { title: "Delay Alert", message: "The 14:30 ferry to Beşiktaş is delayed by 10 minutes.", type: "warning" as const },
-      { title: "Ticket Confirmed", message: "Your digital pass for Kadıköy -> Karaköy is ready.", type: "success" as const },
-      { title: "Weather Advisory", message: "High winds reported. Some routes might be slower than usual.", type: "info" as const },
-    ];
-    
-    // Send a notification 5 seconds after load for demo
-    const timer1 = setTimeout(() => {
-      addNotification(mockMessages[0]);
-    }, 5000);
-
-    // And another one at 15s
-    const timer2 = setTimeout(() => {
-      addNotification(mockMessages[1]);
-    }, 15000);
-
-    return () => {
-      clearTimeout(timer1);
-      clearTimeout(timer2);
-    };
-  }, [addNotification]);
+  const { notifications } = useNotificationStore();
 
   return (
     <div className="fixed top-0 left-0 right-0 z-50 p-4 flex flex-col gap-3 pointer-events-none" style={{ paddingTop: 'max(16px, env(safe-area-inset-top))' }}>
