@@ -25,6 +25,7 @@ export interface ScheduleCardDto {
 
 export interface SchedulesResponse {
   serverTimeIso: string;
+  serverDateFormatted?: string;
   schedules: ScheduleCardDto[];
 }
 
