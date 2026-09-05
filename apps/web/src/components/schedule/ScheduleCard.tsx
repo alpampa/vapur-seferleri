@@ -1,6 +1,8 @@
 "use client";
 
-import { Anchor, Navigation, Waves, Crown, Ship, Bell, BellRing, Star, ChevronRight } from "lucide-react";
+import { Ship, Bell, BellRing, Star, ChevronRight, Radio } from "lucide-react";
+import { OperatorLogo } from "@/components/ui/OperatorLogo";
+import { resolveLiveVesselName } from "@/lib/agents/fleet-registry";
 import { useEffect, useState } from "react";
 import { resolveDynamicTrip, DynamicTripResolution } from "@/lib/utils/dynamic-trip";
 import { useAlarmStore } from "@/store/useAlarmStore";
@@ -77,38 +79,7 @@ export function TripStatusBadge({ status, delayText }: { status: TripStatus; del
   );
 }
 
-function OperatorDot({ operator }: { operator: string }) {
-  if (operator === "Şehir Hatları") {
-    return (
-      <span className="inline-flex items-center gap-1 text-red-400 font-bold text-[11px]">
-        <Anchor size={11} className="text-red-400 shrink-0" />
-        <span className="truncate">Şehir Hatları</span>
-      </span>
-    );
-  }
-  if (operator === "Mavi Marmara") {
-    return (
-      <span className="inline-flex items-center gap-1 text-sky-400 font-bold text-[11px]">
-        <Waves size={11} className="text-sky-400 shrink-0" />
-        <span className="truncate">Mavi Marmara</span>
-      </span>
-    );
-  }
-  if (operator === "Prens Tur") {
-    return (
-      <span className="inline-flex items-center gap-1 text-purple-400 font-bold text-[11px]">
-        <Crown size={11} className="text-purple-400 shrink-0" />
-        <span className="truncate">Prens Tur</span>
-      </span>
-    );
-  }
-  return (
-    <span className="inline-flex items-center gap-1 text-slate-300 font-bold text-[11px]">
-      <Navigation size={11} className="shrink-0" />
-      <span className="truncate">{operator}</span>
-    </span>
-  );
-}
+
 
 export function ScheduleCard(props: ScheduleCardProps) {
   const { isAlarmSet, toggleAlarm } = useAlarmStore();
@@ -131,6 +102,15 @@ export function ScheduleCard(props: ScheduleCardProps) {
       props.serverTimeIso
     );
   });
+
+  const liveVessel = resolveLiveVesselName(
+    props.origin,
+    props.destination,
+    props.operator,
+    dynState.isDeparted,
+    dynState.status,
+    props.id
+  );
 
   useEffect(() => {
     const update = () => {
@@ -196,7 +176,14 @@ export function ScheduleCard(props: ScheduleCardProps) {
 
         {/* Meta Line: Operator, Occupancy dot, and Direct/Stops */}
         <div className="flex items-center gap-2 mt-1 text-[11px] text-slate-400 flex-wrap truncate">
-          <OperatorDot operator={props.operator} />
+          <OperatorLogo operator={props.operator} size="sm" showName={true} />
+
+          {/* Underway Confirmed Vessel Name */}
+          {liveVessel.isConfirmedUnderway && (
+            <span className="inline-flex items-center gap-1 text-[10px] font-black text-emerald-300 bg-emerald-950/80 border border-emerald-500/40 px-1.5 py-0.2 rounded shrink-0 shadow-sm animate-pulse">
+              🚢 {liveVessel.vesselName}
+            </span>
+          )}
 
           <span className="text-slate-600 font-bold">•</span>
 

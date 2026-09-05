@@ -3,6 +3,8 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Ship, MapPin, Clock, X, ChevronRight, Anchor, ShieldCheck, Ticket, Users, Train, Star, Bell, BellRing, Navigation, Radar } from "lucide-react";
 import { MarineAisRadarModal } from "@/components/map/MarineAisRadarModal";
+import { OperatorLogo } from "@/components/ui/OperatorLogo";
+import { resolveLiveVesselName } from "@/lib/agents/fleet-registry";
 import { TripStatusBadge } from "./ScheduleCard";
 import type { ScheduleCardDto } from "@/app/page";
 import { predictTripOccupancy } from "@/lib/utils/occupancy";
@@ -59,6 +61,14 @@ export function TripDetailsSheet({ schedule, isOpen, onClose, serverTimeIso }: T
   const hasAlarm = isAlarmSet(schedule.id);
 
   const occupancy = predictTripOccupancy(schedule.origin, schedule.destination, schedule.departureTime);
+  const liveVessel = resolveLiveVesselName(
+    schedule.origin,
+    schedule.destination,
+    schedule.operator,
+    dynState?.isDeparted || false,
+    dynState?.status || schedule.status,
+    schedule.id
+  );
   const originTransit = getPierTransit(schedule.origin);
   const destTransit = getPierTransit(schedule.destination);
   const isDirect = !schedule.stops || schedule.stops.length === 0;
@@ -95,9 +105,7 @@ export function TripDetailsSheet({ schedule, isOpen, onClose, serverTimeIso }: T
                   {dynState && (
                     <TripStatusBadge status={dynState.status} delayText={schedule.delayText} />
                   )}
-                  <span className="text-[11px] font-bold text-slate-300 bg-slate-800 px-2 py-0.5 rounded border border-slate-700/80">
-                    {schedule.operator}
-                  </span>
+                  <OperatorLogo operator={schedule.operator} size="md" showName={true} />
                   {dynState?.countdown && (
                     <span className="px-2 py-0.5 rounded text-[11px] font-mono font-black bg-amber-500/20 text-amber-300 border border-amber-500/40 animate-pulse">
                       ⏳ KALKIŞA {dynState.countdown}
@@ -191,6 +199,34 @@ export function TripDetailsSheet({ schedule, isOpen, onClose, serverTimeIso }: T
                 </div>
                 <div className="text-xl font-mono font-black text-emerald-400">{schedule.price}</div>
                 <div className="text-[10px] text-slate-400 font-medium">İstanbulkart</div>
+              </div>
+            </div>
+
+            {/* Gemi & AIS Canlı Durumu Kartı */}
+            <div className="mb-3 p-3 rounded-xl bg-slate-900/90 border border-slate-800 shadow-inner flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2.5 min-w-0">
+                <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
+                  liveVessel.isConfirmedUnderway
+                    ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/40"
+                    : "bg-slate-800 text-slate-400 border border-slate-700"
+                }`}>
+                  <Ship size={16} className={liveVessel.isConfirmedUnderway ? "animate-pulse" : ""} />
+                </div>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-xs font-black text-white">
+                      {liveVessel.isConfirmedUnderway ? `Gemi: ${liveVessel.vesselName}` : "Gemi: İskelede Hazırlanıyor"}
+                    </span>
+                    {liveVessel.mmsi && (
+                      <span className="text-[9px] font-mono text-slate-400 bg-slate-950 px-1.5 py-0.2 rounded border border-slate-800">
+                        MMSI: {liveVessel.mmsi}
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-[10px] text-slate-400 mt-0.5">
+                    {liveVessel.statusText}
+                  </p>
+                </div>
               </div>
             </div>
 

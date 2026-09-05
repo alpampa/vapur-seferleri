@@ -12,6 +12,7 @@ import { AlarmManager } from "@/components/schedule/AlarmManager";
 import { TripPlannerWithMap } from "@/components/planner/TripPlannerWithMap";
 import { LastFerryAlert } from "@/components/schedule/LastFerryAlert";
 import { FavoritesWidget } from "@/components/schedule/FavoritesWidget";
+import { OperatorLogo } from "@/components/ui/OperatorLogo";
 
 // Istanbul Ferry Pier Coordinates (Latitude, Longitude)
 const PIER_COORDINATES: Record<string, { lat: number; lng: number; label: string }> = {
@@ -425,13 +426,13 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather }: 
             <button
               key={op}
               onClick={() => setSelectedOperator(selectedOperator === op ? "ALL" : op)}
-              className={`px-2 py-1 rounded-md text-[10px] font-bold whitespace-nowrap shrink-0 transition-all ${
+              className={`px-2 py-1 rounded-lg text-[10px] font-bold whitespace-nowrap shrink-0 transition-all flex items-center gap-1 border ${
                 selectedOperator === op
-                  ? "bg-slate-100 text-slate-950 font-black shadow-sm"
-                  : "bg-slate-900/80 text-slate-400 hover:text-slate-200 border border-slate-800"
+                  ? "bg-slate-800 border-blue-400 text-white shadow-sm ring-1 ring-blue-400/40"
+                  : "bg-slate-900/80 border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700"
               }`}
             >
-              {op}
+              <OperatorLogo operator={op} size="sm" showName={true} />
             </button>
           ))}
         </div>
