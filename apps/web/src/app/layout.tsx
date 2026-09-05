@@ -25,8 +25,29 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="tr" className="dark">
-      <body className={`${inter.variable} font-sans antialiased bg-[#070b14] text-white min-h-screen pb-[env(safe-area-inset-bottom)]`}>
+    <html lang="tr" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                var stored = localStorage.getItem('vapur_app_theme_v1');
+                if (stored) {
+                  var parsed = JSON.parse(stored);
+                  if (parsed && parsed.state && parsed.state.theme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                  } else if (parsed && parsed.state && parsed.state.theme === 'light') {
+                    document.documentElement.classList.remove('dark');
+                  }
+                } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                  document.documentElement.classList.add('dark');
+                }
+              } catch (e) {}
+            `,
+          }}
+        />
+      </head>
+      <body className={`${inter.variable} font-sans antialiased bg-slate-100 dark:bg-[#070b14] text-slate-900 dark:text-white min-h-screen pb-[env(safe-area-inset-bottom)] transition-colors duration-150`}>
         <ServiceWorkerRegister />
         {children}
         <NotificationContainer />

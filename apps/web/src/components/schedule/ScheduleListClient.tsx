@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import { ScheduleCard } from "@/components/schedule/ScheduleCard";
 import { TripDetailsSheet } from "@/components/schedule/TripDetailsSheet";
 import type { ScheduleCardDto } from "@/app/page";
-import { Search, Navigation, ArrowLeftRight, Compass, MapPin } from "lucide-react";
+import { Search, Navigation, ArrowLeftRight, Compass, MapPin, LayoutGrid, List } from "lucide-react";
 import { MarineWeatherBanner } from "@/components/weather/MarineWeatherBanner";
 import type { MarineWeatherStatus } from "@/lib/services/marine-weather";
 import { resolveDynamicTrip } from "@/lib/utils/dynamic-trip";
@@ -13,6 +13,7 @@ import { TripPlannerWithMap } from "@/components/planner/TripPlannerWithMap";
 import { LastFerryAlert } from "@/components/schedule/LastFerryAlert";
 import { FavoritesWidget } from "@/components/schedule/FavoritesWidget";
 import { OperatorLogo } from "@/components/ui/OperatorLogo";
+import { useLanguageStore } from "@/store/useLanguageStore";
 
 // Istanbul Ferry Pier Coordinates (Latitude, Longitude)
 const PIER_COORDINATES: Record<string, { lat: number; lng: number; label: string }> = {
@@ -54,6 +55,8 @@ interface ScheduleListClientProps {
 }
 
 export function ScheduleListClient({ schedules, serverTimeIso, marineWeather }: ScheduleListClientProps) {
+  const { t, language } = useLanguageStore();
+
   const [selectedSchedule, setSelectedSchedule] = useState<ScheduleCardDto | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<"ADALAR" | "BOGAZ" | "ALL">("ADALAR");
   const [now, setNow] = useState(Date.now());
@@ -63,6 +66,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather }: 
   const [searchQuery, setSearchQuery] = useState<string>(" ");
   const [showPlanner, setShowPlanner] = useState<boolean>(false);
   const [onlyImminent, setOnlyImminent] = useState<boolean>(false);
+  const [isCompactDensity, setIsCompactDensity] = useState<boolean>(false);
 
   // Offline LocalStorage Caching
   const [effectiveSchedules, setEffectiveSchedules] = useState<ScheduleCardDto[]>(schedules);
@@ -207,7 +211,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather }: 
     }
   };
 
-  // Final filtered list
+  // Final filtered list - KULLANICI KURALI: En üstte yer alacak ilk sefer (kesin kronolojik sıralama)
   const filteredList = useMemo(() => {
     return activeSchedulesWithDyn.filter(({ schedule, dyn }) => {
       if (selectedOrigin !== "ALL") {
@@ -247,7 +251,6 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather }: 
 
       return true;
     }).sort((a, b) => {
-      // Kullanıcı kuralı: En üstte yer alacak ilk sefer (kesin kronolojik sıralama)
       if (a.dyn.isDeparted !== b.dyn.isDeparted) {
         return a.dyn.isDeparted ? 1 : -1;
       }
@@ -264,7 +267,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather }: 
 
       {/* Category Segmented Switcher: Adalar vs Boğaz vs Tümü */}
       <div className="px-3 pt-2">
-        <div className="grid grid-cols-3 gap-1 p-1 bg-slate-900/90 border border-slate-800 rounded-xl shadow-inner">
+        <div className="grid grid-cols-3 gap-1 p-1 bg-slate-200/90 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-800 rounded-xl shadow-xs transition-colors">
           <button
             onClick={() => {
               setSelectedCategory("ADALAR");
@@ -273,12 +276,12 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather }: 
             }}
             className={`py-1.5 px-1 rounded-lg text-xs font-black transition-all flex items-center justify-center gap-1.5 ${
               selectedCategory === "ADALAR"
-                ? "bg-amber-400 text-slate-950 shadow-md scale-[1.01]"
-                : "text-slate-400 hover:text-white"
+                ? "bg-amber-400 text-slate-950 shadow-xs scale-[1.01]"
+                : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
             }`}
           >
             <span>🏝️</span>
-            <span>Adalar Hatları</span>
+            <span>{t("adalarLines")}</span>
           </button>
 
           <button
@@ -289,12 +292,12 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather }: 
             }}
             className={`py-1.5 px-1 rounded-lg text-xs font-black transition-all flex items-center justify-center gap-1.5 ${
               selectedCategory === "BOGAZ"
-                ? "bg-blue-600 text-white shadow-md scale-[1.01]"
-                : "text-slate-400 hover:text-white"
+                ? "bg-blue-600 text-white shadow-xs scale-[1.01]"
+                : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
             }`}
           >
             <span>🌊</span>
-            <span>Boğaz Hatları</span>
+            <span>{t("bogazLines")}</span>
           </button>
 
           <button
@@ -305,12 +308,12 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather }: 
             }}
             className={`py-1.5 px-1 rounded-lg text-xs font-black transition-all flex items-center justify-center gap-1.5 ${
               selectedCategory === "ALL"
-                ? "bg-slate-700 text-white shadow-md scale-[1.01]"
-                : "text-slate-400 hover:text-white"
+                ? "bg-slate-800 dark:bg-slate-700 text-white shadow-xs scale-[1.01]"
+                : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
             }`}
           >
             <span>⚓</span>
-            <span>Tümü</span>
+            <span>{t("allLines")}</span>
           </button>
         </div>
       </div>
@@ -320,18 +323,18 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather }: 
         <div className="flex items-center gap-1.5">
           {/* Search Input */}
           <div className="relative flex-1">
-            <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" />
+            <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
             <input
               type="text"
-              placeholder="İskele veya hat ara..."
+              placeholder={t("searchPlaceholder")}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-8 pr-6 py-1.5 bg-slate-900 border border-slate-700/70 rounded-lg text-white text-xs placeholder:text-slate-500 focus:outline-none focus:border-blue-500"
+              className="w-full pl-8 pr-6 py-1.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700/70 rounded-lg text-slate-900 dark:text-white text-xs placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-blue-500 transition-colors shadow-2xs"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery("")}
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-slate-400 hover:text-white"
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-slate-400 hover:text-slate-700 dark:hover:text-white"
               >
                 ✕
               </button>
@@ -344,13 +347,13 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather }: 
             title="Aktarma Planlayıcı ve Canlı Harita"
             className={`px-2.5 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap flex items-center gap-1 shrink-0 transition-all border ${
               showPlanner
-                ? "bg-cyan-600 text-white border-cyan-400 shadow-sm"
-                : "bg-slate-900 hover:bg-slate-800 text-cyan-300 border-slate-700/80"
+                ? "bg-cyan-600 text-white border-cyan-400 shadow-2xs"
+                : "bg-white hover:bg-slate-100 dark:bg-slate-900 dark:hover:bg-slate-800 text-cyan-700 dark:text-cyan-300 border-slate-300 dark:border-slate-700/80 shadow-2xs"
             }`}
           >
-            <Compass size={14} className={showPlanner ? "animate-spin text-white" : "text-cyan-400"} />
-            <span className="hidden sm:inline">Nasıl Giderim?</span>
-            <span className="sm:hidden">Harita</span>
+            <Compass size={14} className={showPlanner ? "animate-spin text-white" : "text-cyan-600 dark:text-cyan-400"} />
+            <span className="hidden sm:inline">{t("howToGo")}</span>
+            <span className="sm:hidden">{t("map")}</span>
           </button>
 
           {/* En Yakın İskele Geolocation Button */}
@@ -358,18 +361,18 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather }: 
             onClick={requestLocation}
             disabled={geoStatus === "LOCATING"}
             title="Konumuma En Yakın İskele"
-            className={`px-2.5 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap flex items-center gap-1 shrink-0 transition-colors shadow-sm ${
+            className={`px-2.5 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap flex items-center gap-1 shrink-0 transition-colors shadow-2xs border ${
               geoStatus === "ACTIVE"
-                ? "bg-emerald-600 text-white"
-                : "bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700/80"
+                ? "bg-emerald-600 text-white border-emerald-500"
+                : "bg-white hover:bg-slate-100 dark:bg-slate-900 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700/80"
             }`}
           >
-            <Navigation size={13} className={geoStatus === "ACTIVE" ? "text-white" : "text-blue-400"} />
+            <Navigation size={13} className={geoStatus === "ACTIVE" ? "text-white" : "text-blue-600 dark:text-blue-400"} />
             <span className="hidden sm:inline">
-              {geoStatus === "LOCATING" ? "Aranıyor..." : geoStatus === "ACTIVE" && nearestPier ? nearestPier.name : "En Yakın İskele"}
+              {geoStatus === "LOCATING" ? t("locating") : geoStatus === "ACTIVE" && nearestPier ? nearestPier.name : t("nearestPier")}
             </span>
             <span className="sm:hidden">
-              {geoStatus === "LOCATING" ? "..." : geoStatus === "ACTIVE" && nearestPier ? nearestPier.name : "Yakın"}
+              {geoStatus === "LOCATING" ? "..." : geoStatus === "ACTIVE" && nearestPier ? nearestPier.name : t("nearestPier")}
             </span>
           </button>
         </div>
@@ -394,14 +397,15 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather }: 
             onClick={() => {
               setSelectedRoute("ALL");
               setSelectedOrigin("ALL");
+              setOnlyImminent(false);
             }}
             className={`px-2.5 py-1 rounded-md text-[11px] font-black whitespace-nowrap transition-all shrink-0 ${
-              selectedRoute === "ALL" && selectedOrigin === "ALL"
-                ? "bg-blue-600 text-white shadow-sm"
-                : "bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800"
+              selectedRoute === "ALL" && selectedOrigin === "ALL" && !onlyImminent
+                ? "bg-blue-600 text-white shadow-2xs"
+                : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-300 dark:border-slate-800"
             }`}
           >
-            TÜMÜ ({activeSchedulesWithDyn.length})
+            {t("allRoutes")} ({activeSchedulesWithDyn.length})
           </button>
 
           {/* 15-Minute Imminent Quick Filter / Son Çağrı */}
@@ -409,13 +413,13 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather }: 
             onClick={() => setOnlyImminent(!onlyImminent)}
             className={`px-2.5 py-1 rounded-md text-[11px] font-black whitespace-nowrap transition-all shrink-0 flex items-center gap-1 border ${
               onlyImminent
-                ? "bg-amber-400 text-slate-950 border-amber-300 shadow-sm ring-1 ring-amber-400/50"
-                : "bg-slate-900 text-amber-300 hover:bg-slate-800 border-amber-500/30"
+                ? "bg-amber-400 text-slate-950 border-amber-300 shadow-2xs ring-1 ring-amber-400/50"
+                : "bg-white dark:bg-slate-900 text-amber-600 dark:text-amber-300 hover:bg-slate-100 dark:hover:bg-slate-800 border-amber-400/40 dark:border-amber-500/30"
             }`}
             title="Kalkışına 15 dakika veya daha az kalan seferleri göster"
           >
             <span className={onlyImminent ? "" : "animate-pulse"}>⚡</span>
-            <span>Son Çağrı (≤ 15 dk)</span>
+            <span>{t("lastCall")}</span>
           </button>
 
           {/* Swap Button if route selected */}
@@ -423,10 +427,10 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather }: 
             <button
               onClick={swapDirection}
               title="Gidiş-Dönüş Değiştir"
-              className="px-2 py-1 bg-amber-500 text-slate-950 rounded-md text-[11px] font-black flex items-center gap-1 shrink-0 shadow-sm"
+              className="px-2 py-1 bg-amber-500 text-slate-950 rounded-md text-[11px] font-black flex items-center gap-1 shrink-0 shadow-2xs"
             >
               <ArrowLeftRight size={12} />
-              <span>Çevir</span>
+              <span>{t("swap")}</span>
             </button>
           )}
 
@@ -440,15 +444,15 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather }: 
                   setSelectedRoute(routeKey);
                   setSelectedOrigin("ALL");
                 }}
-                className={`px-2.5 py-1 rounded-md text-[11px] font-bold whitespace-nowrap transition-all shrink-0 flex items-center gap-1 ${
+                className={`px-2.5 py-1 rounded-md text-[11px] font-bold whitespace-nowrap transition-all shrink-0 flex items-center gap-1 border ${
                   selectedRoute === routeKey
-                    ? "bg-amber-400 text-slate-950 font-black shadow-sm"
-                    : "bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800"
+                    ? "bg-amber-400 text-slate-950 font-black shadow-2xs border-amber-400"
+                    : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 border-slate-300 dark:border-slate-800"
                 }`}
               >
                 <span>{routeKey}</span>
                 <span className={`text-[9px] px-1 rounded-full font-bold ${
-                  selectedRoute === routeKey ? "bg-black/30 text-slate-950" : "bg-slate-800 text-slate-400"
+                  selectedRoute === routeKey ? "bg-black/20 text-slate-950" : "bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
                 }`}>
                   {count}
                 </span>
@@ -457,15 +461,15 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather }: 
           })}
 
           {/* Operators */}
-          <span className="text-slate-700 font-bold px-0.5 shrink-0">|</span>
+          <span className="text-slate-400 dark:text-slate-700 font-bold px-0.5 shrink-0">|</span>
           {uniqueOperators.map((op) => (
             <button
               key={op}
               onClick={() => setSelectedOperator(selectedOperator === op ? "ALL" : op)}
               className={`px-2 py-1 rounded-lg text-[10px] font-bold whitespace-nowrap shrink-0 transition-all flex items-center gap-1 border ${
                 selectedOperator === op
-                  ? "bg-slate-800 border-blue-400 text-white shadow-sm ring-1 ring-blue-400/40"
-                  : "bg-slate-900/80 border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700"
+                  ? "bg-slate-100 dark:bg-slate-800 border-blue-500 text-slate-950 dark:text-white shadow-2xs ring-1 ring-blue-400/40"
+                  : "bg-white dark:bg-slate-900/80 border-slate-300 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:border-slate-400 dark:hover:border-slate-700"
               }`}
             >
               <OperatorLogo operator={op} size="sm" showName={true} />
@@ -492,28 +496,41 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather }: 
         selectedCategory={selectedCategory}
       />
 
-      {/* Results Header */}
-      <div className="px-3 pt-2.5 pb-1 flex items-center justify-between text-xs font-bold text-slate-400">
-        <span className="text-[11px]">
-          Aktif Sefer: <strong className="text-white text-xs">{filteredList.length}</strong>
-        </span>
+      {/* Results Header with View Density Switcher */}
+      <div className="px-3 pt-2.5 pb-1 flex items-center justify-between text-xs font-bold text-slate-500 dark:text-slate-400">
+        <div className="flex items-center gap-2">
+          <span className="text-[11px]">
+            {t("activeTrips")}: <strong className="text-slate-900 dark:text-white text-xs">{filteredList.length}</strong>
+          </span>
+
+          {/* Density Toggle (Kompakt vs Geniş Kart) */}
+          <button
+            onClick={() => setIsCompactDensity(!isCompactDensity)}
+            title={isCompactDensity ? "Geniş Kart Görünümü" : "Kompakt Liste Görünümü"}
+            className="px-1.5 py-0.5 rounded border border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-900 text-[10px] text-slate-600 dark:text-slate-400 hover:text-blue-600 flex items-center gap-1 shadow-2xs"
+          >
+            {isCompactDensity ? <LayoutGrid size={11} /> : <List size={11} />}
+            <span className="hidden xs:inline">{isCompactDensity ? t("viewComfort") : t("viewCompact")}</span>
+          </button>
+        </div>
+
         {selectedRoute !== "ALL" ? (
-          <span className="text-amber-300 font-extrabold bg-amber-950/60 border border-amber-500/30 px-2 py-0.5 rounded text-[11px]">
+          <span className="text-amber-700 dark:text-amber-300 font-extrabold bg-amber-100 dark:bg-amber-950/60 border border-amber-300 dark:border-amber-500/30 px-2 py-0.5 rounded text-[11px]">
             {selectedRoute}
           </span>
         ) : selectedOrigin !== "ALL" ? (
-          <span className="text-emerald-300 font-extrabold bg-emerald-950/60 border border-emerald-500/30 px-2 py-0.5 rounded text-[11px]">
-            📍 {selectedOrigin} Kalkışlılar
+          <span className="text-emerald-700 dark:text-emerald-300 font-extrabold bg-emerald-100 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-500/30 px-2 py-0.5 rounded text-[11px]">
+            📍 {selectedOrigin}
           </span>
         ) : (
-          <span className="text-[10px] text-slate-500 font-normal">
-            Detay için sefere dokunun
+          <span className="text-[10px] text-slate-400 dark:text-slate-500 font-normal">
+            {language === "en" ? "Tap trip for details & live AIS" : "Detay için sefere dokunun"}
           </span>
         )}
       </div>
 
-      {/* Compact Schedules List (~68px rows) */}
-      <div className="px-3 flex flex-col gap-2 pb-12 mt-1">
+      {/* Schedules List (Comfortable or Compact Rows) */}
+      <div className={`px-3 flex flex-col ${isCompactDensity ? "gap-1.5" : "gap-2"} pb-12 mt-1`}>
         {filteredList.length > 0 ? (
           filteredList.map(({ schedule }) => (
             <ScheduleCard
@@ -535,31 +552,18 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather }: 
               progress={schedule.progress}
               stops={schedule.stops}
               arrivalTime={schedule.arrivalTime}
+              isCompact={isCompactDensity}
               onClick={() => setSelectedSchedule(schedule)}
             />
           ))
         ) : (
-          <div className="text-center py-12 bg-slate-900/60 border border-slate-800 rounded-xl p-5 text-slate-400">
-            <p className="text-sm font-bold text-slate-300">Seçilen kriterlere uygun aktif sefer bulunamadı.</p>
-            <p className="text-xs mt-1 text-slate-500">
-              Kalkan seferler 30 saniye sonra listeden otomatik olarak kaldırılır.
-            </p>
-            <button
-              onClick={() => {
-                setSelectedRoute("ALL");
-                setSelectedOrigin("ALL");
-                setSelectedOperator("ALL");
-                setSearchQuery("");
-              }}
-              className="mt-3 px-3.5 py-1.5 bg-blue-600 text-white text-xs font-bold rounded-lg shadow hover:bg-blue-500"
-            >
-              Filtreleri Sıfırla
-            </button>
+          <div className="p-8 text-center text-slate-500 dark:text-slate-400 text-xs bg-white dark:bg-slate-900/50 rounded-2xl border border-slate-200 dark:border-slate-800">
+            {language === "en" ? "No scheduled trips found matching your filters." : "Seçtiğiniz kriterlere uygun aktif sefer bulunamadı."}
           </div>
         )}
       </div>
 
-      {/* Progressive Disclosure Bottom Sheet Modal */}
+      {/* Bottom Sheet for Trip Details with AIS Live Radar & IBB Pier Camera */}
       <TripDetailsSheet
         schedule={selectedSchedule}
         isOpen={!!selectedSchedule}

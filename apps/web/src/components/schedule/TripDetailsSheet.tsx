@@ -94,11 +94,11 @@ export function TripDetailsSheet({ schedule, isOpen, onClose, serverTimeIso }: T
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
             transition={{ type: "spring", damping: 26, stiffness: 240 }}
-            className="fixed bottom-0 left-0 right-0 bg-[#0d1424] border-t border-slate-700/80 rounded-t-[28px] z-50 p-5 sm:p-7 text-white shadow-2xl flex flex-col max-h-[88vh] overflow-y-auto"
+            className="fixed bottom-0 left-0 right-0 bg-white dark:bg-[#0d1424] border-t border-slate-200 dark:border-slate-700/80 rounded-t-[28px] z-50 p-5 sm:p-7 text-slate-900 dark:text-white shadow-2xl flex flex-col max-h-[88vh] overflow-y-auto transition-colors"
             style={{ paddingBottom: 'max(24px, env(safe-area-inset-bottom))' }}
           >
             {/* Drag Handle Bar */}
-            <div className="w-12 h-1 bg-slate-700 rounded-full mx-auto mb-4 shrink-0" />
+            <div className="w-12 h-1 bg-slate-300 dark:bg-slate-700 rounded-full mx-auto mb-4 shrink-0" />
 
             {/* Header: Status, Title, Actions & Close */}
             <div className="flex justify-between items-start gap-3 mb-5">
@@ -115,7 +115,7 @@ export function TripDetailsSheet({ schedule, isOpen, onClose, serverTimeIso }: T
                   )}
                 </div>
 
-                <h2 className="text-xl sm:text-2xl font-black text-white leading-tight flex items-center gap-2">
+                <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white leading-tight flex items-center gap-2">
                   <span>{dynState?.currentOrigin || schedule.origin}</span>
                   <span className="text-blue-400 font-extrabold">➔</span>
                   <span className="text-amber-300">{dynState?.destination || schedule.destination}</span>
@@ -160,7 +160,7 @@ export function TripDetailsSheet({ schedule, isOpen, onClose, serverTimeIso }: T
 
                 <button 
                   onClick={onClose}
-                  className="w-8 h-8 bg-slate-800 hover:bg-slate-700 rounded-full flex items-center justify-center text-slate-300 hover:text-white transition-colors border border-slate-700"
+                  className="w-8 h-8 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 rounded-full flex items-center justify-center text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors border border-slate-200 dark:border-slate-700"
                 >
                   <X size={16} />
                 </button>
@@ -170,12 +170,12 @@ export function TripDetailsSheet({ schedule, isOpen, onClose, serverTimeIso }: T
             {/* Quick Stats Grid */}
             <div className="grid grid-cols-3 gap-2.5 mb-4">
               {/* Kalkış Saati */}
-              <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800 shadow-inner">
+              <div className="bg-slate-50 dark:bg-slate-900/90 p-3 rounded-xl border border-slate-200 dark:border-slate-800 shadow-2xs">
                 <div className="flex items-center gap-1 text-blue-400 mb-0.5">
                   <Clock size={13} />
                   <span className="text-[10px] font-black uppercase tracking-wider">Kalkış</span>
                 </div>
-                <div className="text-xl font-mono font-black text-white">
+                <div className="text-xl font-mono font-black text-slate-900 dark:text-white">
                   {dynState?.currentDepartureTime || schedule.departureTime}
                 </div>
                 <div className="text-[10px] text-slate-400 font-medium">
@@ -184,17 +184,17 @@ export function TripDetailsSheet({ schedule, isOpen, onClose, serverTimeIso }: T
               </div>
 
               {/* İskele / Peron */}
-              <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800 shadow-inner">
+              <div className="bg-slate-50 dark:bg-slate-900/90 p-3 rounded-xl border border-slate-200 dark:border-slate-800 shadow-2xs">
                 <div className="flex items-center gap-1 text-amber-400 mb-0.5">
                   <MapPin size={13} />
                   <span className="text-[10px] font-black uppercase tracking-wider">İskele / Peron</span>
                 </div>
-                <div className="text-base font-bold text-white truncate">{schedule.platform}</div>
+                <div className="text-base font-bold text-slate-900 dark:text-white truncate">{schedule.platform}</div>
                 <div className="text-[10px] text-emerald-400 font-bold truncate">{schedule.origin} Rıhtım</div>
               </div>
 
               {/* Ücret */}
-              <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800 shadow-inner">
+              <div className="bg-slate-50 dark:bg-slate-900/90 p-3 rounded-xl border border-slate-200 dark:border-slate-800 shadow-2xs">
                 <div className="flex items-center gap-1 text-emerald-400 mb-0.5">
                   <Ticket size={13} />
                   <span className="text-[10px] font-black uppercase tracking-wider">Tarife</span>
@@ -205,7 +205,7 @@ export function TripDetailsSheet({ schedule, isOpen, onClose, serverTimeIso }: T
             </div>
 
             {/* Gemi & AIS Canlı Durumu Kartı */}
-            <div className="mb-3 p-3 rounded-xl bg-slate-900/90 border border-slate-800 shadow-inner flex items-center justify-between gap-3">
+            <div className="mb-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 shadow-2xs flex items-center justify-between gap-3">
               <div className="flex items-center gap-2.5 min-w-0">
                 <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
                   liveVessel.isConfirmedUnderway
@@ -216,7 +216,7 @@ export function TripDetailsSheet({ schedule, isOpen, onClose, serverTimeIso }: T
                 </div>
                 <div className="min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-xs font-black text-white">
+                    <span className="text-xs font-black text-slate-900 dark:text-white">
                       {liveVessel.isConfirmedUnderway ? `Gemi: ${liveVessel.vesselName}` : "Gemi: İskelede Hazırlanıyor"}
                     </span>
                     {liveVessel.mmsi && (
@@ -295,7 +295,7 @@ export function TripDetailsSheet({ schedule, isOpen, onClose, serverTimeIso }: T
 
             {/* Metro / Marmaray Progressive Route Timeline */}
             {!isDirect && dynState?.waypoints && dynState.waypoints.length > 1 ? (
-              <div className="mb-4 bg-slate-900/90 border border-slate-800 rounded-xl p-4 shadow-inner">
+              <div className="mb-4 bg-slate-50 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-xl p-4 shadow-2xs">
                 <div className="flex items-center justify-between text-xs font-bold text-slate-400 mb-3">
                   <span className="flex items-center gap-1.5 text-amber-400 font-black uppercase tracking-wider text-[11px]">
                     <Navigation size={13} className="text-amber-400" />
@@ -445,7 +445,7 @@ export function TripDetailsSheet({ schedule, isOpen, onClose, serverTimeIso }: T
             {/* Kapat Butonu */}
             <button
               onClick={onClose}
-              className="w-full py-3 bg-slate-800 hover:bg-slate-700 text-white text-xs font-black rounded-xl border border-slate-700 transition-colors shadow-md uppercase tracking-wider mt-1"
+              className="w-full py-3 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-white text-xs font-black rounded-xl border border-slate-300 dark:border-slate-700 transition-colors shadow-2xs uppercase tracking-wider mt-1"
             >
               Kapat
             </button>

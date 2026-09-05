@@ -65,7 +65,7 @@ export default async function Home() {
   const serverTimeIso = data?.serverTimeIso || new Date().toISOString();
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#070b14]">
+    <div className="flex flex-col min-h-screen bg-slate-100 dark:bg-[#070b14] text-slate-900 dark:text-white transition-colors duration-150">
       <TopBar />
       
       <main className="flex-1 overflow-y-auto hide-scrollbar relative pb-[76px]">

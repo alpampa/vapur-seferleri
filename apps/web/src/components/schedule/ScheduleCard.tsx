@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { resolveDynamicTrip, DynamicTripResolution } from "@/lib/utils/dynamic-trip";
 import { useAlarmStore } from "@/store/useAlarmStore";
 import { useFavoritesStore } from "@/store/useFavoritesStore";
+import { useLanguageStore } from "@/store/useLanguageStore";
 import { requestNotificationPermission } from "@/lib/utils/sound";
 import { predictTripOccupancy } from "@/lib/utils/occupancy";
 
@@ -31,42 +32,43 @@ export interface ScheduleCardProps {
   stops?: { name: string; time: string }[];
   arrivalTime?: string;
   onClick?: () => void;
+  isCompact?: boolean;
 }
 
 export function TripStatusBadge({ status, delayText }: { status: TripStatus; delayText?: string }) {
-  let bgColor = "bg-slate-800 text-slate-300";
+  let bgColor = "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300";
   let label = status.replace("_", " ");
   
   switch (status) {
     case "ON_TIME": 
-      // Kullanıcı talebi doğrultusunda: "Zamanında" ibaresi kaldırıldı, normal seferler yalın görünür
+      // Kullanıcı kuralı: "Zamanında" yazısı kaldırıldı, yalın görünür
       return null;
     case "DEPARTING_SOON": 
-      bgColor = "bg-amber-500/20 text-amber-300 border border-amber-500/40 font-black animate-pulse"; 
+      bgColor = "bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-500/40 font-black animate-pulse"; 
       label = "AZ KALDI"; 
       break;
     case "BOARDING": 
-      bgColor = "bg-blue-600/30 text-blue-300 border border-blue-500/40 font-bold animate-pulse"; 
+      bgColor = "bg-blue-100 dark:bg-blue-600/30 text-blue-700 dark:text-blue-300 border border-blue-300 dark:border-blue-500/40 font-bold animate-pulse"; 
       label = "YOLCU ALINIYOR"; 
       break;
     case "IN_TRANSIT": 
-      bgColor = "bg-indigo-600/30 text-indigo-300 border border-indigo-500/40 font-bold"; 
+      bgColor = "bg-indigo-100 dark:bg-indigo-600/30 text-indigo-700 dark:text-indigo-300 border border-indigo-300 dark:border-indigo-500/40 font-bold"; 
       label = "SEYİRDE"; 
       break;
     case "ARRIVING": 
-      bgColor = "bg-cyan-600/30 text-cyan-300 border border-cyan-500/40 font-bold"; 
+      bgColor = "bg-cyan-100 dark:bg-cyan-600/30 text-cyan-700 dark:text-cyan-300 border border-cyan-300 dark:border-cyan-500/40 font-bold"; 
       label = "YANAŞIYOR"; 
       break;
     case "DELAYED": 
-      bgColor = "bg-rose-600/30 text-rose-300 border border-rose-500/40 font-bold"; 
+      bgColor = "bg-rose-100 dark:bg-rose-600/30 text-rose-700 dark:text-rose-300 border border-rose-300 dark:border-rose-500/40 font-bold"; 
       label = "GECİKMELİ"; 
       break;
     case "CANCELLED": 
-      bgColor = "bg-rose-950/90 text-rose-300 font-black border border-rose-500/60 animate-pulse"; 
+      bgColor = "bg-rose-100 dark:bg-rose-950/90 text-rose-700 dark:text-rose-300 font-black border border-rose-400 dark:border-rose-500/60 animate-pulse"; 
       label = "❌ İPTAL EDİLDİ"; 
       break;
     case "COMPLETED": 
-      bgColor = "bg-slate-800 text-slate-400"; 
+      bgColor = "bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400"; 
       label = "TAMAMLANDI"; 
       break;
   }
@@ -78,11 +80,11 @@ export function TripStatusBadge({ status, delayText }: { status: TripStatus; del
   );
 }
 
-
-
 export function ScheduleCard(props: ScheduleCardProps) {
   const { isAlarmSet, toggleAlarm } = useAlarmStore();
   const { isFavorite, toggleFavorite } = useFavoritesStore();
+  const { t, language } = useLanguageStore();
+
   const hasAlarm = isAlarmSet(props.id);
   const routeKey = `${props.origin} ➔ ${props.destination}`;
   const isFav = isFavorite(routeKey);
@@ -138,24 +140,37 @@ export function ScheduleCard(props: ScheduleCardProps) {
 
   const isDirect = !props.stops || props.stops.length === 0;
 
+  // KULLANICI KURALI: Son 5 dakikada sefer saati de yanıp sönsün
+  const isLast5Minutes = !!dynState.countdown && !dynState.isDeparted;
+
   return (
     <div
       onClick={props.onClick}
-      className="bg-[#141d2e] hover:bg-[#1c283f] border border-slate-700/60 hover:border-blue-500/40 rounded-xl px-3 py-2.5 flex items-center justify-between gap-2.5 text-white shadow-sm transition-all duration-150 cursor-pointer group"
+      className={`bg-white dark:bg-[#141d2e] hover:bg-slate-50 dark:hover:bg-[#1c283f] rounded-xl px-3 py-2.5 flex items-center justify-between gap-2.5 text-slate-900 dark:text-white shadow-xs dark:shadow-none transition-all duration-150 cursor-pointer group border ${
+        isLast5Minutes
+          ? "border-amber-400 dark:border-amber-500/60 shadow-sm shadow-amber-400/20 ring-1 ring-amber-400/30"
+          : "border-slate-200 dark:border-slate-700/60 hover:border-blue-400 dark:hover:border-blue-500/40"
+      }`}
     >
       {/* 1. Left Column: Departure Time & Countdown / Status Badge */}
       <div className="flex flex-col items-start justify-center shrink-0 w-[68px]">
-        <span className="font-mono font-black text-xl sm:text-2xl text-blue-400 leading-none tabular-nums tracking-tight">
+        <span
+          className={`font-mono font-black text-xl sm:text-2xl leading-none tabular-nums tracking-tight transition-all ${
+            isLast5Minutes
+              ? "text-amber-500 dark:text-amber-400 animate-pulse font-extrabold scale-105"
+              : "text-blue-600 dark:text-blue-400"
+          }`}
+        >
           {dynState.currentDepartureTime}
         </span>
         <div className="mt-1">
           {dynState.isDeparted ? (
             <span className="px-1.5 py-0.5 rounded text-[9px] font-black bg-rose-600 text-white animate-pulse inline-flex items-center gap-0.5">
               <Ship size={10} />
-              <span>GİTTİ</span>
+              <span>{t("departed")}</span>
             </span>
           ) : dynState.countdown ? (
-            <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-black bg-amber-500/20 text-amber-300 border border-amber-500/40 animate-pulse whitespace-nowrap">
+            <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-black bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-500/40 animate-pulse whitespace-nowrap">
               ⏳ {dynState.countdown}
             </span>
           ) : (
@@ -168,23 +183,23 @@ export function ScheduleCard(props: ScheduleCardProps) {
       <div className="flex flex-col min-w-0 flex-1 pr-1">
         {/* Route Line */}
         <div className="flex items-center gap-1.5 font-black text-sm sm:text-base leading-tight truncate">
-          <span className="text-white truncate">{dynState.currentOrigin}</span>
-          <span className="text-blue-400 font-extrabold text-xs sm:text-sm shrink-0">➔</span>
-          <span className="text-amber-300 truncate">{dynState.destination}</span>
+          <span className="text-slate-900 dark:text-white truncate">{dynState.currentOrigin}</span>
+          <span className="text-blue-600 dark:text-blue-400 font-extrabold text-xs sm:text-sm shrink-0">➔</span>
+          <span className="text-blue-700 dark:text-amber-300 font-bold truncate">{dynState.destination}</span>
         </div>
 
         {/* Meta Line: Operator, Occupancy dot, and Direct/Stops */}
-        <div className="flex items-center gap-2 mt-1 text-[11px] text-slate-400 flex-wrap truncate">
+        <div className="flex items-center gap-2 mt-1 text-[11px] text-slate-500 dark:text-slate-400 flex-wrap truncate">
           <OperatorLogo operator={props.operator} size="sm" showName={true} />
 
           {/* Underway Confirmed Vessel Name */}
           {liveVessel.isConfirmedUnderway && (
-            <span className="inline-flex items-center gap-1 text-[10px] font-black text-emerald-300 bg-emerald-950/80 border border-emerald-500/40 px-1.5 py-0.2 rounded shrink-0 shadow-sm animate-pulse">
+            <span className="inline-flex items-center gap-1 text-[10px] font-black text-emerald-700 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-300 dark:border-emerald-500/40 px-1.5 py-0.2 rounded shrink-0 shadow-2xs animate-pulse">
               🚢 {liveVessel.vesselName}
             </span>
           )}
 
-          <span className="text-slate-600 font-bold">•</span>
+          <span className="text-slate-300 dark:text-slate-600 font-bold">•</span>
 
           {/* Occupancy Indicator */}
           <span
@@ -194,80 +209,88 @@ export function ScheduleCard(props: ScheduleCardProps) {
             <span
               className={`w-1.5 h-1.5 rounded-full shrink-0 ${
                 occupancy.level === "HIGH"
-                  ? "bg-rose-400"
+                  ? "bg-rose-500"
                   : occupancy.level === "MEDIUM"
-                  ? "bg-amber-400"
-                  : "bg-emerald-400"
+                  ? "bg-amber-500"
+                  : "bg-emerald-500"
               }`}
             />
             <span
               className={
                 occupancy.level === "HIGH"
-                  ? "text-rose-300"
+                  ? "text-rose-600 dark:text-rose-300 font-bold"
                   : occupancy.level === "MEDIUM"
-                  ? "text-amber-300"
-                  : "text-emerald-300"
+                  ? "text-amber-600 dark:text-amber-300 font-bold"
+                  : "text-emerald-600 dark:text-emerald-300 font-bold"
               }
             >
-              {occupancy.label}
+              {language === "en" 
+                ? (occupancy.level === "HIGH" ? "Crowded" : occupancy.level === "MEDIUM" ? "Normal" : "Low")
+                : occupancy.label}
             </span>
           </span>
 
-          <span className="text-slate-600 font-bold">•</span>
+          <span className="text-slate-300 dark:text-slate-600 font-bold">•</span>
 
           {/* Direct or Stops badge */}
-          <span className="text-slate-400 text-[10px]">
-            {isDirect ? "Direkt" : `${props.stops?.length || 0} Durak`}
+          <span className="text-slate-500 dark:text-slate-400 text-[10px]">
+            {isDirect ? t("direct") : `${props.stops?.length} ${t("stops")}`}
           </span>
         </div>
       </div>
 
-      {/* 3. Right Column: Price, Star, Alarm, and Chevron */}
-      <div className="flex items-center gap-1 sm:gap-1.5 shrink-0" onClick={(e) => e.stopPropagation()}>
-        {/* Price Tag */}
-        <div className="bg-emerald-950/70 border border-emerald-500/30 text-emerald-300 font-mono font-black text-xs px-2 py-1 rounded-md shadow-sm">
-          {props.price}
+      {/* 3. Right Column: Price & Quick Action (Alarm, Fav, Arrow) */}
+      <div className="flex items-center gap-1.5 shrink-0">
+        <div className="text-right hidden xs:flex flex-col items-end">
+          <span className="font-mono font-bold text-xs sm:text-sm text-emerald-600 dark:text-emerald-400 tabular-nums leading-none">
+            {props.price}
+          </span>
+          <span className="text-[9px] text-slate-400 dark:text-slate-500 mt-0.5">
+            {props.platform}
+          </span>
         </div>
 
         {/* Favorite Star Button */}
         <button
           type="button"
-          onClick={() => toggleFavorite(routeKey)}
-          title={isFav ? "Favorilerden Çıkar" : "Bu Hattı Favorilere Ekle"}
-          className={`p-1.5 rounded-lg border transition-all flex items-center justify-center ${
+          onClick={(e) => {
+            e.stopPropagation();
+            toggleFavorite(routeKey);
+          }}
+          title={isFav ? "Favorilerden Çıkar" : "Favorilere Ekle"}
+          className={`p-1.5 rounded-lg transition-colors ${
             isFav
-              ? "bg-amber-400 text-slate-950 border-amber-300 shadow-sm"
-              : "bg-slate-800/80 hover:bg-slate-700 border-slate-700 text-slate-400 hover:text-amber-300"
+              ? "text-amber-500 dark:text-amber-400 bg-amber-100 dark:bg-amber-400/20"
+              : "text-slate-400 hover:text-amber-500 dark:hover:text-amber-300 hover:bg-slate-100 dark:hover:bg-slate-800"
           }`}
         >
-          <Star size={13} className={isFav ? "fill-slate-950 text-slate-950" : ""} />
+          <Star size={14} className={isFav ? "fill-amber-500 text-amber-500" : ""} />
         </button>
 
         {/* Alarm Bell Button */}
         <button
           type="button"
-          onClick={() => {
-            requestNotificationPermission();
+          onClick={async (e) => {
+            e.stopPropagation();
+            await requestNotificationPermission();
             toggleAlarm(props.id);
           }}
-          title={hasAlarm ? "Alarmı Kaldır" : "Kalkışa 5 dakika kala sesli/bildirimle uyar"}
-          className={`p-1.5 rounded-lg border transition-all flex items-center justify-center ${
+          title={hasAlarm ? "Hatırlatıcıyı Kaldır" : "15 Dk Önce Hatırlat"}
+          className={`p-1.5 rounded-lg transition-colors ${
             hasAlarm
-              ? "bg-amber-500/20 border-amber-400 text-amber-300"
-              : "bg-slate-800/80 hover:bg-slate-700 border-slate-700 text-slate-400 hover:text-white"
+              ? "text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-500/20"
+              : "text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-slate-100 dark:hover:bg-slate-800"
           }`}
         >
           {hasAlarm ? (
-            <BellRing size={13} className="text-amber-400 animate-bounce" />
+            <BellRing size={14} className="text-blue-600 dark:text-blue-400 animate-bounce" />
           ) : (
-            <Bell size={13} />
+            <Bell size={14} />
           )}
         </button>
 
-        {/* Detail Arrow Indicator */}
-        <div className="text-slate-500 group-hover:text-blue-400 transition-transform group-hover:translate-x-0.5 pl-0.5">
-          <ChevronRight size={16} />
-        </div>
+        {/* Details Chevron */}
+        <ChevronRight size={16} className="text-slate-400 group-hover:text-slate-700 dark:group-hover:text-white group-hover:translate-x-0.5 transition-all" />
       </div>
     </div>
   );
