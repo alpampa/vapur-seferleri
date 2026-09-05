@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { NotificationContainer } from "@/components/ui/NotificationToast";
+import { ServiceWorkerRegister } from "@/components/pwa/ServiceWorkerRegister";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -9,12 +10,13 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "FerryFlow - Live Ferry Tracking",
-  description: "Real-time ferry schedules, tracking, and ticketing",
+  title: "Vapur Seferleri — İstanbul Canlı Deniz Ulaşımı",
+  description: "İstanbul Şehir Hatları, Mavi Marmara ve Prens Tur canlı vapur kalkış panosu, durak takibi ve deniz hava durumu asistanı.",
+  manifest: "/manifest.json",
 };
 
 export const viewport = {
-  themeColor: "#041225", // Deep Navy
+  themeColor: "#0a0f1d",
 };
 
 export default function RootLayout({
@@ -23,8 +25,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
-      <body className={`${inter.variable} font-sans antialiased bg-[var(--deep-navy)] text-[var(--text-primary)] min-h-screen pb-[env(safe-area-inset-bottom)]`}>
+    <html lang="tr" className="dark">
+      <body className={`${inter.variable} font-sans antialiased bg-[#070b14] text-white min-h-screen pb-[env(safe-area-inset-bottom)]`}>
+        <ServiceWorkerRegister />
         {children}
         <NotificationContainer />
       </body>

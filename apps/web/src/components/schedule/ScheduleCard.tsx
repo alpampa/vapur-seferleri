@@ -1,8 +1,10 @@
 "use client";
 
-import { Anchor, Navigation, ShieldCheck, Waves, Crown, Ship, Check } from "lucide-react";
+import { Anchor, Navigation, ShieldCheck, Waves, Crown, Ship, Check, Bell, BellRing } from "lucide-react";
 import { useEffect, useState } from "react";
 import { resolveDynamicTrip, DynamicTripResolution } from "@/lib/utils/dynamic-trip";
+import { useAlarmStore } from "@/store/useAlarmStore";
+import { requestNotificationPermission } from "@/lib/utils/sound";
 
 export type TripStatus = "ON_TIME" | "DEPARTING_SOON" | "BOARDING" | "DELAYED" | "CANCELLED" | "IN_TRANSIT" | "ARRIVING" | "COMPLETED";
 
@@ -106,6 +108,9 @@ function OperatorBranding({ operator }: { operator: string }) {
 }
 
 export function ScheduleCard(props: ScheduleCardProps) {
+  const { isAlarmSet, toggleAlarm } = useAlarmStore();
+  const hasAlarm = isAlarmSet(props.id);
+
   const [dynState, setDynState] = useState<DynamicTripResolution>(() => {
     return resolveDynamicTrip(
       props.origin,
@@ -197,8 +202,31 @@ export function ScheduleCard(props: ScheduleCardProps) {
             <TripStatusBadge status={dynState.status} delayText={props.delayText} />
           )}
 
-          <div className="bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 font-black text-sm px-2.5 py-0.5 rounded-md shadow-sm">
-            {props.price}
+          <div className="flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                requestNotificationPermission();
+                toggleAlarm(props.id);
+              }}
+              title={hasAlarm ? "Alarmı Kaldır" : "Kalkışa 5 dakika kala sesli/bildirimle uyar"}
+              className={`p-1.5 rounded-lg border transition-all flex items-center justify-center ${
+                hasAlarm
+                  ? "bg-amber-500/20 border-amber-400 text-amber-300 ring-2 ring-amber-400/40"
+                  : "bg-slate-800/90 hover:bg-slate-700 border-slate-700 text-slate-400 hover:text-white"
+              }`}
+            >
+              {hasAlarm ? (
+                <BellRing size={14} className="text-amber-400 animate-bounce" />
+              ) : (
+                <Bell size={14} />
+              )}
+            </button>
+
+            <div className="bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 font-black text-sm px-2.5 py-0.5 rounded-md shadow-sm">
+              {props.price}
+            </div>
           </div>
         </div>
       </div>

@@ -4,8 +4,12 @@ import { useState, useEffect, useMemo } from "react";
 import { ScheduleCard } from "@/components/schedule/ScheduleCard";
 import { TripDetailsSheet } from "@/components/schedule/TripDetailsSheet";
 import type { ScheduleCardDto } from "@/app/page";
-import { resolveDynamicTrip } from "@/lib/utils/dynamic-trip";
 import { Search, MapPin, Navigation, ArrowLeftRight, Check, AlertTriangle, ShieldCheck } from "lucide-react";
+import { MarineWeatherBanner } from "@/components/weather/MarineWeatherBanner";
+import type { MarineWeatherStatus } from "@/lib/services/marine-weather";
+import { resolveDynamicTrip } from "@/lib/utils/dynamic-trip";
+import { AlarmManager } from "@/components/schedule/AlarmManager";
+import { PierDepartureBoard } from "@/components/schedule/PierDepartureBoard";
 
 // Istanbul Ferry Pier Coordinates (Latitude, Longitude)
 const PIER_COORDINATES: Record<string, { lat: number; lng: number; label: string }> = {
@@ -40,15 +44,38 @@ function calculateDistanceKm(lat1: number, lon1: number, lat2: number, lon2: num
 interface ScheduleListClientProps {
   schedules: ScheduleCardDto[];
   serverTimeIso: string;
+  marineWeather?: MarineWeatherStatus | null;
 }
 
-export function ScheduleListClient({ schedules, serverTimeIso }: ScheduleListClientProps) {
+export function ScheduleListClient({ schedules, serverTimeIso, marineWeather }: ScheduleListClientProps) {
   const [selectedSchedule, setSelectedSchedule] = useState<ScheduleCardDto | null>(null);
   const [now, setNow] = useState(Date.now());
   const [selectedRoute, setSelectedRoute] = useState<string>("ALL");
   const [selectedOrigin, setSelectedOrigin] = useState<string>("ALL");
   const [selectedOperator, setSelectedOperator] = useState<string>("ALL");
   const [searchQuery, setSearchQuery] = useState<string>("");
+
+  // Offline LocalStorage Caching
+  const [effectiveSchedules, setEffectiveSchedules] = useState<ScheduleCardDto[]>(schedules);
+
+  useEffect(() => {
+    if (schedules && schedules.length > 0) {
+      setEffectiveSchedules(schedules);
+      try {
+        localStorage.setItem("vapur_schedules_cache_v1", JSON.stringify(schedules));
+      } catch (e) {}
+    } else {
+      try {
+        const cached = localStorage.getItem("vapur_schedules_cache_v1");
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            setEffectiveSchedules(parsed);
+          }
+        }
+      } catch (e) {}
+    }
+  }, [schedules]);
 
   // Geolocation states
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
@@ -106,7 +133,7 @@ export function ScheduleListClient({ schedules, serverTimeIso }: ScheduleListCli
 
   // 1. Resolve dynamic states for all schedules (Removes expired trips 30s after departure)
   const activeSchedulesWithDyn = useMemo(() => {
-    return schedules
+    return effectiveSchedules
       .map((s) => {
         const dyn = resolveDynamicTrip(
           s.origin,
@@ -124,7 +151,7 @@ export function ScheduleListClient({ schedules, serverTimeIso }: ScheduleListCli
         };
       })
       .filter(({ dyn }) => !dyn.isExpired); // Filter out expired trips
-  }, [schedules, now, serverTimeIso]);
+  }, [effectiveSchedules, now, serverTimeIso]);
 
   // Compute unique routes from available active trips
   const uniqueRoutes = useMemo(() => {
@@ -193,6 +220,23 @@ export function ScheduleListClient({ schedules, serverTimeIso }: ScheduleListCli
 
   return (
     <>
+      <AlarmManager schedules={effectiveSchedules} />
+
+      {/* Marine Weather & Storm / Lodos Warning Banner */}
+      <MarineWeatherBanner weather={marineWeather} />
+
+      {/* İskele Odaklı Havalimanı / Gar Kalkış Panosu (Next 3 Ferries) */}
+      <PierDepartureBoard
+        schedules={effectiveSchedules}
+        serverTimeIso={serverTimeIso}
+        selectedOrigin={selectedOrigin}
+        onSelectOrigin={(pier) => {
+          setSelectedOrigin(pier);
+          setSelectedRoute("ALL");
+        }}
+        onSelectTrip={setSelectedSchedule}
+      />
+
       {/* Ultra Compact Filter & Search Bar */}
       <div className="px-3 py-2 bg-[#0a0f1d]/95 backdrop-blur-md border-b border-slate-800 sticky top-[49px] z-30 space-y-2 shadow-md">
         {/* Row 1: Search & Nearest Pier Button */}

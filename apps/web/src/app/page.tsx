@@ -33,6 +33,7 @@ export interface SchedulesResponse {
 }
 
 import { getLiveOrOfficialSchedules } from "@/lib/agents/timetable-engine";
+import { fetchLiveMarineWeather, type MarineWeatherStatus } from "@/lib/services/marine-weather";
 
 async function getSchedules(): Promise<SchedulesResponse> {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -53,7 +54,11 @@ async function getSchedules(): Promise<SchedulesResponse> {
 }
 
 export default async function Home() {
-  const data = await getSchedules();
+  const [data, weather] = await Promise.all([
+    getSchedules(),
+    fetchLiveMarineWeather()
+  ]);
+
   const schedules = data?.schedules || [];
   const serverTimeIso = data?.serverTimeIso || new Date().toISOString();
 
@@ -63,7 +68,11 @@ export default async function Home() {
       
       <main className="flex-1 overflow-y-auto hide-scrollbar relative pb-[76px]">
         {/* Schedule Cards List via Client Component with Integrated Sleek Filters */}
-        <ScheduleListClient schedules={schedules} serverTimeIso={serverTimeIso} />
+        <ScheduleListClient
+          schedules={schedules}
+          serverTimeIso={serverTimeIso}
+          marineWeather={weather}
+        />
       </main>
 
       <BottomNav />
