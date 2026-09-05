@@ -121,6 +121,7 @@ export async function getLiveOrOfficialSchedules(): Promise<SchedulesResponse> {
       platform: trip.platform,
       price: trip.price,
       progress,
+      category: trip.category || (trip.destination.includes('ada') || trip.origin.includes('ada') || trip.destination === 'Büyükada' || trip.origin === 'Büyükada' ? 'ADALAR' : 'BOGAZ'),
       stops: trip.stops && trip.stops.length > 0 ? trip.stops : undefined
     };
   });

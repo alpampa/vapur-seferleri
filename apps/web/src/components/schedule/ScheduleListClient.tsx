@@ -10,6 +10,8 @@ import type { MarineWeatherStatus } from "@/lib/services/marine-weather";
 import { resolveDynamicTrip } from "@/lib/utils/dynamic-trip";
 import { AlarmManager } from "@/components/schedule/AlarmManager";
 import { TripPlannerWithMap } from "@/components/planner/TripPlannerWithMap";
+import { LastFerryAlert } from "@/components/schedule/LastFerryAlert";
+import { FavoritesWidget } from "@/components/schedule/FavoritesWidget";
 import { Compass } from "lucide-react";
 
 // Istanbul Ferry Pier Coordinates (Latitude, Longitude)
@@ -50,6 +52,7 @@ interface ScheduleListClientProps {
 
 export function ScheduleListClient({ schedules, serverTimeIso, marineWeather }: ScheduleListClientProps) {
   const [selectedSchedule, setSelectedSchedule] = useState<ScheduleCardDto | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<"ADALAR" | "BOGAZ" | "ALL">("ADALAR");
   const [now, setNow] = useState(Date.now());
   const [selectedRoute, setSelectedRoute] = useState<string>("ALL");
   const [selectedOrigin, setSelectedOrigin] = useState<string>("ALL");
@@ -133,9 +136,21 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather }: 
     );
   };
 
-  // 1. Resolve dynamic states for all schedules (Removes expired trips 30s after departure)
+  // 1. Resolve dynamic states for all schedules (Removes expired trips 30s after departure & filters by category)
   const activeSchedulesWithDyn = useMemo(() => {
     return effectiveSchedules
+      .filter((s) => {
+        if (selectedCategory === "ALL") return true;
+        const cat = s.category || (
+          s.destination.toLowerCase().includes('ada') ||
+          s.origin.toLowerCase().includes('ada') ||
+          s.destination === 'Büyükada' ||
+          s.origin === 'Büyükada'
+            ? 'ADALAR'
+            : 'BOGAZ'
+        );
+        return cat === selectedCategory;
+      })
       .map((s) => {
         const dyn = resolveDynamicTrip(
           s.origin,
@@ -153,7 +168,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather }: 
         };
       })
       .filter(({ dyn }) => !dyn.isExpired); // Filter out expired trips
-  }, [effectiveSchedules, now, serverTimeIso]);
+  }, [effectiveSchedules, selectedCategory, now, serverTimeIso]);
 
   // Compute unique routes from available active trips
   const uniqueRoutes = useMemo(() => {
@@ -257,6 +272,77 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather }: 
           />
         </div>
       )}
+
+      {/* Category Segmented Switcher: Adalar vs Boğaz vs Tümü */}
+      <div className="px-3 pt-2">
+        <div className="grid grid-cols-3 gap-1.5 p-1 bg-slate-900/90 border border-slate-800 rounded-xl shadow-inner">
+          <button
+            onClick={() => {
+              setSelectedCategory("ADALAR");
+              setSelectedRoute("ALL");
+              setSelectedOrigin("ALL");
+            }}
+            className={`py-2 px-1 rounded-lg text-xs font-black transition-all flex items-center justify-center gap-1.5 ${
+              selectedCategory === "ADALAR"
+                ? "bg-amber-400 text-slate-950 shadow-md font-black scale-[1.02]"
+                : "text-slate-400 hover:text-white"
+            }`}
+          >
+            <span>🏝️</span>
+            <span>Adalar Hatları</span>
+          </button>
+
+          <button
+            onClick={() => {
+              setSelectedCategory("BOGAZ");
+              setSelectedRoute("ALL");
+              setSelectedOrigin("ALL");
+            }}
+            className={`py-2 px-1 rounded-lg text-xs font-black transition-all flex items-center justify-center gap-1.5 ${
+              selectedCategory === "BOGAZ"
+                ? "bg-blue-600 text-white shadow-md font-black scale-[1.02]"
+                : "text-slate-400 hover:text-white"
+            }`}
+          >
+            <span>🌊</span>
+            <span>Boğaz Hatları</span>
+          </button>
+
+          <button
+            onClick={() => {
+              setSelectedCategory("ALL");
+              setSelectedRoute("ALL");
+              setSelectedOrigin("ALL");
+            }}
+            className={`py-2 px-1 rounded-lg text-xs font-black transition-all flex items-center justify-center gap-1.5 ${
+              selectedCategory === "ALL"
+                ? "bg-slate-700 text-white shadow-md font-black scale-[1.02]"
+                : "text-slate-400 hover:text-white"
+            }`}
+          >
+            <span>⚓</span>
+            <span>Tümü</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Favorites & Commute Widget */}
+      <FavoritesWidget
+        schedules={effectiveSchedules}
+        selectedRoute={selectedRoute}
+        onSelectRoute={(r) => {
+          setSelectedRoute(r);
+          setSelectedOrigin("ALL");
+        }}
+      />
+
+      {/* Last Ferry Safety Net Alert */}
+      <LastFerryAlert
+        schedules={filteredList.map((x) => x.schedule)}
+        selectedRoute={selectedRoute}
+        selectedOrigin={selectedOrigin}
+        selectedCategory={selectedCategory}
+      />
 
       {/* Ultra Compact Filter & Search Bar */}
       <div className="px-3 py-2 bg-[#0a0f1d]/95 backdrop-blur-md border-b border-slate-800 sticky top-[49px] z-30 space-y-2 shadow-md">

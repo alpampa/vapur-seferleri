@@ -1,9 +1,10 @@
 "use client";
 
-import { Anchor, Navigation, ShieldCheck, Waves, Crown, Ship, Check, Bell, BellRing } from "lucide-react";
+import { Anchor, Navigation, ShieldCheck, Waves, Crown, Ship, Check, Bell, BellRing, Star } from "lucide-react";
 import { useEffect, useState } from "react";
 import { resolveDynamicTrip, DynamicTripResolution } from "@/lib/utils/dynamic-trip";
 import { useAlarmStore } from "@/store/useAlarmStore";
+import { useFavoritesStore } from "@/store/useFavoritesStore";
 import { requestNotificationPermission } from "@/lib/utils/sound";
 
 export type TripStatus = "ON_TIME" | "DEPARTING_SOON" | "BOARDING" | "DELAYED" | "CANCELLED" | "IN_TRANSIT" | "ARRIVING" | "COMPLETED";
@@ -109,7 +110,10 @@ function OperatorBranding({ operator }: { operator: string }) {
 
 export function ScheduleCard(props: ScheduleCardProps) {
   const { isAlarmSet, toggleAlarm } = useAlarmStore();
+  const { isFavorite, toggleFavorite } = useFavoritesStore();
   const hasAlarm = isAlarmSet(props.id);
+  const routeKey = `${props.origin} ➔ ${props.destination}`;
+  const isFav = isFavorite(routeKey);
 
   const [dynState, setDynState] = useState<DynamicTripResolution>(() => {
     return resolveDynamicTrip(
@@ -203,6 +207,24 @@ export function ScheduleCard(props: ScheduleCardProps) {
           )}
 
           <div className="flex items-center gap-1.5">
+            {/* Star Favorite Route Button */}
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleFavorite(routeKey);
+              }}
+              title={isFav ? "Favorilerden Çıkar" : "Bu Hattı Favorilere Ekle"}
+              className={`p-1.5 rounded-lg border transition-all flex items-center justify-center ${
+                isFav
+                  ? "bg-amber-400 text-slate-950 border-amber-300 shadow-sm ring-2 ring-amber-400/40"
+                  : "bg-slate-800/90 hover:bg-slate-700 border-slate-700 text-slate-400 hover:text-amber-300"
+              }`}
+            >
+              <Star size={14} className={isFav ? "fill-slate-950 text-slate-950" : ""} />
+            </button>
+
+            {/* Bell Alarm Button */}
             <button
               type="button"
               onClick={(e) => {

@@ -23,6 +23,7 @@ export interface ScheduleCardDto {
   platform: string;
   price: string;
   progress: number;
+  category?: 'ADALAR' | 'BOGAZ';
   stops?: { name: string; time: string }[];
 }
 
