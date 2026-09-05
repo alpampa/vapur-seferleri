@@ -5,6 +5,9 @@ import { TripStatus } from "@/components/schedule/ScheduleCard";
 import { NearbyRoutes } from "@/components/schedule/NearbyRoutes";
 import { ScheduleListClient } from "@/components/schedule/ScheduleListClient";
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export interface ScheduleCardDto {
   id: string;
   origin: string;

@@ -3,6 +3,7 @@ import type { TripStatus } from "@/components/schedule/ScheduleCard";
 export interface WaypointItem {
   name: string;
   time: string;
+  targetTimeMs: number;
   targetTimeIso: string;
 }
 
@@ -22,9 +23,22 @@ export interface DynamicTripResolution {
   isDeparted: boolean;         // Active for 30s right after leg departure
   countdown: string | null;    // Active during last 5 minutes (0 to 5 mins)
   status: TripStatus;
-  isExpired: boolean;          // Should be removed from screen
+  isExpired: boolean;          // True if 30s passed after last departure leg (should be removed from screen)
   waypoints: DynamicWaypointView[];
   activeLegIndex: number;
+}
+
+/**
+ * Gets today's YYYY-MM-DD in Europe/Istanbul timezone
+ */
+export function getIstanbulTodayDateStr(nowMs: number = Date.now()): string {
+  const formatter = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Europe/Istanbul',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  });
+  return formatter.format(new Date(nowMs)); // Returns "YYYY-MM-DD"
 }
 
 /**
@@ -40,34 +54,30 @@ export function resolveDynamicTrip(
   nowMs: number = Date.now(),
   serverTimeIso?: string
 ): DynamicTripResolution {
-  // Compute accurate server offset if provided
-  let accurateNow = nowMs;
-  if (serverTimeIso) {
-    const serverMs = new Date(serverTimeIso).getTime();
-    const clientMs = nowMs;
-    accurateNow = clientMs + (serverMs - clientMs);
-  }
+  const accurateNow = nowMs;
+  const todayIsoDate = getIstanbulTodayDateStr(accurateNow);
 
-  // Base date string (YYYY-MM-DD) from targetTimeIso
-  const baseIsoDate = targetTimeIso.split('T')[0] || new Date().toISOString().split('T')[0];
-
-  // 1. Build chronological waypoints list
+  // 1. Build chronological waypoints list with live ISO timestamps for today
   const allWaypoints: WaypointItem[] = [];
   
   // Origin
+  const originIso = `${todayIsoDate}T${departureTime}:00+03:00`;
   allWaypoints.push({
     name: initialOrigin,
     time: departureTime,
-    targetTimeIso: targetTimeIso
+    targetTimeMs: new Date(originIso).getTime(),
+    targetTimeIso: originIso
   });
 
   // Intermediate Stops
   if (stops && stops.length > 0) {
     stops.forEach(st => {
+      const stopIso = `${todayIsoDate}T${st.time}:00+03:00`;
       allWaypoints.push({
         name: st.name,
         time: st.time,
-        targetTimeIso: `${baseIsoDate}T${st.time}:00+03:00`
+        targetTimeMs: new Date(stopIso).getTime(),
+        targetTimeIso: stopIso
       });
     });
   }
@@ -75,28 +85,27 @@ export function resolveDynamicTrip(
   // Final Destination
   let finalArrTime = arrivalTime;
   if (!finalArrTime) {
-    // Estimate arrival 15 mins after last stop or 30 mins after departure
     const lastTime = allWaypoints[allWaypoints.length - 1].time;
     const [h, m] = lastTime.split(':').map(Number);
     const estMin = (m + 20) % 60;
     const estHour = (h + Math.floor((m + 20) / 60)) % 24;
     finalArrTime = `${String(estHour).padStart(2, '0')}:${String(estMin).padStart(2, '0')}`;
   }
+  const destIso = `${todayIsoDate}T${finalArrTime}:00+03:00`;
   allWaypoints.push({
     name: destination,
     time: finalArrTime,
-    targetTimeIso: `${baseIsoDate}T${finalArrTime}:00+03:00`
+    targetTimeMs: new Date(destIso).getTime(),
+    targetTimeIso: destIso
   });
 
   const numLegs = allWaypoints.length - 1; // Number of departure stations (excluding final destination arrival)
-  const isDirect = (stops?.length || 0) === 0;
 
   // 2. Find active leg
-  // Each departure leg i is active until 30 seconds after its departure time (T_i + 30000)
+  // Each departure leg i is active until 30 seconds after its departure time (targetTimeMs + 30000)
   for (let i = 0; i < numLegs; i++) {
     const leg = allWaypoints[i];
-    const legDepartureMs = new Date(leg.targetTimeIso).getTime();
-    const diff = legDepartureMs - accurateNow;
+    const diff = leg.targetTimeMs - accurateNow;
 
     // Check if we are before departure or within 30 seconds after departure
     if (diff > -30000) {
@@ -106,17 +115,17 @@ export function resolveDynamicTrip(
       let status: TripStatus = "ON_TIME";
 
       if (diff <= 0) {
-        // Between departure and +30 seconds
+        // Between departure and +30 seconds: Flash "HAREKET ETTİ"
         isDeparted = true;
         status = "IN_TRANSIT";
       } else if (diff <= 5 * 60000) {
-        // Last 5 minutes before departure -> Show Live Countdown MM:SS
+        // Last 5 minutes before departure: Show Live Countdown MM:SS
         const m = Math.floor(diff / 60000);
         const s = Math.floor((diff % 60000) / 1000);
         countdown = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
         status = diff <= 2 * 60000 ? "BOARDING" : "DEPARTING_SOON";
       } else {
-        // More than 5 minutes in the future
+        // More than 5 minutes in the future: Normal "ZAMANINDA"
         status = "ON_TIME";
       }
 
@@ -127,15 +136,15 @@ export function resolveDynamicTrip(
       const h12 = hNum % 12 === 0 ? 12 : hNum % 12;
       const dep12 = `${h12}:${mm} ${isPm ? 'PM' : 'AM'}`;
 
-      // Build waypoints view with Metro / Marmaray states
+      // Build waypoints view with Metro / Marmaray progressive states
       const waypointsView: DynamicWaypointView[] = allWaypoints.map((wp, idx) => {
         let state: "COMPLETED" | "CURRENT" | "UPCOMING" = "UPCOMING";
         if (idx < i) {
-          state = "COMPLETED"; // Green checkmark
+          state = "COMPLETED"; // Green checkmark (completed)
         } else if (idx === i) {
-          state = "CURRENT";   // Glowing / ship icon
+          state = "CURRENT";   // Glowing / active target
         } else {
-          state = "UPCOMING";  // Standard pill
+          state = "UPCOMING";  // Standard upcoming pill
         }
         return {
           name: wp.name,
@@ -161,8 +170,8 @@ export function resolveDynamicTrip(
     }
   }
 
-  // If we reach here, all departure legs have passed by more than 30 seconds
-  // The trip is expired and must be removed from the screen!
+  // If all departure legs have passed by more than 30 seconds:
+  // The trip is expired and will be automatically removed from the screen!
   const finalWaypointsView: DynamicWaypointView[] = allWaypoints.map(wp => ({
     name: wp.name,
     time: wp.time,
@@ -180,7 +189,7 @@ export function resolveDynamicTrip(
     isDeparted: false,
     countdown: null,
     status: "COMPLETED",
-    isExpired: true, // EXPIRED: Will be filtered out from screen!
+    isExpired: true, // EXPIRED: Will be automatically removed from the list!
     waypoints: finalWaypointsView,
     activeLegIndex: numLegs
   };
