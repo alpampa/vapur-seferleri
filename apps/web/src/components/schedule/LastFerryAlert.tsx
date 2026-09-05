@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
-import { Moon, AlertTriangle, Clock, Bell, BellRing, ShieldAlert } from "lucide-react";
+import { Moon, ShieldAlert, Clock, Bell, BellRing } from "lucide-react";
 import type { ScheduleCardDto } from "@/app/page";
 import { useAlarmStore } from "@/store/useAlarmStore";
 import { requestNotificationPermission } from "@/lib/utils/sound";
@@ -31,6 +31,8 @@ export function LastFerryAlert({
   const lastTripInfo = useMemo(() => {
     if (!schedules || schedules.length === 0) return null;
 
+    const isSpecificFilter = (selectedRoute && selectedRoute !== "ALL") || (selectedOrigin && selectedOrigin !== "ALL");
+
     // Filter relevant trips
     let pool = schedules;
     if (selectedRoute && selectedRoute !== "ALL") {
@@ -48,6 +50,16 @@ export function LastFerryAlert({
     const targetMs = latest.targetTimeIso ? new Date(latest.targetTimeIso).getTime() : 0;
     const diff = targetMs - now;
 
+    // Visibility rules to avoid cluttering screen:
+    // 1) If ALL routes selected, only show if diff is <= 45 mins (strictly urgent last ferry)
+    // 2) If specific route/origin selected, show if diff is <= 90 mins or already departed
+    if (!isSpecificFilter && diff > 45 * 60 * 1000) {
+      return null;
+    }
+    if (isSpecificFilter && diff > 90 * 60 * 1000) {
+      return null;
+    }
+
     return {
       trip: latest,
       diff,
@@ -59,19 +71,23 @@ export function LastFerryAlert({
 
   const { trip, diff } = lastTripInfo;
 
-  // If already departed
-  if (diff <= -30000) {
+  // If already departed within the last 30 mins
+  if (diff <= 0 && diff > -1800000) {
     return (
       <div className="px-3 pt-1">
-        <div className="bg-slate-900/90 border border-slate-800 rounded-xl px-3 py-2 text-xs flex items-center justify-between text-slate-400">
-          <div className="flex items-center gap-2">
-            <Moon size={14} className="text-slate-500" />
-            <span>Bu güzergahta bugünkü tüm tarifeli seferler sona erdi. İlk sefer yarın sabah.</span>
+        <div className="bg-slate-900/90 border border-slate-800 rounded-xl px-3 py-1.5 text-xs flex items-center justify-between text-slate-400">
+          <div className="flex items-center gap-1.5">
+            <Moon size={13} className="text-slate-500" />
+            <span className="text-[11px]">Bugünkü son sefer hareket etti. İlk sefer yarın sabah.</span>
           </div>
-          <span className="font-mono text-[10px] text-slate-500 font-bold">TAMAMLANDI</span>
+          <span className="font-mono text-[10px] text-slate-500 font-bold">SONA ERDİ</span>
         </div>
       </div>
     );
+  }
+
+  if (diff <= -1800000) {
+    return null;
   }
 
   const isUrgent = diff > 0 && diff <= 45 * 60 * 1000;
@@ -92,9 +108,9 @@ export function LastFerryAlert({
   return (
     <div className="px-3 pt-1">
       <div
-        className={`rounded-xl p-2.5 transition-all text-xs border shadow-md flex items-center justify-between gap-2 ${
+        className={`rounded-xl p-2 transition-all text-xs border shadow-sm flex items-center justify-between gap-2 ${
           isUrgent
-            ? "bg-rose-950/90 border-rose-500/60 text-rose-100 ring-2 ring-rose-500/30"
+            ? "bg-rose-950/90 border-rose-500/60 text-rose-100 ring-1 ring-rose-500/40"
             : "bg-slate-900/80 border-slate-800 text-slate-300"
         }`}
       >
@@ -104,7 +120,7 @@ export function LastFerryAlert({
               isUrgent ? "bg-rose-600/30 text-rose-400 animate-pulse" : "bg-purple-500/20 text-purple-300"
             }`}
           >
-            {isUrgent ? <ShieldAlert size={15} /> : <Moon size={15} />}
+            {isUrgent ? <ShieldAlert size={14} /> : <Moon size={14} />}
           </div>
 
           <div className="flex flex-col min-w-0">
@@ -117,32 +133,42 @@ export function LastFerryAlert({
               </span>
             </div>
 
-            <div className="text-[10px] text-slate-400 flex items-center gap-1.5 mt-0.5">
-              <span>Kalkış: <strong className="font-mono text-white">{trip.departureTime}</strong> ({trip.operator})</span>
+            <div className="text-[10px] text-slate-400 flex items-center gap-1.5">
+              <span>Kalkış: <strong className="text-white font-mono">{trip.departureTime}</strong></span>
               <span>•</span>
-              <span className={isUrgent ? "text-rose-300 font-bold" : "text-amber-400 font-semibold"}>
-                Kalan Süre: {countdownText}
+              <span className="font-semibold text-amber-300">
+                {isUrgent ? "Kalkışa Kalan:" : "Kalan Süre:"} {countdownText}
               </span>
             </div>
           </div>
         </div>
 
-        {/* Quick Alarm Button */}
+        {/* Alarm Button */}
         <button
-          type="button"
           onClick={() => {
             requestNotificationPermission();
             toggleAlarm(trip.id);
           }}
-          title={hasAlarm ? "Son vapur alarmı kurulu" : "Son vapur için alarm kur"}
-          className={`px-2 py-1 rounded-lg text-[10px] font-bold shrink-0 flex items-center gap-1 transition-all border ${
+          title={hasAlarm ? "Alarm Kurulu" : "Son vapur için alarm kur"}
+          className={`px-2 py-1 rounded-lg text-[10px] font-bold flex items-center gap-1 transition-colors shrink-0 ${
             hasAlarm
-              ? "bg-amber-500/20 border-amber-400 text-amber-300"
-              : "bg-slate-800 hover:bg-slate-700 border-slate-700 text-slate-300 hover:text-white"
+              ? "bg-amber-400 text-slate-950 shadow-sm"
+              : isUrgent
+              ? "bg-rose-600 hover:bg-rose-500 text-white"
+              : "bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700"
           }`}
         >
-          {hasAlarm ? <BellRing size={12} className="text-amber-400 animate-bounce" /> : <Bell size={12} />}
-          <span className="hidden sm:inline">{hasAlarm ? "Alarm Açık" : "Beni Uyar"}</span>
+          {hasAlarm ? (
+            <>
+              <BellRing size={12} className="animate-bounce" />
+              <span>Alarm Açık</span>
+            </>
+          ) : (
+            <>
+              <Bell size={12} />
+              <span>Alarm Kur</span>
+            </>
+          )}
         </button>
       </div>
     </div>

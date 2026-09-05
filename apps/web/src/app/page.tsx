@@ -25,6 +25,7 @@ export interface ScheduleCardDto {
   progress: number;
   category?: 'ADALAR' | 'BOGAZ';
   stops?: { name: string; time: string }[];
+  arrivalTime?: string;
 }
 
 export interface SchedulesResponse {
