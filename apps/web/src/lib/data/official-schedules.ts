@@ -7187,7 +7187,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
       },
       {
         "name": "Heybeliada",
-        "time": "08:28"
+        "time": "08:30"
       }
     ]
   },
@@ -7212,7 +7212,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
       },
       {
         "name": "Heybeliada",
-        "time": "10:58"
+        "time": "11:00"
       }
     ]
   },
@@ -7237,7 +7237,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
       },
       {
         "name": "Heybeliada",
-        "time": "11:28"
+        "time": "11:30"
       }
     ]
   },
@@ -7262,7 +7262,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
       },
       {
         "name": "Heybeliada",
-        "time": "13:28"
+        "time": "13:30"
       }
     ]
   },
@@ -7287,7 +7287,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
       },
       {
         "name": "Heybeliada",
-        "time": "15:28"
+        "time": "15:30"
       }
     ]
   },
@@ -7312,7 +7312,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
       },
       {
         "name": "Heybeliada",
-        "time": "17:28"
+        "time": "17:30"
       }
     ]
   },
@@ -7337,7 +7337,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
       },
       {
         "name": "Heybeliada",
-        "time": "19:58"
+        "time": "20:00"
       }
     ]
   },
@@ -7354,7 +7354,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     "stops": [
       {
         "name": "Heybeliada",
-        "time": "09:57"
+        "time": "09:55"
       },
       {
         "name": "Kınalıada",
@@ -7379,7 +7379,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     "stops": [
       {
         "name": "Heybeliada",
-        "time": "11:27"
+        "time": "11:25"
       },
       {
         "name": "Kınalıada",
@@ -7404,7 +7404,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     "stops": [
       {
         "name": "Heybeliada",
-        "time": "12:57"
+        "time": "12:55"
       },
       {
         "name": "Kınalıada",
@@ -7429,7 +7429,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     "stops": [
       {
         "name": "Heybeliada",
-        "time": "14:57"
+        "time": "14:55"
       },
       {
         "name": "Kınalıada",
@@ -7454,7 +7454,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     "stops": [
       {
         "name": "Heybeliada",
-        "time": "16:57"
+        "time": "16:55"
       },
       {
         "name": "Kınalıada",
@@ -7479,7 +7479,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     "stops": [
       {
         "name": "Heybeliada",
-        "time": "18:57"
+        "time": "18:55"
       },
       {
         "name": "Kınalıada",
@@ -7504,7 +7504,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     "stops": [
       {
         "name": "Heybeliada",
-        "time": "20:27"
+        "time": "20:25"
       },
       {
         "name": "Kınalıada",
@@ -7533,7 +7533,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
       },
       {
         "name": "Heybeliada",
-        "time": "09:52"
+        "time": "09:50"
       }
     ]
   },
@@ -7554,7 +7554,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
       },
       {
         "name": "Heybeliada",
-        "time": "11:52"
+        "time": "11:50"
       }
     ]
   },
@@ -7575,7 +7575,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
       },
       {
         "name": "Heybeliada",
-        "time": "13:22"
+        "time": "13:20"
       }
     ]
   },
@@ -7596,7 +7596,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
       },
       {
         "name": "Heybeliada",
-        "time": "16:52"
+        "time": "16:50"
       }
     ]
   },
@@ -7617,7 +7617,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
       },
       {
         "name": "Heybeliada",
-        "time": "18:52"
+        "time": "18:50"
       }
     ]
   },
@@ -7634,7 +7634,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     "stops": [
       {
         "name": "Heybeliada",
-        "time": "10:28"
+        "time": "10:30"
       },
       {
         "name": "Kınalıada",
@@ -7655,7 +7655,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     "stops": [
       {
         "name": "Heybeliada",
-        "time": "12:28"
+        "time": "12:30"
       },
       {
         "name": "Kınalıada",
@@ -7676,7 +7676,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     "stops": [
       {
         "name": "Heybeliada",
-        "time": "14:58"
+        "time": "15:00"
       },
       {
         "name": "Kınalıada",
@@ -7697,7 +7697,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     "stops": [
       {
         "name": "Heybeliada",
-        "time": "17:28"
+        "time": "17:30"
       },
       {
         "name": "Kınalıada",
@@ -7718,7 +7718,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     "stops": [
       {
         "name": "Heybeliada",
-        "time": "19:28"
+        "time": "19:30"
       },
       {
         "name": "Kınalıada",
@@ -8569,7 +8569,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     "operator": "Dentur Avrasya",
     "category": "BOGAZ",
     "departureTime": "07:15",
-    "arrivalTime": "07:27",
+    "arrivalTime": "07:25",
     "platform": "Dentur Kabataş İskelesi",
     "price": "₺27.00"
   },
@@ -8580,7 +8580,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     "operator": "Dentur Avrasya",
     "category": "BOGAZ",
     "departureTime": "07:45",
-    "arrivalTime": "07:57",
+    "arrivalTime": "07:55",
     "platform": "Dentur Kabataş İskelesi",
     "price": "₺27.00"
   },
@@ -8591,7 +8591,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     "operator": "Dentur Avrasya",
     "category": "BOGAZ",
     "departureTime": "08:15",
-    "arrivalTime": "08:27",
+    "arrivalTime": "08:25",
     "platform": "Dentur Kabataş İskelesi",
     "price": "₺27.00"
   },
@@ -8602,7 +8602,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     "operator": "Dentur Avrasya",
     "category": "BOGAZ",
     "departureTime": "08:45",
-    "arrivalTime": "08:57",
+    "arrivalTime": "08:55",
     "platform": "Dentur Kabataş İskelesi",
     "price": "₺27.00"
   },
@@ -8613,7 +8613,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     "operator": "Dentur Avrasya",
     "category": "BOGAZ",
     "departureTime": "09:15",
-    "arrivalTime": "09:27",
+    "arrivalTime": "09:25",
     "platform": "Dentur Kabataş İskelesi",
     "price": "₺27.00"
   },
@@ -8624,7 +8624,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     "operator": "Dentur Avrasya",
     "category": "BOGAZ",
     "departureTime": "10:00",
-    "arrivalTime": "10:12",
+    "arrivalTime": "10:10",
     "platform": "Dentur Kabataş İskelesi",
     "price": "₺27.00"
   },
@@ -8635,7 +8635,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     "operator": "Dentur Avrasya",
     "category": "BOGAZ",
     "departureTime": "11:00",
-    "arrivalTime": "11:12",
+    "arrivalTime": "11:10",
     "platform": "Dentur Kabataş İskelesi",
     "price": "₺27.00"
   },
@@ -8646,7 +8646,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     "operator": "Dentur Avrasya",
     "category": "BOGAZ",
     "departureTime": "12:00",
-    "arrivalTime": "12:12",
+    "arrivalTime": "12:10",
     "platform": "Dentur Kabataş İskelesi",
     "price": "₺27.00"
   },
@@ -8657,7 +8657,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     "operator": "Dentur Avrasya",
     "category": "BOGAZ",
     "departureTime": "13:00",
-    "arrivalTime": "13:12",
+    "arrivalTime": "13:10",
     "platform": "Dentur Kabataş İskelesi",
     "price": "₺27.00"
   },
@@ -8668,7 +8668,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     "operator": "Dentur Avrasya",
     "category": "BOGAZ",
     "departureTime": "14:00",
-    "arrivalTime": "14:12",
+    "arrivalTime": "14:10",
     "platform": "Dentur Kabataş İskelesi",
     "price": "₺27.00"
   },
@@ -8679,7 +8679,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     "operator": "Dentur Avrasya",
     "category": "BOGAZ",
     "departureTime": "15:00",
-    "arrivalTime": "15:12",
+    "arrivalTime": "15:10",
     "platform": "Dentur Kabataş İskelesi",
     "price": "₺27.00"
   },
@@ -8690,7 +8690,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     "operator": "Dentur Avrasya",
     "category": "BOGAZ",
     "departureTime": "16:00",
-    "arrivalTime": "16:12",
+    "arrivalTime": "16:10",
     "platform": "Dentur Kabataş İskelesi",
     "price": "₺27.00"
   },
@@ -8701,7 +8701,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     "operator": "Dentur Avrasya",
     "category": "BOGAZ",
     "departureTime": "17:00",
-    "arrivalTime": "17:12",
+    "arrivalTime": "17:10",
     "platform": "Dentur Kabataş İskelesi",
     "price": "₺27.00"
   },
@@ -8712,7 +8712,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     "operator": "Dentur Avrasya",
     "category": "BOGAZ",
     "departureTime": "17:30",
-    "arrivalTime": "17:42",
+    "arrivalTime": "17:40",
     "platform": "Dentur Kabataş İskelesi",
     "price": "₺27.00"
   },
@@ -8723,7 +8723,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     "operator": "Dentur Avrasya",
     "category": "BOGAZ",
     "departureTime": "18:00",
-    "arrivalTime": "18:12",
+    "arrivalTime": "18:10",
     "platform": "Dentur Kabataş İskelesi",
     "price": "₺27.00"
   },
@@ -8734,7 +8734,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     "operator": "Dentur Avrasya",
     "category": "BOGAZ",
     "departureTime": "18:30",
-    "arrivalTime": "18:42",
+    "arrivalTime": "18:40",
     "platform": "Dentur Kabataş İskelesi",
     "price": "₺27.00"
   },
@@ -8745,7 +8745,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     "operator": "Dentur Avrasya",
     "category": "BOGAZ",
     "departureTime": "19:00",
-    "arrivalTime": "19:12",
+    "arrivalTime": "19:10",
     "platform": "Dentur Kabataş İskelesi",
     "price": "₺27.00"
   },
@@ -8756,7 +8756,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     "operator": "Dentur Avrasya",
     "category": "BOGAZ",
     "departureTime": "20:00",
-    "arrivalTime": "20:12",
+    "arrivalTime": "20:10",
     "platform": "Dentur Kabataş İskelesi",
     "price": "₺27.00"
   },
@@ -8767,7 +8767,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     "operator": "Dentur Avrasya",
     "category": "BOGAZ",
     "departureTime": "07:00",
-    "arrivalTime": "07:12",
+    "arrivalTime": "07:10",
     "platform": "Dentur Üsküdar İskelesi",
     "price": "₺27.00"
   },
@@ -8778,7 +8778,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     "operator": "Dentur Avrasya",
     "category": "BOGAZ",
     "departureTime": "07:30",
-    "arrivalTime": "07:42",
+    "arrivalTime": "07:40",
     "platform": "Dentur Üsküdar İskelesi",
     "price": "₺27.00"
   },
@@ -8789,7 +8789,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     "operator": "Dentur Avrasya",
     "category": "BOGAZ",
     "departureTime": "08:00",
-    "arrivalTime": "08:12",
+    "arrivalTime": "08:10",
     "platform": "Dentur Üsküdar İskelesi",
     "price": "₺27.00"
   },
@@ -8800,7 +8800,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     "operator": "Dentur Avrasya",
     "category": "BOGAZ",
     "departureTime": "08:30",
-    "arrivalTime": "08:42",
+    "arrivalTime": "08:40",
     "platform": "Dentur Üsküdar İskelesi",
     "price": "₺27.00"
   },
@@ -8811,7 +8811,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     "operator": "Dentur Avrasya",
     "category": "BOGAZ",
     "departureTime": "09:00",
-    "arrivalTime": "09:12",
+    "arrivalTime": "09:10",
     "platform": "Dentur Üsküdar İskelesi",
     "price": "₺27.00"
   },
@@ -8822,7 +8822,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     "operator": "Dentur Avrasya",
     "category": "BOGAZ",
     "departureTime": "09:45",
-    "arrivalTime": "09:57",
+    "arrivalTime": "09:55",
     "platform": "Dentur Üsküdar İskelesi",
     "price": "₺27.00"
   },
@@ -8833,7 +8833,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     "operator": "Dentur Avrasya",
     "category": "BOGAZ",
     "departureTime": "10:45",
-    "arrivalTime": "10:57",
+    "arrivalTime": "10:55",
     "platform": "Dentur Üsküdar İskelesi",
     "price": "₺27.00"
   },
@@ -8844,7 +8844,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     "operator": "Dentur Avrasya",
     "category": "BOGAZ",
     "departureTime": "11:45",
-    "arrivalTime": "11:57",
+    "arrivalTime": "11:55",
     "platform": "Dentur Üsküdar İskelesi",
     "price": "₺27.00"
   },
@@ -8855,7 +8855,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     "operator": "Dentur Avrasya",
     "category": "BOGAZ",
     "departureTime": "12:45",
-    "arrivalTime": "12:57",
+    "arrivalTime": "12:55",
     "platform": "Dentur Üsküdar İskelesi",
     "price": "₺27.00"
   },
@@ -8866,7 +8866,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     "operator": "Dentur Avrasya",
     "category": "BOGAZ",
     "departureTime": "13:45",
-    "arrivalTime": "13:57",
+    "arrivalTime": "13:55",
     "platform": "Dentur Üsküdar İskelesi",
     "price": "₺27.00"
   },
@@ -8877,7 +8877,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     "operator": "Dentur Avrasya",
     "category": "BOGAZ",
     "departureTime": "14:45",
-    "arrivalTime": "14:57",
+    "arrivalTime": "14:55",
     "platform": "Dentur Üsküdar İskelesi",
     "price": "₺27.00"
   },
@@ -8888,7 +8888,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     "operator": "Dentur Avrasya",
     "category": "BOGAZ",
     "departureTime": "15:45",
-    "arrivalTime": "15:57",
+    "arrivalTime": "15:55",
     "platform": "Dentur Üsküdar İskelesi",
     "price": "₺27.00"
   },
@@ -8899,7 +8899,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     "operator": "Dentur Avrasya",
     "category": "BOGAZ",
     "departureTime": "16:45",
-    "arrivalTime": "16:57",
+    "arrivalTime": "16:55",
     "platform": "Dentur Üsküdar İskelesi",
     "price": "₺27.00"
   },
@@ -8910,7 +8910,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     "operator": "Dentur Avrasya",
     "category": "BOGAZ",
     "departureTime": "17:15",
-    "arrivalTime": "17:27",
+    "arrivalTime": "17:25",
     "platform": "Dentur Üsküdar İskelesi",
     "price": "₺27.00"
   },
@@ -8921,7 +8921,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     "operator": "Dentur Avrasya",
     "category": "BOGAZ",
     "departureTime": "17:45",
-    "arrivalTime": "17:57",
+    "arrivalTime": "17:55",
     "platform": "Dentur Üsküdar İskelesi",
     "price": "₺27.00"
   },
@@ -8932,7 +8932,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     "operator": "Dentur Avrasya",
     "category": "BOGAZ",
     "departureTime": "18:15",
-    "arrivalTime": "18:27",
+    "arrivalTime": "18:25",
     "platform": "Dentur Üsküdar İskelesi",
     "price": "₺27.00"
   },
@@ -8943,7 +8943,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     "operator": "Dentur Avrasya",
     "category": "BOGAZ",
     "departureTime": "18:45",
-    "arrivalTime": "18:57",
+    "arrivalTime": "18:55",
     "platform": "Dentur Üsküdar İskelesi",
     "price": "₺27.00"
   },
@@ -8954,7 +8954,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     "operator": "Dentur Avrasya",
     "category": "BOGAZ",
     "departureTime": "19:45",
-    "arrivalTime": "19:57",
+    "arrivalTime": "19:55",
     "platform": "Dentur Üsküdar İskelesi",
     "price": "₺27.00"
   },

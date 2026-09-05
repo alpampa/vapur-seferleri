@@ -38,13 +38,12 @@ export function TripStatusBadge({ status, delayText }: { status: TripStatus; del
   let label = status.replace("_", " ");
   
   switch (status) {
+    case "ON_TIME": 
+      // Kullanıcı talebi doğrultusunda: "Zamanında" ibaresi kaldırıldı, normal seferler yalın görünür
+      return null;
     case "DEPARTING_SOON": 
       bgColor = "bg-amber-500/20 text-amber-300 border border-amber-500/40 font-black animate-pulse"; 
       label = "AZ KALDI"; 
-      break;
-    case "ON_TIME": 
-      bgColor = "bg-emerald-950/80 text-emerald-300 border border-emerald-500/30 font-bold"; 
-      label = "ZAMANINDA"; 
       break;
     case "BOARDING": 
       bgColor = "bg-blue-600/30 text-blue-300 border border-blue-500/40 font-bold animate-pulse"; 
@@ -63,8 +62,8 @@ export function TripStatusBadge({ status, delayText }: { status: TripStatus; del
       label = "GECİKMELİ"; 
       break;
     case "CANCELLED": 
-      bgColor = "bg-slate-900 text-rose-400 font-bold border border-rose-500/30"; 
-      label = "İPTAL"; 
+      bgColor = "bg-rose-950/90 text-rose-300 font-black border border-rose-500/60 animate-pulse"; 
+      label = "❌ İPTAL EDİLDİ"; 
       break;
     case "COMPLETED": 
       bgColor = "bg-slate-800 text-slate-400"; 

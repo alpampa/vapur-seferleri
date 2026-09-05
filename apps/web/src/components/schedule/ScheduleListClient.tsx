@@ -246,6 +246,12 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather }: 
       }
 
       return true;
+    }).sort((a, b) => {
+      // Kullanıcı kuralı: En üstte yer alacak ilk sefer (kesin kronolojik sıralama)
+      if (a.dyn.isDeparted !== b.dyn.isDeparted) {
+        return a.dyn.isDeparted ? 1 : -1;
+      }
+      return a.dyn.currentDepartureTime.localeCompare(b.dyn.currentDepartureTime);
     });
   }, [activeSchedulesWithDyn, selectedOrigin, selectedRoute, selectedOperator, searchQuery, onlyImminent]);
 

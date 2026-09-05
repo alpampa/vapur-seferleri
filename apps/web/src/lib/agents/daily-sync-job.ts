@@ -18,16 +18,15 @@ export const OFFICIAL_OPERATOR_CRAWLERS: OperatorScraperConfig[] = [
     officialWebsite: "https://sehirhatlari.istanbul",
     timetableEndpoint: "https://sehirhatlari.istanbul/tr/seferler/ic-hatlar",
     category: "HEPSİ",
-    updateFrequency: "Her Gece 03:00 (Günlük Tarama)",
+    updateFrequency: "Her Gece 00:01 (Günlük Resmi Tarama)",
     status: "VERIFIED"
   },
-
   {
     operatorName: "Turyol",
     officialWebsite: "https://www.turyol.com",
     timetableEndpoint: "https://www.turyol.com/Tarife.aspx",
     category: "HEPSİ",
-    updateFrequency: "Her Gece 03:30 (Günlük Tarama)",
+    updateFrequency: "Her Gece 00:01 (Günlük Resmi Tarama)",
     status: "VERIFIED"
   },
   {
@@ -35,7 +34,7 @@ export const OFFICIAL_OPERATOR_CRAWLERS: OperatorScraperConfig[] = [
     officialWebsite: "https://www.mavimarmara.net",
     timetableEndpoint: "https://www.mavimarmara.net/sefer-saatleri",
     category: "ADALAR",
-    updateFrequency: "Her Gece 03:45 (Günlük Tarama)",
+    updateFrequency: "Her Gece 00:01 (Günlük Resmi Tarama)",
     status: "VERIFIED"
   },
   {
@@ -43,7 +42,7 @@ export const OFFICIAL_OPERATOR_CRAWLERS: OperatorScraperConfig[] = [
     officialWebsite: "https://www.denturavrasya.com",
     timetableEndpoint: "https://www.denturavrasya.com/tr-TR/seferler.aspx",
     category: "HEPSİ",
-    updateFrequency: "Her Gece 04:00 (Günlük Tarama)",
+    updateFrequency: "Her Gece 00:01 (Günlük Resmi Tarama)",
     status: "VERIFIED"
   },
   {
@@ -51,7 +50,7 @@ export const OFFICIAL_OPERATOR_CRAWLERS: OperatorScraperConfig[] = [
     officialWebsite: "https://www.prenstur.net",
     timetableEndpoint: "https://www.prenstur.net/sefer-saatleri",
     category: "ADALAR",
-    updateFrequency: "Her Gece 04:15 (Günlük Tarama)",
+    updateFrequency: "Her Gece 00:01 (Günlük Resmi Tarama)",
     status: "VERIFIED"
   }
 ];
