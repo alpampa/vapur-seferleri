@@ -19,7 +19,7 @@ export interface ScheduleCardDto {
   status: TripStatus;
   targetTimeIso?: string;
   delayText?: string;
-  vessel: string;
+  vessel?: string;
   platform: string;
   price: string;
   progress: number;

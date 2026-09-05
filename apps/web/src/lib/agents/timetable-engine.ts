@@ -118,7 +118,6 @@ export async function getLiveOrOfficialSchedules(): Promise<SchedulesResponse> {
       departureTime12: dep12,
       status,
       targetTimeIso: targetIso,
-      vessel: trip.vessel,
       platform: trip.platform,
       price: trip.price,
       progress,

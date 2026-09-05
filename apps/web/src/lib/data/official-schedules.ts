@@ -8,7 +8,7 @@ export interface RawOfficialTrip {
   origin: string;
   destination: string;
   operator: 'Şehir Hatları' | 'Mavi Marmara' | 'Prens Tur';
-  vessel: string;
+
   departureTime: string;
   arrivalTime?: string;
   platform: string;
@@ -27,7 +27,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Kabataş',
     destination: 'Büyükada',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Barış Manço',
+
     departureTime: '06:45',
     arrivalTime: '08:30',
     platform: 'Peron 2',
@@ -40,7 +40,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Kabataş',
     destination: 'Büyükada',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Barış Manço',
+
     departureTime: '08:00',
     arrivalTime: '09:45',
     platform: 'Peron 2',
@@ -53,7 +53,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Kabataş',
     destination: 'Büyükada',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Barış Manço',
+
     departureTime: '09:00',
     arrivalTime: '10:45',
     platform: 'Peron 2',
@@ -66,7 +66,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Kabataş',
     destination: 'Büyükada',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Barış Manço',
+
     departureTime: '10:05',
     arrivalTime: '11:50',
     platform: 'Peron 2',
@@ -79,7 +79,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Kabataş',
     destination: 'Büyükada',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Barış Manço',
+
     departureTime: '11:05',
     arrivalTime: '12:50',
     platform: 'Peron 2',
@@ -92,7 +92,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Kabataş',
     destination: 'Büyükada',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Barış Manço',
+
     departureTime: '12:00',
     arrivalTime: '13:45',
     platform: 'Peron 2',
@@ -105,7 +105,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Kabataş',
     destination: 'Büyükada',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Barış Manço',
+
     departureTime: '14:00',
     arrivalTime: '15:45',
     platform: 'Peron 2',
@@ -118,7 +118,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Kabataş',
     destination: 'Büyükada',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Barış Manço',
+
     departureTime: '16:30',
     arrivalTime: '18:15',
     platform: 'Peron 2',
@@ -131,7 +131,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Kabataş',
     destination: 'Büyükada',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Barış Manço',
+
     departureTime: '17:35',
     arrivalTime: '19:20',
     platform: 'Peron 2',
@@ -144,7 +144,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Kabataş',
     destination: 'Büyükada',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Barış Manço',
+
     departureTime: '18:25',
     arrivalTime: '19:35',
     platform: 'Peron 2',
@@ -157,7 +157,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Kabataş',
     destination: 'Büyükada',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Barış Manço',
+
     departureTime: '18:50',
     arrivalTime: '20:45',
     platform: 'Peron 2',
@@ -170,7 +170,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Kabataş',
     destination: 'Büyükada',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Barış Manço',
+
     departureTime: '19:20',
     arrivalTime: '20:35',
     platform: 'Peron 2',
@@ -183,7 +183,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Kabataş',
     destination: 'Büyükada',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Barış Manço',
+
     departureTime: '19:40',
     arrivalTime: '21:25',
     platform: 'Peron 2',
@@ -196,7 +196,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Kabataş',
     destination: 'Büyükada',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Barış Manço',
+
     departureTime: '21:40',
     arrivalTime: '23:30',
     platform: 'Peron 2',
@@ -209,7 +209,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Kabataş',
     destination: 'Büyükada',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Barış Manço',
+
     departureTime: '23:30',
     arrivalTime: '01:15',
     platform: 'Peron 2',
@@ -223,7 +223,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Kabataş',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Barış Manço',
+
     departureTime: '05:45',
     arrivalTime: '07:45',
     platform: 'Peron 2',
@@ -236,7 +236,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Kabataş',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Barış Manço',
+
     departureTime: '06:35',
     arrivalTime: '08:25',
     platform: 'Peron 2',
@@ -249,7 +249,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Kabataş',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Barış Manço',
+
     departureTime: '07:40',
     arrivalTime: '09:30',
     platform: 'Peron 2',
@@ -262,7 +262,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Kabataş',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Barış Manço',
+
     departureTime: '07:55',
     arrivalTime: '09:05',
     platform: 'Peron 2',
@@ -275,7 +275,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Kabataş',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Barış Manço',
+
     departureTime: '09:00',
     arrivalTime: '10:50',
     platform: 'Peron 2',
@@ -288,7 +288,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Kabataş',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Barış Manço',
+
     departureTime: '10:35',
     arrivalTime: '12:25',
     platform: 'Peron 2',
@@ -301,7 +301,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Kabataş',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Barış Manço',
+
     departureTime: '12:05',
     arrivalTime: '13:55',
     platform: 'Peron 2',
@@ -314,7 +314,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Kabataş',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Barış Manço',
+
     departureTime: '13:30',
     arrivalTime: '15:20',
     platform: 'Peron 2',
@@ -327,7 +327,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Kabataş',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Barış Manço',
+
     departureTime: '15:00',
     arrivalTime: '16:50',
     platform: 'Peron 2',
@@ -340,7 +340,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Kabataş',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Barış Manço',
+
     departureTime: '16:30',
     arrivalTime: '18:20',
     platform: 'Peron 2',
@@ -353,7 +353,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Kabataş',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Barış Manço',
+
     departureTime: '17:35',
     arrivalTime: '19:25',
     platform: 'Peron 2',
@@ -366,7 +366,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Kabataş',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Barış Manço',
+
     departureTime: '18:30',
     arrivalTime: '20:20',
     platform: 'Peron 2',
@@ -379,7 +379,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Kabataş',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Barış Manço',
+
     departureTime: '19:35',
     arrivalTime: '21:25',
     platform: 'Peron 2',
@@ -392,7 +392,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Kabataş',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Barış Manço',
+
     departureTime: '20:35',
     arrivalTime: '22:25',
     platform: 'Peron 2',
@@ -405,7 +405,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Kabataş',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Barış Manço',
+
     departureTime: '21:45',
     arrivalTime: '23:35',
     platform: 'Peron 2',
@@ -422,7 +422,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Kabataş',
     destination: 'Büyükada',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Ahmet Hulusi Yıldırım',
+
     departureTime: '07:30',
     arrivalTime: '09:15',
     platform: 'Peron 2',
@@ -435,7 +435,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Kabataş',
     destination: 'Büyükada',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Ahmet Hulusi Yıldırım',
+
     departureTime: '08:30',
     arrivalTime: '10:15',
     platform: 'Peron 2',
@@ -448,7 +448,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Kabataş',
     destination: 'Büyükada',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Ahmet Hulusi Yıldırım',
+
     departureTime: '09:05',
     arrivalTime: '10:50',
     platform: 'Peron 2',
@@ -461,7 +461,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Kabataş',
     destination: 'Büyükada',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Ahmet Hulusi Yıldırım',
+
     departureTime: '10:05',
     arrivalTime: '11:50',
     platform: 'Peron 2',
@@ -474,7 +474,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Kabataş',
     destination: 'Büyükada',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Ahmet Hulusi Yıldırım',
+
     departureTime: '11:05',
     arrivalTime: '12:50',
     platform: 'Peron 2',
@@ -487,7 +487,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Kabataş',
     destination: 'Büyükada',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Ahmet Hulusi Yıldırım',
+
     departureTime: '12:05',
     arrivalTime: '13:50',
     platform: 'Peron 2',
@@ -500,7 +500,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Kabataş',
     destination: 'Büyükada',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Ahmet Hulusi Yıldırım',
+
     departureTime: '14:00',
     arrivalTime: '15:45',
     platform: 'Peron 2',
@@ -513,7 +513,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Kabataş',
     destination: 'Büyükada',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Ahmet Hulusi Yıldırım',
+
     departureTime: '15:30',
     arrivalTime: '16:45',
     platform: 'Peron 2',
@@ -526,7 +526,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Kabataş',
     destination: 'Büyükada',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Ahmet Hulusi Yıldırım',
+
     departureTime: '16:30',
     arrivalTime: '18:15',
     platform: 'Peron 2',
@@ -539,7 +539,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Kabataş',
     destination: 'Büyükada',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Ahmet Hulusi Yıldırım',
+
     departureTime: '17:35',
     arrivalTime: '19:20',
     platform: 'Peron 2',
@@ -552,7 +552,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Kabataş',
     destination: 'Büyükada',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Ahmet Hulusi Yıldırım',
+
     departureTime: '18:25',
     arrivalTime: '19:35',
     platform: 'Peron 2',
@@ -565,7 +565,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Kabataş',
     destination: 'Büyükada',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Ahmet Hulusi Yıldırım',
+
     departureTime: '18:50',
     arrivalTime: '20:45',
     platform: 'Peron 2',
@@ -578,7 +578,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Kabataş',
     destination: 'Büyükada',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Ahmet Hulusi Yıldırım',
+
     departureTime: '19:20',
     arrivalTime: '20:35',
     platform: 'Peron 2',
@@ -591,7 +591,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Kabataş',
     destination: 'Büyükada',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Ahmet Hulusi Yıldırım',
+
     departureTime: '19:40',
     arrivalTime: '21:25',
     platform: 'Peron 2',
@@ -604,7 +604,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Kabataş',
     destination: 'Büyükada',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Ahmet Hulusi Yıldırım',
+
     departureTime: '21:40',
     arrivalTime: '23:30',
     platform: 'Peron 2',
@@ -617,7 +617,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Kabataş',
     destination: 'Büyükada',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Ahmet Hulusi Yıldırım',
+
     departureTime: '23:30',
     arrivalTime: '01:15',
     platform: 'Peron 2',
@@ -631,7 +631,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Kabataş',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Ahmet Hulusi Yıldırım',
+
     departureTime: '06:15',
     arrivalTime: '08:15',
     platform: 'Peron 2',
@@ -644,7 +644,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Kabataş',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Ahmet Hulusi Yıldırım',
+
     departureTime: '07:00',
     arrivalTime: '08:50',
     platform: 'Peron 2',
@@ -657,7 +657,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Kabataş',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Ahmet Hulusi Yıldırım',
+
     departureTime: '07:35',
     arrivalTime: '09:30',
     platform: 'Peron 2',
@@ -670,7 +670,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Kabataş',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Ahmet Hulusi Yıldırım',
+
     departureTime: '08:15',
     arrivalTime: '09:25',
     platform: 'Peron 2',
@@ -683,7 +683,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Kabataş',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Ahmet Hulusi Yıldırım',
+
     departureTime: '09:00',
     arrivalTime: '10:50',
     platform: 'Peron 2',
@@ -696,7 +696,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Kabataş',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Ahmet Hulusi Yıldırım',
+
     departureTime: '11:00',
     arrivalTime: '12:50',
     platform: 'Peron 2',
@@ -709,7 +709,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Kabataş',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Ahmet Hulusi Yıldırım',
+
     departureTime: '12:05',
     arrivalTime: '13:55',
     platform: 'Peron 2',
@@ -722,7 +722,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Kabataş',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Ahmet Hulusi Yıldırım',
+
     departureTime: '13:30',
     arrivalTime: '15:20',
     platform: 'Peron 2',
@@ -735,7 +735,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Kabataş',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Ahmet Hulusi Yıldırım',
+
     departureTime: '15:00',
     arrivalTime: '16:50',
     platform: 'Peron 2',
@@ -748,7 +748,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Kabataş',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Ahmet Hulusi Yıldırım',
+
     departureTime: '16:30',
     arrivalTime: '18:20',
     platform: 'Peron 2',
@@ -761,7 +761,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Kabataş',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Ahmet Hulusi Yıldırım',
+
     departureTime: '17:00',
     arrivalTime: '18:30',
     platform: 'Peron 2',
@@ -774,7 +774,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Kabataş',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Ahmet Hulusi Yıldırım',
+
     departureTime: '17:35',
     arrivalTime: '19:25',
     platform: 'Peron 2',
@@ -787,7 +787,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Kabataş',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Ahmet Hulusi Yıldırım',
+
     departureTime: '18:30',
     arrivalTime: '20:20',
     platform: 'Peron 2',
@@ -800,7 +800,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Kabataş',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Ahmet Hulusi Yıldırım',
+
     departureTime: '19:35',
     arrivalTime: '21:25',
     platform: 'Peron 2',
@@ -813,7 +813,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Kabataş',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Ahmet Hulusi Yıldırım',
+
     departureTime: '20:35',
     arrivalTime: '22:25',
     platform: 'Peron 2',
@@ -826,7 +826,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Kabataş',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Ahmet Hulusi Yıldırım',
+
     departureTime: '21:45',
     arrivalTime: '23:35',
     platform: 'Peron 2',
@@ -843,7 +843,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Bostancı',
     destination: 'Büyükada',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Moda',
+
     departureTime: '02:00',
     arrivalTime: '03:10',
     platform: 'Peron 2',
@@ -855,7 +855,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Bostancı',
     destination: 'Büyükada',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Moda',
+
     departureTime: '04:45',
     arrivalTime: '05:55',
     platform: 'Peron 2',
@@ -867,7 +867,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Bostancı',
     destination: 'Büyükada',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Moda',
+
     departureTime: '08:20',
     arrivalTime: '-',
     platform: 'Peron 2',
@@ -879,7 +879,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Bostancı',
     destination: 'Büyükada',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Moda',
+
     departureTime: '15:10',
     arrivalTime: '16:20',
     platform: 'Peron 2',
@@ -891,7 +891,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Bostancı',
     destination: 'Büyükada',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Moda',
+
     departureTime: '21:45',
     arrivalTime: '22:55',
     platform: 'Peron 2',
@@ -904,7 +904,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Bostancı',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Moda',
+
     departureTime: '06:45',
     arrivalTime: '07:30',
     platform: 'Peron 2',
@@ -916,7 +916,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Bostancı',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Moda',
+
     departureTime: '08:20',
     arrivalTime: '-',
     platform: 'Peron 2',
@@ -928,7 +928,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Bostancı',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Moda',
+
     departureTime: '10:00',
     arrivalTime: '11:10',
     platform: 'Peron 2',
@@ -940,7 +940,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Bostancı',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Moda',
+
     departureTime: '11:35',
     arrivalTime: '-',
     platform: 'Peron 2',
@@ -952,7 +952,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Bostancı',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Moda',
+
     departureTime: '19:10',
     arrivalTime: '20:20',
     platform: 'Peron 2',
@@ -964,7 +964,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Bostancı',
     operator: 'Şehir Hatları',
-    vessel: 'ŞH-Moda',
+
     departureTime: '00:35',
     arrivalTime: '01:45',
     platform: 'Peron 2',
@@ -980,7 +980,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Bostancı',
     destination: 'Büyükada',
     operator: 'Mavi Marmara',
-    vessel: 'Marmara-1',
+
     departureTime: '07:10',
     platform: 'Peron 1',
     price: '₺65.00',
@@ -991,7 +991,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Bostancı',
     destination: 'Büyükada',
     operator: 'Mavi Marmara',
-    vessel: 'Marmara-1',
+
     departureTime: '08:00',
     platform: 'Peron 1',
     price: '₺65.00',
@@ -1002,7 +1002,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Bostancı',
     destination: 'Büyükada',
     operator: 'Mavi Marmara',
-    vessel: 'Marmara-1',
+
     departureTime: '09:00',
     platform: 'Peron 1',
     price: '₺65.00',
@@ -1013,7 +1013,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Bostancı',
     destination: 'Büyükada',
     operator: 'Mavi Marmara',
-    vessel: 'Marmara-1',
+
     departureTime: '09:50',
     platform: 'Peron 1',
     price: '₺65.00',
@@ -1024,7 +1024,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Bostancı',
     destination: 'Büyükada',
     operator: 'Mavi Marmara',
-    vessel: 'Marmara-1',
+
     departureTime: '10:45',
     platform: 'Peron 1',
     price: '₺65.00',
@@ -1035,7 +1035,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Bostancı',
     destination: 'Büyükada',
     operator: 'Mavi Marmara',
-    vessel: 'Marmara-1',
+
     departureTime: '11:45',
     platform: 'Peron 1',
     price: '₺65.00',
@@ -1046,7 +1046,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Bostancı',
     destination: 'Büyükada',
     operator: 'Mavi Marmara',
-    vessel: 'Marmara-1',
+
     departureTime: '12:40',
     platform: 'Peron 1',
     price: '₺65.00',
@@ -1057,7 +1057,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Bostancı',
     destination: 'Büyükada',
     operator: 'Mavi Marmara',
-    vessel: 'Marmara-1',
+
     departureTime: '13:30',
     platform: 'Peron 1',
     price: '₺65.00',
@@ -1068,7 +1068,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Bostancı',
     destination: 'Büyükada',
     operator: 'Mavi Marmara',
-    vessel: 'Marmara-1',
+
     departureTime: '14:30',
     platform: 'Peron 1',
     price: '₺65.00',
@@ -1079,7 +1079,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Bostancı',
     destination: 'Büyükada',
     operator: 'Mavi Marmara',
-    vessel: 'Marmara-1',
+
     departureTime: '15:15',
     platform: 'Peron 1',
     price: '₺65.00',
@@ -1090,7 +1090,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Bostancı',
     destination: 'Büyükada',
     operator: 'Mavi Marmara',
-    vessel: 'Marmara-1',
+
     departureTime: '15:50',
     platform: 'Peron 1',
     price: '₺65.00',
@@ -1101,7 +1101,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Bostancı',
     destination: 'Büyükada',
     operator: 'Mavi Marmara',
-    vessel: 'Marmara-1',
+
     departureTime: '16:35',
     platform: 'Peron 1',
     price: '₺65.00',
@@ -1112,7 +1112,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Bostancı',
     destination: 'Büyükada',
     operator: 'Mavi Marmara',
-    vessel: 'Marmara-1',
+
     departureTime: '17:15',
     platform: 'Peron 1',
     price: '₺65.00',
@@ -1123,7 +1123,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Bostancı',
     destination: 'Büyükada',
     operator: 'Mavi Marmara',
-    vessel: 'Marmara-1',
+
     departureTime: '17:45',
     platform: 'Peron 1',
     price: '₺65.00',
@@ -1134,7 +1134,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Bostancı',
     destination: 'Büyükada',
     operator: 'Mavi Marmara',
-    vessel: 'Marmara-1',
+
     departureTime: '18:20',
     platform: 'Peron 1',
     price: '₺65.00',
@@ -1145,7 +1145,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Bostancı',
     destination: 'Büyükada',
     operator: 'Mavi Marmara',
-    vessel: 'Marmara-1',
+
     departureTime: '19:00',
     platform: 'Peron 1',
     price: '₺65.00',
@@ -1156,7 +1156,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Bostancı',
     destination: 'Büyükada',
     operator: 'Mavi Marmara',
-    vessel: 'Marmara-1',
+
     departureTime: '19:30',
     platform: 'Peron 1',
     price: '₺65.00',
@@ -1167,7 +1167,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Bostancı',
     destination: 'Büyükada',
     operator: 'Mavi Marmara',
-    vessel: 'Marmara-1',
+
     departureTime: '20:15',
     platform: 'Peron 1',
     price: '₺65.00',
@@ -1178,7 +1178,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Bostancı',
     destination: 'Büyükada',
     operator: 'Mavi Marmara',
-    vessel: 'Marmara-1',
+
     departureTime: '21:00',
     platform: 'Peron 1',
     price: '₺65.00',
@@ -1189,7 +1189,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Bostancı',
     destination: 'Büyükada',
     operator: 'Mavi Marmara',
-    vessel: 'Marmara-1',
+
     departureTime: '22:00',
     platform: 'Peron 1',
     price: '₺65.00',
@@ -1200,7 +1200,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Bostancı',
     destination: 'Büyükada',
     operator: 'Mavi Marmara',
-    vessel: 'Marmara-1',
+
     departureTime: '23:00',
     platform: 'Peron 1',
     price: '₺65.00',
@@ -1211,7 +1211,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Bostancı',
     destination: 'Büyükada',
     operator: 'Mavi Marmara',
-    vessel: 'Marmara-1',
+
     departureTime: '23:45',
     platform: 'Peron 1',
     price: '₺65.00',
@@ -1223,7 +1223,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Bostancı',
     operator: 'Mavi Marmara',
-    vessel: 'Marmara-1',
+
     departureTime: '06:25',
     platform: 'Peron 1',
     price: '₺65.00',
@@ -1234,7 +1234,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Bostancı',
     operator: 'Mavi Marmara',
-    vessel: 'Marmara-1',
+
     departureTime: '08:00',
     platform: 'Peron 1',
     price: '₺65.00',
@@ -1245,7 +1245,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Bostancı',
     operator: 'Mavi Marmara',
-    vessel: 'Marmara-1',
+
     departureTime: '08:50',
     platform: 'Peron 1',
     price: '₺65.00',
@@ -1256,7 +1256,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Bostancı',
     operator: 'Mavi Marmara',
-    vessel: 'Marmara-1',
+
     departureTime: '09:35',
     platform: 'Peron 1',
     price: '₺65.00',
@@ -1267,7 +1267,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Bostancı',
     operator: 'Mavi Marmara',
-    vessel: 'Marmara-1',
+
     departureTime: '10:25',
     platform: 'Peron 1',
     price: '₺65.00',
@@ -1278,7 +1278,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Bostancı',
     operator: 'Mavi Marmara',
-    vessel: 'Marmara-1',
+
     departureTime: '11:20',
     platform: 'Peron 1',
     price: '₺65.00',
@@ -1289,7 +1289,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Bostancı',
     operator: 'Mavi Marmara',
-    vessel: 'Marmara-1',
+
     departureTime: '12:35',
     platform: 'Peron 1',
     price: '₺65.00',
@@ -1300,7 +1300,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Bostancı',
     operator: 'Mavi Marmara',
-    vessel: 'Marmara-1',
+
     departureTime: '13:15',
     platform: 'Peron 1',
     price: '₺65.00',
@@ -1311,7 +1311,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Bostancı',
     operator: 'Mavi Marmara',
-    vessel: 'Marmara-1',
+
     departureTime: '14:05',
     platform: 'Peron 1',
     price: '₺65.00',
@@ -1322,7 +1322,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Bostancı',
     operator: 'Mavi Marmara',
-    vessel: 'Marmara-1',
+
     departureTime: '15:20',
     platform: 'Peron 1',
     price: '₺65.00',
@@ -1333,7 +1333,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Bostancı',
     operator: 'Mavi Marmara',
-    vessel: 'Marmara-1',
+
     departureTime: '16:05',
     platform: 'Peron 1',
     price: '₺65.00',
@@ -1344,7 +1344,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Bostancı',
     operator: 'Mavi Marmara',
-    vessel: 'Marmara-1',
+
     departureTime: '16:40',
     platform: 'Peron 1',
     price: '₺65.00',
@@ -1355,7 +1355,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Bostancı',
     operator: 'Mavi Marmara',
-    vessel: 'Marmara-1',
+
     departureTime: '17:25',
     platform: 'Peron 1',
     price: '₺65.00',
@@ -1366,7 +1366,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Bostancı',
     operator: 'Mavi Marmara',
-    vessel: 'Marmara-1',
+
     departureTime: '18:05',
     platform: 'Peron 1',
     price: '₺65.00',
@@ -1377,7 +1377,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Bostancı',
     operator: 'Mavi Marmara',
-    vessel: 'Marmara-1',
+
     departureTime: '18:20',
     platform: 'Peron 1',
     price: '₺65.00',
@@ -1388,7 +1388,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Bostancı',
     operator: 'Mavi Marmara',
-    vessel: 'Marmara-1',
+
     departureTime: '18:55',
     platform: 'Peron 1',
     price: '₺65.00',
@@ -1399,7 +1399,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Bostancı',
     operator: 'Mavi Marmara',
-    vessel: 'Marmara-1',
+
     departureTime: '19:50',
     platform: 'Peron 1',
     price: '₺65.00',
@@ -1410,7 +1410,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Bostancı',
     operator: 'Mavi Marmara',
-    vessel: 'Marmara-1',
+
     departureTime: '20:35',
     platform: 'Peron 1',
     price: '₺65.00',
@@ -1421,7 +1421,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Bostancı',
     operator: 'Mavi Marmara',
-    vessel: 'Marmara-1',
+
     departureTime: '21:05',
     platform: 'Peron 1',
     price: '₺65.00',
@@ -1432,7 +1432,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Bostancı',
     operator: 'Mavi Marmara',
-    vessel: 'Marmara-1',
+
     departureTime: '21:50',
     platform: 'Peron 1',
     price: '₺65.00',
@@ -1443,7 +1443,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Bostancı',
     operator: 'Mavi Marmara',
-    vessel: 'Marmara-1',
+
     departureTime: '22:50',
     platform: 'Peron 1',
     price: '₺65.00',
@@ -1458,7 +1458,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Kartal',
     destination: 'Büyükada',
     operator: 'Prens Tur',
-    vessel: 'Prens-5',
+
     departureTime: '06:20',
     platform: 'Peron 1',
     price: '₺50.00',
@@ -1469,7 +1469,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Kartal',
     destination: 'Büyükada',
     operator: 'Prens Tur',
-    vessel: 'Prens-5',
+
     departureTime: '07:30',
     platform: 'Peron 1',
     price: '₺50.00',
@@ -1480,7 +1480,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Kartal',
     destination: 'Büyükada',
     operator: 'Prens Tur',
-    vessel: 'Prens-5',
+
     departureTime: '08:30',
     platform: 'Peron 1',
     price: '₺50.00',
@@ -1491,7 +1491,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Kartal',
     destination: 'Büyükada',
     operator: 'Prens Tur',
-    vessel: 'Prens-5',
+
     departureTime: '09:30',
     platform: 'Peron 1',
     price: '₺50.00',
@@ -1502,7 +1502,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Kartal',
     destination: 'Büyükada',
     operator: 'Prens Tur',
-    vessel: 'Prens-5',
+
     departureTime: '10:30',
     platform: 'Peron 1',
     price: '₺50.00',
@@ -1513,7 +1513,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Kartal',
     destination: 'Büyükada',
     operator: 'Prens Tur',
-    vessel: 'Prens-5',
+
     departureTime: '11:30',
     platform: 'Peron 1',
     price: '₺50.00',
@@ -1524,7 +1524,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Kartal',
     destination: 'Büyükada',
     operator: 'Prens Tur',
-    vessel: 'Prens-5',
+
     departureTime: '12:30',
     platform: 'Peron 1',
     price: '₺50.00',
@@ -1535,7 +1535,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Kartal',
     destination: 'Büyükada',
     operator: 'Prens Tur',
-    vessel: 'Prens-5',
+
     departureTime: '13:30',
     platform: 'Peron 1',
     price: '₺50.00',
@@ -1546,7 +1546,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Kartal',
     destination: 'Büyükada',
     operator: 'Prens Tur',
-    vessel: 'Prens-5',
+
     departureTime: '14:30',
     platform: 'Peron 1',
     price: '₺50.00',
@@ -1557,7 +1557,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Kartal',
     destination: 'Büyükada',
     operator: 'Prens Tur',
-    vessel: 'Prens-5',
+
     departureTime: '15:30',
     platform: 'Peron 1',
     price: '₺50.00',
@@ -1568,7 +1568,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Kartal',
     destination: 'Büyükada',
     operator: 'Prens Tur',
-    vessel: 'Prens-5',
+
     departureTime: '16:30',
     platform: 'Peron 1',
     price: '₺50.00',
@@ -1579,7 +1579,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Kartal',
     destination: 'Büyükada',
     operator: 'Prens Tur',
-    vessel: 'Prens-5',
+
     departureTime: '17:30',
     platform: 'Peron 1',
     price: '₺50.00',
@@ -1590,7 +1590,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Kartal',
     destination: 'Büyükada',
     operator: 'Prens Tur',
-    vessel: 'Prens-5',
+
     departureTime: '18:30',
     platform: 'Peron 1',
     price: '₺50.00',
@@ -1601,7 +1601,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Kartal',
     destination: 'Büyükada',
     operator: 'Prens Tur',
-    vessel: 'Prens-5',
+
     departureTime: '19:30',
     platform: 'Peron 1',
     price: '₺50.00',
@@ -1612,7 +1612,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Kartal',
     destination: 'Büyükada',
     operator: 'Prens Tur',
-    vessel: 'Prens-5',
+
     departureTime: '20:30',
     platform: 'Peron 1',
     price: '₺50.00',
@@ -1624,7 +1624,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Kartal',
     operator: 'Prens Tur',
-    vessel: 'Prens-5',
+
     departureTime: '07:00',
     platform: 'Peron 1',
     price: '₺50.00',
@@ -1635,7 +1635,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Kartal',
     operator: 'Prens Tur',
-    vessel: 'Prens-5',
+
     departureTime: '08:00',
     platform: 'Peron 1',
     price: '₺50.00',
@@ -1646,7 +1646,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Kartal',
     operator: 'Prens Tur',
-    vessel: 'Prens-5',
+
     departureTime: '09:00',
     platform: 'Peron 1',
     price: '₺50.00',
@@ -1657,7 +1657,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Kartal',
     operator: 'Prens Tur',
-    vessel: 'Prens-5',
+
     departureTime: '10:00',
     platform: 'Peron 1',
     price: '₺50.00',
@@ -1668,7 +1668,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Kartal',
     operator: 'Prens Tur',
-    vessel: 'Prens-5',
+
     departureTime: '11:00',
     platform: 'Peron 1',
     price: '₺50.00',
@@ -1679,7 +1679,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Kartal',
     operator: 'Prens Tur',
-    vessel: 'Prens-5',
+
     departureTime: '12:00',
     platform: 'Peron 1',
     price: '₺50.00',
@@ -1690,7 +1690,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Kartal',
     operator: 'Prens Tur',
-    vessel: 'Prens-5',
+
     departureTime: '13:00',
     platform: 'Peron 1',
     price: '₺50.00',
@@ -1701,7 +1701,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Kartal',
     operator: 'Prens Tur',
-    vessel: 'Prens-5',
+
     departureTime: '14:00',
     platform: 'Peron 1',
     price: '₺50.00',
@@ -1712,7 +1712,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Kartal',
     operator: 'Prens Tur',
-    vessel: 'Prens-5',
+
     departureTime: '15:00',
     platform: 'Peron 1',
     price: '₺50.00',
@@ -1723,7 +1723,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Kartal',
     operator: 'Prens Tur',
-    vessel: 'Prens-5',
+
     departureTime: '16:00',
     platform: 'Peron 1',
     price: '₺50.00',
@@ -1734,7 +1734,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Kartal',
     operator: 'Prens Tur',
-    vessel: 'Prens-5',
+
     departureTime: '17:00',
     platform: 'Peron 1',
     price: '₺50.00',
@@ -1745,7 +1745,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Kartal',
     operator: 'Prens Tur',
-    vessel: 'Prens-5',
+
     departureTime: '18:00',
     platform: 'Peron 1',
     price: '₺50.00',
@@ -1756,7 +1756,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Kartal',
     operator: 'Prens Tur',
-    vessel: 'Prens-5',
+
     departureTime: '19:00',
     platform: 'Peron 1',
     price: '₺50.00',
@@ -1767,7 +1767,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Kartal',
     operator: 'Prens Tur',
-    vessel: 'Prens-5',
+
     departureTime: '20:00',
     platform: 'Peron 1',
     price: '₺50.00',
@@ -1778,7 +1778,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     origin: 'Büyükada',
     destination: 'Kartal',
     operator: 'Prens Tur',
-    vessel: 'Prens-5',
+
     departureTime: '21:00',
     platform: 'Peron 1',
     price: '₺50.00',
