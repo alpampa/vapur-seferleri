@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { Radar } from "lucide-react";
+import { MarineAisRadarModal } from "./MarineAisRadarModal";
 import "leaflet/dist/leaflet.css";
 import { ISTANBUL_PIERS, type PierLocation } from "@/lib/services/route-planner";
 import type { ScheduleCardDto } from "@/app/page";
@@ -28,6 +30,7 @@ export function InteractiveMarineMap({
   const routeLayerRef = useRef<any>(null);
   const vesselsLayerRef = useRef<any>(null);
   const [mounted, setMounted] = useState(false);
+  const [isRadarOpen, setIsRadarOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -231,11 +234,27 @@ export function InteractiveMarineMap({
       {/* Map Target Container */}
       <div ref={mapContainerRef} className="w-full h-full" />
 
+      {/* Live AIS Radar Button */}
+      <button
+        onClick={() => setIsRadarOpen(true)}
+        className="absolute top-2.5 right-2.5 z-[1000] flex items-center gap-1.5 bg-emerald-950/90 hover:bg-emerald-900 text-emerald-300 border border-emerald-500/50 backdrop-blur-md px-2.5 py-1 rounded-lg text-[11px] font-black shadow-lg transition-all"
+      >
+        <Radar size={13} className="animate-spin" style={{ animationDuration: '4s' }} />
+        <span>Canlı AIS Radarı</span>
+      </button>
+
       {/* Map Overlay Badge */}
       <div className="absolute top-2.5 left-2.5 z-[1000] flex items-center gap-2 bg-slate-900/90 backdrop-blur-md px-2.5 py-1 rounded-lg border border-slate-700/80 text-[11px] font-bold text-white shadow-md">
         <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
         <span>Canlı İstanbul Deniz Haritası</span>
       </div>
+
+      <MarineAisRadarModal
+        isOpen={isRadarOpen}
+        onClose={() => setIsRadarOpen(false)}
+        origin={selectedOrigin}
+        destination={selectedDestination}
+      />
 
       {/* Quick Legend Overlay */}
       <div className="absolute bottom-2.5 right-2.5 z-[1000] flex items-center gap-2 bg-slate-950/90 backdrop-blur-md px-2 py-1 rounded-lg border border-slate-800 text-[10px] text-slate-300 shadow-md">

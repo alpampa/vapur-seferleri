@@ -1,7 +1,8 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { Ship, MapPin, Clock, X, ChevronRight, Anchor, ShieldCheck, Ticket, Users, Train, Star, Bell, BellRing, Navigation } from "lucide-react";
+import { Ship, MapPin, Clock, X, ChevronRight, Anchor, ShieldCheck, Ticket, Users, Train, Star, Bell, BellRing, Navigation, Radar } from "lucide-react";
+import { MarineAisRadarModal } from "@/components/map/MarineAisRadarModal";
 import { TripStatusBadge } from "./ScheduleCard";
 import type { ScheduleCardDto } from "@/app/page";
 import { predictTripOccupancy } from "@/lib/utils/occupancy";
@@ -24,6 +25,7 @@ export function TripDetailsSheet({ schedule, isOpen, onClose, serverTimeIso }: T
   const { isFavorite, toggleFavorite } = useFavoritesStore();
 
   const [dynState, setDynState] = useState<DynamicTripResolution | null>(null);
+  const [isRadarOpen, setIsRadarOpen] = useState(false);
 
   useEffect(() => {
     if (!schedule) {
@@ -192,6 +194,35 @@ export function TripDetailsSheet({ schedule, isOpen, onClose, serverTimeIso }: T
               </div>
             </div>
 
+            {/* Canlı Deniz Radarı (AIS) Butonu */}
+            <button
+              type="button"
+              onClick={() => setIsRadarOpen(true)}
+              className="w-full mb-4 p-3 rounded-xl bg-gradient-to-r from-emerald-950/80 via-teal-950/60 to-slate-900 border border-emerald-500/40 hover:border-emerald-400 text-left flex items-center justify-between gap-3 shadow-md group transition-all"
+            >
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                  <Radar size={18} className="animate-spin" style={{ animationDuration: '4s' }} />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-black text-white tracking-tight">
+                      CANLI DENİZ RADARI (AIS)
+                    </span>
+                    <span className="text-[9px] font-mono font-bold bg-emerald-500/30 text-emerald-300 px-1.5 py-0.2 rounded">
+                      GERÇEK GEMİ ADLARI
+                    </span>
+                  </div>
+                  <p className="text-[10px] text-slate-300 mt-0.5">
+                    Denizdeki vapurların anlık telsiz adını, hızını ve rotasını canlı radarda gör ➔
+                  </p>
+                </div>
+              </div>
+              <div className="text-emerald-400 group-hover:translate-x-0.5 transition-transform text-xs font-bold shrink-0">
+                Radarı Aç ↗
+              </div>
+            </button>
+
             {/* Metro / Marmaray Progressive Route Timeline */}
             {!isDirect && dynState?.waypoints && dynState.waypoints.length > 1 ? (
               <div className="mb-4 bg-slate-900/90 border border-slate-800 rounded-xl p-4 shadow-inner">
@@ -351,6 +382,12 @@ export function TripDetailsSheet({ schedule, isOpen, onClose, serverTimeIso }: T
           </motion.div>
         </>
       )}
+      <MarineAisRadarModal
+        isOpen={isRadarOpen}
+        onClose={() => setIsRadarOpen(false)}
+        origin={schedule?.origin}
+        destination={schedule?.destination}
+      />
     </AnimatePresence>
   );
 }
