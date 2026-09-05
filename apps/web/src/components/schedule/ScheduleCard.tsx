@@ -1,11 +1,13 @@
 "use client";
 
-import { Anchor, Navigation, ShieldCheck, Waves, Crown, Ship, Check, Bell, BellRing, Star } from "lucide-react";
+import { Anchor, Navigation, ShieldCheck, Waves, Crown, Ship, Check, Bell, BellRing, Star, Users, Train } from "lucide-react";
 import { useEffect, useState } from "react";
 import { resolveDynamicTrip, DynamicTripResolution } from "@/lib/utils/dynamic-trip";
 import { useAlarmStore } from "@/store/useAlarmStore";
 import { useFavoritesStore } from "@/store/useFavoritesStore";
 import { requestNotificationPermission } from "@/lib/utils/sound";
+import { predictTripOccupancy } from "@/lib/utils/occupancy";
+import { getPierTransit } from "@/lib/data/pier-transit-connections";
 
 export type TripStatus = "ON_TIME" | "DEPARTING_SOON" | "BOARDING" | "DELAYED" | "CANCELLED" | "IN_TRANSIT" | "ARRIVING" | "COMPLETED";
 
@@ -115,6 +117,9 @@ export function ScheduleCard(props: ScheduleCardProps) {
   const routeKey = `${props.origin} ➔ ${props.destination}`;
   const isFav = isFavorite(routeKey);
 
+  const occupancy = predictTripOccupancy(props.origin, props.destination, props.departureTime);
+  const transitConnections = getPierTransit(props.destination);
+
   const [dynState, setDynState] = useState<DynamicTripResolution>(() => {
     return resolveDynamicTrip(
       props.origin,
@@ -182,8 +187,12 @@ export function ScheduleCard(props: ScheduleCardProps) {
                 {dynState.destination}
               </span>
             </div>
-            <div className="flex items-center gap-2 mt-0.5">
+            <div className="flex items-center gap-2 mt-1 flex-wrap">
               <OperatorBranding operator={props.operator} />
+              <div className={`px-2 py-0.5 rounded-md text-[10px] flex items-center gap-1 shadow-sm ${occupancy.badgeClass}`} title={occupancy.description}>
+                <Users size={11} />
+                <span>{occupancy.label}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -347,6 +356,23 @@ export function ScheduleCard(props: ScheduleCardProps) {
             <span className="text-slate-400">Kalkış İskelesi:</span>
             <span className="text-blue-300 font-black">{props.platform}</span>
           </div>
+        </div>
+      )}
+
+      {/* City Transit / Metro / Marmaray Walking Connections */}
+      {transitConnections.length > 0 && (
+        <div className="flex items-center gap-1.5 overflow-x-auto pt-1.5 border-t border-slate-800/80 text-[10px] text-slate-400 hide-scrollbar">
+          <span className="flex items-center gap-1 text-slate-400 font-bold shrink-0">
+            <Train size={11} className="text-cyan-400" />
+            <span>{props.destination} Aktarmaları:</span>
+          </span>
+          {transitConnections.map((tr, tIdx) => (
+            <div key={tIdx} className="flex items-center gap-1 bg-slate-900 px-1.5 py-0.5 rounded border border-slate-800 shrink-0">
+              <span className={`text-[9px] font-black text-white px-1 rounded ${tr.badgeBg}`}>{tr.line}</span>
+              <span className="text-slate-300 font-semibold">{tr.name.split(' ')[0]}</span>
+              <span className="text-cyan-300 font-bold">({tr.walkMinutes} dk)</span>
+            </div>
+          ))}
         </div>
       )}
     </div>

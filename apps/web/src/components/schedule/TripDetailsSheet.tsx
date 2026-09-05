@@ -1,9 +1,11 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { Ship, MapPin, Clock, X, ChevronRight, Anchor, ShieldCheck, Ticket, Calendar } from "lucide-react";
+import { Ship, MapPin, Clock, X, ChevronRight, Anchor, ShieldCheck, Ticket, Calendar, Users, Train } from "lucide-react";
 import { TripStatusBadge } from "./ScheduleCard";
 import type { ScheduleCardDto } from "@/app/page";
+import { predictTripOccupancy } from "@/lib/utils/occupancy";
+import { getPierTransit } from "@/lib/data/pier-transit-connections";
 
 interface TripDetailsSheetProps {
   schedule: ScheduleCardDto | null;
@@ -96,7 +98,7 @@ export function TripDetailsSheet({ schedule, isOpen, onClose }: TripDetailsSheet
             </div>
 
             {/* Operatör & Sefer Tipi Bilgisi */}
-            <div className="flex items-center gap-3.5 p-4 border border-slate-800 rounded-2xl mb-6 bg-slate-900/60 shadow-md">
+            <div className="flex items-center gap-3.5 p-4 border border-slate-800 rounded-2xl mb-4 bg-slate-900/60 shadow-md">
               <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl flex items-center justify-center shrink-0 shadow-lg shadow-blue-600/30">
                 <Ship className="text-white" size={24} />
               </div>
@@ -107,6 +109,89 @@ export function TripDetailsSheet({ schedule, isOpen, onClose }: TripDetailsSheet
                 </p>
               </div>
             </div>
+
+            {/* Canlı Yolcu Yoğunluğu ve Doluluk Tahmini */}
+            {(() => {
+              const occupancy = predictTripOccupancy(schedule.origin, schedule.destination, schedule.departureTime);
+              return (
+                <div className="p-4 border border-slate-800 rounded-2xl mb-4 bg-slate-900/90 shadow-inner">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-xs font-black uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+                      <Users size={14} className="text-cyan-400" />
+                      YOLCU DOLULUK TAHMİNİ
+                    </span>
+                    <span className={`px-2 py-0.5 rounded text-xs font-black ${occupancy.badgeClass}`}>
+                      {occupancy.label} (~%{occupancy.percentage})
+                    </span>
+                  </div>
+
+                  {/* Progress Bar */}
+                  <div className="w-full h-2 bg-slate-800 rounded-full overflow-hidden mb-2">
+                    <div
+                      className={`h-full rounded-full transition-all duration-500 ${
+                        occupancy.level === 'HIGH' ? 'bg-rose-500' : occupancy.level === 'MEDIUM' ? 'bg-amber-400' : 'bg-emerald-400'
+                      }`}
+                      style={{ width: `${occupancy.percentage}%` }}
+                    />
+                  </div>
+                  <p className="text-xs text-slate-400">{occupancy.description}</p>
+                </div>
+              );
+            })()}
+
+            {/* İskelelerden Raylı Sistem & Şehir İçi Aktarmaları */}
+            {(() => {
+              const originTransit = getPierTransit(schedule.origin);
+              const destTransit = getPierTransit(schedule.destination);
+              if (originTransit.length === 0 && destTransit.length === 0) return null;
+
+              return (
+                <div className="p-4 border border-slate-800 rounded-2xl mb-6 bg-slate-900/90 shadow-inner">
+                  <h3 className="text-xs font-black uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-1.5">
+                    <Train size={14} className="text-cyan-400" />
+                    İSKELELERDEN RAYLI SİSTEM & ŞEHİR İÇİ AKTARMALARI
+                  </h3>
+
+                  <div className="space-y-3">
+                    {/* Origin Transit */}
+                    {originTransit.length > 0 && (
+                      <div>
+                        <span className="text-[11px] font-bold text-blue-400 block mb-1">
+                          📍 {schedule.origin} İskelesi Bağlantıları:
+                        </span>
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          {originTransit.map((t, idx) => (
+                            <div key={idx} className="flex items-center gap-1 bg-slate-950 px-2 py-1 rounded-lg border border-slate-800 text-xs">
+                              <span className={`text-[9px] font-black text-white px-1.5 py-0.2 rounded ${t.badgeBg}`}>{t.line}</span>
+                              <span className="text-slate-300 font-medium">{t.name}</span>
+                              <span className="text-cyan-400 font-bold">({t.walkMinutes} dk yürüyüş)</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Destination Transit */}
+                    {destTransit.length > 0 && (
+                      <div>
+                        <span className="text-[11px] font-bold text-amber-400 block mb-1">
+                          🏁 {schedule.destination} İskelesi Bağlantıları:
+                        </span>
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          {destTransit.map((t, idx) => (
+                            <div key={idx} className="flex items-center gap-1 bg-slate-950 px-2 py-1 rounded-lg border border-slate-800 text-xs">
+                              <span className={`text-[9px] font-black text-white px-1.5 py-0.2 rounded ${t.badgeBg}`}>{t.line}</span>
+                              <span className="text-slate-300 font-medium">{t.name}</span>
+                              <span className="text-amber-400 font-bold">({t.walkMinutes} dk yürüyüş)</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })()}
 
             {/* Duraklar ve Güzergah Zaman Çizelgesi */}
             <div className="mb-6 bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-inner">
