@@ -9,7 +9,8 @@ import { MarineWeatherBanner } from "@/components/weather/MarineWeatherBanner";
 import type { MarineWeatherStatus } from "@/lib/services/marine-weather";
 import { resolveDynamicTrip } from "@/lib/utils/dynamic-trip";
 import { AlarmManager } from "@/components/schedule/AlarmManager";
-import { PierDepartureBoard } from "@/components/schedule/PierDepartureBoard";
+import { TripPlannerWithMap } from "@/components/planner/TripPlannerWithMap";
+import { Compass } from "lucide-react";
 
 // Istanbul Ferry Pier Coordinates (Latitude, Longitude)
 const PIER_COORDINATES: Record<string, { lat: number; lng: number; label: string }> = {
@@ -54,6 +55,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather }: 
   const [selectedOrigin, setSelectedOrigin] = useState<string>("ALL");
   const [selectedOperator, setSelectedOperator] = useState<string>("ALL");
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [showPlanner, setShowPlanner] = useState<boolean>(false);
 
   // Offline LocalStorage Caching
   const [effectiveSchedules, setEffectiveSchedules] = useState<ScheduleCardDto[]>(schedules);
@@ -225,17 +227,36 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather }: 
       {/* Marine Weather & Storm / Lodos Warning Banner */}
       <MarineWeatherBanner weather={marineWeather} />
 
-      {/* İskele Odaklı Havalimanı / Gar Kalkış Panosu (Next 3 Ferries) */}
-      <PierDepartureBoard
-        schedules={effectiveSchedules}
-        serverTimeIso={serverTimeIso}
-        selectedOrigin={selectedOrigin}
-        onSelectOrigin={(pier) => {
-          setSelectedOrigin(pier);
-          setSelectedRoute("ALL");
-        }}
-        onSelectTrip={setSelectedSchedule}
-      />
+      {/* Nasıl Giderim & Canlı Harita Toggle Button */}
+      <div className="px-3 pt-2">
+        <button
+          onClick={() => setShowPlanner(!showPlanner)}
+          className={`w-full py-2 px-3 rounded-xl font-black text-xs flex items-center justify-between transition-all shadow-md ${
+            showPlanner
+              ? "bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-600 text-white ring-2 ring-cyan-400/50"
+              : "bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700/80"
+          }`}
+        >
+          <div className="flex items-center gap-2">
+            <Compass size={16} className={showPlanner ? "text-cyan-200 animate-spin" : "text-cyan-400"} />
+            <span className="tracking-wide">🧭 NASIL GİDERİM? (Aktarma & Canlı Deniz Haritası)</span>
+          </div>
+          <span className="text-[10px] font-bold bg-black/40 px-2 py-0.5 rounded text-cyan-300">
+            {showPlanner ? "Paneli Kapat ▲" : "Rotayı ve Haritayı Aç ▼"}
+          </span>
+        </button>
+      </div>
+
+      {/* Expanded Trip Planner with Live Map */}
+      {showPlanner && (
+        <div className="px-3 pt-2 animate-fadeIn">
+          <TripPlannerWithMap
+            schedules={effectiveSchedules}
+            serverTimeIso={serverTimeIso}
+            onClose={() => setShowPlanner(false)}
+          />
+        </div>
+      )}
 
       {/* Ultra Compact Filter & Search Bar */}
       <div className="px-3 py-2 bg-[#0a0f1d]/95 backdrop-blur-md border-b border-slate-800 sticky top-[49px] z-30 space-y-2 shadow-md">
