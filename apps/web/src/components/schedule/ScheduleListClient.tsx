@@ -26,6 +26,10 @@ const PIER_COORDINATES: Record<string, { lat: number; lng: number; label: string
   "Kınalıada": { lat: 40.9103, lng: 29.0522, label: "Kınalıada İskelesi" },
   "Eminönü": { lat: 41.0186, lng: 28.9739, label: "Eminönü İskelesi" },
   "Beşiktaş": { lat: 41.0422, lng: 29.0067, label: "Beşiktaş İskelesi" },
+  "Üsküdar": { lat: 41.0267, lng: 29.0152, label: "Üsküdar İskelesi" },
+  "Karaköy": { lat: 41.0222, lng: 28.9772, label: "Karaköy İskelesi" },
+  "Yenikapı": { lat: 41.0028, lng: 28.9567, label: "Yenikapı İDO Terminali" },
+  "Bakırköy": { lat: 40.9722, lng: 28.8753, label: "Bakırköy İDO İskelesi" },
   "Maltepe": { lat: 40.9231, lng: 29.1306, label: "Maltepe İskelesi" }
 };
 
@@ -58,6 +62,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather }: 
   const [selectedOperator, setSelectedOperator] = useState<string>("ALL");
   const [searchQuery, setSearchQuery] = useState<string>(" ");
   const [showPlanner, setShowPlanner] = useState<boolean>(false);
+  const [onlyImminent, setOnlyImminent] = useState<boolean>(false);
 
   // Offline LocalStorage Caching
   const [effectiveSchedules, setEffectiveSchedules] = useState<ScheduleCardDto[]>(schedules);
@@ -229,9 +234,20 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather }: 
         if (!inOrigin && !inDest && !inOperator && !inStops) return false;
       }
 
+      if (onlyImminent) {
+        if (dyn.isDeparted) return false;
+        const isImminent = dyn.status === "BOARDING" || (
+          dyn.countdown ? (
+            dyn.countdown.startsWith("00:") || 
+            parseInt(dyn.countdown.split(":")[0], 10) <= 15
+          ) : false
+        );
+        if (!isImminent) return false;
+      }
+
       return true;
     });
-  }, [activeSchedulesWithDyn, selectedOrigin, selectedRoute, selectedOperator, searchQuery]);
+  }, [activeSchedulesWithDyn, selectedOrigin, selectedRoute, selectedOperator, searchQuery, onlyImminent]);
 
   return (
     <>
@@ -380,6 +396,20 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather }: 
             }`}
           >
             TÜMÜ ({activeSchedulesWithDyn.length})
+          </button>
+
+          {/* 15-Minute Imminent Quick Filter / Son Çağrı */}
+          <button
+            onClick={() => setOnlyImminent(!onlyImminent)}
+            className={`px-2.5 py-1 rounded-md text-[11px] font-black whitespace-nowrap transition-all shrink-0 flex items-center gap-1 border ${
+              onlyImminent
+                ? "bg-amber-400 text-slate-950 border-amber-300 shadow-sm ring-1 ring-amber-400/50"
+                : "bg-slate-900 text-amber-300 hover:bg-slate-800 border-amber-500/30"
+            }`}
+            title="Kalkışına 15 dakika veya daha az kalan seferleri göster"
+          >
+            <span className={onlyImminent ? "" : "animate-pulse"}>⚡</span>
+            <span>Son Çağrı (≤ 15 dk)</span>
           </button>
 
           {/* Swap Button if route selected */}

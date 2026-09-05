@@ -3,11 +3,19 @@ export interface RawStop {
   time: string;
 }
 
+export type FerryOperatorName = 
+  | 'Şehir Hatları' 
+  | 'İDO' 
+  | 'Turyol' 
+  | 'Mavi Marmara' 
+  | 'Dentur Avrasya' 
+  | 'Prens Tur';
+
 export interface RawOfficialTrip {
   id: string;
   origin: string;
   destination: string;
-  operator: 'Şehir Hatları' | 'Mavi Marmara' | 'Prens Tur';
+  operator: FerryOperatorName;
   category?: 'ADALAR' | 'BOGAZ';
 
   departureTime: string;
@@ -4889,5 +4897,4412 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     "arrivalTime": "23:50",
     "platform": "Üsküdar İskelesi",
     "price": "₺27.00"
+  }
+,
+  {
+    "id": "ido-bos-buy-0",
+    "origin": "Bostancı",
+    "destination": "Büyükada",
+    "operator": "İDO",
+    "category": "ADALAR",
+    "departureTime": "07:30",
+    "arrivalTime": "08:10",
+    "platform": "İDO Bostancı İskelesi",
+    "price": "₺75.00",
+    "stops": [
+      {
+        "name": "Kınalıada",
+        "time": "07:45"
+      },
+      {
+        "name": "Burgazada",
+        "time": "07:55"
+      },
+      {
+        "name": "Heybeliada",
+        "time": "07:02"
+      }
+    ]
+  },
+  {
+    "id": "ido-bos-buy-1",
+    "origin": "Bostancı",
+    "destination": "Büyükada",
+    "operator": "İDO",
+    "category": "ADALAR",
+    "departureTime": "08:45",
+    "arrivalTime": "09:25",
+    "platform": "İDO Bostancı İskelesi",
+    "price": "₺75.00",
+    "stops": [
+      {
+        "name": "Kınalıada",
+        "time": "08:00"
+      },
+      {
+        "name": "Burgazada",
+        "time": "08:10"
+      },
+      {
+        "name": "Heybeliada",
+        "time": "08:17"
+      }
+    ]
+  },
+  {
+    "id": "ido-bos-buy-2",
+    "origin": "Bostancı",
+    "destination": "Büyükada",
+    "operator": "İDO",
+    "category": "ADALAR",
+    "departureTime": "10:00",
+    "arrivalTime": "10:40",
+    "platform": "İDO Bostancı İskelesi",
+    "price": "₺75.00",
+    "stops": [
+      {
+        "name": "Kınalıada",
+        "time": "10:15"
+      },
+      {
+        "name": "Burgazada",
+        "time": "10:25"
+      },
+      {
+        "name": "Heybeliada",
+        "time": "10:32"
+      }
+    ]
+  },
+  {
+    "id": "ido-bos-buy-3",
+    "origin": "Bostancı",
+    "destination": "Büyükada",
+    "operator": "İDO",
+    "category": "ADALAR",
+    "departureTime": "11:30",
+    "arrivalTime": "12:10",
+    "platform": "İDO Bostancı İskelesi",
+    "price": "₺75.00",
+    "stops": [
+      {
+        "name": "Kınalıada",
+        "time": "11:45"
+      },
+      {
+        "name": "Burgazada",
+        "time": "11:55"
+      },
+      {
+        "name": "Heybeliada",
+        "time": "11:02"
+      }
+    ]
+  },
+  {
+    "id": "ido-bos-buy-4",
+    "origin": "Bostancı",
+    "destination": "Büyükada",
+    "operator": "İDO",
+    "category": "ADALAR",
+    "departureTime": "13:00",
+    "arrivalTime": "13:40",
+    "platform": "İDO Bostancı İskelesi",
+    "price": "₺75.00",
+    "stops": [
+      {
+        "name": "Kınalıada",
+        "time": "13:15"
+      },
+      {
+        "name": "Burgazada",
+        "time": "13:25"
+      },
+      {
+        "name": "Heybeliada",
+        "time": "13:32"
+      }
+    ]
+  },
+  {
+    "id": "ido-bos-buy-5",
+    "origin": "Bostancı",
+    "destination": "Büyükada",
+    "operator": "İDO",
+    "category": "ADALAR",
+    "departureTime": "14:45",
+    "arrivalTime": "15:25",
+    "platform": "İDO Bostancı İskelesi",
+    "price": "₺75.00",
+    "stops": [
+      {
+        "name": "Kınalıada",
+        "time": "14:00"
+      },
+      {
+        "name": "Burgazada",
+        "time": "14:10"
+      },
+      {
+        "name": "Heybeliada",
+        "time": "14:17"
+      }
+    ]
+  },
+  {
+    "id": "ido-bos-buy-6",
+    "origin": "Bostancı",
+    "destination": "Büyükada",
+    "operator": "İDO",
+    "category": "ADALAR",
+    "departureTime": "16:30",
+    "arrivalTime": "17:10",
+    "platform": "İDO Bostancı İskelesi",
+    "price": "₺75.00",
+    "stops": [
+      {
+        "name": "Kınalıada",
+        "time": "16:45"
+      },
+      {
+        "name": "Burgazada",
+        "time": "16:55"
+      },
+      {
+        "name": "Heybeliada",
+        "time": "16:02"
+      }
+    ]
+  },
+  {
+    "id": "ido-bos-buy-7",
+    "origin": "Bostancı",
+    "destination": "Büyükada",
+    "operator": "İDO",
+    "category": "ADALAR",
+    "departureTime": "18:00",
+    "arrivalTime": "18:40",
+    "platform": "İDO Bostancı İskelesi",
+    "price": "₺75.00",
+    "stops": [
+      {
+        "name": "Kınalıada",
+        "time": "18:15"
+      },
+      {
+        "name": "Burgazada",
+        "time": "18:25"
+      },
+      {
+        "name": "Heybeliada",
+        "time": "18:32"
+      }
+    ]
+  },
+  {
+    "id": "ido-bos-buy-8",
+    "origin": "Bostancı",
+    "destination": "Büyükada",
+    "operator": "İDO",
+    "category": "ADALAR",
+    "departureTime": "19:30",
+    "arrivalTime": "20:10",
+    "platform": "İDO Bostancı İskelesi",
+    "price": "₺75.00",
+    "stops": [
+      {
+        "name": "Kınalıada",
+        "time": "19:45"
+      },
+      {
+        "name": "Burgazada",
+        "time": "19:55"
+      },
+      {
+        "name": "Heybeliada",
+        "time": "19:02"
+      }
+    ]
+  },
+  {
+    "id": "ido-bos-buy-9",
+    "origin": "Bostancı",
+    "destination": "Büyükada",
+    "operator": "İDO",
+    "category": "ADALAR",
+    "departureTime": "21:00",
+    "arrivalTime": "21:40",
+    "platform": "İDO Bostancı İskelesi",
+    "price": "₺75.00",
+    "stops": [
+      {
+        "name": "Kınalıada",
+        "time": "21:15"
+      },
+      {
+        "name": "Burgazada",
+        "time": "21:25"
+      },
+      {
+        "name": "Heybeliada",
+        "time": "21:32"
+      }
+    ]
+  },
+  {
+    "id": "ido-buy-bos-0",
+    "origin": "Büyükada",
+    "destination": "Bostancı",
+    "operator": "İDO",
+    "category": "ADALAR",
+    "departureTime": "08:15",
+    "arrivalTime": "08:55",
+    "platform": "İDO Büyükada İskelesi",
+    "price": "₺75.00",
+    "stops": [
+      {
+        "name": "Heybeliada",
+        "time": "08:23"
+      },
+      {
+        "name": "Burgazada",
+        "time": "08:33"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "08:43"
+      }
+    ]
+  },
+  {
+    "id": "ido-buy-bos-1",
+    "origin": "Büyükada",
+    "destination": "Bostancı",
+    "operator": "İDO",
+    "category": "ADALAR",
+    "departureTime": "09:30",
+    "arrivalTime": "10:10",
+    "platform": "İDO Büyükada İskelesi",
+    "price": "₺75.00",
+    "stops": [
+      {
+        "name": "Heybeliada",
+        "time": "09:38"
+      },
+      {
+        "name": "Burgazada",
+        "time": "09:48"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "09:58"
+      }
+    ]
+  },
+  {
+    "id": "ido-buy-bos-2",
+    "origin": "Büyükada",
+    "destination": "Bostancı",
+    "operator": "İDO",
+    "category": "ADALAR",
+    "departureTime": "10:45",
+    "arrivalTime": "11:25",
+    "platform": "İDO Büyükada İskelesi",
+    "price": "₺75.00",
+    "stops": [
+      {
+        "name": "Heybeliada",
+        "time": "10:53"
+      },
+      {
+        "name": "Burgazada",
+        "time": "10:03"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "10:13"
+      }
+    ]
+  },
+  {
+    "id": "ido-buy-bos-3",
+    "origin": "Büyükada",
+    "destination": "Bostancı",
+    "operator": "İDO",
+    "category": "ADALAR",
+    "departureTime": "12:15",
+    "arrivalTime": "12:55",
+    "platform": "İDO Büyükada İskelesi",
+    "price": "₺75.00",
+    "stops": [
+      {
+        "name": "Heybeliada",
+        "time": "12:23"
+      },
+      {
+        "name": "Burgazada",
+        "time": "12:33"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "12:43"
+      }
+    ]
+  },
+  {
+    "id": "ido-buy-bos-4",
+    "origin": "Büyükada",
+    "destination": "Bostancı",
+    "operator": "İDO",
+    "category": "ADALAR",
+    "departureTime": "13:45",
+    "arrivalTime": "14:25",
+    "platform": "İDO Büyükada İskelesi",
+    "price": "₺75.00",
+    "stops": [
+      {
+        "name": "Heybeliada",
+        "time": "13:53"
+      },
+      {
+        "name": "Burgazada",
+        "time": "13:03"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "13:13"
+      }
+    ]
+  },
+  {
+    "id": "ido-buy-bos-5",
+    "origin": "Büyükada",
+    "destination": "Bostancı",
+    "operator": "İDO",
+    "category": "ADALAR",
+    "departureTime": "15:30",
+    "arrivalTime": "16:10",
+    "platform": "İDO Büyükada İskelesi",
+    "price": "₺75.00",
+    "stops": [
+      {
+        "name": "Heybeliada",
+        "time": "15:38"
+      },
+      {
+        "name": "Burgazada",
+        "time": "15:48"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "15:58"
+      }
+    ]
+  },
+  {
+    "id": "ido-buy-bos-6",
+    "origin": "Büyükada",
+    "destination": "Bostancı",
+    "operator": "İDO",
+    "category": "ADALAR",
+    "departureTime": "17:15",
+    "arrivalTime": "17:55",
+    "platform": "İDO Büyükada İskelesi",
+    "price": "₺75.00",
+    "stops": [
+      {
+        "name": "Heybeliada",
+        "time": "17:23"
+      },
+      {
+        "name": "Burgazada",
+        "time": "17:33"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "17:43"
+      }
+    ]
+  },
+  {
+    "id": "ido-buy-bos-7",
+    "origin": "Büyükada",
+    "destination": "Bostancı",
+    "operator": "İDO",
+    "category": "ADALAR",
+    "departureTime": "18:45",
+    "arrivalTime": "19:25",
+    "platform": "İDO Büyükada İskelesi",
+    "price": "₺75.00",
+    "stops": [
+      {
+        "name": "Heybeliada",
+        "time": "18:53"
+      },
+      {
+        "name": "Burgazada",
+        "time": "18:03"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "18:13"
+      }
+    ]
+  },
+  {
+    "id": "ido-buy-bos-8",
+    "origin": "Büyükada",
+    "destination": "Bostancı",
+    "operator": "İDO",
+    "category": "ADALAR",
+    "departureTime": "20:15",
+    "arrivalTime": "20:55",
+    "platform": "İDO Büyükada İskelesi",
+    "price": "₺75.00",
+    "stops": [
+      {
+        "name": "Heybeliada",
+        "time": "20:23"
+      },
+      {
+        "name": "Burgazada",
+        "time": "20:33"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "20:43"
+      }
+    ]
+  },
+  {
+    "id": "ido-buy-bos-9",
+    "origin": "Büyükada",
+    "destination": "Bostancı",
+    "operator": "İDO",
+    "category": "ADALAR",
+    "departureTime": "21:45",
+    "arrivalTime": "22:25",
+    "platform": "İDO Büyükada İskelesi",
+    "price": "₺75.00",
+    "stops": [
+      {
+        "name": "Heybeliada",
+        "time": "21:53"
+      },
+      {
+        "name": "Burgazada",
+        "time": "21:03"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "21:13"
+      }
+    ]
+  },
+  {
+    "id": "ido-yen-buy-0",
+    "origin": "Yenikapı",
+    "destination": "Büyükada",
+    "operator": "İDO",
+    "category": "ADALAR",
+    "departureTime": "08:30",
+    "arrivalTime": "09:25",
+    "platform": "İDO Yenikapı Terminali",
+    "price": "₺85.00",
+    "stops": [
+      {
+        "name": "Kadıköy",
+        "time": "08:50"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "08:08"
+      },
+      {
+        "name": "Heybeliada",
+        "time": "08:17"
+      }
+    ]
+  },
+  {
+    "id": "ido-yen-buy-1",
+    "origin": "Yenikapı",
+    "destination": "Büyükada",
+    "operator": "İDO",
+    "category": "ADALAR",
+    "departureTime": "10:15",
+    "arrivalTime": "11:10",
+    "platform": "İDO Yenikapı Terminali",
+    "price": "₺85.00",
+    "stops": [
+      {
+        "name": "Kadıköy",
+        "time": "10:35"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "10:53"
+      },
+      {
+        "name": "Heybeliada",
+        "time": "10:02"
+      }
+    ]
+  },
+  {
+    "id": "ido-yen-buy-2",
+    "origin": "Yenikapı",
+    "destination": "Büyükada",
+    "operator": "İDO",
+    "category": "ADALAR",
+    "departureTime": "12:00",
+    "arrivalTime": "12:55",
+    "platform": "İDO Yenikapı Terminali",
+    "price": "₺85.00",
+    "stops": [
+      {
+        "name": "Kadıköy",
+        "time": "12:20"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "12:38"
+      },
+      {
+        "name": "Heybeliada",
+        "time": "12:47"
+      }
+    ]
+  },
+  {
+    "id": "ido-yen-buy-3",
+    "origin": "Yenikapı",
+    "destination": "Büyükada",
+    "operator": "İDO",
+    "category": "ADALAR",
+    "departureTime": "14:30",
+    "arrivalTime": "15:25",
+    "platform": "İDO Yenikapı Terminali",
+    "price": "₺85.00",
+    "stops": [
+      {
+        "name": "Kadıköy",
+        "time": "14:50"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "14:08"
+      },
+      {
+        "name": "Heybeliada",
+        "time": "14:17"
+      }
+    ]
+  },
+  {
+    "id": "ido-yen-buy-4",
+    "origin": "Yenikapı",
+    "destination": "Büyükada",
+    "operator": "İDO",
+    "category": "ADALAR",
+    "departureTime": "17:00",
+    "arrivalTime": "17:55",
+    "platform": "İDO Yenikapı Terminali",
+    "price": "₺85.00",
+    "stops": [
+      {
+        "name": "Kadıköy",
+        "time": "17:20"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "17:38"
+      },
+      {
+        "name": "Heybeliada",
+        "time": "17:47"
+      }
+    ]
+  },
+  {
+    "id": "ido-yen-buy-5",
+    "origin": "Yenikapı",
+    "destination": "Büyükada",
+    "operator": "İDO",
+    "category": "ADALAR",
+    "departureTime": "19:00",
+    "arrivalTime": "19:55",
+    "platform": "İDO Yenikapı Terminali",
+    "price": "₺85.00",
+    "stops": [
+      {
+        "name": "Kadıköy",
+        "time": "19:20"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "19:38"
+      },
+      {
+        "name": "Heybeliada",
+        "time": "19:47"
+      }
+    ]
+  },
+  {
+    "id": "ido-buy-yen-0",
+    "origin": "Büyükada",
+    "destination": "Yenikapı",
+    "operator": "İDO",
+    "category": "ADALAR",
+    "departureTime": "09:45",
+    "arrivalTime": "10:40",
+    "platform": "İDO Büyükada İskelesi",
+    "price": "₺85.00",
+    "stops": [
+      {
+        "name": "Heybeliada",
+        "time": "09:53"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "09:02"
+      },
+      {
+        "name": "Kadıköy",
+        "time": "09:20"
+      }
+    ]
+  },
+  {
+    "id": "ido-buy-yen-1",
+    "origin": "Büyükada",
+    "destination": "Yenikapı",
+    "operator": "İDO",
+    "category": "ADALAR",
+    "departureTime": "11:30",
+    "arrivalTime": "12:25",
+    "platform": "İDO Büyükada İskelesi",
+    "price": "₺85.00",
+    "stops": [
+      {
+        "name": "Heybeliada",
+        "time": "11:38"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "11:47"
+      },
+      {
+        "name": "Kadıköy",
+        "time": "11:05"
+      }
+    ]
+  },
+  {
+    "id": "ido-buy-yen-2",
+    "origin": "Büyükada",
+    "destination": "Yenikapı",
+    "operator": "İDO",
+    "category": "ADALAR",
+    "departureTime": "13:15",
+    "arrivalTime": "14:10",
+    "platform": "İDO Büyükada İskelesi",
+    "price": "₺85.00",
+    "stops": [
+      {
+        "name": "Heybeliada",
+        "time": "13:23"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "13:32"
+      },
+      {
+        "name": "Kadıköy",
+        "time": "13:50"
+      }
+    ]
+  },
+  {
+    "id": "ido-buy-yen-3",
+    "origin": "Büyükada",
+    "destination": "Yenikapı",
+    "operator": "İDO",
+    "category": "ADALAR",
+    "departureTime": "15:45",
+    "arrivalTime": "16:40",
+    "platform": "İDO Büyükada İskelesi",
+    "price": "₺85.00",
+    "stops": [
+      {
+        "name": "Heybeliada",
+        "time": "15:53"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "15:02"
+      },
+      {
+        "name": "Kadıköy",
+        "time": "15:20"
+      }
+    ]
+  },
+  {
+    "id": "ido-buy-yen-4",
+    "origin": "Büyükada",
+    "destination": "Yenikapı",
+    "operator": "İDO",
+    "category": "ADALAR",
+    "departureTime": "18:15",
+    "arrivalTime": "19:10",
+    "platform": "İDO Büyükada İskelesi",
+    "price": "₺85.00",
+    "stops": [
+      {
+        "name": "Heybeliada",
+        "time": "18:23"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "18:32"
+      },
+      {
+        "name": "Kadıköy",
+        "time": "18:50"
+      }
+    ]
+  },
+  {
+    "id": "ido-buy-yen-5",
+    "origin": "Büyükada",
+    "destination": "Yenikapı",
+    "operator": "İDO",
+    "category": "ADALAR",
+    "departureTime": "20:15",
+    "arrivalTime": "21:10",
+    "platform": "İDO Büyükada İskelesi",
+    "price": "₺85.00",
+    "stops": [
+      {
+        "name": "Heybeliada",
+        "time": "20:23"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "20:32"
+      },
+      {
+        "name": "Kadıköy",
+        "time": "20:50"
+      }
+    ]
+  },
+  {
+    "id": "ido-kab-buy-0",
+    "origin": "Kabataş",
+    "destination": "Büyükada",
+    "operator": "İDO",
+    "category": "ADALAR",
+    "departureTime": "09:15",
+    "arrivalTime": "10:05",
+    "platform": "İDO Kabataş İskelesi",
+    "price": "₺85.00",
+    "stops": [
+      {
+        "name": "Kadıköy",
+        "time": "09:30"
+      },
+      {
+        "name": "Heybeliada",
+        "time": "09:55"
+      }
+    ]
+  },
+  {
+    "id": "ido-kab-buy-1",
+    "origin": "Kabataş",
+    "destination": "Büyükada",
+    "operator": "İDO",
+    "category": "ADALAR",
+    "departureTime": "11:15",
+    "arrivalTime": "12:05",
+    "platform": "İDO Kabataş İskelesi",
+    "price": "₺85.00",
+    "stops": [
+      {
+        "name": "Kadıköy",
+        "time": "11:30"
+      },
+      {
+        "name": "Heybeliada",
+        "time": "11:55"
+      }
+    ]
+  },
+  {
+    "id": "ido-kab-buy-2",
+    "origin": "Kabataş",
+    "destination": "Büyükada",
+    "operator": "İDO",
+    "category": "ADALAR",
+    "departureTime": "13:30",
+    "arrivalTime": "14:20",
+    "platform": "İDO Kabataş İskelesi",
+    "price": "₺85.00",
+    "stops": [
+      {
+        "name": "Kadıköy",
+        "time": "13:45"
+      },
+      {
+        "name": "Heybeliada",
+        "time": "13:10"
+      }
+    ]
+  },
+  {
+    "id": "ido-kab-buy-3",
+    "origin": "Kabataş",
+    "destination": "Büyükada",
+    "operator": "İDO",
+    "category": "ADALAR",
+    "departureTime": "16:15",
+    "arrivalTime": "17:05",
+    "platform": "İDO Kabataş İskelesi",
+    "price": "₺85.00",
+    "stops": [
+      {
+        "name": "Kadıköy",
+        "time": "16:30"
+      },
+      {
+        "name": "Heybeliada",
+        "time": "16:55"
+      }
+    ]
+  },
+  {
+    "id": "ido-kab-buy-4",
+    "origin": "Kabataş",
+    "destination": "Büyükada",
+    "operator": "İDO",
+    "category": "ADALAR",
+    "departureTime": "18:30",
+    "arrivalTime": "19:20",
+    "platform": "İDO Kabataş İskelesi",
+    "price": "₺85.00",
+    "stops": [
+      {
+        "name": "Kadıköy",
+        "time": "18:45"
+      },
+      {
+        "name": "Heybeliada",
+        "time": "18:10"
+      }
+    ]
+  },
+  {
+    "id": "ido-buy-kab-0",
+    "origin": "Büyükada",
+    "destination": "Kabataş",
+    "operator": "İDO",
+    "category": "ADALAR",
+    "departureTime": "10:30",
+    "arrivalTime": "11:20",
+    "platform": "İDO Büyükada İskelesi",
+    "price": "₺85.00",
+    "stops": [
+      {
+        "name": "Heybeliada",
+        "time": "10:40"
+      },
+      {
+        "name": "Kadıköy",
+        "time": "10:05"
+      }
+    ]
+  },
+  {
+    "id": "ido-buy-kab-1",
+    "origin": "Büyükada",
+    "destination": "Kabataş",
+    "operator": "İDO",
+    "category": "ADALAR",
+    "departureTime": "12:30",
+    "arrivalTime": "13:20",
+    "platform": "İDO Büyükada İskelesi",
+    "price": "₺85.00",
+    "stops": [
+      {
+        "name": "Heybeliada",
+        "time": "12:40"
+      },
+      {
+        "name": "Kadıköy",
+        "time": "12:05"
+      }
+    ]
+  },
+  {
+    "id": "ido-buy-kab-2",
+    "origin": "Büyükada",
+    "destination": "Kabataş",
+    "operator": "İDO",
+    "category": "ADALAR",
+    "departureTime": "14:45",
+    "arrivalTime": "15:35",
+    "platform": "İDO Büyükada İskelesi",
+    "price": "₺85.00",
+    "stops": [
+      {
+        "name": "Heybeliada",
+        "time": "14:55"
+      },
+      {
+        "name": "Kadıköy",
+        "time": "14:20"
+      }
+    ]
+  },
+  {
+    "id": "ido-buy-kab-3",
+    "origin": "Büyükada",
+    "destination": "Kabataş",
+    "operator": "İDO",
+    "category": "ADALAR",
+    "departureTime": "17:15",
+    "arrivalTime": "18:05",
+    "platform": "İDO Büyükada İskelesi",
+    "price": "₺85.00",
+    "stops": [
+      {
+        "name": "Heybeliada",
+        "time": "17:25"
+      },
+      {
+        "name": "Kadıköy",
+        "time": "17:50"
+      }
+    ]
+  },
+  {
+    "id": "ido-buy-kab-4",
+    "origin": "Büyükada",
+    "destination": "Kabataş",
+    "operator": "İDO",
+    "category": "ADALAR",
+    "departureTime": "19:30",
+    "arrivalTime": "20:20",
+    "platform": "İDO Büyükada İskelesi",
+    "price": "₺85.00",
+    "stops": [
+      {
+        "name": "Heybeliada",
+        "time": "19:40"
+      },
+      {
+        "name": "Kadıköy",
+        "time": "19:05"
+      }
+    ]
+  },
+  {
+    "id": "tur-emi-kad-0",
+    "origin": "Eminönü",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "07:15",
+    "arrivalTime": "07:35",
+    "platform": "Turyol Eminönü İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-emi-kad-1",
+    "origin": "Eminönü",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "07:45",
+    "arrivalTime": "08:05",
+    "platform": "Turyol Eminönü İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-emi-kad-2",
+    "origin": "Eminönü",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "08:15",
+    "arrivalTime": "08:35",
+    "platform": "Turyol Eminönü İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-emi-kad-3",
+    "origin": "Eminönü",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "08:45",
+    "arrivalTime": "09:05",
+    "platform": "Turyol Eminönü İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-emi-kad-4",
+    "origin": "Eminönü",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "09:15",
+    "arrivalTime": "09:35",
+    "platform": "Turyol Eminönü İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-emi-kad-5",
+    "origin": "Eminönü",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "09:45",
+    "arrivalTime": "10:05",
+    "platform": "Turyol Eminönü İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-emi-kad-6",
+    "origin": "Eminönü",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "10:15",
+    "arrivalTime": "10:35",
+    "platform": "Turyol Eminönü İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-emi-kad-7",
+    "origin": "Eminönü",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "10:45",
+    "arrivalTime": "11:05",
+    "platform": "Turyol Eminönü İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-emi-kad-8",
+    "origin": "Eminönü",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "11:15",
+    "arrivalTime": "11:35",
+    "platform": "Turyol Eminönü İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-emi-kad-9",
+    "origin": "Eminönü",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "11:45",
+    "arrivalTime": "12:05",
+    "platform": "Turyol Eminönü İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-emi-kad-10",
+    "origin": "Eminönü",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "12:15",
+    "arrivalTime": "12:35",
+    "platform": "Turyol Eminönü İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-emi-kad-11",
+    "origin": "Eminönü",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "12:45",
+    "arrivalTime": "13:05",
+    "platform": "Turyol Eminönü İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-emi-kad-12",
+    "origin": "Eminönü",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "13:15",
+    "arrivalTime": "13:35",
+    "platform": "Turyol Eminönü İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-emi-kad-13",
+    "origin": "Eminönü",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "13:45",
+    "arrivalTime": "14:05",
+    "platform": "Turyol Eminönü İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-emi-kad-14",
+    "origin": "Eminönü",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "14:15",
+    "arrivalTime": "14:35",
+    "platform": "Turyol Eminönü İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-emi-kad-15",
+    "origin": "Eminönü",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "14:45",
+    "arrivalTime": "15:05",
+    "platform": "Turyol Eminönü İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-emi-kad-16",
+    "origin": "Eminönü",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "15:15",
+    "arrivalTime": "15:35",
+    "platform": "Turyol Eminönü İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-emi-kad-17",
+    "origin": "Eminönü",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "15:45",
+    "arrivalTime": "16:05",
+    "platform": "Turyol Eminönü İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-emi-kad-18",
+    "origin": "Eminönü",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "16:15",
+    "arrivalTime": "16:35",
+    "platform": "Turyol Eminönü İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-emi-kad-19",
+    "origin": "Eminönü",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "16:45",
+    "arrivalTime": "17:05",
+    "platform": "Turyol Eminönü İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-emi-kad-20",
+    "origin": "Eminönü",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "17:15",
+    "arrivalTime": "17:35",
+    "platform": "Turyol Eminönü İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-emi-kad-21",
+    "origin": "Eminönü",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "17:45",
+    "arrivalTime": "18:05",
+    "platform": "Turyol Eminönü İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-emi-kad-22",
+    "origin": "Eminönü",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "18:15",
+    "arrivalTime": "18:35",
+    "platform": "Turyol Eminönü İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-emi-kad-23",
+    "origin": "Eminönü",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "18:45",
+    "arrivalTime": "19:05",
+    "platform": "Turyol Eminönü İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-emi-kad-24",
+    "origin": "Eminönü",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "19:15",
+    "arrivalTime": "19:35",
+    "platform": "Turyol Eminönü İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-emi-kad-25",
+    "origin": "Eminönü",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "19:45",
+    "arrivalTime": "20:05",
+    "platform": "Turyol Eminönü İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-emi-kad-26",
+    "origin": "Eminönü",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "20:15",
+    "arrivalTime": "20:35",
+    "platform": "Turyol Eminönü İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-emi-kad-27",
+    "origin": "Eminönü",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "20:45",
+    "arrivalTime": "21:05",
+    "platform": "Turyol Eminönü İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-emi-kad-28",
+    "origin": "Eminönü",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "21:15",
+    "arrivalTime": "21:35",
+    "platform": "Turyol Eminönü İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-emi-0",
+    "origin": "Kadıköy",
+    "destination": "Eminönü",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "07:00",
+    "arrivalTime": "07:20",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-emi-1",
+    "origin": "Kadıköy",
+    "destination": "Eminönü",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "07:30",
+    "arrivalTime": "07:50",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-emi-2",
+    "origin": "Kadıköy",
+    "destination": "Eminönü",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "08:00",
+    "arrivalTime": "08:20",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-emi-3",
+    "origin": "Kadıköy",
+    "destination": "Eminönü",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "08:30",
+    "arrivalTime": "08:50",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-emi-4",
+    "origin": "Kadıköy",
+    "destination": "Eminönü",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "09:00",
+    "arrivalTime": "09:20",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-emi-5",
+    "origin": "Kadıköy",
+    "destination": "Eminönü",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "09:30",
+    "arrivalTime": "09:50",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-emi-6",
+    "origin": "Kadıköy",
+    "destination": "Eminönü",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "10:00",
+    "arrivalTime": "10:20",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-emi-7",
+    "origin": "Kadıköy",
+    "destination": "Eminönü",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "10:30",
+    "arrivalTime": "10:50",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-emi-8",
+    "origin": "Kadıköy",
+    "destination": "Eminönü",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "11:00",
+    "arrivalTime": "11:20",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-emi-9",
+    "origin": "Kadıköy",
+    "destination": "Eminönü",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "11:30",
+    "arrivalTime": "11:50",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-emi-10",
+    "origin": "Kadıköy",
+    "destination": "Eminönü",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "12:00",
+    "arrivalTime": "12:20",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-emi-11",
+    "origin": "Kadıköy",
+    "destination": "Eminönü",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "12:30",
+    "arrivalTime": "12:50",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-emi-12",
+    "origin": "Kadıköy",
+    "destination": "Eminönü",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "13:00",
+    "arrivalTime": "13:20",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-emi-13",
+    "origin": "Kadıköy",
+    "destination": "Eminönü",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "13:30",
+    "arrivalTime": "13:50",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-emi-14",
+    "origin": "Kadıköy",
+    "destination": "Eminönü",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "14:00",
+    "arrivalTime": "14:20",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-emi-15",
+    "origin": "Kadıköy",
+    "destination": "Eminönü",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "14:30",
+    "arrivalTime": "14:50",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-emi-16",
+    "origin": "Kadıköy",
+    "destination": "Eminönü",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "15:00",
+    "arrivalTime": "15:20",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-emi-17",
+    "origin": "Kadıköy",
+    "destination": "Eminönü",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "15:30",
+    "arrivalTime": "15:50",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-emi-18",
+    "origin": "Kadıköy",
+    "destination": "Eminönü",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "16:00",
+    "arrivalTime": "16:20",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-emi-19",
+    "origin": "Kadıköy",
+    "destination": "Eminönü",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "16:30",
+    "arrivalTime": "16:50",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-emi-20",
+    "origin": "Kadıköy",
+    "destination": "Eminönü",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "17:00",
+    "arrivalTime": "17:20",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-emi-21",
+    "origin": "Kadıköy",
+    "destination": "Eminönü",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "17:30",
+    "arrivalTime": "17:50",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-emi-22",
+    "origin": "Kadıköy",
+    "destination": "Eminönü",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "18:00",
+    "arrivalTime": "18:20",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-emi-23",
+    "origin": "Kadıköy",
+    "destination": "Eminönü",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "18:30",
+    "arrivalTime": "18:50",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-emi-24",
+    "origin": "Kadıköy",
+    "destination": "Eminönü",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "19:00",
+    "arrivalTime": "19:20",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-emi-25",
+    "origin": "Kadıköy",
+    "destination": "Eminönü",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "19:30",
+    "arrivalTime": "19:50",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-emi-26",
+    "origin": "Kadıköy",
+    "destination": "Eminönü",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "20:00",
+    "arrivalTime": "20:20",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-emi-27",
+    "origin": "Kadıköy",
+    "destination": "Eminönü",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "20:30",
+    "arrivalTime": "20:50",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-emi-28",
+    "origin": "Kadıköy",
+    "destination": "Eminönü",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "21:00",
+    "arrivalTime": "21:20",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kar-kad-0",
+    "origin": "Karaköy",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "07:15",
+    "arrivalTime": "07:35",
+    "platform": "Turyol Karaköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kar-kad-1",
+    "origin": "Karaköy",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "07:45",
+    "arrivalTime": "08:05",
+    "platform": "Turyol Karaköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kar-kad-2",
+    "origin": "Karaköy",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "08:15",
+    "arrivalTime": "08:35",
+    "platform": "Turyol Karaköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kar-kad-3",
+    "origin": "Karaköy",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "08:45",
+    "arrivalTime": "09:05",
+    "platform": "Turyol Karaköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kar-kad-4",
+    "origin": "Karaköy",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "09:15",
+    "arrivalTime": "09:35",
+    "platform": "Turyol Karaköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kar-kad-5",
+    "origin": "Karaköy",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "09:45",
+    "arrivalTime": "10:05",
+    "platform": "Turyol Karaköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kar-kad-6",
+    "origin": "Karaköy",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "10:15",
+    "arrivalTime": "10:35",
+    "platform": "Turyol Karaköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kar-kad-7",
+    "origin": "Karaköy",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "10:45",
+    "arrivalTime": "11:05",
+    "platform": "Turyol Karaköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kar-kad-8",
+    "origin": "Karaköy",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "11:15",
+    "arrivalTime": "11:35",
+    "platform": "Turyol Karaköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kar-kad-9",
+    "origin": "Karaköy",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "11:45",
+    "arrivalTime": "12:05",
+    "platform": "Turyol Karaköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kar-kad-10",
+    "origin": "Karaköy",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "12:15",
+    "arrivalTime": "12:35",
+    "platform": "Turyol Karaköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kar-kad-11",
+    "origin": "Karaköy",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "12:45",
+    "arrivalTime": "13:05",
+    "platform": "Turyol Karaköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kar-kad-12",
+    "origin": "Karaköy",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "13:15",
+    "arrivalTime": "13:35",
+    "platform": "Turyol Karaköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kar-kad-13",
+    "origin": "Karaköy",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "13:45",
+    "arrivalTime": "14:05",
+    "platform": "Turyol Karaköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kar-kad-14",
+    "origin": "Karaköy",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "14:15",
+    "arrivalTime": "14:35",
+    "platform": "Turyol Karaköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kar-kad-15",
+    "origin": "Karaköy",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "14:45",
+    "arrivalTime": "15:05",
+    "platform": "Turyol Karaköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kar-kad-16",
+    "origin": "Karaköy",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "15:15",
+    "arrivalTime": "15:35",
+    "platform": "Turyol Karaköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kar-kad-17",
+    "origin": "Karaköy",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "15:45",
+    "arrivalTime": "16:05",
+    "platform": "Turyol Karaköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kar-kad-18",
+    "origin": "Karaköy",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "16:15",
+    "arrivalTime": "16:35",
+    "platform": "Turyol Karaköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kar-kad-19",
+    "origin": "Karaköy",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "16:45",
+    "arrivalTime": "17:05",
+    "platform": "Turyol Karaköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kar-kad-20",
+    "origin": "Karaköy",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "17:15",
+    "arrivalTime": "17:35",
+    "platform": "Turyol Karaköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kar-kad-21",
+    "origin": "Karaköy",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "17:45",
+    "arrivalTime": "18:05",
+    "platform": "Turyol Karaköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kar-kad-22",
+    "origin": "Karaköy",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "18:15",
+    "arrivalTime": "18:35",
+    "platform": "Turyol Karaköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kar-kad-23",
+    "origin": "Karaköy",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "18:45",
+    "arrivalTime": "19:05",
+    "platform": "Turyol Karaköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kar-kad-24",
+    "origin": "Karaköy",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "19:15",
+    "arrivalTime": "19:35",
+    "platform": "Turyol Karaköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kar-kad-25",
+    "origin": "Karaköy",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "19:45",
+    "arrivalTime": "20:05",
+    "platform": "Turyol Karaköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kar-kad-26",
+    "origin": "Karaköy",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "20:15",
+    "arrivalTime": "20:35",
+    "platform": "Turyol Karaköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kar-kad-27",
+    "origin": "Karaköy",
+    "destination": "Kadıköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "20:45",
+    "arrivalTime": "21:05",
+    "platform": "Turyol Karaköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-kar-0",
+    "origin": "Kadıköy",
+    "destination": "Karaköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "07:00",
+    "arrivalTime": "07:20",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-kar-1",
+    "origin": "Kadıköy",
+    "destination": "Karaköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "07:30",
+    "arrivalTime": "07:50",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-kar-2",
+    "origin": "Kadıköy",
+    "destination": "Karaköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "08:00",
+    "arrivalTime": "08:20",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-kar-3",
+    "origin": "Kadıköy",
+    "destination": "Karaköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "08:30",
+    "arrivalTime": "08:50",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-kar-4",
+    "origin": "Kadıköy",
+    "destination": "Karaköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "09:00",
+    "arrivalTime": "09:20",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-kar-5",
+    "origin": "Kadıköy",
+    "destination": "Karaköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "09:30",
+    "arrivalTime": "09:50",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-kar-6",
+    "origin": "Kadıköy",
+    "destination": "Karaköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "10:00",
+    "arrivalTime": "10:20",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-kar-7",
+    "origin": "Kadıköy",
+    "destination": "Karaköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "10:30",
+    "arrivalTime": "10:50",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-kar-8",
+    "origin": "Kadıköy",
+    "destination": "Karaköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "11:00",
+    "arrivalTime": "11:20",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-kar-9",
+    "origin": "Kadıköy",
+    "destination": "Karaköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "11:30",
+    "arrivalTime": "11:50",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-kar-10",
+    "origin": "Kadıköy",
+    "destination": "Karaköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "12:00",
+    "arrivalTime": "12:20",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-kar-11",
+    "origin": "Kadıköy",
+    "destination": "Karaköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "12:30",
+    "arrivalTime": "12:50",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-kar-12",
+    "origin": "Kadıköy",
+    "destination": "Karaköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "13:00",
+    "arrivalTime": "13:20",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-kar-13",
+    "origin": "Kadıköy",
+    "destination": "Karaköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "13:30",
+    "arrivalTime": "13:50",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-kar-14",
+    "origin": "Kadıköy",
+    "destination": "Karaköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "14:00",
+    "arrivalTime": "14:20",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-kar-15",
+    "origin": "Kadıköy",
+    "destination": "Karaköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "14:30",
+    "arrivalTime": "14:50",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-kar-16",
+    "origin": "Kadıköy",
+    "destination": "Karaköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "15:00",
+    "arrivalTime": "15:20",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-kar-17",
+    "origin": "Kadıköy",
+    "destination": "Karaköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "15:30",
+    "arrivalTime": "15:50",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-kar-18",
+    "origin": "Kadıköy",
+    "destination": "Karaköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "16:00",
+    "arrivalTime": "16:20",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-kar-19",
+    "origin": "Kadıköy",
+    "destination": "Karaköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "16:30",
+    "arrivalTime": "16:50",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-kar-20",
+    "origin": "Kadıköy",
+    "destination": "Karaköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "17:00",
+    "arrivalTime": "17:20",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-kar-21",
+    "origin": "Kadıköy",
+    "destination": "Karaköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "17:30",
+    "arrivalTime": "17:50",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-kar-22",
+    "origin": "Kadıköy",
+    "destination": "Karaköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "18:00",
+    "arrivalTime": "18:20",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-kar-23",
+    "origin": "Kadıköy",
+    "destination": "Karaköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "18:30",
+    "arrivalTime": "18:50",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-kar-24",
+    "origin": "Kadıköy",
+    "destination": "Karaköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "19:00",
+    "arrivalTime": "19:20",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-kar-25",
+    "origin": "Kadıköy",
+    "destination": "Karaköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "19:30",
+    "arrivalTime": "19:50",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-kar-26",
+    "origin": "Kadıköy",
+    "destination": "Karaköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "20:00",
+    "arrivalTime": "20:20",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-kad-kar-27",
+    "origin": "Kadıköy",
+    "destination": "Karaköy",
+    "operator": "Turyol",
+    "category": "BOGAZ",
+    "departureTime": "20:30",
+    "arrivalTime": "20:50",
+    "platform": "Turyol Kadıköy İskelesi",
+    "price": "₺32.00"
+  },
+  {
+    "id": "tur-emi-buy-0",
+    "origin": "Eminönü",
+    "destination": "Büyükada",
+    "operator": "Turyol",
+    "category": "ADALAR",
+    "departureTime": "08:30",
+    "arrivalTime": "09:40",
+    "platform": "Turyol Eminönü İskelesi",
+    "price": "₺55.00",
+    "stops": [
+      {
+        "name": "Kadıköy",
+        "time": "08:50"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "08:15"
+      },
+      {
+        "name": "Heybeliada",
+        "time": "08:28"
+      }
+    ]
+  },
+  {
+    "id": "tur-emi-buy-1",
+    "origin": "Eminönü",
+    "destination": "Büyükada",
+    "operator": "Turyol",
+    "category": "ADALAR",
+    "departureTime": "10:00",
+    "arrivalTime": "11:10",
+    "platform": "Turyol Eminönü İskelesi",
+    "price": "₺55.00",
+    "stops": [
+      {
+        "name": "Kadıköy",
+        "time": "10:20"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "10:45"
+      },
+      {
+        "name": "Heybeliada",
+        "time": "10:58"
+      }
+    ]
+  },
+  {
+    "id": "tur-emi-buy-2",
+    "origin": "Eminönü",
+    "destination": "Büyükada",
+    "operator": "Turyol",
+    "category": "ADALAR",
+    "departureTime": "11:30",
+    "arrivalTime": "12:40",
+    "platform": "Turyol Eminönü İskelesi",
+    "price": "₺55.00",
+    "stops": [
+      {
+        "name": "Kadıköy",
+        "time": "11:50"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "11:15"
+      },
+      {
+        "name": "Heybeliada",
+        "time": "11:28"
+      }
+    ]
+  },
+  {
+    "id": "tur-emi-buy-3",
+    "origin": "Eminönü",
+    "destination": "Büyükada",
+    "operator": "Turyol",
+    "category": "ADALAR",
+    "departureTime": "13:30",
+    "arrivalTime": "14:40",
+    "platform": "Turyol Eminönü İskelesi",
+    "price": "₺55.00",
+    "stops": [
+      {
+        "name": "Kadıköy",
+        "time": "13:50"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "13:15"
+      },
+      {
+        "name": "Heybeliada",
+        "time": "13:28"
+      }
+    ]
+  },
+  {
+    "id": "tur-emi-buy-4",
+    "origin": "Eminönü",
+    "destination": "Büyükada",
+    "operator": "Turyol",
+    "category": "ADALAR",
+    "departureTime": "15:30",
+    "arrivalTime": "16:40",
+    "platform": "Turyol Eminönü İskelesi",
+    "price": "₺55.00",
+    "stops": [
+      {
+        "name": "Kadıköy",
+        "time": "15:50"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "15:15"
+      },
+      {
+        "name": "Heybeliada",
+        "time": "15:28"
+      }
+    ]
+  },
+  {
+    "id": "tur-emi-buy-5",
+    "origin": "Eminönü",
+    "destination": "Büyükada",
+    "operator": "Turyol",
+    "category": "ADALAR",
+    "departureTime": "17:30",
+    "arrivalTime": "18:40",
+    "platform": "Turyol Eminönü İskelesi",
+    "price": "₺55.00",
+    "stops": [
+      {
+        "name": "Kadıköy",
+        "time": "17:50"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "17:15"
+      },
+      {
+        "name": "Heybeliada",
+        "time": "17:28"
+      }
+    ]
+  },
+  {
+    "id": "tur-emi-buy-6",
+    "origin": "Eminönü",
+    "destination": "Büyükada",
+    "operator": "Turyol",
+    "category": "ADALAR",
+    "departureTime": "19:00",
+    "arrivalTime": "20:10",
+    "platform": "Turyol Eminönü İskelesi",
+    "price": "₺55.00",
+    "stops": [
+      {
+        "name": "Kadıköy",
+        "time": "19:20"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "19:45"
+      },
+      {
+        "name": "Heybeliada",
+        "time": "19:58"
+      }
+    ]
+  },
+  {
+    "id": "tur-buy-emi-0",
+    "origin": "Büyükada",
+    "destination": "Eminönü",
+    "operator": "Turyol",
+    "category": "ADALAR",
+    "departureTime": "09:45",
+    "arrivalTime": "10:55",
+    "platform": "Turyol Büyükada İskelesi",
+    "price": "₺55.00",
+    "stops": [
+      {
+        "name": "Heybeliada",
+        "time": "09:57"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "09:10"
+      },
+      {
+        "name": "Kadıköy",
+        "time": "09:35"
+      }
+    ]
+  },
+  {
+    "id": "tur-buy-emi-1",
+    "origin": "Büyükada",
+    "destination": "Eminönü",
+    "operator": "Turyol",
+    "category": "ADALAR",
+    "departureTime": "11:15",
+    "arrivalTime": "12:25",
+    "platform": "Turyol Büyükada İskelesi",
+    "price": "₺55.00",
+    "stops": [
+      {
+        "name": "Heybeliada",
+        "time": "11:27"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "11:40"
+      },
+      {
+        "name": "Kadıköy",
+        "time": "11:05"
+      }
+    ]
+  },
+  {
+    "id": "tur-buy-emi-2",
+    "origin": "Büyükada",
+    "destination": "Eminönü",
+    "operator": "Turyol",
+    "category": "ADALAR",
+    "departureTime": "12:45",
+    "arrivalTime": "13:55",
+    "platform": "Turyol Büyükada İskelesi",
+    "price": "₺55.00",
+    "stops": [
+      {
+        "name": "Heybeliada",
+        "time": "12:57"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "12:10"
+      },
+      {
+        "name": "Kadıköy",
+        "time": "12:35"
+      }
+    ]
+  },
+  {
+    "id": "tur-buy-emi-3",
+    "origin": "Büyükada",
+    "destination": "Eminönü",
+    "operator": "Turyol",
+    "category": "ADALAR",
+    "departureTime": "14:45",
+    "arrivalTime": "15:55",
+    "platform": "Turyol Büyükada İskelesi",
+    "price": "₺55.00",
+    "stops": [
+      {
+        "name": "Heybeliada",
+        "time": "14:57"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "14:10"
+      },
+      {
+        "name": "Kadıköy",
+        "time": "14:35"
+      }
+    ]
+  },
+  {
+    "id": "tur-buy-emi-4",
+    "origin": "Büyükada",
+    "destination": "Eminönü",
+    "operator": "Turyol",
+    "category": "ADALAR",
+    "departureTime": "16:45",
+    "arrivalTime": "17:55",
+    "platform": "Turyol Büyükada İskelesi",
+    "price": "₺55.00",
+    "stops": [
+      {
+        "name": "Heybeliada",
+        "time": "16:57"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "16:10"
+      },
+      {
+        "name": "Kadıköy",
+        "time": "16:35"
+      }
+    ]
+  },
+  {
+    "id": "tur-buy-emi-5",
+    "origin": "Büyükada",
+    "destination": "Eminönü",
+    "operator": "Turyol",
+    "category": "ADALAR",
+    "departureTime": "18:45",
+    "arrivalTime": "19:55",
+    "platform": "Turyol Büyükada İskelesi",
+    "price": "₺55.00",
+    "stops": [
+      {
+        "name": "Heybeliada",
+        "time": "18:57"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "18:10"
+      },
+      {
+        "name": "Kadıköy",
+        "time": "18:35"
+      }
+    ]
+  },
+  {
+    "id": "tur-buy-emi-6",
+    "origin": "Büyükada",
+    "destination": "Eminönü",
+    "operator": "Turyol",
+    "category": "ADALAR",
+    "departureTime": "20:15",
+    "arrivalTime": "21:25",
+    "platform": "Turyol Büyükada İskelesi",
+    "price": "₺55.00",
+    "stops": [
+      {
+        "name": "Heybeliada",
+        "time": "20:27"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "20:40"
+      },
+      {
+        "name": "Kadıköy",
+        "time": "20:05"
+      }
+    ]
+  },
+  {
+    "id": "tur-bak-buy-0",
+    "origin": "Bakırköy",
+    "destination": "Büyükada",
+    "operator": "Turyol",
+    "category": "ADALAR",
+    "departureTime": "09:00",
+    "arrivalTime": "10:05",
+    "platform": "Turyol Bakırköy İskelesi",
+    "price": "₺60.00",
+    "stops": [
+      {
+        "name": "Kınalıada",
+        "time": "09:40"
+      },
+      {
+        "name": "Heybeliada",
+        "time": "09:52"
+      }
+    ]
+  },
+  {
+    "id": "tur-bak-buy-1",
+    "origin": "Bakırköy",
+    "destination": "Büyükada",
+    "operator": "Turyol",
+    "category": "ADALAR",
+    "departureTime": "11:00",
+    "arrivalTime": "12:05",
+    "platform": "Turyol Bakırköy İskelesi",
+    "price": "₺60.00",
+    "stops": [
+      {
+        "name": "Kınalıada",
+        "time": "11:40"
+      },
+      {
+        "name": "Heybeliada",
+        "time": "11:52"
+      }
+    ]
+  },
+  {
+    "id": "tur-bak-buy-2",
+    "origin": "Bakırköy",
+    "destination": "Büyükada",
+    "operator": "Turyol",
+    "category": "ADALAR",
+    "departureTime": "13:30",
+    "arrivalTime": "14:35",
+    "platform": "Turyol Bakırköy İskelesi",
+    "price": "₺60.00",
+    "stops": [
+      {
+        "name": "Kınalıada",
+        "time": "13:10"
+      },
+      {
+        "name": "Heybeliada",
+        "time": "13:22"
+      }
+    ]
+  },
+  {
+    "id": "tur-bak-buy-3",
+    "origin": "Bakırköy",
+    "destination": "Büyükada",
+    "operator": "Turyol",
+    "category": "ADALAR",
+    "departureTime": "16:00",
+    "arrivalTime": "17:05",
+    "platform": "Turyol Bakırköy İskelesi",
+    "price": "₺60.00",
+    "stops": [
+      {
+        "name": "Kınalıada",
+        "time": "16:40"
+      },
+      {
+        "name": "Heybeliada",
+        "time": "16:52"
+      }
+    ]
+  },
+  {
+    "id": "tur-bak-buy-4",
+    "origin": "Bakırköy",
+    "destination": "Büyükada",
+    "operator": "Turyol",
+    "category": "ADALAR",
+    "departureTime": "18:00",
+    "arrivalTime": "19:05",
+    "platform": "Turyol Bakırköy İskelesi",
+    "price": "₺60.00",
+    "stops": [
+      {
+        "name": "Kınalıada",
+        "time": "18:40"
+      },
+      {
+        "name": "Heybeliada",
+        "time": "18:52"
+      }
+    ]
+  },
+  {
+    "id": "tur-buy-bak-0",
+    "origin": "Büyükada",
+    "destination": "Bakırköy",
+    "operator": "Turyol",
+    "category": "ADALAR",
+    "departureTime": "10:15",
+    "arrivalTime": "11:20",
+    "platform": "Turyol Büyükada İskelesi",
+    "price": "₺60.00",
+    "stops": [
+      {
+        "name": "Heybeliada",
+        "time": "10:28"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "10:40"
+      }
+    ]
+  },
+  {
+    "id": "tur-buy-bak-1",
+    "origin": "Büyükada",
+    "destination": "Bakırköy",
+    "operator": "Turyol",
+    "category": "ADALAR",
+    "departureTime": "12:15",
+    "arrivalTime": "13:20",
+    "platform": "Turyol Büyükada İskelesi",
+    "price": "₺60.00",
+    "stops": [
+      {
+        "name": "Heybeliada",
+        "time": "12:28"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "12:40"
+      }
+    ]
+  },
+  {
+    "id": "tur-buy-bak-2",
+    "origin": "Büyükada",
+    "destination": "Bakırköy",
+    "operator": "Turyol",
+    "category": "ADALAR",
+    "departureTime": "14:45",
+    "arrivalTime": "15:50",
+    "platform": "Turyol Büyükada İskelesi",
+    "price": "₺60.00",
+    "stops": [
+      {
+        "name": "Heybeliada",
+        "time": "14:58"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "14:10"
+      }
+    ]
+  },
+  {
+    "id": "tur-buy-bak-3",
+    "origin": "Büyükada",
+    "destination": "Bakırköy",
+    "operator": "Turyol",
+    "category": "ADALAR",
+    "departureTime": "17:15",
+    "arrivalTime": "18:20",
+    "platform": "Turyol Büyükada İskelesi",
+    "price": "₺60.00",
+    "stops": [
+      {
+        "name": "Heybeliada",
+        "time": "17:28"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "17:40"
+      }
+    ]
+  },
+  {
+    "id": "tur-buy-bak-4",
+    "origin": "Büyükada",
+    "destination": "Bakırköy",
+    "operator": "Turyol",
+    "category": "ADALAR",
+    "departureTime": "19:15",
+    "arrivalTime": "20:20",
+    "platform": "Turyol Büyükada İskelesi",
+    "price": "₺60.00",
+    "stops": [
+      {
+        "name": "Heybeliada",
+        "time": "19:28"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "19:40"
+      }
+    ]
+  },
+  {
+    "id": "den-bes-usk-0",
+    "origin": "Beşiktaş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "06:40",
+    "arrivalTime": "06:50",
+    "platform": "Dentur Beşiktaş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-bes-usk-1",
+    "origin": "Beşiktaş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "07:00",
+    "arrivalTime": "07:10",
+    "platform": "Dentur Beşiktaş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-bes-usk-2",
+    "origin": "Beşiktaş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "07:20",
+    "arrivalTime": "07:30",
+    "platform": "Dentur Beşiktaş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-bes-usk-3",
+    "origin": "Beşiktaş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "07:40",
+    "arrivalTime": "07:50",
+    "platform": "Dentur Beşiktaş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-bes-usk-4",
+    "origin": "Beşiktaş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "08:00",
+    "arrivalTime": "08:10",
+    "platform": "Dentur Beşiktaş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-bes-usk-5",
+    "origin": "Beşiktaş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "08:20",
+    "arrivalTime": "08:30",
+    "platform": "Dentur Beşiktaş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-bes-usk-6",
+    "origin": "Beşiktaş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "08:40",
+    "arrivalTime": "08:50",
+    "platform": "Dentur Beşiktaş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-bes-usk-7",
+    "origin": "Beşiktaş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "09:00",
+    "arrivalTime": "09:10",
+    "platform": "Dentur Beşiktaş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-bes-usk-8",
+    "origin": "Beşiktaş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "09:20",
+    "arrivalTime": "09:30",
+    "platform": "Dentur Beşiktaş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-bes-usk-9",
+    "origin": "Beşiktaş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "09:40",
+    "arrivalTime": "09:50",
+    "platform": "Dentur Beşiktaş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-bes-usk-10",
+    "origin": "Beşiktaş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "10:00",
+    "arrivalTime": "10:10",
+    "platform": "Dentur Beşiktaş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-bes-usk-11",
+    "origin": "Beşiktaş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "10:30",
+    "arrivalTime": "10:40",
+    "platform": "Dentur Beşiktaş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-bes-usk-12",
+    "origin": "Beşiktaş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "11:00",
+    "arrivalTime": "11:10",
+    "platform": "Dentur Beşiktaş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-bes-usk-13",
+    "origin": "Beşiktaş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "11:30",
+    "arrivalTime": "11:40",
+    "platform": "Dentur Beşiktaş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-bes-usk-14",
+    "origin": "Beşiktaş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "12:00",
+    "arrivalTime": "12:10",
+    "platform": "Dentur Beşiktaş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-bes-usk-15",
+    "origin": "Beşiktaş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "12:30",
+    "arrivalTime": "12:40",
+    "platform": "Dentur Beşiktaş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-bes-usk-16",
+    "origin": "Beşiktaş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "13:00",
+    "arrivalTime": "13:10",
+    "platform": "Dentur Beşiktaş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-bes-usk-17",
+    "origin": "Beşiktaş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "13:30",
+    "arrivalTime": "13:40",
+    "platform": "Dentur Beşiktaş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-bes-usk-18",
+    "origin": "Beşiktaş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "14:00",
+    "arrivalTime": "14:10",
+    "platform": "Dentur Beşiktaş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-bes-usk-19",
+    "origin": "Beşiktaş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "14:30",
+    "arrivalTime": "14:40",
+    "platform": "Dentur Beşiktaş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-bes-usk-20",
+    "origin": "Beşiktaş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "15:00",
+    "arrivalTime": "15:10",
+    "platform": "Dentur Beşiktaş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-bes-usk-21",
+    "origin": "Beşiktaş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "15:30",
+    "arrivalTime": "15:40",
+    "platform": "Dentur Beşiktaş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-bes-usk-22",
+    "origin": "Beşiktaş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "16:00",
+    "arrivalTime": "16:10",
+    "platform": "Dentur Beşiktaş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-bes-usk-23",
+    "origin": "Beşiktaş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "16:20",
+    "arrivalTime": "16:30",
+    "platform": "Dentur Beşiktaş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-bes-usk-24",
+    "origin": "Beşiktaş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "16:40",
+    "arrivalTime": "16:50",
+    "platform": "Dentur Beşiktaş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-bes-usk-25",
+    "origin": "Beşiktaş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "17:00",
+    "arrivalTime": "17:10",
+    "platform": "Dentur Beşiktaş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-bes-usk-26",
+    "origin": "Beşiktaş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "17:20",
+    "arrivalTime": "17:30",
+    "platform": "Dentur Beşiktaş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-bes-usk-27",
+    "origin": "Beşiktaş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "17:40",
+    "arrivalTime": "17:50",
+    "platform": "Dentur Beşiktaş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-bes-usk-28",
+    "origin": "Beşiktaş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "18:00",
+    "arrivalTime": "18:10",
+    "platform": "Dentur Beşiktaş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-bes-usk-29",
+    "origin": "Beşiktaş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "18:20",
+    "arrivalTime": "18:30",
+    "platform": "Dentur Beşiktaş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-bes-usk-30",
+    "origin": "Beşiktaş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "18:40",
+    "arrivalTime": "18:50",
+    "platform": "Dentur Beşiktaş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-bes-usk-31",
+    "origin": "Beşiktaş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "19:00",
+    "arrivalTime": "19:10",
+    "platform": "Dentur Beşiktaş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-bes-usk-32",
+    "origin": "Beşiktaş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "19:30",
+    "arrivalTime": "19:40",
+    "platform": "Dentur Beşiktaş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-bes-usk-33",
+    "origin": "Beşiktaş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "20:00",
+    "arrivalTime": "20:10",
+    "platform": "Dentur Beşiktaş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-bes-usk-34",
+    "origin": "Beşiktaş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "20:30",
+    "arrivalTime": "20:40",
+    "platform": "Dentur Beşiktaş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-bes-usk-35",
+    "origin": "Beşiktaş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "21:00",
+    "arrivalTime": "21:10",
+    "platform": "Dentur Beşiktaş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-bes-usk-36",
+    "origin": "Beşiktaş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "21:30",
+    "arrivalTime": "21:40",
+    "platform": "Dentur Beşiktaş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-bes-usk-37",
+    "origin": "Beşiktaş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "22:00",
+    "arrivalTime": "22:10",
+    "platform": "Dentur Beşiktaş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-bes-0",
+    "origin": "Üsküdar",
+    "destination": "Beşiktaş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "06:30",
+    "arrivalTime": "06:40",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-bes-1",
+    "origin": "Üsküdar",
+    "destination": "Beşiktaş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "06:50",
+    "arrivalTime": "07:00",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-bes-2",
+    "origin": "Üsküdar",
+    "destination": "Beşiktaş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "07:10",
+    "arrivalTime": "07:20",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-bes-3",
+    "origin": "Üsküdar",
+    "destination": "Beşiktaş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "07:30",
+    "arrivalTime": "07:40",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-bes-4",
+    "origin": "Üsküdar",
+    "destination": "Beşiktaş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "07:50",
+    "arrivalTime": "08:00",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-bes-5",
+    "origin": "Üsküdar",
+    "destination": "Beşiktaş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "08:10",
+    "arrivalTime": "08:20",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-bes-6",
+    "origin": "Üsküdar",
+    "destination": "Beşiktaş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "08:30",
+    "arrivalTime": "08:40",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-bes-7",
+    "origin": "Üsküdar",
+    "destination": "Beşiktaş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "08:50",
+    "arrivalTime": "09:00",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-bes-8",
+    "origin": "Üsküdar",
+    "destination": "Beşiktaş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "09:10",
+    "arrivalTime": "09:20",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-bes-9",
+    "origin": "Üsküdar",
+    "destination": "Beşiktaş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "09:30",
+    "arrivalTime": "09:40",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-bes-10",
+    "origin": "Üsküdar",
+    "destination": "Beşiktaş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "09:50",
+    "arrivalTime": "10:00",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-bes-11",
+    "origin": "Üsküdar",
+    "destination": "Beşiktaş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "10:15",
+    "arrivalTime": "10:25",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-bes-12",
+    "origin": "Üsküdar",
+    "destination": "Beşiktaş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "10:45",
+    "arrivalTime": "10:55",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-bes-13",
+    "origin": "Üsküdar",
+    "destination": "Beşiktaş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "11:15",
+    "arrivalTime": "11:25",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-bes-14",
+    "origin": "Üsküdar",
+    "destination": "Beşiktaş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "11:45",
+    "arrivalTime": "11:55",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-bes-15",
+    "origin": "Üsküdar",
+    "destination": "Beşiktaş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "12:15",
+    "arrivalTime": "12:25",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-bes-16",
+    "origin": "Üsküdar",
+    "destination": "Beşiktaş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "12:45",
+    "arrivalTime": "12:55",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-bes-17",
+    "origin": "Üsküdar",
+    "destination": "Beşiktaş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "13:15",
+    "arrivalTime": "13:25",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-bes-18",
+    "origin": "Üsküdar",
+    "destination": "Beşiktaş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "13:45",
+    "arrivalTime": "13:55",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-bes-19",
+    "origin": "Üsküdar",
+    "destination": "Beşiktaş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "14:15",
+    "arrivalTime": "14:25",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-bes-20",
+    "origin": "Üsküdar",
+    "destination": "Beşiktaş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "14:45",
+    "arrivalTime": "14:55",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-bes-21",
+    "origin": "Üsküdar",
+    "destination": "Beşiktaş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "15:15",
+    "arrivalTime": "15:25",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-bes-22",
+    "origin": "Üsküdar",
+    "destination": "Beşiktaş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "15:45",
+    "arrivalTime": "15:55",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-bes-23",
+    "origin": "Üsküdar",
+    "destination": "Beşiktaş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "16:10",
+    "arrivalTime": "16:20",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-bes-24",
+    "origin": "Üsküdar",
+    "destination": "Beşiktaş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "16:30",
+    "arrivalTime": "16:40",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-bes-25",
+    "origin": "Üsküdar",
+    "destination": "Beşiktaş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "16:50",
+    "arrivalTime": "17:00",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-bes-26",
+    "origin": "Üsküdar",
+    "destination": "Beşiktaş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "17:10",
+    "arrivalTime": "17:20",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-bes-27",
+    "origin": "Üsküdar",
+    "destination": "Beşiktaş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "17:30",
+    "arrivalTime": "17:40",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-bes-28",
+    "origin": "Üsküdar",
+    "destination": "Beşiktaş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "17:50",
+    "arrivalTime": "18:00",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-bes-29",
+    "origin": "Üsküdar",
+    "destination": "Beşiktaş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "18:10",
+    "arrivalTime": "18:20",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-bes-30",
+    "origin": "Üsküdar",
+    "destination": "Beşiktaş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "18:30",
+    "arrivalTime": "18:40",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-bes-31",
+    "origin": "Üsküdar",
+    "destination": "Beşiktaş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "18:50",
+    "arrivalTime": "19:00",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-bes-32",
+    "origin": "Üsküdar",
+    "destination": "Beşiktaş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "19:15",
+    "arrivalTime": "19:25",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-bes-33",
+    "origin": "Üsküdar",
+    "destination": "Beşiktaş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "19:45",
+    "arrivalTime": "19:55",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-bes-34",
+    "origin": "Üsküdar",
+    "destination": "Beşiktaş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "20:15",
+    "arrivalTime": "20:25",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-bes-35",
+    "origin": "Üsküdar",
+    "destination": "Beşiktaş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "20:45",
+    "arrivalTime": "20:55",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-bes-36",
+    "origin": "Üsküdar",
+    "destination": "Beşiktaş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "21:15",
+    "arrivalTime": "21:25",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-bes-37",
+    "origin": "Üsküdar",
+    "destination": "Beşiktaş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "21:45",
+    "arrivalTime": "21:55",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-kab-usk-0",
+    "origin": "Kabataş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "07:15",
+    "arrivalTime": "07:27",
+    "platform": "Dentur Kabataş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-kab-usk-1",
+    "origin": "Kabataş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "07:45",
+    "arrivalTime": "07:57",
+    "platform": "Dentur Kabataş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-kab-usk-2",
+    "origin": "Kabataş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "08:15",
+    "arrivalTime": "08:27",
+    "platform": "Dentur Kabataş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-kab-usk-3",
+    "origin": "Kabataş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "08:45",
+    "arrivalTime": "08:57",
+    "platform": "Dentur Kabataş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-kab-usk-4",
+    "origin": "Kabataş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "09:15",
+    "arrivalTime": "09:27",
+    "platform": "Dentur Kabataş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-kab-usk-5",
+    "origin": "Kabataş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "10:00",
+    "arrivalTime": "10:12",
+    "platform": "Dentur Kabataş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-kab-usk-6",
+    "origin": "Kabataş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "11:00",
+    "arrivalTime": "11:12",
+    "platform": "Dentur Kabataş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-kab-usk-7",
+    "origin": "Kabataş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "12:00",
+    "arrivalTime": "12:12",
+    "platform": "Dentur Kabataş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-kab-usk-8",
+    "origin": "Kabataş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "13:00",
+    "arrivalTime": "13:12",
+    "platform": "Dentur Kabataş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-kab-usk-9",
+    "origin": "Kabataş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "14:00",
+    "arrivalTime": "14:12",
+    "platform": "Dentur Kabataş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-kab-usk-10",
+    "origin": "Kabataş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "15:00",
+    "arrivalTime": "15:12",
+    "platform": "Dentur Kabataş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-kab-usk-11",
+    "origin": "Kabataş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "16:00",
+    "arrivalTime": "16:12",
+    "platform": "Dentur Kabataş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-kab-usk-12",
+    "origin": "Kabataş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "17:00",
+    "arrivalTime": "17:12",
+    "platform": "Dentur Kabataş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-kab-usk-13",
+    "origin": "Kabataş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "17:30",
+    "arrivalTime": "17:42",
+    "platform": "Dentur Kabataş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-kab-usk-14",
+    "origin": "Kabataş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "18:00",
+    "arrivalTime": "18:12",
+    "platform": "Dentur Kabataş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-kab-usk-15",
+    "origin": "Kabataş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "18:30",
+    "arrivalTime": "18:42",
+    "platform": "Dentur Kabataş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-kab-usk-16",
+    "origin": "Kabataş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "19:00",
+    "arrivalTime": "19:12",
+    "platform": "Dentur Kabataş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-kab-usk-17",
+    "origin": "Kabataş",
+    "destination": "Üsküdar",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "20:00",
+    "arrivalTime": "20:12",
+    "platform": "Dentur Kabataş İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-kab-0",
+    "origin": "Üsküdar",
+    "destination": "Kabataş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "07:00",
+    "arrivalTime": "07:12",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-kab-1",
+    "origin": "Üsküdar",
+    "destination": "Kabataş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "07:30",
+    "arrivalTime": "07:42",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-kab-2",
+    "origin": "Üsküdar",
+    "destination": "Kabataş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "08:00",
+    "arrivalTime": "08:12",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-kab-3",
+    "origin": "Üsküdar",
+    "destination": "Kabataş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "08:30",
+    "arrivalTime": "08:42",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-kab-4",
+    "origin": "Üsküdar",
+    "destination": "Kabataş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "09:00",
+    "arrivalTime": "09:12",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-kab-5",
+    "origin": "Üsküdar",
+    "destination": "Kabataş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "09:45",
+    "arrivalTime": "09:57",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-kab-6",
+    "origin": "Üsküdar",
+    "destination": "Kabataş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "10:45",
+    "arrivalTime": "10:57",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-kab-7",
+    "origin": "Üsküdar",
+    "destination": "Kabataş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "11:45",
+    "arrivalTime": "11:57",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-kab-8",
+    "origin": "Üsküdar",
+    "destination": "Kabataş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "12:45",
+    "arrivalTime": "12:57",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-kab-9",
+    "origin": "Üsküdar",
+    "destination": "Kabataş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "13:45",
+    "arrivalTime": "13:57",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-kab-10",
+    "origin": "Üsküdar",
+    "destination": "Kabataş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "14:45",
+    "arrivalTime": "14:57",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-kab-11",
+    "origin": "Üsküdar",
+    "destination": "Kabataş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "15:45",
+    "arrivalTime": "15:57",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-kab-12",
+    "origin": "Üsküdar",
+    "destination": "Kabataş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "16:45",
+    "arrivalTime": "16:57",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-kab-13",
+    "origin": "Üsküdar",
+    "destination": "Kabataş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "17:15",
+    "arrivalTime": "17:27",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-kab-14",
+    "origin": "Üsküdar",
+    "destination": "Kabataş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "17:45",
+    "arrivalTime": "17:57",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-kab-15",
+    "origin": "Üsküdar",
+    "destination": "Kabataş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "18:15",
+    "arrivalTime": "18:27",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-kab-16",
+    "origin": "Üsküdar",
+    "destination": "Kabataş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "18:45",
+    "arrivalTime": "18:57",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-usk-kab-17",
+    "origin": "Üsküdar",
+    "destination": "Kabataş",
+    "operator": "Dentur Avrasya",
+    "category": "BOGAZ",
+    "departureTime": "19:45",
+    "arrivalTime": "19:57",
+    "platform": "Dentur Üsküdar İskelesi",
+    "price": "₺27.00"
+  },
+  {
+    "id": "den-kab-buy-0",
+    "origin": "Kabataş",
+    "destination": "Büyükada",
+    "operator": "Dentur Avrasya",
+    "category": "ADALAR",
+    "departureTime": "09:00",
+    "arrivalTime": "10:00",
+    "platform": "Dentur Kabataş İskelesi",
+    "price": "₺55.00",
+    "stops": [
+      {
+        "name": "Beşiktaş",
+        "time": "09:15"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "09:40"
+      },
+      {
+        "name": "Heybeliada",
+        "time": "09:50"
+      }
+    ]
+  },
+  {
+    "id": "den-kab-buy-1",
+    "origin": "Kabataş",
+    "destination": "Büyükada",
+    "operator": "Dentur Avrasya",
+    "category": "ADALAR",
+    "departureTime": "10:30",
+    "arrivalTime": "11:30",
+    "platform": "Dentur Kabataş İskelesi",
+    "price": "₺55.00",
+    "stops": [
+      {
+        "name": "Beşiktaş",
+        "time": "10:45"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "10:10"
+      },
+      {
+        "name": "Heybeliada",
+        "time": "10:20"
+      }
+    ]
+  },
+  {
+    "id": "den-kab-buy-2",
+    "origin": "Kabataş",
+    "destination": "Büyükada",
+    "operator": "Dentur Avrasya",
+    "category": "ADALAR",
+    "departureTime": "12:00",
+    "arrivalTime": "13:00",
+    "platform": "Dentur Kabataş İskelesi",
+    "price": "₺55.00",
+    "stops": [
+      {
+        "name": "Beşiktaş",
+        "time": "12:15"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "12:40"
+      },
+      {
+        "name": "Heybeliada",
+        "time": "12:50"
+      }
+    ]
+  },
+  {
+    "id": "den-kab-buy-3",
+    "origin": "Kabataş",
+    "destination": "Büyükada",
+    "operator": "Dentur Avrasya",
+    "category": "ADALAR",
+    "departureTime": "13:30",
+    "arrivalTime": "14:30",
+    "platform": "Dentur Kabataş İskelesi",
+    "price": "₺55.00",
+    "stops": [
+      {
+        "name": "Beşiktaş",
+        "time": "13:45"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "13:10"
+      },
+      {
+        "name": "Heybeliada",
+        "time": "13:20"
+      }
+    ]
+  },
+  {
+    "id": "den-kab-buy-4",
+    "origin": "Kabataş",
+    "destination": "Büyükada",
+    "operator": "Dentur Avrasya",
+    "category": "ADALAR",
+    "departureTime": "15:00",
+    "arrivalTime": "16:00",
+    "platform": "Dentur Kabataş İskelesi",
+    "price": "₺55.00",
+    "stops": [
+      {
+        "name": "Beşiktaş",
+        "time": "15:15"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "15:40"
+      },
+      {
+        "name": "Heybeliada",
+        "time": "15:50"
+      }
+    ]
+  },
+  {
+    "id": "den-kab-buy-5",
+    "origin": "Kabataş",
+    "destination": "Büyükada",
+    "operator": "Dentur Avrasya",
+    "category": "ADALAR",
+    "departureTime": "16:30",
+    "arrivalTime": "17:30",
+    "platform": "Dentur Kabataş İskelesi",
+    "price": "₺55.00",
+    "stops": [
+      {
+        "name": "Beşiktaş",
+        "time": "16:45"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "16:10"
+      },
+      {
+        "name": "Heybeliada",
+        "time": "16:20"
+      }
+    ]
+  },
+  {
+    "id": "den-kab-buy-6",
+    "origin": "Kabataş",
+    "destination": "Büyükada",
+    "operator": "Dentur Avrasya",
+    "category": "ADALAR",
+    "departureTime": "18:00",
+    "arrivalTime": "19:00",
+    "platform": "Dentur Kabataş İskelesi",
+    "price": "₺55.00",
+    "stops": [
+      {
+        "name": "Beşiktaş",
+        "time": "18:15"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "18:40"
+      },
+      {
+        "name": "Heybeliada",
+        "time": "18:50"
+      }
+    ]
+  },
+  {
+    "id": "den-buy-kab-0",
+    "origin": "Büyükada",
+    "destination": "Kabataş",
+    "operator": "Dentur Avrasya",
+    "category": "ADALAR",
+    "departureTime": "10:15",
+    "arrivalTime": "11:15",
+    "platform": "Dentur Büyükada İskelesi",
+    "price": "₺55.00",
+    "stops": [
+      {
+        "name": "Heybeliada",
+        "time": "10:25"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "10:35"
+      },
+      {
+        "name": "Beşiktaş",
+        "time": "10:00"
+      }
+    ]
+  },
+  {
+    "id": "den-buy-kab-1",
+    "origin": "Büyükada",
+    "destination": "Kabataş",
+    "operator": "Dentur Avrasya",
+    "category": "ADALAR",
+    "departureTime": "11:45",
+    "arrivalTime": "12:45",
+    "platform": "Dentur Büyükada İskelesi",
+    "price": "₺55.00",
+    "stops": [
+      {
+        "name": "Heybeliada",
+        "time": "11:55"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "11:05"
+      },
+      {
+        "name": "Beşiktaş",
+        "time": "11:30"
+      }
+    ]
+  },
+  {
+    "id": "den-buy-kab-2",
+    "origin": "Büyükada",
+    "destination": "Kabataş",
+    "operator": "Dentur Avrasya",
+    "category": "ADALAR",
+    "departureTime": "13:15",
+    "arrivalTime": "14:15",
+    "platform": "Dentur Büyükada İskelesi",
+    "price": "₺55.00",
+    "stops": [
+      {
+        "name": "Heybeliada",
+        "time": "13:25"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "13:35"
+      },
+      {
+        "name": "Beşiktaş",
+        "time": "13:00"
+      }
+    ]
+  },
+  {
+    "id": "den-buy-kab-3",
+    "origin": "Büyükada",
+    "destination": "Kabataş",
+    "operator": "Dentur Avrasya",
+    "category": "ADALAR",
+    "departureTime": "14:45",
+    "arrivalTime": "15:45",
+    "platform": "Dentur Büyükada İskelesi",
+    "price": "₺55.00",
+    "stops": [
+      {
+        "name": "Heybeliada",
+        "time": "14:55"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "14:05"
+      },
+      {
+        "name": "Beşiktaş",
+        "time": "14:30"
+      }
+    ]
+  },
+  {
+    "id": "den-buy-kab-4",
+    "origin": "Büyükada",
+    "destination": "Kabataş",
+    "operator": "Dentur Avrasya",
+    "category": "ADALAR",
+    "departureTime": "16:15",
+    "arrivalTime": "17:15",
+    "platform": "Dentur Büyükada İskelesi",
+    "price": "₺55.00",
+    "stops": [
+      {
+        "name": "Heybeliada",
+        "time": "16:25"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "16:35"
+      },
+      {
+        "name": "Beşiktaş",
+        "time": "16:00"
+      }
+    ]
+  },
+  {
+    "id": "den-buy-kab-5",
+    "origin": "Büyükada",
+    "destination": "Kabataş",
+    "operator": "Dentur Avrasya",
+    "category": "ADALAR",
+    "departureTime": "17:45",
+    "arrivalTime": "18:45",
+    "platform": "Dentur Büyükada İskelesi",
+    "price": "₺55.00",
+    "stops": [
+      {
+        "name": "Heybeliada",
+        "time": "17:55"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "17:05"
+      },
+      {
+        "name": "Beşiktaş",
+        "time": "17:30"
+      }
+    ]
+  },
+  {
+    "id": "den-buy-kab-6",
+    "origin": "Büyükada",
+    "destination": "Kabataş",
+    "operator": "Dentur Avrasya",
+    "category": "ADALAR",
+    "departureTime": "19:15",
+    "arrivalTime": "20:15",
+    "platform": "Dentur Büyükada İskelesi",
+    "price": "₺55.00",
+    "stops": [
+      {
+        "name": "Heybeliada",
+        "time": "19:25"
+      },
+      {
+        "name": "Kınalıada",
+        "time": "19:35"
+      },
+      {
+        "name": "Beşiktaş",
+        "time": "19:00"
+      }
+    ]
   }
 ];

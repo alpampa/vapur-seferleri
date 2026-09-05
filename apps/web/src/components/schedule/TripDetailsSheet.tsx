@@ -1,8 +1,9 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { Ship, MapPin, Clock, X, ChevronRight, Anchor, ShieldCheck, Ticket, Users, Train, Star, Bell, BellRing, Navigation, Radar } from "lucide-react";
+import { Ship, MapPin, Clock, X, ChevronRight, Anchor, ShieldCheck, Ticket, Users, Train, Star, Bell, BellRing, Navigation, Radar, Camera } from "lucide-react";
 import { MarineAisRadarModal } from "@/components/map/MarineAisRadarModal";
+import { PierLiveCameraModal } from "@/components/map/PierLiveCameraModal";
 import { OperatorLogo } from "@/components/ui/OperatorLogo";
 import { resolveLiveVesselName } from "@/lib/agents/fleet-registry";
 import { TripStatusBadge } from "./ScheduleCard";
@@ -28,6 +29,7 @@ export function TripDetailsSheet({ schedule, isOpen, onClose, serverTimeIso }: T
 
   const [dynState, setDynState] = useState<DynamicTripResolution | null>(null);
   const [isRadarOpen, setIsRadarOpen] = useState(false);
+  const [isCameraOpen, setIsCameraOpen] = useState(false);
 
   useEffect(() => {
     if (!schedule) {
@@ -230,34 +232,66 @@ export function TripDetailsSheet({ schedule, isOpen, onClose, serverTimeIso }: T
               </div>
             </div>
 
-            {/* Canlı Deniz Radarı (AIS) Butonu */}
-            <button
-              type="button"
-              onClick={() => setIsRadarOpen(true)}
-              className="w-full mb-4 p-3 rounded-xl bg-gradient-to-r from-emerald-950/80 via-teal-950/60 to-slate-900 border border-emerald-500/40 hover:border-emerald-400 text-left flex items-center justify-between gap-3 shadow-md group transition-all"
-            >
-              <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                  <Radar size={18} className="animate-spin" style={{ animationDuration: '4s' }} />
-                </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-black text-white tracking-tight">
-                      CANLI DENİZ RADARI (AIS)
-                    </span>
-                    <span className="text-[9px] font-mono font-bold bg-emerald-500/30 text-emerald-300 px-1.5 py-0.2 rounded">
-                      GERÇEK GEMİ ADLARI
-                    </span>
+            {/* Canlı Deniz Radarı (AIS) ve İBB Canlı Kamera Butonları */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mb-4">
+              {/* AIS Radar Button */}
+              <button
+                type="button"
+                onClick={() => setIsRadarOpen(true)}
+                className="p-3 rounded-xl bg-gradient-to-r from-emerald-950/80 via-teal-950/60 to-slate-900 border border-emerald-500/40 hover:border-emerald-400 text-left flex items-center justify-between gap-2.5 shadow-md group transition-all"
+              >
+                <div className="flex items-center gap-2 min-w-0">
+                  <div className="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                    <Radar size={16} className="animate-spin" style={{ animationDuration: '4s' }} />
                   </div>
-                  <p className="text-[10px] text-slate-300 mt-0.5">
-                    Denizdeki vapurların anlık telsiz adını, hızını ve rotasını canlı radarda gör ➔
-                  </p>
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className="text-xs font-black text-white tracking-tight">
+                        CANLI RADAR (AIS)
+                      </span>
+                      <span className="text-[8px] font-mono font-bold bg-emerald-500/30 text-emerald-300 px-1 py-0.1 rounded">
+                        GEMİ ADLARI
+                      </span>
+                    </div>
+                    <p className="text-[10px] text-slate-300 truncate mt-0.5">
+                      Vapurların anlık telsiz ve rota takibi
+                    </p>
+                  </div>
                 </div>
-              </div>
-              <div className="text-emerald-400 group-hover:translate-x-0.5 transition-transform text-xs font-bold shrink-0">
-                Radarı Aç ↗
-              </div>
-            </button>
+                <div className="text-emerald-400 group-hover:translate-x-0.5 transition-transform text-xs font-bold shrink-0">
+                  ↗
+                </div>
+              </button>
+
+              {/* İBB Live Camera Button */}
+              <button
+                type="button"
+                onClick={() => setIsCameraOpen(true)}
+                className="p-3 rounded-xl bg-gradient-to-r from-blue-950/80 via-indigo-950/60 to-slate-900 border border-blue-500/40 hover:border-blue-400 text-left flex items-center justify-between gap-2.5 shadow-md group transition-all"
+              >
+                <div className="flex items-center gap-2 min-w-0">
+                  <div className="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 border border-blue-500/30 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                    <Camera size={16} className="animate-pulse" />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className="text-xs font-black text-white tracking-tight">
+                        İBB CANLI KAMERA
+                      </span>
+                      <span className="text-[8px] font-mono font-bold bg-blue-500/30 text-blue-300 px-1 py-0.1 rounded">
+                        RIHTIM YAYINI
+                      </span>
+                    </div>
+                    <p className="text-[10px] text-slate-300 truncate mt-0.5">
+                      İskele yoğunluğu ve deniz canlı yayını
+                    </p>
+                  </div>
+                </div>
+                <div className="text-blue-400 group-hover:translate-x-0.5 transition-transform text-xs font-bold shrink-0">
+                  ↗
+                </div>
+              </button>
+            </div>
 
             {/* Metro / Marmaray Progressive Route Timeline */}
             {!isDirect && dynState?.waypoints && dynState.waypoints.length > 1 ? (
@@ -421,6 +455,12 @@ export function TripDetailsSheet({ schedule, isOpen, onClose, serverTimeIso }: T
       <MarineAisRadarModal
         isOpen={isRadarOpen}
         onClose={() => setIsRadarOpen(false)}
+        origin={schedule?.origin}
+        destination={schedule?.destination}
+      />
+      <PierLiveCameraModal
+        isOpen={isCameraOpen}
+        onClose={() => setIsCameraOpen(false)}
         origin={schedule?.origin}
         destination={schedule?.destination}
       />
