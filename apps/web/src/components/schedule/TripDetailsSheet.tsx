@@ -95,15 +95,15 @@ export function TripDetailsSheet({ schedule, isOpen, onClose }: TripDetailsSheet
               </div>
             </div>
 
-            {/* Gemi Bilgisi Kartı */}
+            {/* Operatör & Sefer Tipi Bilgisi */}
             <div className="flex items-center gap-3.5 p-4 border border-slate-800 rounded-2xl mb-6 bg-slate-900/60 shadow-md">
               <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl flex items-center justify-center shrink-0 shadow-lg shadow-blue-600/30">
                 <Ship className="text-white" size={24} />
               </div>
               <div className="flex-1">
-                <h4 className="font-extrabold text-base text-white">{schedule.vessel}</h4>
+                <h4 className="font-extrabold text-base text-white">{schedule.operator} Tarifeli Seferi</h4>
                 <p className="text-xs text-slate-400 font-medium">
-                  {schedule.operator} Filosu • Canlı AIS Takibi Aktif
+                  {schedule.routeTitle} • Resmi Deniz Ulaşım Tarifesi
                 </p>
               </div>
             </div>

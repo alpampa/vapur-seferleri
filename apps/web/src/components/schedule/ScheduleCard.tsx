@@ -175,9 +175,6 @@ export function ScheduleCard(props: ScheduleCardProps) {
             </div>
             <div className="flex items-center gap-2 mt-0.5">
               <OperatorBranding operator={props.operator} />
-              <span className="text-xs font-bold text-slate-300">
-                • {props.vessel}
-              </span>
             </div>
           </div>
         </div>

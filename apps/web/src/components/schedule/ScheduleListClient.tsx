@@ -182,10 +182,9 @@ export function ScheduleListClient({ schedules, serverTimeIso }: ScheduleListCli
         const q = searchQuery.toLowerCase().trim();
         const inOrigin = schedule.origin.toLowerCase().includes(q) || dyn.currentOrigin.toLowerCase().includes(q);
         const inDest = schedule.destination.toLowerCase().includes(q);
-        const inVessel = schedule.vessel.toLowerCase().includes(q);
         const inOperator = schedule.operator.toLowerCase().includes(q);
         const inStops = schedule.stops?.some((st) => st.name.toLowerCase().includes(q));
-        if (!inOrigin && !inDest && !inVessel && !inOperator && !inStops) return false;
+        if (!inOrigin && !inDest && !inOperator && !inStops) return false;
       }
 
       return true;
@@ -202,7 +201,7 @@ export function ScheduleListClient({ schedules, serverTimeIso }: ScheduleListCli
             <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
               type="text"
-              placeholder="İskele, vapur adı veya durak ara..."
+              placeholder="İskele, hat veya durak ara..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-9 pr-7 py-1.5 bg-slate-900 border border-slate-700/80 rounded-lg text-white text-xs font-semibold placeholder:text-slate-500 focus:outline-none focus:border-blue-500"
