@@ -117,62 +117,6 @@ export const ISTANBUL_FERRY_FLEET: RegisteredVessel[] = [
     assignedLines: ["Kabataş - Adalar", "Kadıköy - Karaköy"]
   },
 
-  // --- İDO KATAMARAN DENİZ OTOBÜSLERİ ---
-  {
-    name: "Kaptan Enver Cura",
-    mmsi: "271002421",
-    imo: "9143439",
-    callSign: "TC5461",
-    operator: "İDO",
-    type: "DENIZ_OTOBUSU",
-    capacityPax: 450,
-    builtYear: 1997,
-    assignedLines: ["Bostancı - Adalar", "Yenikapı - Adalar", "Kabataş - Adalar"]
-  },
-  {
-    name: "Çakabey-1",
-    mmsi: "271002422",
-    imo: "9143441",
-    callSign: "TC5462",
-    operator: "İDO",
-    type: "DENIZ_OTOBUSU",
-    capacityPax: 450,
-    builtYear: 1997,
-    assignedLines: ["Bostancı - Adalar", "Yenikapı - Adalar"]
-  },
-  {
-    name: "Umur Bey",
-    mmsi: "271002423",
-    imo: "9143453",
-    callSign: "TC5463",
-    operator: "İDO",
-    type: "DENIZ_OTOBUSU",
-    capacityPax: 450,
-    builtYear: 1997,
-    assignedLines: ["Yenikapı - Kadıköy - Adalar", "Kabataş - Adalar"]
-  },
-  {
-    name: "Yeditepe-1",
-    mmsi: "271002424",
-    imo: "9143465",
-    callSign: "TC5464",
-    operator: "İDO",
-    type: "DENIZ_OTOBUSU",
-    capacityPax: 450,
-    builtYear: 1998,
-    assignedLines: ["Bostancı - Adalar", "Yenikapı - Adalar"]
-  },
-  {
-    name: "Ulubatlı Hasan",
-    mmsi: "271002425",
-    imo: "9143477",
-    callSign: "TC5465",
-    operator: "İDO",
-    type: "DENIZ_OTOBUSU",
-    capacityPax: 450,
-    builtYear: 1998,
-    assignedLines: ["Bostancı - Adalar", "Kabataş - Adalar"]
-  },
 
   // --- TURYOL MOTORLARI ---
   {

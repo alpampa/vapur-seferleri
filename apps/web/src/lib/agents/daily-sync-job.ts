@@ -21,14 +21,7 @@ export const OFFICIAL_OPERATOR_CRAWLERS: OperatorScraperConfig[] = [
     updateFrequency: "Her Gece 03:00 (Günlük Tarama)",
     status: "VERIFIED"
   },
-  {
-    operatorName: "İDO",
-    officialWebsite: "https://www.ido.com.tr",
-    timetableEndpoint: "https://www.ido.com.tr/sefer-saatleri",
-    category: "ADALAR",
-    updateFrequency: "Her Gece 03:15 (Günlük Tarama)",
-    status: "VERIFIED"
-  },
+
   {
     operatorName: "Turyol",
     officialWebsite: "https://www.turyol.com",
