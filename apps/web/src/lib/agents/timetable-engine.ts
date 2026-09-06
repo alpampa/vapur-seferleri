@@ -2,6 +2,7 @@ import { OFFICIAL_SCHEDULES_DATA, RawOfficialTrip } from '../data/official-sched
 import type { ScheduleCardDto, SchedulesResponse } from '@/app/page';
 import type { TripStatus } from '@/components/schedule/ScheduleCard';
 import { getOfficialRouteFare, resolveRealisticPlatform } from '@/lib/data/official-fares';
+import { selfHealTripRecord } from '@/lib/agents/self-healing-engine';
 
 /**
  * Returns current Istanbul time components (UTC+3)
@@ -74,7 +75,8 @@ export async function getLiveOrOfficialSchedules(): Promise<SchedulesResponse> {
   });
 
   // 2. Map raw official trips to full ScheduleCardDto
-  const schedules: ScheduleCardDto[] = todayOfficial.map((trip) => {
+  const schedules: ScheduleCardDto[] = todayOfficial.map((rawTrip) => {
+    const trip = selfHealTripRecord(rawTrip);
     const [hh, mm] = trip.departureTime.split(':');
     
     // Construct ISO string explicitly with +03:00 Istanbul offset
