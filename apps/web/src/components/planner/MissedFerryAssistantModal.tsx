@@ -1,8 +1,11 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, AlertOctagon, Train, Ship, Compass, ArrowRight, CheckCircle, Clock, Zap, MapPin } from "lucide-react";
+import { X, AlertOctagon, Train, Ship, Compass, ArrowRight, CheckCircle, Clock, Zap, MapPin, Anchor } from "lucide-react";
 import { calculateMissedFerryAlternatives, MissedFerryRescuePlan } from "@/lib/services/missed-ferry-engine";
+import { SharedSeaTaxiModal } from "@/components/taxishare/SharedSeaTaxiModal";
 
 interface MissedFerryAssistantModalProps {
   isOpen: boolean;
@@ -19,28 +22,28 @@ export function MissedFerryAssistantModal({
   destination,
   missedDepartureTime
 }: MissedFerryAssistantModalProps) {
-  if (!isOpen) return null;
+  const [mounted, setMounted] = useState(false);
+  const [isSeaTaxiOpen, setIsSeaTaxiOpen] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!isOpen || !mounted) return null;
 
   const plan: MissedFerryRescuePlan = calculateMissedFerryAlternatives(origin, destination, missedDepartureTime);
 
-  return (
+  return createPortal(
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
-        {/* Backdrop */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          onClick={onClose}
-          className="fixed inset-0 bg-black/80 backdrop-blur-sm"
-        />
+      <div className="fixed inset-0 z-[99999] flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md overflow-y-auto min-h-full">
+        <div className="fixed inset-0" onClick={onClose} />
 
         {/* Modal Container */}
         <motion.div
           initial={{ scale: 0.95, opacity: 0, y: 15 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.95, opacity: 0, y: 15 }}
-          className="relative w-full max-w-lg bg-white dark:bg-[#0c1220] border border-amber-500/40 rounded-3xl p-5 sm:p-6 shadow-2xl text-slate-900 dark:text-white z-10 max-h-[92vh] overflow-y-auto"
+          className="relative my-auto w-full max-w-lg bg-white dark:bg-[#0c1220] border border-amber-500/40 rounded-3xl p-5 sm:p-6 shadow-2xl text-slate-900 dark:text-white z-10 max-h-[92vh] overflow-y-auto"
         >
           {/* Header */}
           <div className="flex items-center justify-between gap-3 mb-4 pb-3 border-b border-slate-200 dark:border-slate-800">
@@ -65,7 +68,7 @@ export function MissedFerryAssistantModal({
 
             <button
               onClick={onClose}
-              className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center justify-center transition-colors"
+              className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center justify-center transition-colors cursor-pointer"
             >
               <X size={16} />
             </button>
@@ -80,6 +83,30 @@ export function MissedFerryAssistantModal({
             <p className="text-xs text-amber-950 dark:text-amber-100 leading-relaxed font-medium">
               {plan.summary}
             </p>
+          </div>
+
+          {/* Paylaşımlı Deniz Taksi Banner */}
+          <div className="mb-4 p-3 rounded-2xl bg-gradient-to-r from-amber-500/15 via-orange-500/10 to-transparent border border-amber-500/30 flex items-center justify-between gap-3 shadow-xs">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-500 flex items-center justify-center shrink-0">
+                <Anchor size={16} />
+              </div>
+              <div>
+                <span className="text-xs font-black text-slate-900 dark:text-white block">
+                  GECE / ACİL DENİZ TAKSİ ÇAĞIR
+                </span>
+                <span className="text-[10px] text-slate-500 dark:text-slate-400">
+                  İskeledeki diğer yolcularla masrafı bölüşerek geçin
+                </span>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => setIsSeaTaxiOpen(true)}
+              className="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition-colors cursor-pointer shrink-0"
+            >
+              Hesapla ➔
+            </button>
           </div>
 
           {/* Alternatives List */}
@@ -133,6 +160,14 @@ export function MissedFerryAssistantModal({
           </div>
         </motion.div>
       </div>
-    </AnimatePresence>
+
+      <SharedSeaTaxiModal
+        isOpen={isSeaTaxiOpen}
+        onClose={() => setIsSeaTaxiOpen(false)}
+        defaultOrigin={origin}
+        defaultDestination={destination}
+      />
+    </AnimatePresence>,
+    document.body
   );
 }

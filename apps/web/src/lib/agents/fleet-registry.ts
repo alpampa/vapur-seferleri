@@ -18,6 +18,17 @@ export interface RegisteredVessel {
 export const ISTANBUL_FERRY_FLEET: RegisteredVessel[] = [
   // --- ŞEHİR HATLARI RESMİ VAPURLARI ---
   {
+    name: "Paşabahçe",
+    mmsi: "271002496",
+    imo: "5271070",
+    callSign: "TC7821",
+    operator: "Şehir Hatları",
+    type: "VAPUR",
+    capacityPax: 2100,
+    builtYear: 1952,
+    assignedLines: ["Kabataş - Adalar", "Kadıköy - Adalar", "Kadıköy - Karaköy", "Boğaz Turu"]
+  },
+  {
     name: "Barış Manço",
     mmsi: "271002506",
     imo: "7315519",
@@ -223,16 +234,19 @@ export interface LiveVesselResolution {
   statusText: string;
   isConfirmedUnderway: boolean;
   radarUrl: string;
+  liveBosphorusRadarUrl: string;
   vesselType: "VAPUR" | "MOTOR" | "DENIZ_OTOBUSU";
   capacityPax: number;
   builtYear: number;
   callSign?: string;
+  isRotationalFleetPool: boolean;
+  fleetDisclaimer: string;
 }
 
 /**
  * Resolves the real vessel name and maritime telemetry:
- * 1. Before departure: Assigned vessel is docked at pier preparing for departure
- * 2. After departure: Vessel is underway in Bosphorus / Marmara with active AIS broadcast
+ * Note: City Lines ferries are allocated via daily duty rotation from the fleet pool.
+ * We cross-reference authentic MMSI / IMO registrations with the active corridor.
  */
 export function resolveLiveVesselName(
   origin: string,
@@ -256,6 +270,8 @@ export function resolveLiveVesselName(
   const vessel = fleetPool[assignedIndex];
 
   const radarUrl = `https://www.marinetraffic.com/tr/ais/details/ships/mmsi:${vessel.mmsi}`;
+  const liveBosphorusRadarUrl = `https://www.marinetraffic.com/en/ais/home/centerx:29.02/centery:41.01/zoom:13`;
+  const fleetDisclaimer = "İBB Şehir Hatları tarifesinde fiziki gemi adı önceden ilan edilmez; nöbetçi filo havuzundan görevlendirilir.";
 
   // IF STILL AT THE PIER (Not departed)
   if (!isDeparted && status !== "IN_TRANSIT") {
@@ -265,10 +281,13 @@ export function resolveLiveVesselName(
       statusText: "İskelede Hazırlanıyor • Rıhtıma Bağlı",
       isConfirmedUnderway: false,
       radarUrl,
+      liveBosphorusRadarUrl,
       vesselType: vessel.type,
       capacityPax: vessel.capacityPax,
       builtYear: vessel.builtYear,
-      callSign: vessel.callSign
+      callSign: vessel.callSign,
+      isRotationalFleetPool: true,
+      fleetDisclaimer
     };
   }
 
@@ -276,12 +295,15 @@ export function resolveLiveVesselName(
   return {
     vesselName: vessel.name,
     mmsi: vessel.mmsi,
-    statusText: `AIS Sinyali Aktif • ${vessel.name} seyirde`,
+    statusText: `Hat Seyrinde • ${vessel.name} (Nöbetçi Havuzu)`,
     isConfirmedUnderway: true,
     radarUrl,
+    liveBosphorusRadarUrl,
     vesselType: vessel.type,
     capacityPax: vessel.capacityPax,
     builtYear: vessel.builtYear,
-    callSign: vessel.callSign
+    callSign: vessel.callSign,
+    isRotationalFleetPool: true,
+    fleetDisclaimer
   };
 }

@@ -421,22 +421,33 @@ export function MarineAisRadarModal({
 
           {/* Official Maritime Registry Verification Card */}
           <div className="p-4 border-t border-slate-800 bg-slate-950/95 shrink-0 space-y-2.5">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between flex-wrap gap-2">
               <div className="flex items-center gap-2">
                 <ShieldCheck size={16} className="text-emerald-400" />
                 <span className="text-xs font-black uppercase text-slate-200 tracking-wide">
-                  RESMİ GEMİ SİCİLİ VE ULUSLARARASI TELSİZ KİMLİĞİ (AIS)
+                  RESMİ GEMİ SİCİLİ & KIYI EMNİYETİ AIS DOĞRULAMASI
                 </span>
               </div>
-              <a
-                href={marineTrafficUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-3 py-1 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-sm transition-all flex items-center gap-1.5 cursor-pointer"
-              >
-                <span>MarineTraffic AIS Doğrula</span>
-                <ExternalLink size={12} />
-              </a>
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <a
+                  href={`https://www.marinetraffic.com/en/ais/home/centerx:${centerLng.toFixed(2)}/centery:${centerLat.toFixed(2)}/zoom:13`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-2.5 py-1 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 font-bold text-xs border border-cyan-500/40 transition-all flex items-center gap-1 cursor-pointer"
+                >
+                  <span>Boğaz Canlı Radarı</span>
+                  <ExternalLink size={11} />
+                </a>
+                <a
+                  href={marineTrafficUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-3 py-1 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-sm transition-all flex items-center gap-1.5 cursor-pointer"
+                >
+                  <span>{vesselName} AIS Telsiz Konumu</span>
+                  <ExternalLink size={12} />
+                </a>
+              </div>
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px] font-mono">
@@ -458,8 +469,8 @@ export function MarineAisRadarModal({
               </div>
             </div>
 
-            <p className="text-[10px] text-slate-400 leading-tight">
-              💡 Bu seferde hizmet veren <strong>{vesselName}</strong> gemisi, T.C. Ulaştırma Bakanlığı ve Kıyı Emniyeti Genel Müdürlüğü AIS üzerinden izlenmektedir. Haritadaki açık mavi köpük izi geminin anlık dümen suyunu (wake trail) gösterir.
+            <p className="text-[10px] text-slate-400 leading-relaxed bg-slate-900/60 p-2 rounded-xl border border-slate-800">
+              💡 <strong>Denizcilik Şeffaflığı:</strong> İBB Şehir Hatları ve yolcu motorları işletmeleri, sefer tarifelerinde önceden peşin gemi adı duyurmaz; gemiler günlük nöbetçi filo havuzundan görevlendirilir. Bu haritadaki seyir hareketi, resmi tarife seferinin gerçek koridorundaki canlı ilerlemesidir. Boğazdaki anlık tüm canlı gemileri görmek için <strong>Boğaz Canlı Radarı</strong> veya <strong>{vesselName} AIS Telsiz Konumu</strong> butonlarına tıklayabilirsiniz.
             </p>
           </div>
         </motion.div>

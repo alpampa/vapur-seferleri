@@ -36,6 +36,7 @@ import { TurnstileCheckBanner } from "@/components/turnstile/TurnstileCheckBanne
 import { getOfficialRouteFare } from "@/lib/data/official-fares";
 import { VesselVisualCard } from "@/components/vessel/VesselVisualCard";
 import { BerthTurnaroundIndicator } from "@/components/schedule/BerthTurnaroundIndicator";
+import { SharedSeaTaxiModal } from "@/components/taxishare/SharedSeaTaxiModal";
 
 interface TripDetailsSheetProps {
   schedule: ScheduleCardDto | null;
@@ -56,6 +57,7 @@ export function TripDetailsSheet({ schedule, isOpen, onClose, serverTimeIso }: T
   const [isAudioGuideOpen, setIsAudioGuideOpen] = useState(false);
   const [isOnboardOpen, setIsOnboardOpen] = useState(false);
   const [isMissedOpen, setIsMissedOpen] = useState(false);
+  const [isSeaTaxiOpen, setIsSeaTaxiOpen] = useState(false);
 
   useEffect(() => {
     if (!schedule) {
@@ -348,6 +350,32 @@ export function TripDetailsSheet({ schedule, isOpen, onClose, serverTimeIso }: T
                   </div>
                 </div>
                 <span className="text-xs font-bold text-amber-600 dark:text-amber-400">Gör ➔</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setIsSeaTaxiOpen(true)}
+                className="col-span-1 sm:col-span-2 p-2.5 rounded-xl bg-gradient-to-r from-amber-500/15 via-orange-500/10 to-transparent hover:from-amber-500/25 border border-amber-500/40 text-left flex items-center justify-between transition-all shadow-2xs group cursor-pointer"
+              >
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-500 flex items-center justify-center shrink-0">
+                    <Anchor size={14} className="group-hover:rotate-12 transition-transform" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-[11px] font-black uppercase text-amber-900 dark:text-amber-300 block">
+                        GECE & PAYLAŞIMLI İBB DENİZ TAKSİ
+                      </span>
+                      <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-600 dark:text-amber-400">
+                        10 Kişiye Bölüş
+                      </span>
+                    </div>
+                    <span className="text-[10px] text-slate-600 dark:text-slate-400">
+                      Tarifeli vapur bittiyse masrafı bölüşerek tekne çağırın
+                    </span>
+                  </div>
+                </div>
+                <span className="text-xs font-bold text-amber-600 dark:text-amber-400 shrink-0">Hesapla & Çağır ➔</span>
               </button>
             </div>
 
@@ -951,6 +979,12 @@ export function TripDetailsSheet({ schedule, isOpen, onClose, serverTimeIso }: T
         onClose={() => setIsCameraOpen(false)}
         origin={dynState?.currentOrigin || schedule?.origin}
         destination={dynState?.destination || schedule?.destination}
+      />
+      <SharedSeaTaxiModal
+        isOpen={isSeaTaxiOpen}
+        onClose={() => setIsSeaTaxiOpen(false)}
+        defaultOrigin={dynState?.currentOrigin || schedule?.origin || "Kadıköy"}
+        defaultDestination={dynState?.destination || schedule?.destination || "Karaköy"}
       />
     </AnimatePresence>
   );
