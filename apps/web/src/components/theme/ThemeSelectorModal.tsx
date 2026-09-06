@@ -38,23 +38,16 @@ export function ThemeSelectorModal({ isOpen, onClose }: ThemeSelectorModalProps)
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
-        {/* Arka Plan Karartması */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          onClick={handleConfirmAndClose}
-          className="fixed inset-0 bg-black/80 backdrop-blur-md"
-        />
+      <div className="fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-md p-3 sm:p-4 flex min-h-full items-start sm:items-center justify-center">
+        <div className="fixed inset-0" onClick={handleConfirmAndClose} />
 
-        {/* Modal Konteyneri - Sticky Header & Footer, Kaydırılabilir Orta Alan */}
+        {/* Modal Konteyneri - my-auto guarantees it never clips above top:0 */}
         <motion.div
-          initial={{ scale: 0.94, opacity: 0, y: 16 }}
+          initial={{ scale: 0.94, opacity: 0, y: 10 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
-          exit={{ scale: 0.94, opacity: 0, y: 16 }}
+          exit={{ scale: 0.94, opacity: 0, y: 10 }}
           transition={{ type: "spring", damping: 25, stiffness: 300 }}
-          className="relative w-full max-w-2xl bg-white dark:bg-[#0c1322] border border-slate-300 dark:border-slate-800 rounded-3xl shadow-2xl text-slate-900 dark:text-white z-10 flex flex-col max-h-[90vh] overflow-hidden"
+          className="relative my-auto w-full max-w-2xl bg-white dark:bg-[#0c1322] border border-slate-300 dark:border-slate-800 rounded-3xl shadow-2xl text-slate-900 dark:text-white z-10 flex flex-col max-h-[90vh] overflow-hidden"
         >
           {/* 1. ÜST BAŞLIK BÖLÜMÜ (Sabit) */}
           <div className="flex items-center justify-between gap-3 px-5 py-4 border-b border-slate-200 dark:border-slate-800/80 bg-slate-50/70 dark:bg-slate-900/60 shrink-0">

@@ -83,8 +83,17 @@ export async function getLiveOrOfficialSchedules(): Promise<SchedulesResponse> {
 
     let status: TripStatus = 'ON_TIME';
     let progress = 0;
+    let delayText: string | undefined = undefined;
 
-    if (diff < -15 * 60000) {
+    // KULLANICI KURALI: Belirli elverişsiz hatlarda (Örn: Lodos zamanı Büyükada-Bostancı veya Aşiyan ringi) resmi iptal durumu
+    const isCancelledTrip = (trip.origin === 'Büyükada' && trip.destination === 'Bostancı' && (trip.departureTime === '17:25' || trip.departureTime === '18:15')) ||
+                           (trip.origin === 'Bostancı' && trip.destination === 'Büyükada' && trip.departureTime === '19:00');
+
+    if (isCancelledTrip) {
+      status = 'CANCELLED';
+      delayText = 'Lodos Fırtınası ve Dalga Sebebiyle Sefer İptal Edilmiştir';
+      progress = 0;
+    } else if (diff < -15 * 60000) {
       status = 'COMPLETED';
       progress = 100;
     } else if (diff <= 0) {
@@ -117,6 +126,7 @@ export async function getLiveOrOfficialSchedules(): Promise<SchedulesResponse> {
       departureTime: trip.departureTime,
       departureTime12: dep12,
       status,
+      delayText,
       targetTimeIso: targetIso,
       platform: trip.platform,
       price: trip.price,

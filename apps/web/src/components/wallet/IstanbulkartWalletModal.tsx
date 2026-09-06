@@ -43,142 +43,128 @@ export function IstanbulkartWalletModal({ isOpen, onClose }: IstanbulkartWalletM
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
-        {/* Backdrop */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          onClick={onClose}
-          className="fixed inset-0 bg-black/80 backdrop-blur-sm"
-        />
+      <div className="fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-sm p-3 sm:p-4 flex min-h-full items-start sm:items-center justify-center">
+        {/* Backdrop Click */}
+        <div className="fixed inset-0" onClick={onClose} />
 
-        {/* Modal Container */}
+        {/* Modal Container - my-auto guarantees it never clips above top:0 */}
         <motion.div
-          initial={{ scale: 0.95, opacity: 0, y: 15 }}
+          initial={{ scale: 0.95, opacity: 0, y: 10 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
-          exit={{ scale: 0.95, opacity: 0, y: 15 }}
-          className="relative w-full max-w-md bg-white dark:bg-[#0c1220] border border-slate-200 dark:border-slate-800 rounded-3xl p-5 sm:p-6 shadow-2xl text-slate-900 dark:text-white z-10 max-h-[92vh] overflow-y-auto"
+          exit={{ scale: 0.95, opacity: 0, y: 10 }}
+          className="relative my-auto w-full max-w-md bg-white dark:bg-[#0c1220] border border-slate-200 dark:border-slate-800 rounded-3xl p-5 shadow-2xl text-slate-900 dark:text-white z-10 max-h-[90vh] overflow-y-auto"
         >
           {/* Header */}
-          <div className="flex items-center justify-between gap-3 mb-4">
+          <div className="flex items-center justify-between gap-3 mb-4 pb-3 border-b border-slate-200 dark:border-slate-800">
             <div className="flex items-center gap-2.5">
-              <div className="w-10 h-10 rounded-2xl bg-red-600 text-white flex items-center justify-center font-black shadow-md shadow-red-600/30">
-                <CreditCard size={20} />
+              <div className="w-9 h-9 rounded-xl bg-red-600 text-white flex items-center justify-center font-black shadow-md shrink-0">
+                <CreditCard size={18} />
               </div>
               <div>
-                <h3 className="text-base font-black text-slate-900 dark:text-white flex items-center gap-1.5 leading-tight">
+                <h3 className="text-sm sm:text-base font-black text-slate-900 dark:text-white flex items-center gap-1.5">
                   <span>İSTANBULKART DİJİTAL GEÇİŞ</span>
+                  <span className="text-[9px] font-mono bg-red-500/20 text-red-600 dark:text-red-400 border border-red-500/40 px-1.5 py-0.2 rounded font-bold">
+                    BELBİM
+                  </span>
                 </h3>
                 <p className="text-[11px] text-slate-500 dark:text-slate-400 font-semibold">
-                  İskele Turnikeleri & UKOME Resmi Deniz Tarifesi
+                  Turnike QR kod & Güncel UKOME Deniz Ücret Tarifesi
                 </p>
               </div>
             </div>
 
             <button
               onClick={onClose}
-              className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center justify-center transition-colors"
+              className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center justify-center transition-colors cursor-pointer shrink-0"
             >
               <X size={16} />
             </button>
           </div>
 
-          {/* Digital QR Card Simulation */}
-          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-red-600 via-rose-700 to-amber-700 p-5 text-white shadow-xl mb-4">
-            {/* Background Watermark */}
-            <div className="absolute -right-6 -bottom-6 w-32 h-32 rounded-full bg-white/10 blur-xl pointer-events-none" />
-
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <span className="font-mono font-black text-lg tracking-wider">istanbulkart</span>
-                <span className="text-[9px] font-bold uppercase bg-white/20 px-2 py-0.5 rounded-full backdrop-blur-xs">
-                  DİJİTAL CÜZDAN
-                </span>
-              </div>
-              <ShieldCheck size={18} className="text-amber-200" />
+          {/* Turnstile QR Code Simulator Card */}
+          <div className="p-4 rounded-2xl bg-gradient-to-br from-red-600 via-rose-700 to-amber-600 text-white shadow-lg mb-4 text-center relative overflow-hidden">
+            <div className="flex items-center justify-between text-xs font-mono font-bold opacity-90 mb-3">
+              <span className="flex items-center gap-1">
+                <Smartphone size={13} />
+                <span>DİJİTAL GEÇİŞ KARTI</span>
+              </span>
+              <span className="bg-white/20 px-2 py-0.5 rounded-full text-[10px]">
+                TEMASSIZ / NFC
+              </span>
             </div>
 
-            {/* QR Code Graphic Box */}
-            <div className="bg-white rounded-xl p-3.5 flex flex-col items-center justify-center text-slate-950 shadow-inner">
-              <div className="relative w-36 h-36 flex items-center justify-center border-4 border-slate-900 rounded-lg p-1 bg-white">
-                <QrCode size={124} className="text-slate-950" />
-              </div>
-              <span className="font-mono text-xs font-black tracking-widest mt-2 text-slate-800">
+            {/* QR Mock Display */}
+            <div className="bg-white p-3 rounded-2xl w-36 h-36 mx-auto shadow-inner flex flex-col items-center justify-center gap-1.5 border-4 border-white/30">
+              <QrCode size={110} className="text-slate-900" />
+            </div>
+
+            <div className="mt-3">
+              <span className="text-xs font-mono font-black tracking-widest bg-black/30 px-3 py-1 rounded-lg">
                 {qrToken}
               </span>
-              <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-500 mt-1">
-                <RefreshCw size={10} className="animate-spin text-red-600" />
+              <div className="text-[10px] text-white/80 font-bold mt-1.5 flex items-center justify-center gap-1">
+                <RefreshCw size={10} className="animate-spin" />
                 <span>Geçerlilik süresi: <strong>{secondsRemaining} sn</strong></span>
               </div>
             </div>
 
-            <div className="mt-3 flex items-center justify-between text-[11px] text-rose-100">
-              <span>Turnike okuyucusuna 5-10 cm yaklaştırın</span>
-              <span className="font-mono font-bold">BELBİM A.Ş.</span>
-            </div>
+            <p className="text-[10px] text-white/70 mt-2 font-medium">
+              Turnike okuyucusuna 5-10 cm yaklaştırın
+            </p>
           </div>
 
-          {/* Direct Mobile App Launch Buttons */}
+          {/* Quick Actions */}
           <div className="grid grid-cols-2 gap-2 mb-4">
-            <a
-              href="istanbulkart://"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-800 hover:border-red-500 text-slate-900 dark:text-white text-xs font-bold flex items-center justify-center gap-1.5 transition-all shadow-2xs group"
-            >
-              <Smartphone size={14} className="text-red-500 group-hover:scale-110 transition-transform" />
-              <span>İstanbulkart App</span>
-              <ExternalLink size={11} className="text-slate-400" />
-            </a>
-
             <a
               href="https://www.istanbulkart.istanbul/"
               target="_blank"
               rel="noopener noreferrer"
-              className="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-800 hover:border-blue-500 text-slate-900 dark:text-white text-xs font-bold flex items-center justify-center gap-1.5 transition-all shadow-2xs group"
+              className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60 hover:bg-slate-100 dark:hover:bg-slate-800/80 text-center text-xs font-bold transition-all flex items-center justify-center gap-1.5"
             >
-              <CreditCard size={14} className="text-blue-500 group-hover:scale-110 transition-transform" />
+              <Smartphone size={13} className="text-blue-500" />
+              <span>İstanbulkart App</span>
+              <ExternalLink size={10} className="text-slate-400" />
+            </a>
+
+            <a
+              href="https://bakiye.istanbulkart.istanbul/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60 hover:bg-slate-100 dark:hover:bg-slate-800/80 text-center text-xs font-bold transition-all flex items-center justify-center gap-1.5"
+            >
+              <CreditCard size={13} className="text-emerald-500" />
               <span>Bakiye Yükle</span>
-              <ExternalLink size={11} className="text-slate-400" />
+              <ExternalLink size={10} className="text-slate-400" />
             </a>
           </div>
 
-          {/* Official UKOME Fare Matrix */}
+          {/* UKOME Official Ferry Fares */}
           <div>
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-black uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                UKOME RESMİ DENİZ ULAŞIMI TARİFESİ
-              </span>
-              <span className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 font-bold">
-                GÜNCEL FİYATLAR
-              </span>
+            <div className="flex items-center justify-between text-xs font-black uppercase tracking-wider text-slate-900 dark:text-white mb-2">
+              <span>UKOME RESMİ DENİZ ULAŞIMI TARİFESİ</span>
+              <span className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400">GÜNCEL FİYATLAR</span>
             </div>
 
             <div className="space-y-1.5">
-              {fares.map((item, idx) => (
+              {fares.map((fare, idx) => (
                 <div
                   key={idx}
-                  className="p-2 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs"
+                  className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200/80 dark:border-slate-800/80 text-xs"
                 >
                   <div>
-                    <span className="font-bold text-slate-900 dark:text-white block">{item.title}</span>
-                    <span className="text-[10px] text-slate-500 dark:text-slate-400">{item.note}</span>
+                    <span className="font-bold text-slate-800 dark:text-slate-200 block">
+                      {fare.title}
+                    </span>
+                    <span className="text-[10px] text-slate-400 dark:text-slate-500">
+                      {fare.note}
+                    </span>
                   </div>
                   <span className="font-mono font-black text-sm text-emerald-600 dark:text-emerald-400">
-                    {item.price}
+                    {fare.price}
                   </span>
                 </div>
               ))}
             </div>
-          </div>
-
-          {/* Turnstile Legal Notice */}
-          <div className="mt-4 p-2.5 rounded-xl bg-slate-100 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 text-[11px] text-slate-500 dark:text-slate-400 flex items-start gap-2">
-            <AlertCircle size={14} className="text-amber-500 shrink-0 mt-0.5" />
-            <span>
-              Tarifeler İstanbul Büyükşehir Belediyesi Ulaşım Koordinasyon Merkezi (UKOME) resmi kararlarına göre uygulanmaktadır. Aktarmalı geçişlerde kademeli indirim geçerlidir.
-            </span>
           </div>
         </motion.div>
       </div>

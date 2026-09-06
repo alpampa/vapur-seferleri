@@ -9,6 +9,9 @@ import { getPierMobility } from "@/lib/data/pier-parking-bicycle";
 import { Car, Bike } from "lucide-react";
 import { Users } from "lucide-react";
 import { PierLiveCameraModal } from "@/components/map/PierLiveCameraModal";
+import { Landmark, Tag, Sparkles, BookOpen, Compass } from "lucide-react";
+import { AdalarHeritageModal } from "@/components/adalar/AdalarHeritageModal";
+import { SponsoredDealsModal } from "@/components/commercial/SponsoredDealsModal";
 import type { ScheduleCardDto } from "@/app/page";
 
 interface PiersDirectoryViewProps {
@@ -20,6 +23,8 @@ export function PiersDirectoryView({ schedules, onSelectPierForSchedules }: Pier
   const [search, setSearch] = useState("");
   const [selectedRegion, setSelectedRegion] = useState<"ALL" | "Adalar" | "Avrupa" | "Anadolu">("ALL");
   const [activeCameraPier, setActiveCameraPier] = useState<string | null>(null);
+  const [isAdalarHeritageOpen, setIsAdalarHeritageOpen] = useState(false);
+  const [isSponsoredDealsOpen, setIsSponsoredDealsOpen] = useState(false);
 
   const piersList = useMemo(() => {
     return Object.values(ISTANBUL_PIERS).filter(pier => {
@@ -52,6 +57,61 @@ export function PiersDirectoryView({ schedules, onSelectPierForSchedules }: Pier
               Tüm iskelelerin canlı kameraları, metro/tramvay aktarma hatları ve kalkan vapur saatleri
             </p>
           </div>
+        </div>
+      </div>
+
+      {/* KULLANICI KURALI: İskeleler Bölümüne Taşınan 'Adalar Mirası' ve 'İskele Fırsatları' Panelleri */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+        {/* Adalar Tarihi Mirası Rehber Kartı */}
+        <div
+          onClick={() => setIsAdalarHeritageOpen(true)}
+          className="p-3.5 rounded-2xl bg-gradient-to-br from-amber-500/10 via-amber-600/5 to-transparent border border-amber-500/30 hover:border-amber-500/60 transition-all cursor-pointer group shadow-xs flex items-center justify-between gap-3"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center font-black shadow-xs shrink-0 group-hover:scale-105 transition-transform">
+              <Landmark size={20} />
+            </div>
+            <div>
+              <div className="flex items-center gap-1.5">
+                <h4 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white">
+                  ADALAR TARİHİ MİRASI REHBERİ
+                </h4>
+                <span className="text-[9px] font-mono font-bold bg-amber-500/20 text-amber-700 dark:text-amber-300 px-1.5 py-0.2 rounded">
+                  KÜLTÜR
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 leading-snug">
+                Rum Yetimhanesi, Troçki Evi, Ruhban Okulu, Sait Faik Müzesi ve adalara ulaşım rotaları
+              </p>
+            </div>
+          </div>
+          <ChevronRight size={16} className="text-amber-500 shrink-0 group-hover:translate-x-1 transition-transform" />
+        </div>
+
+        {/* İskele Fırsatları & Yerel Sponsorluk Kartı */}
+        <div
+          onClick={() => setIsSponsoredDealsOpen(true)}
+          className="p-3.5 rounded-2xl bg-gradient-to-br from-emerald-500/10 via-emerald-600/5 to-transparent border border-emerald-500/30 hover:border-emerald-500/60 transition-all cursor-pointer group shadow-xs flex items-center justify-between gap-3"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-black shadow-xs shrink-0 group-hover:scale-105 transition-transform">
+              <Tag size={20} />
+            </div>
+            <div>
+              <div className="flex items-center gap-1.5">
+                <h4 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white">
+                  İSKELE AYRICALIKLARI & FIRSATLAR
+                </h4>
+                <span className="text-[9px] font-mono font-bold bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 px-1.5 py-0.2 rounded">
+                  SPONSOR
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 leading-snug">
+                İskele çevresi tarihi çay bahçeleri, ada bisiklet indirimleri ve yerel işletme avantajları
+              </p>
+            </div>
+          </div>
+          <ChevronRight size={16} className="text-emerald-500 shrink-0 group-hover:translate-x-1 transition-transform" />
         </div>
       </div>
 

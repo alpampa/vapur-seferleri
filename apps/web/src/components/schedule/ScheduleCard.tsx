@@ -146,6 +146,9 @@ export function ScheduleCard(props: ScheduleCardProps) {
   // KULLANICI KURALI: Son 5 dakikada sefer saati de yanıp sönsün
   const isLast5Minutes = !!dynState.countdown && !dynState.isDeparted;
 
+  // KULLANICI KURALI: İptal Sefer Tespiti (/ İPTAL Kırmızı Yanıp Sönen Rozet)
+  const isCancelled = props.status === "CANCELLED" || dynState.status === "CANCELLED" || (Boolean(props.delayText) && props.delayText!.toLowerCase().includes("iptal"));
+
   // Profesyonel Yetişme Asistanı Entegrasyonu
   const { isEnabled: isCatchEnabled, getWalkingMinutesToPier } = useWalkingCatchStore();
   const { setActiveVoyage } = useActiveVoyageStore();
@@ -191,17 +194,21 @@ export function ScheduleCard(props: ScheduleCardProps) {
   return (
     <div
       onClick={handleCardClick}
-      className={`theme-card bg-white dark:bg-[#141d2e] hover:bg-slate-50 dark:hover:bg-[#1c283f] rounded-xl px-3 py-2.5 flex items-center justify-between gap-2.5 text-slate-900 dark:text-white shadow-xs dark:shadow-none transition-all duration-150 cursor-pointer group border ${
-        isLast5Minutes
-          ? "border-amber-400 dark:border-amber-500/60 shadow-sm shadow-amber-400/20 ring-1 ring-amber-400/30"
-          : "border-slate-200 dark:border-slate-700/60 hover:border-blue-400 dark:hover:border-blue-500/40"
+      className={`theme-card rounded-xl px-3 py-2.5 flex items-center justify-between gap-2.5 text-slate-900 dark:text-white shadow-xs dark:shadow-none transition-all duration-150 cursor-pointer group border ${
+        isCancelled
+          ? "border-rose-500/90 bg-rose-50/50 dark:bg-rose-950/25 ring-1 ring-rose-500/40 shadow-xs shadow-rose-500/10"
+          : isLast5Minutes
+          ? "border-amber-400 dark:border-amber-500/60 shadow-sm shadow-amber-400/20 ring-1 ring-amber-400/30 bg-white dark:bg-[#141d2e]"
+          : "border-slate-200 dark:border-slate-700/60 hover:border-blue-400 dark:hover:border-blue-500/40 bg-white dark:bg-[#141d2e]"
       }`}
     >
       {/* 1. Left Column: Departure Time & Countdown / Status Badge */}
       <div className="flex flex-col items-start justify-center shrink-0 w-[68px]">
         <span
           className={`font-mono font-black text-xl sm:text-2xl leading-none tabular-nums tracking-tight transition-all ${
-            isLast5Minutes
+            isCancelled
+              ? "line-through text-rose-500 dark:text-rose-400 font-bold opacity-80"
+              : isLast5Minutes
               ? "text-amber-500 dark:text-amber-400 animate-pulse font-extrabold scale-105"
               : "text-blue-600 dark:text-blue-400"
           }`}
@@ -209,7 +216,11 @@ export function ScheduleCard(props: ScheduleCardProps) {
           {dynState.currentDepartureTime}
         </span>
         <div className="mt-1">
-          {dynState.isDeparted ? (
+          {isCancelled ? (
+            <span className="px-1.5 py-0.5 rounded text-[9px] font-black bg-rose-600 text-white animate-pulse inline-flex items-center gap-0.5 shadow-xs">
+              <span>🚫 İPTAL</span>
+            </span>
+          ) : dynState.isDeparted ? (
             <span className="px-1.5 py-0.5 rounded text-[9px] font-black bg-rose-600 text-white animate-pulse inline-flex items-center gap-0.5">
               <Ship size={10} />
               <span>{t("departed")}</span>
@@ -226,12 +237,31 @@ export function ScheduleCard(props: ScheduleCardProps) {
 
       {/* 2. Middle Column: Dynamic Route & Operator / Occupancy Meta */}
       <div className="flex flex-col min-w-0 flex-1 pr-1">
-        {/* Route Line */}
+        {/* Route Line with Cancellation Slash Badge */}
         <div className="flex items-center gap-1.5 font-black text-sm sm:text-base leading-tight truncate">
-          <span className="text-slate-900 dark:text-white truncate">{dynState.currentOrigin}</span>
+          <span className={`truncate ${isCancelled ? "line-through opacity-70 text-slate-500 dark:text-slate-400" : "text-slate-900 dark:text-white"}`}>
+            {dynState.currentOrigin}
+          </span>
           <span className="text-blue-600 dark:text-blue-400 font-extrabold text-xs sm:text-sm shrink-0">➔</span>
-          <span className="text-blue-700 dark:text-amber-300 font-bold truncate">{dynState.destination}</span>
+          <span className={`truncate ${isCancelled ? "line-through opacity-70 text-slate-500 dark:text-slate-400" : "text-blue-700 dark:text-amber-300 font-bold"}`}>
+            {dynState.destination}
+          </span>
+
+          {/* KULLANICI KURALI: Slash ve kırmızı yanıp sönen İPTAL rozeti */}
+          {isCancelled && (
+            <span className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded bg-rose-600 text-white text-[10px] sm:text-[11px] font-black uppercase tracking-wider animate-pulse shrink-0 shadow-xs border border-rose-400">
+              <span className="text-white font-bold">/</span>
+              <span>⚠️ İPTAL</span>
+            </span>
+          )}
         </div>
+
+        {/* Cancellation Reason Notification */}
+        {isCancelled && (
+          <div className="text-[10px] font-bold text-rose-600 dark:text-rose-400 mt-0.5 truncate">
+            ⚠️ {props.delayText || "Hava muhalefeti (Lodos / Sert Dalga) nedeniyle sefer iptal edilmiştir."}
+          </div>
+        )}
 
         {/* Meta Line: Operator, Occupancy dot, and Direct/Stops */}
         <div className="flex items-center gap-2 mt-1 text-[11px] text-slate-500 dark:text-slate-400 flex-wrap truncate">
