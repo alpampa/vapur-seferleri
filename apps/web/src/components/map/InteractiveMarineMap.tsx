@@ -7,6 +7,8 @@ import "leaflet/dist/leaflet.css";
 import { ISTANBUL_PIERS, type PierLocation } from "@/lib/services/route-planner";
 import type { ScheduleCardDto } from "@/app/page";
 import { resolveDynamicTrip } from "@/lib/utils/dynamic-trip";
+import { MARINE_SWELL_TRACKS } from "@/lib/data/marine-swell-tracks";
+import { Waves } from "lucide-react";
 
 interface InteractiveMarineMapProps {
   selectedOrigin?: string;
@@ -31,6 +33,8 @@ export function InteractiveMarineMap({
   const vesselsLayerRef = useRef<any>(null);
   const [mounted, setMounted] = useState(false);
   const [isRadarOpen, setIsRadarOpen] = useState(false);
+  const [showSwellTracks, setShowSwellTracks] = useState(true);
+  const swellLayerRef = useRef<any>(null);
 
   useEffect(() => {
     setMounted(true);

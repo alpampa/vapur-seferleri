@@ -8,6 +8,7 @@ import { Search, Navigation, ArrowLeftRight, Compass, MapPin, LayoutGrid, List, 
 import { matchesTurkishSearch } from "@/lib/utils/search-normalizer";
 import { AdalarHeritageModal } from "@/components/adalar/AdalarHeritageModal";
 import { SponsoredDealsModal } from "@/components/commercial/SponsoredDealsModal";
+import { PinnedHomePierWidget } from "@/components/schedule/PinnedHomePierWidget";
 import { MarineWeatherBanner } from "@/components/weather/MarineWeatherBanner";
 import type { MarineWeatherStatus } from "@/lib/services/marine-weather";
 import { resolveDynamicTrip } from "@/lib/utils/dynamic-trip";
@@ -560,6 +561,16 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
           />
         </div>
       )}
+
+      {/* KULLANICI KURALI: Sabit İskelem (Turnike Öncelikli Hızlı Kart) */}
+      <PinnedHomePierWidget
+        schedules={effectiveSchedules}
+        onSelectPier={(pier) => {
+          setSelectedOrigin(pier);
+          setSelectedRoute("ALL");
+        }}
+        onTripClick={(trip) => setSelectedSchedule(trip)}
+      />
 
       {/* Sonuç Başlığı & Yoğunluk Seçici */}
       <div className="px-3 pt-2 pb-1 flex items-center justify-between text-xs font-bold text-slate-500 dark:text-slate-400">

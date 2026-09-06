@@ -149,6 +149,24 @@ export function ScheduleCard(props: ScheduleCardProps) {
   // KULLANICI KURALI: İptal Sefer Tespiti (/ İPTAL Kırmızı Yanıp Sönen Rozet)
   const isCancelled = props.status === "CANCELLED" || dynState.status === "CANCELLED" || (Boolean(props.delayText) && props.delayText!.toLowerCase().includes("iptal"));
 
+  // Kalan Saniyeyi Hesapla
+  let remainingSec = 0;
+  if (dynState.countdown) {
+    const parts = dynState.countdown.split(':').map(Number);
+    if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
+      remainingSec = parts[0] * 60 + parts[1];
+    }
+  }
+
+  // KULLANICI KURALI: Son 3 Dakika Dairesel Kalan Saniye Progress Göstergesi
+  const isLast3Minutes = !isCancelled && !dynState.isDeparted && remainingSec > 0 && remainingSec <= 180;
+  const ringRatio = isLast3Minutes ? Math.max(0, Math.min(1, remainingSec / 180)) : 1;
+  const ringCircumference = 94.2; // 2 * PI * 15
+  const ringOffset = ringCircumference * (1 - ringRatio);
+  let ringColor = "#f59e0b";
+  if (remainingSec <= 60) ringColor = "#ef4444";
+  else if (remainingSec <= 120) ringColor = "#f97316";
+
   // Profesyonel Yetişme Asistanı Entegrasyonu
   const { isEnabled: isCatchEnabled, getWalkingMinutesToPier } = useWalkingCatchStore();
   const { setActiveVoyage } = useActiveVoyageStore();
@@ -202,36 +220,81 @@ export function ScheduleCard(props: ScheduleCardProps) {
           : "border-slate-200 dark:border-slate-700/60 hover:border-blue-400 dark:hover:border-blue-500/40 bg-white dark:bg-[#141d2e]"
       }`}
     >
-      {/* 1. Left Column: Departure Time & Countdown / Status Badge */}
-      <div className="flex flex-col items-start justify-center shrink-0 w-[68px]">
-        <span
-          className={`font-mono font-black text-xl sm:text-2xl leading-none tabular-nums tracking-tight transition-all ${
-            isCancelled
-              ? "line-through text-rose-500 dark:text-rose-400 font-bold opacity-80"
-              : isLast5Minutes
-              ? "text-amber-500 dark:text-amber-400 animate-pulse font-extrabold scale-105"
-              : "text-blue-600 dark:text-blue-400"
-          }`}
-        >
-          {dynState.currentDepartureTime}
-        </span>
-        <div className="mt-1">
-          {isCancelled ? (
-            <span className="px-1.5 py-0.5 rounded text-[9px] font-black bg-rose-600 text-white animate-pulse inline-flex items-center gap-0.5 shadow-xs">
-              <span>🚫 İPTAL</span>
-            </span>
-          ) : dynState.isDeparted ? (
-            <span className="px-1.5 py-0.5 rounded text-[9px] font-black bg-rose-600 text-white animate-pulse inline-flex items-center gap-0.5">
-              <Ship size={10} />
-              <span>{t("departed")}</span>
-            </span>
-          ) : dynState.countdown ? (
-            <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-black bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-500/40 animate-pulse whitespace-nowrap">
-              ⏳ {dynState.countdown}
-            </span>
-          ) : (
-            <TripStatusBadge status={dynState.status} delayText={props.delayText} />
-          )}
+      {/* 1. Left Column: Departure Time & Dairesel Geri Sayım Progress Ring */}
+      <div className="flex items-center gap-2 shrink-0">
+        {/* KULLANICI KURALI: Son 3 Dakika Kalan Saniye Dairesel Progress Halkası */}
+        {isLast3Minutes && (
+          <div className="relative w-11 h-11 flex items-center justify-center shrink-0" title={`Kalkışa ${remainingSec} saniye kaldı!`}>
+            <svg className="w-11 h-11 -rotate-90" viewBox="0 0 36 36">
+              <circle
+                cx="18"
+                cy="18"
+                r="15"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                className="text-slate-200 dark:text-slate-800"
+              />
+              <circle
+                cx="18"
+                cy="18"
+                r="15"
+                fill="none"
+                stroke={ringColor}
+                strokeWidth="3"
+                strokeDasharray={ringCircumference}
+                strokeDashoffset={ringOffset}
+                strokeLinecap="round"
+                className="transition-all duration-1000 ease-linear"
+              />
+            </svg>
+            <div className="absolute inset-0 flex flex-col items-center justify-center leading-none">
+              <span className={`text-[10px] font-mono font-black tabular-nums ${remainingSec <= 60 ? "text-rose-600 dark:text-rose-400 animate-pulse font-extrabold" : "text-amber-600 dark:text-amber-400"}`}>
+                {remainingSec}s
+              </span>
+              <span className="text-[7px] font-bold text-slate-400">KALDI</span>
+            </div>
+          </div>
+        )}
+
+        <div className="flex flex-col items-start justify-center shrink-0 min-w-[64px]">
+          <span
+            className={`font-mono font-black text-xl sm:text-2xl leading-none tabular-nums tracking-tight transition-all ${
+              isCancelled
+                ? "line-through text-rose-500 dark:text-rose-400 font-bold opacity-80"
+                : isLast3Minutes
+                ? "text-rose-600 dark:text-rose-400 font-extrabold scale-105 animate-pulse"
+                : isLast5Minutes
+                ? "text-amber-500 dark:text-amber-400 animate-pulse font-extrabold"
+                : "text-blue-600 dark:text-blue-400"
+            }`}
+          >
+            {dynState.currentDepartureTime}
+          </span>
+          <div className="mt-1">
+            {isCancelled ? (
+              <span className="px-1.5 py-0.5 rounded text-[9px] font-black bg-rose-600 text-white animate-pulse inline-flex items-center gap-0.5 shadow-xs">
+                <span>🚫 İPTAL</span>
+              </span>
+            ) : dynState.isDeparted ? (
+              <span className="px-1.5 py-0.5 rounded text-[9px] font-black bg-rose-600 text-white animate-pulse inline-flex items-center gap-0.5">
+                <Ship size={10} />
+                <span>{t("departed")}</span>
+              </span>
+            ) : isLast3Minutes ? (
+              <span className={`px-1.5 py-0.5 rounded text-[9px] font-black uppercase tracking-wider inline-flex items-center gap-0.5 shadow-xs animate-pulse ${
+                remainingSec <= 60 ? "bg-rose-600 text-white" : "bg-amber-500 text-slate-950 font-extrabold"
+              }`}>
+                <span>{remainingSec <= 60 ? "🚨 SON ÇAĞRI" : "🏃 KAPI KAPANIYOR"}</span>
+              </span>
+            ) : dynState.countdown ? (
+              <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-black bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-500/40 animate-pulse whitespace-nowrap">
+                ⏳ {dynState.countdown}
+              </span>
+            ) : (
+              <TripStatusBadge status={dynState.status} delayText={props.delayText} />
+            )}
+          </div>
         </div>
       </div>
 
