@@ -21,17 +21,17 @@ interface OperatorLogoProps {
 export function OperatorLogo({ operator, size = "sm", showName = true, className = "" }: OperatorLogoProps) {
   const norm = operator.trim().toLowerCase();
 
-  // Dimensions
-  const logoHeight = size === "sm" ? 16 : size === "md" ? 22 : 28;
+// Dimensions
+  const logoHeight = size === "sm" ? 18 : size === "md" ? 24 : 30;
   const textSize = size === "sm" ? "text-[11px]" : size === "md" ? "text-xs" : "text-sm";
 
   // 1. ŞEHİR HATLARI (Kırmızı zemin üzerinde beyaz İBB Çapa & Hilal Arması)
   if (norm.includes("şehir hatları") || norm.includes("sehir hatlari")) {
     return (
-      <div className={`inline-flex items-center gap-1.5 ${className}`}>
+      <div className={`inline-flex items-center gap-1.5 px-1.5 py-0.5 rounded-md bg-red-50 dark:bg-red-950/40 border border-red-200/80 dark:border-red-900/50 ${className}`}>
         <div 
-          className="rounded-md bg-[#c8102e] flex items-center justify-center shrink-0 shadow-sm border border-red-400/40 px-1"
-          style={{ height: logoHeight, minWidth: logoHeight }}
+          className="rounded bg-[#c8102e] flex items-center justify-center shrink-0 shadow-xs border border-red-400/40 p-0.5"
+          style={{ height: logoHeight, width: logoHeight }}
           title="İstanbul Şehir Hatları"
         >
           {/* Authentic Anchor & Star SVG */}
@@ -40,7 +40,7 @@ export function OperatorLogo({ operator, size = "sm", showName = true, className
           </svg>
         </div>
         {showName && (
-          <span className={`font-black tracking-tight text-red-300 truncate ${textSize}`}>
+          <span className={`font-black tracking-tight text-red-700 dark:text-red-300 truncate ${textSize}`}>
             ŞEHİR HATLARI
           </span>
         )}
@@ -51,10 +51,10 @@ export function OperatorLogo({ operator, size = "sm", showName = true, className
   // 2. İDO (İstanbul Deniz Otobüsleri - Mavi/Lacivert Katamaran Dalga Amblemi)
   if (norm.includes("ido") || norm.includes("i̇do")) {
     return (
-      <div className={`inline-flex items-center gap-1.5 ${className}`}>
+      <div className={`inline-flex items-center gap-1.5 px-1.5 py-0.5 rounded-md bg-sky-50 dark:bg-sky-950/40 border border-sky-200/80 dark:border-sky-900/50 ${className}`}>
         <div 
-          className="rounded-md bg-[#004b87] flex items-center justify-center shrink-0 shadow-sm border border-blue-400/40 px-1"
-          style={{ height: logoHeight, minWidth: logoHeight }}
+          className="rounded bg-[#004b87] flex items-center justify-center shrink-0 shadow-xs border border-blue-400/40 p-0.5"
+          style={{ height: logoHeight, width: logoHeight }}
           title="İDO - İstanbul Deniz Otobüsleri"
         >
           <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 fill-white" xmlns="http://www.w3.org/2000/svg">
@@ -62,7 +62,7 @@ export function OperatorLogo({ operator, size = "sm", showName = true, className
           </svg>
         </div>
         {showName && (
-          <span className={`font-black tracking-tight text-sky-400 truncate ${textSize}`}>
+          <span className={`font-black tracking-tight text-[#004b87] dark:text-sky-300 truncate ${textSize}`}>
             İDO
           </span>
         )}
@@ -73,10 +73,10 @@ export function OperatorLogo({ operator, size = "sm", showName = true, className
   // 3. TURYOL (Kırmızı/Beyaz Gemi Dümeni & T Arması)
   if (norm.includes("turyol")) {
     return (
-      <div className={`inline-flex items-center gap-1.5 ${className}`}>
+      <div className={`inline-flex items-center gap-1.5 px-1.5 py-0.5 rounded-md bg-rose-50 dark:bg-rose-950/40 border border-rose-200/80 dark:border-rose-900/50 ${className}`}>
         <div 
-          className="rounded-md bg-[#e11d48] flex items-center justify-center shrink-0 shadow-sm border border-rose-400/40 px-1"
-          style={{ height: logoHeight, minWidth: logoHeight }}
+          className="rounded bg-[#e11d48] flex items-center justify-center shrink-0 shadow-xs border border-rose-400/40 p-0.5"
+          style={{ height: logoHeight, width: logoHeight }}
           title="Turyol Kooperatifi"
         >
           {/* Wheel / Helm SVG */}
@@ -86,7 +86,7 @@ export function OperatorLogo({ operator, size = "sm", showName = true, className
           </svg>
         </div>
         {showName && (
-          <span className={`font-black tracking-tight text-rose-300 truncate ${textSize}`}>
+          <span className={`font-black tracking-tight text-rose-700 dark:text-rose-300 truncate ${textSize}`}>
             TURYOL
           </span>
         )}
@@ -97,10 +97,10 @@ export function OperatorLogo({ operator, size = "sm", showName = true, className
   // 4. MAVİ MARMARA (Lacivert/Turkuaz Dalga Arması)
   if (norm.includes("mavi marmara")) {
     return (
-      <div className={`inline-flex items-center gap-1.5 ${className}`}>
+      <div className={`inline-flex items-center gap-1.5 px-1.5 py-0.5 rounded-md bg-cyan-50 dark:bg-cyan-950/40 border border-cyan-200/80 dark:border-cyan-900/50 ${className}`}>
         <div 
-          className="rounded-md bg-[#0284c7] flex items-center justify-center shrink-0 shadow-sm border border-cyan-400/40 px-1"
-          style={{ height: logoHeight, minWidth: logoHeight }}
+          className="rounded bg-[#0284c7] flex items-center justify-center shrink-0 shadow-xs border border-cyan-400/40 p-0.5"
+          style={{ height: logoHeight, width: logoHeight }}
           title="Mavi Marmara Kooperatifi"
         >
           {/* Waves SVG */}
@@ -109,7 +109,7 @@ export function OperatorLogo({ operator, size = "sm", showName = true, className
           </svg>
         </div>
         {showName && (
-          <span className={`font-black tracking-tight text-cyan-300 truncate ${textSize}`}>
+          <span className={`font-black tracking-tight text-cyan-700 dark:text-cyan-300 truncate ${textSize}`}>
             MAVİ MARMARA
           </span>
         )}
@@ -120,10 +120,10 @@ export function OperatorLogo({ operator, size = "sm", showName = true, className
   // 5. DENTUR AVRASYA (Mavi Yelken & Pusula Arması)
   if (norm.includes("dentur")) {
     return (
-      <div className={`inline-flex items-center gap-1.5 ${className}`}>
+      <div className={`inline-flex items-center gap-1.5 px-1.5 py-0.5 rounded-md bg-blue-50 dark:bg-blue-950/40 border border-blue-200/80 dark:border-blue-900/50 ${className}`}>
         <div 
-          className="rounded-md bg-[#1e40af] flex items-center justify-center shrink-0 shadow-sm border border-blue-400/40 px-1"
-          style={{ height: logoHeight, minWidth: logoHeight }}
+          className="rounded bg-[#1e40af] flex items-center justify-center shrink-0 shadow-xs border border-blue-400/40 p-0.5"
+          style={{ height: logoHeight, width: logoHeight }}
           title="Dentur Avrasya"
         >
           {/* Sailboat / Compass SVG */}
@@ -132,7 +132,7 @@ export function OperatorLogo({ operator, size = "sm", showName = true, className
           </svg>
         </div>
         {showName && (
-          <span className={`font-black tracking-tight text-blue-300 truncate ${textSize}`}>
+          <span className={`font-black tracking-tight text-blue-700 dark:text-blue-300 truncate ${textSize}`}>
             DENTUR
           </span>
         )}
@@ -143,10 +143,10 @@ export function OperatorLogo({ operator, size = "sm", showName = true, className
   // 6. PRENS TUR (Mor/Altın Taç Arması)
   if (norm.includes("prens tur") || norm.includes("prenstur")) {
     return (
-      <div className={`inline-flex items-center gap-1.5 ${className}`}>
+      <div className={`inline-flex items-center gap-1.5 px-1.5 py-0.5 rounded-md bg-purple-50 dark:bg-purple-950/40 border border-purple-200/80 dark:border-purple-900/50 ${className}`}>
         <div 
-          className="rounded-md bg-[#7e22ce] flex items-center justify-center shrink-0 shadow-sm border border-purple-400/40 px-1"
-          style={{ height: logoHeight, minWidth: logoHeight }}
+          className="rounded bg-[#7e22ce] flex items-center justify-center shrink-0 shadow-xs border border-purple-400/40 p-0.5"
+          style={{ height: logoHeight, width: logoHeight }}
           title="Prens Tur"
         >
           {/* Crown SVG */}
@@ -155,7 +155,7 @@ export function OperatorLogo({ operator, size = "sm", showName = true, className
           </svg>
         </div>
         {showName && (
-          <span className={`font-black tracking-tight text-purple-300 truncate ${textSize}`}>
+          <span className={`font-black tracking-tight text-purple-700 dark:text-purple-300 truncate ${textSize}`}>
             PRENS TUR
           </span>
         )}
@@ -165,15 +165,15 @@ export function OperatorLogo({ operator, size = "sm", showName = true, className
 
   // Default fallback
   return (
-    <div className={`inline-flex items-center gap-1.5 ${className}`}>
+    <div className={`inline-flex items-center gap-1.5 px-1.5 py-0.5 rounded-md bg-slate-100 dark:bg-slate-850 border border-slate-200 dark:border-slate-700 ${className}`}>
       <div 
-        className="rounded-md bg-slate-800 flex items-center justify-center shrink-0 border border-slate-700 px-1"
-        style={{ height: logoHeight, minWidth: logoHeight }}
+        className="rounded bg-slate-800 flex items-center justify-center shrink-0 border border-slate-700 p-0.5"
+        style={{ height: logoHeight, width: logoHeight }}
       >
         <span className="text-[10px]">⚓</span>
       </div>
       {showName && (
-        <span className={`font-bold tracking-tight text-slate-300 truncate ${textSize}`}>
+        <span className={`font-bold tracking-tight text-slate-700 dark:text-slate-300 truncate ${textSize}`}>
           {operator}
         </span>
       )}

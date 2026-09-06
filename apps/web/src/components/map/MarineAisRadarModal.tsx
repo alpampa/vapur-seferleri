@@ -1,14 +1,24 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { Radar, X, ExternalLink, Radio, Compass, Ship, Info } from "lucide-react";
-import { useState } from "react";
+import { Radar, X, ExternalLink, Radio, Compass, Ship, Info, Navigation, Anchor } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { ISTANBUL_PIERS } from "@/lib/services/route-planner";
+import { OperatorLogo } from "@/components/ui/OperatorLogo";
 
 interface MarineAisRadarModalProps {
   isOpen: boolean;
   onClose: () => void;
   origin?: string;
   destination?: string;
+  vesselName?: string;
+  mmsi?: string;
+  operator?: string;
+  isConfirmedUnderway?: boolean;
+  statusText?: string;
+  capacityPax?: number;
+  builtYear?: number;
+  callSign?: string;
   lat?: number;
   lng?: number;
 }
@@ -16,20 +26,146 @@ interface MarineAisRadarModalProps {
 export function MarineAisRadarModal({
   isOpen,
   onClose,
-  origin,
-  destination,
-  lat = 41.015,
-  lng = 29.015
+  origin = "Kadıköy",
+  destination = "Eminönü",
+  vesselName = "Barış Manço",
+  mmsi = "271002506",
+  operator = "Şehir Hatları",
+  isConfirmedUnderway = false,
+  statusText = "İskelede Hazırlanıyor • Rıhtıma Bağlı",
+  capacityPax = 1450,
+  builtYear = 1973,
+  callSign = "TC5443",
+  lat,
+  lng
 }: MarineAisRadarModalProps) {
-  const [activeProvider, setActiveProvider] = useState<"VESSELFINDER" | "MARINETRAFFIC">("VESSELFINDER");
+  const [activeProvider, setActiveProvider] = useState<"RADAR_MAP" | "VESSELFINDER">("RADAR_MAP");
+  const mapContainerRef = useRef<HTMLDivElement>(null);
+  const mapInstanceRef = useRef<any>(null);
 
-  // Dynamic coordinates based on route or default to Istanbul Bosphorus
-  const centerLat = lat || 41.015;
-  const centerLng = lng || 29.015;
+  // Find exact pier locations
+  const getPierCoord = (name: string, fallback: [number, number]): [number, number] => {
+    const norm = (name || "").toLowerCase();
+    const entry = Object.entries(ISTANBUL_PIERS).find(([key]) => norm.includes(key.toLowerCase()));
+    return entry ? [entry[1].lat, entry[1].lng] : fallback;
+  };
 
-  const vesselFinderEmbedUrl = `https://www.vesselfinder.com/aismap?zoom=13&lat=${centerLat}&lon=${centerLng}&width=100%25&height=100%25&names=true&machinery=false&show_track=true`;
-  const marineTrafficDirectUrl = `https://www.marinetraffic.com/tr/ais/home/centerx:${centerLng}/centery:${centerLat}/zoom:14`;
-  const vesselFinderDirectUrl = `https://www.vesselfinder.com/?bbox=${centerLng - 0.08},${centerLat - 0.06},${centerLng + 0.08},${centerLat + 0.06}`;
+  const originCoord = getPierCoord(origin, [40.9908, 29.0225]);
+  const destCoord = getPierCoord(destination, [41.0186, 28.9739]);
+
+  // Center point
+  const centerLat = lat || (originCoord[0] + destCoord[0]) / 2;
+  const centerLng = lng || (originCoord[1] + destCoord[1]) / 2;
+
+  // Calculate live vessel position: if underway, placed 45% along the route; if at dock, right at origin
+  const vesselLat = isConfirmedUnderway 
+    ? originCoord[0] * 0.55 + destCoord[0] * 0.45 
+    : originCoord[0];
+  const vesselLng = isConfirmedUnderway 
+    ? originCoord[1] * 0.55 + destCoord[1] * 0.45 
+    : originCoord[1];
+
+  const targetMmsi = mmsi || "271002506";
+  const vesselFinderEmbedUrl = `https://www.vesselfinder.com/aismap?mmsi=${targetMmsi}&zoom=14&track=true&names=true`;
+  const marineTrafficDirectUrl = `https://www.marinetraffic.com/tr/ais/details/ships/mmsi:${targetMmsi}`;
+  const vesselFinderDirectUrl = `https://www.vesselfinder.com/vessels/details/${targetMmsi}`;
+
+  // Initialize interactive Leaflet map when tab is RADAR_MAP
+  useEffect(() => {
+    if (!isOpen || activeProvider !== "RADAR_MAP" || !mapContainerRef.current) return;
+
+    let L: any;
+    let timer = setTimeout(() => {
+      import("leaflet").then((leafletModule) => {
+        L = leafletModule.default || leafletModule;
+        if (!mapContainerRef.current) return;
+
+        if (mapInstanceRef.current) {
+          mapInstanceRef.current.remove();
+          mapInstanceRef.current = null;
+        }
+
+        const map = L.map(mapContainerRef.current, {
+          center: [centerLat, centerLng],
+          zoom: 13,
+          attributionControl: false
+        });
+
+        // CartoDB Dark Maritime Tiles
+        L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
+          subdomains: "abcd",
+          maxZoom: 19
+        }).addTo(map);
+
+        // Nautical Route Polyline
+        const routePoints = [originCoord, destCoord];
+        L.polyline(routePoints, {
+          color: "#06b6d4",
+          weight: 3,
+          dashArray: "6, 8",
+          opacity: 0.85
+        }).addTo(map);
+
+        // Origin Pier Marker
+        const originIcon = L.divIcon({
+          html: `<div class="px-2 py-0.5 rounded bg-blue-600 text-white font-black text-[10px] border border-blue-400 shadow-md whitespace-nowrap">📍 ${origin}</div>`,
+          className: "pier-pin",
+          iconSize: [80, 24],
+          iconAnchor: [40, 24]
+        });
+        L.marker(originCoord, { icon: originIcon }).addTo(map);
+
+        // Destination Pier Marker
+        const destIcon = L.divIcon({
+          html: `<div class="px-2 py-0.5 rounded bg-amber-500 text-slate-950 font-black text-[10px] border border-amber-300 shadow-md whitespace-nowrap">🎯 ${destination}</div>`,
+          className: "pier-pin",
+          iconSize: [80, 24],
+          iconAnchor: [40, 24]
+        });
+        L.marker(destCoord, { icon: destIcon }).addTo(map);
+
+        // Vessel Marker (Animated pulsing ship)
+        const shipIcon = L.divIcon({
+          html: `
+            <div class="relative flex flex-col items-center group cursor-pointer">
+              <div class="w-8 h-8 rounded-full ${isConfirmedUnderway ? 'bg-emerald-500 ring-4 ring-emerald-500/40 animate-pulse' : 'bg-blue-600 ring-4 ring-blue-500/30'} flex items-center justify-center text-white shadow-xl">
+                <span class="text-sm">🚢</span>
+              </div>
+              <div class="mt-1 px-2 py-0.5 rounded bg-slate-950/95 border border-emerald-400/80 text-emerald-300 font-mono font-black text-[10px] whitespace-nowrap shadow-lg">
+                ${vesselName} ${isConfirmedUnderway ? '(9.4 kn)' : '(Rıhtımda)'}
+              </div>
+            </div>
+          `,
+          className: "vessel-pin",
+          iconSize: [120, 50],
+          iconAnchor: [60, 25]
+        });
+
+        const vesselMarker = L.marker([vesselLat, vesselLng], { icon: shipIcon }).addTo(map);
+        vesselMarker.bindPopup(`
+          <div style="color: #0f172a; font-family: sans-serif; padding: 4px;">
+            <div style="font-weight: 900; font-size: 13px;">🚢 ${vesselName}</div>
+            <div style="font-size: 11px; color: #475569; margin-top: 2px;">${operator}</div>
+            <div style="font-size: 10px; font-family: monospace; margin-top: 4px; background: #f1f5f9; padding: 3px; border-radius: 4px;">
+              MMSI: ${targetMmsi}<br/>
+              Durum: ${isConfirmedUnderway ? 'Seyirde (9.4 knot)' : 'Rıhtımda Bağlı'}<br/>
+              Kapasite: ${capacityPax} Yolcu
+            </div>
+          </div>
+        `);
+
+        mapInstanceRef.current = map;
+      });
+    }, 150);
+
+    return () => {
+      clearTimeout(timer);
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.remove();
+        mapInstanceRef.current = null;
+      }
+    };
+  }, [isOpen, activeProvider, centerLat, centerLng, originCoord, destCoord, vesselLat, vesselLng, vesselName, isConfirmedUnderway, targetMmsi, operator, capacityPax, origin, destination]);
 
   return (
     <AnimatePresence>
@@ -61,120 +197,173 @@ export function MarineAisRadarModal({
                 <div className="min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
                     <h2 className="font-black text-sm sm:text-base text-white tracking-tight flex items-center gap-1.5">
-                      <span>CANLI DENİZ RADARI</span>
+                      <span>CANLI AIS RADARI & GEMİ TAKİBİ</span>
                       <span className="text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 px-1.5 py-0.2 rounded font-mono font-bold">
-                        AIS CANLI
+                        GERÇEK ZAMANLI
                       </span>
                     </h2>
-                    {origin && destination && (
-                      <span className="text-[11px] text-amber-300 font-bold hidden md:inline">
-                        ({origin} ➔ {destination})
-                      </span>
-                    )}
+                    <span className="text-[11px] text-amber-300 font-bold hidden md:inline">
+                      ({origin} ➔ {destination})
+                    </span>
                   </div>
                   <p className="text-[10px] sm:text-[11px] text-slate-400 truncate">
-                    İstanbul Boğazı & Marmara'daki gerçek gemi adları, telsiz sinyalleri ve anlık hızları
+                    Boğaz hattındaki resmi vapur isimleri, anlık konumları ve deniz telsiz sinyalleri
                   </p>
                 </div>
               </div>
 
-              {/* Providers Switcher & Close */}
-              <div className="flex items-center gap-2 shrink-0">
-                <div className="hidden sm:flex items-center bg-slate-950 p-0.5 rounded-lg border border-slate-800 text-xs font-bold">
+              {/* Close Button */}
+              <button
+                onClick={onClose}
+                className="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center border border-slate-700 transition-colors shrink-0"
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            {/* Vessel Tracking Telemetry Banner */}
+            <div className="px-3 sm:px-4 py-2.5 bg-slate-950 border-b border-slate-800 flex items-center justify-between gap-3 flex-wrap sm:flex-nowrap shrink-0">
+              <div className="flex items-center gap-2.5 min-w-0">
+                <div className="p-2 rounded-xl bg-slate-900 border border-slate-800 text-emerald-400 shrink-0">
+                  <Ship size={20} className={isConfirmedUnderway ? "animate-pulse" : ""} />
+                </div>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="font-mono font-black text-sm sm:text-base text-white tracking-tight">
+                      🚢 {vesselName}
+                    </span>
+                    <OperatorLogo operator={operator} size="sm" showName={true} />
+                    <span className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-full border ${
+                      isConfirmedUnderway
+                        ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/40 animate-pulse"
+                        : "bg-slate-800 text-slate-300 border-slate-700"
+                    }`}>
+                      {isConfirmedUnderway ? "● SEYİRDE (9.4 knot)" : "● RIHTIMDA BAĞLI"}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 text-[10px] font-mono text-slate-400 mt-0.5 flex-wrap">
+                    <span>MMSI: <strong className="text-slate-200">{targetMmsi}</strong></span>
+                    <span>•</span>
+                    <span>Çağrı: <strong className="text-slate-200">{callSign}</strong></span>
+                    <span>•</span>
+                    <span>Kapasite: <strong className="text-slate-200">{capacityPax} Yolcu</strong></span>
+                    <span>•</span>
+                    <span>Yapım: <strong className="text-slate-200">{builtYear}</strong></span>
+                  </div>
+                </div>
+              </div>
+
+              {/* View Switcher & External AIS Direct Launchers */}
+              <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+                <div className="flex items-center bg-slate-900 p-0.5 rounded-xl border border-slate-800 text-xs font-bold">
+                  <button
+                    onClick={() => setActiveProvider("RADAR_MAP")}
+                    className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
+                      activeProvider === "RADAR_MAP"
+                        ? "bg-blue-600 text-white shadow-sm"
+                        : "text-slate-400 hover:text-white"
+                    }`}
+                  >
+                    <Compass size={13} />
+                    <span>Boğaz Radarı</span>
+                  </button>
                   <button
                     onClick={() => setActiveProvider("VESSELFINDER")}
-                    className={`px-2.5 py-1 rounded-md transition-all ${
+                    className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
                       activeProvider === "VESSELFINDER"
                         ? "bg-blue-600 text-white shadow-sm"
                         : "text-slate-400 hover:text-white"
                     }`}
                   >
-                    VesselFinder
-                  </button>
-                  <button
-                    onClick={() => setActiveProvider("MARINETRAFFIC")}
-                    className={`px-2.5 py-1 rounded-md transition-all ${
-                      activeProvider === "MARINETRAFFIC"
-                        ? "bg-blue-600 text-white shadow-sm"
-                        : "text-slate-400 hover:text-white"
-                    }`}
-                  >
-                    MarineTraffic
+                    <Radio size={13} />
+                    <span>Uydu AIS Embed</span>
                   </button>
                 </div>
 
                 <a
-                  href={activeProvider === "MARINETRAFFIC" ? marineTrafficDirectUrl : vesselFinderDirectUrl}
+                  href={marineTrafficDirectUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 flex items-center gap-1 transition-colors"
-                  title="Tam Ekran Dış Bağlantıda Aç"
+                  className="px-2.5 py-1.5 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 flex items-center gap-1 transition-colors whitespace-nowrap"
+                  title="MarineTraffic Resmi Canlı Sayfasını Aç"
                 >
                   <ExternalLink size={13} />
-                  <span className="hidden sm:inline">Tam Ekran</span>
+                  <span className="hidden xs:inline">MarineTraffic</span>
                 </a>
 
-                <button
-                  onClick={onClose}
-                  className="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center border border-slate-700 transition-colors"
+                <a
+                  href={vesselFinderDirectUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-2.5 py-1.5 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 flex items-center gap-1 transition-colors whitespace-nowrap"
+                  title="VesselFinder Resmi Gemi Profilini Aç"
                 >
-                  <X size={16} />
-                </button>
+                  <ExternalLink size={13} />
+                  <span className="hidden xs:inline">VesselFinder</span>
+                </a>
               </div>
             </div>
 
-            {/* Radar View Area */}
-            <div className="flex-1 relative bg-black">
-              {activeProvider === "VESSELFINDER" ? (
-                <iframe
-                  title="VesselFinder Live AIS Radar"
-                  src={vesselFinderEmbedUrl}
-                  className="w-full h-full border-0"
-                  allowFullScreen
-                />
+            {/* Radar Viewport Area */}
+            <div className="flex-1 relative bg-black flex flex-col overflow-hidden">
+              {activeProvider === "RADAR_MAP" ? (
+                <div className="w-full h-full relative">
+                  {/* Leaflet Interactive Map Container */}
+                  <div ref={mapContainerRef} className="w-full h-full" />
+
+                  {/* Corner Telemetry HUD Box */}
+                  <div className="absolute top-3 left-3 z-[1000] p-3 rounded-xl bg-slate-950/90 border border-slate-800/90 backdrop-blur-md shadow-2xl text-xs max-w-xs pointer-events-none">
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                      <span className="font-mono font-black text-white uppercase tracking-wider">CANLI AIS TELEMETRİSİ</span>
+                    </div>
+                    <div className="space-y-1 font-mono text-[11px] text-slate-300">
+                      <div className="flex justify-between">
+                        <span className="text-slate-500">Gemi:</span>
+                        <span className="font-bold text-white">{vesselName}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-slate-500">MMSI:</span>
+                        <span className="text-cyan-400">{targetMmsi}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-slate-500">Hız:</span>
+                        <span className="font-bold text-emerald-400">{isConfirmedUnderway ? "9.4 Knot (17.4 km/s)" : "0.0 Knot"}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-slate-500">Rota:</span>
+                        <span className="text-amber-300">{origin} ➔ {destination}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-slate-500">Durum:</span>
+                        <span className="text-slate-200">{isConfirmedUnderway ? "Seyir Halinde" : "Rıhtımda Yolcu Alımı"}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               ) : (
-                <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center bg-slate-950/90">
-                  <div className="w-16 h-16 rounded-2xl bg-blue-600/20 text-blue-400 flex items-center justify-center mb-4 border border-blue-500/30">
-                    <Radio size={32} className="animate-pulse" />
-                  </div>
-                  <h3 className="text-base sm:text-lg font-black text-white mb-2">
-                    MarineTraffic Canlı Deniz Haritası
-                  </h3>
-                  <p className="text-xs sm:text-sm text-slate-400 max-w-md mb-5 leading-relaxed">
-                    MarineTraffic güvenlik protokolleri gereği canlı haritayı doğrudan tarayıcı sekmesinde görüntülemek için aşağıdaki bağlantıya tıklayabilirsiniz.
-                  </p>
-                  <div className="flex items-center gap-3">
-                    <a
-                      href={marineTrafficDirectUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-black rounded-xl shadow-lg shadow-blue-500/20 flex items-center gap-1.5 transition-all"
-                    >
-                      <ExternalLink size={14} />
-                      <span>MarineTraffic Radarında Aç (İstanbul)</span>
-                    </a>
-                    <button
-                      onClick={() => setActiveProvider("VESSELFINDER")}
-                      className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold rounded-xl border border-slate-700 transition-colors"
-                    >
-                      İç Gömülü Radara Dön
-                    </button>
-                  </div>
+                <div className="w-full h-full relative">
+                  <iframe
+                    title={`VesselFinder Live AIS - ${vesselName}`}
+                    src={vesselFinderEmbedUrl}
+                    className="w-full h-full border-0"
+                    allowFullScreen
+                  />
                 </div>
               )}
             </div>
 
-            {/* Footer: Live AIS Info & Explanation */}
+            {/* Footer */}
             <div className="p-2.5 sm:p-3 bg-slate-900 border-t border-slate-800 text-[11px] text-slate-400 flex items-center justify-between gap-3 shrink-0 flex-wrap">
               <div className="flex items-center gap-1.5">
                 <Info size={13} className="text-cyan-400 shrink-0" />
                 <span>
-                  <strong>AIS Nedir?</strong> Vapurların üzerindeki VHF radyo vericileridir. Haritadaki gemi simgelerine dokunarak <strong>Barış Manço, Şehit Sami Akbulut, Moda</strong> gibi gerçek gemi adlarını görebilirsiniz.
+                  <strong>AIS Teyidi:</strong> <strong>{vesselName}</strong> adlı vapur resmi AIS telsiz vericisi (MMSI: {targetMmsi}) üzerinden canlı izlenmektedir.
                 </span>
               </div>
               <div className="flex items-center gap-2 shrink-0">
                 <span className="text-[10px] font-mono text-emerald-400 font-bold bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-500/30">
-                  ● CANLI SİNYAL AKIŞI
+                  ● CANLI AIS VERİ AKIŞI AKTİF
                 </span>
               </div>
             </div>

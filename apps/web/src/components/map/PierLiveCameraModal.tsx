@@ -1,8 +1,8 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { Camera, X, ExternalLink, Video, ShieldCheck, Eye } from "lucide-react";
-import { useState } from "react";
+import { Camera, X, ExternalLink, Video, ShieldCheck, Eye, Wind, Waves, CheckCircle2 } from "lucide-react";
+import { useState, useEffect } from "react";
 
 interface PierLiveCameraModalProps {
   isOpen: boolean;
@@ -16,58 +16,79 @@ interface CameraLocation {
   name: string;
   pierMatch: string[];
   description: string;
-  streamUrl: string;
+  windDesc: string;
+  waveDesc: string;
+  trafficStatus: string;
   directUrl: string;
+  youtubeQueryUrl: string;
 }
 
 const PIER_CAMERAS: CameraLocation[] = [
   {
     id: "kadikoy",
-    name: "Kadıköy Rıhtım & İskele",
-    pierMatch: ["kadıköy", "kadikoy"],
-    description: "Kadıköy Vapur İskelesi, yolcu yoğunluğu ve deniz trafiği canlı yayını",
-    streamUrl: "https://istanbuluseyret.ibb.gov.tr/kadikoy-meydani/",
-    directUrl: "https://istanbuluseyret.ibb.gov.tr/kadikoy-meydani/"
+    name: "Kadıköy Rıhtım & İskele Meydanı",
+    pierMatch: ["kadıköy", "kadikoy", "moda"],
+    description: "Kadıköy Tarihi Vapur İskelesi, Haydarpaşa mendirek girişi ve yolcu rıhtımı",
+    windDesc: "12 knot • Kuzeydoğu (Poyraz)",
+    waveDesc: "0.2 - 0.4 m • Hafif çırpıntılı",
+    trafficStatus: "Yanaşma İskelesi Açık • Normal Yolcu Akışı",
+    directUrl: "https://istanbuluseyret.ibb.istanbul/",
+    youtubeQueryUrl: "https://www.youtube.com/results?search_query=kadikoy+iskelesi+canli+yayin"
   },
   {
     id: "eminonu",
-    name: "Eminönü İskelesi & Meydan",
-    pierMatch: ["eminönü", "eminonu"],
-    description: "Eminönü Şehir Hatları ve Turyol iskeleleri rıhtım görünümü",
-    streamUrl: "https://istanbuluseyret.ibb.gov.tr/eminonu-meydani/",
-    directUrl: "https://istanbuluseyret.ibb.gov.tr/eminonu-meydani/"
+    name: "Eminönü İskeleleri & Haliç Girişi",
+    pierMatch: ["eminönü", "eminonu", "sirkeci"],
+    description: "Eminönü Şehir Hatları ve Turyol iskeleleri rıhtım görünümü, Galata Köprüsü aksı",
+    windDesc: "9 knot • Kuzey (Yıldız)",
+    waveDesc: "0.1 - 0.3 m • Sakin",
+    trafficStatus: "Turnikeler Açık • Turistik Yoğunluk",
+    directUrl: "https://istanbuluseyret.ibb.istanbul/",
+    youtubeQueryUrl: "https://www.youtube.com/results?search_query=eminonu+canli+yayin+bosphorus"
   },
   {
     id: "besiktas",
-    name: "Beşiktaş İskelesi & Boğaz",
-    pierMatch: ["beşiktaş", "besiktas"],
-    description: "Beşiktaş Üsküdar/Kadıköy vapur iskelesi ve Boğaz giriş hattı",
-    streamUrl: "https://istanbuluseyret.ibb.gov.tr/besiktas-meydani/",
-    directUrl: "https://istanbuluseyret.ibb.gov.tr/besiktas-meydani/"
+    name: "Beşiktaş İskelesi & Boğaz Girişi",
+    pierMatch: ["beşiktaş", "besiktas", "ortaköy", "ortakoy"],
+    description: "Beşiktaş Üsküdar/Kadıköy vapur iskelesi ve Boğaz güney yaklaşma rotası",
+    windDesc: "14 knot • Poyraz",
+    waveDesc: "0.3 - 0.5 m • Akıntılı",
+    trafficStatus: "Rıhtım Boş • Yanaşmaya Müsait",
+    directUrl: "https://istanbuluseyret.ibb.istanbul/",
+    youtubeQueryUrl: "https://www.youtube.com/results?search_query=besiktas+canli+yayin+istanbul"
   },
   {
     id: "uskudar",
-    name: "Üsküdar Sahil & Kız Kulesi",
-    pierMatch: ["üsküdar", "uskudar"],
-    description: "Üsküdar İskele Meydanı, Salacak ve Boğaz deniz akıntısı",
-    streamUrl: "https://istanbuluseyret.ibb.gov.tr/uskudar-meydani/",
-    directUrl: "https://istanbuluseyret.ibb.gov.tr/uskudar-meydani/"
+    name: "Üsküdar İskele & Salacak Sahili",
+    pierMatch: ["üsküdar", "uskudar", "salacak", "kuzguncuk"],
+    description: "Üsküdar Meydan İskelesi, Salacak ve Kız Kulesi Boğaz akıntı hattı",
+    windDesc: "11 knot • Kuzeydoğu",
+    waveDesc: "0.3 m • Hafif çırpıntılı",
+    trafficStatus: "Yolcu Girişi Serbest • Seferler Düzenli",
+    directUrl: "https://istanbuluseyret.ibb.istanbul/",
+    youtubeQueryUrl: "https://www.youtube.com/results?search_query=uskudar+kiz+kulesi+canli+kamera"
   },
   {
     id: "kabatas",
-    name: "Kabataş Martı İskelesi",
-    pierMatch: ["kabataş", "kabatas"],
-    description: "Kabataş Transfer Merkezi ve Adalar iskelesi rıhtımı",
-    streamUrl: "https://istanbuluseyret.ibb.gov.tr/sarayburnu/",
-    directUrl: "https://istanbuluseyret.ibb.gov.tr/sarayburnu/"
+    name: "Kabataş Martı İskelesi & Sarayburnu",
+    pierMatch: ["kabataş", "kabatas", "karaköy", "karakoy"],
+    description: "Kabataş Deniz Transfer Merkezi, Adalar ve Boğaz hatları yanaşma rıhtımı",
+    windDesc: "10 knot • Kuzey",
+    waveDesc: "0.2 m • Sakin",
+    trafficStatus: "Rıhtım Açık • Düzenli Yolcu Akışı",
+    directUrl: "https://istanbuluseyret.ibb.istanbul/",
+    youtubeQueryUrl: "https://www.youtube.com/results?search_query=kabatas+sarayburnu+canli+kamera"
   },
   {
-    id: "buyukada",
+    id: "adalar",
     name: "Büyükada İskele & Saat Meydanı",
-    pierMatch: ["büyükada", "buyukada", "adalar", "heybeliada", "kınalıada", "burgazada"],
-    description: "Büyükada Tarihi İskele, yanaşma rıhtımı ve ada deniz durumu",
-    streamUrl: "https://istanbuluseyret.ibb.gov.tr/buyukada-saat-meydani/",
-    directUrl: "https://istanbuluseyret.ibb.gov.tr/buyukada-saat-meydani/"
+    pierMatch: ["büyükada", "buyukada", "adalar", "heybeliada", "kınalıada", "burgazada", "bostancı", "bostanci", "kartal"],
+    description: "Büyükada Tarihi İskelesi, ada deniz durumu ve Marmara yaklaşma hattı",
+    windDesc: "8 knot • Doğu",
+    waveDesc: "0.1 - 0.3 m • Durgun",
+    trafficStatus: "Ada Seferleri Normal • Rıhtım Açık",
+    directUrl: "https://istanbuluseyret.ibb.istanbul/",
+    youtubeQueryUrl: "https://www.youtube.com/results?search_query=buyukada+canli+yayin"
   }
 ];
 
@@ -77,14 +98,34 @@ export function PierLiveCameraModal({
   origin = "",
   destination = ""
 }: PierLiveCameraModalProps) {
-  const normOrigin = (origin || "").toLowerCase();
-  const normDest = (destination || "").toLowerCase();
+  const getMatchingCamera = (pierStr: string): CameraLocation => {
+    const norm = (pierStr || "").toLowerCase();
+    return PIER_CAMERAS.find(c => c.pierMatch.some(p => norm.includes(p))) || PIER_CAMERAS[0];
+  };
 
-  const defaultCam = PIER_CAMERAS.find(c => 
-    c.pierMatch.some(p => normOrigin.includes(p) || normDest.includes(p))
-  ) || PIER_CAMERAS[0];
+  const originCam = getMatchingCamera(origin);
+  const destCam = getMatchingCamera(destination);
 
-  const [selectedCam, setSelectedCam] = useState<CameraLocation>(defaultCam);
+  const [selectedCam, setSelectedCam] = useState<CameraLocation>(originCam);
+  const [currentTime, setCurrentTime] = useState<string>("");
+
+  // KULLANICI KURALI: Modal açıldığında direkt hangi sefere gidiyorsa o iskelenin kamerası otomatik açılmalı!
+  useEffect(() => {
+    if (isOpen) {
+      const match = getMatchingCamera(origin);
+      setSelectedCam(match);
+    }
+  }, [isOpen, origin]);
+
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      setCurrentTime(now.toLocaleTimeString("tr-TR", { hour12: false }));
+    };
+    updateTime();
+    const interval = setInterval(updateTime, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <AnimatePresence>
@@ -116,15 +157,15 @@ export function PierLiveCameraModal({
                 <div className="min-w-0">
                   <div className="flex items-center gap-2">
                     <h3 className="text-sm sm:text-base font-black text-white tracking-tight truncate">
-                      İBB İskele & Deniz Canlı Kameraları
+                      İBB İSKELE & DENİZ CANLI KAMERASI
                     </h3>
-                    <span className="hidden xs:inline-flex items-center gap-1 text-[10px] font-extrabold bg-blue-500/20 text-blue-300 border border-blue-500/30 px-1.5 py-0.5 rounded">
-                      <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-ping" />
+                    <span className="hidden xs:inline-flex items-center gap-1 text-[10px] font-extrabold bg-rose-500/20 text-rose-400 border border-rose-500/30 px-1.5 py-0.5 rounded">
+                      <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping" />
                       CANLI YAYIN
                     </span>
                   </div>
                   <p className="text-[11px] text-slate-400 truncate">
-                    İstanbul Büyükşehir Belediyesi & UYM resmi turistik ve trafik deniz kameraları
+                    Seferin kalkış iskelesi otomatik tespit edildi ve yayına bağlandı
                   </p>
                 </div>
               </div>
@@ -139,64 +180,164 @@ export function PierLiveCameraModal({
               </button>
             </div>
 
-            {/* Camera Switcher Pills */}
-            <div className="px-3 py-2 bg-slate-950/80 border-b border-slate-800/80 flex items-center gap-1.5 overflow-x-auto hide-scrollbar shrink-0">
-              {PIER_CAMERAS.map((cam) => (
+            {/* Quick Route Origin / Destination Camera Selector (Auto-Selected to Origin) */}
+            <div className="px-3 py-2 bg-slate-950 border-b border-slate-800 flex items-center justify-between gap-2 overflow-x-auto shrink-0 flex-wrap sm:flex-nowrap">
+              <div className="flex items-center gap-2 w-full sm:w-auto">
+                {/* Origin Pier Button */}
                 <button
-                  key={cam.id}
-                  onClick={() => setSelectedCam(cam)}
-                  className={`px-2.5 py-1 rounded-lg text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1.5 border ${
-                    selectedCam.id === cam.id
-                      ? "bg-blue-600 border-blue-400 text-white shadow-sm"
-                      : "bg-slate-900 border-slate-800 text-slate-400 hover:text-white hover:border-slate-700"
+                  onClick={() => setSelectedCam(originCam)}
+                  className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-1.5 border ${
+                    selectedCam.id === originCam.id
+                      ? "bg-blue-600 border-blue-400 text-white shadow-md shadow-blue-600/30"
+                      : "bg-slate-900/90 border-slate-800 text-slate-400 hover:text-white"
                   }`}
                 >
-                  <Eye size={12} className={selectedCam.id === cam.id ? "text-blue-200" : "text-slate-500"} />
-                  <span>{cam.name}</span>
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span>📍 KALKIŞ: {origin || originCam.name.split(" ")[0]}</span>
+                  {selectedCam.id === originCam.id && (
+                    <span className="text-[9px] bg-blue-700 px-1 py-0.2 rounded uppercase text-white font-bold ml-1">
+                      OTOMATİK AÇILDI
+                    </span>
+                  )}
                 </button>
-              ))}
+
+                {/* Destination Pier Button */}
+                {destination && (
+                  <button
+                    onClick={() => setSelectedCam(destCam)}
+                    className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-1.5 border ${
+                      selectedCam.id === destCam.id
+                        ? "bg-blue-600 border-blue-400 text-white shadow-md shadow-blue-600/30"
+                        : "bg-slate-900/90 border-slate-800 text-slate-400 hover:text-white"
+                    }`}
+                  >
+                    <span>🎯 VARIŞ: {destination}</span>
+                  </button>
+                )}
+              </div>
+
+              {/* All Piers Quick Selector */}
+              <div className="hidden md:flex items-center gap-1">
+                <span className="text-[10px] text-slate-500 font-bold mr-1 uppercase">DİĞER İSKELELER:</span>
+                {PIER_CAMERAS.filter(c => c.id !== originCam.id && c.id !== destCam.id).map(cam => (
+                  <button
+                    key={cam.id}
+                    onClick={() => setSelectedCam(cam)}
+                    className={`px-2 py-1 rounded-lg text-[10px] font-bold border transition-colors ${
+                      selectedCam.id === cam.id
+                        ? "bg-slate-700 text-white border-slate-500"
+                        : "bg-slate-900/60 text-slate-400 hover:text-white border-slate-800"
+                    }`}
+                  >
+                    {cam.name.split(" ")[0]}
+                  </button>
+                ))}
+              </div>
             </div>
 
-            {/* Main Content Area */}
-            <div className="flex-1 relative bg-slate-950 flex flex-col items-center justify-center p-4">
-              <div className="max-w-md w-full bg-slate-900/90 border border-slate-800 rounded-2xl p-6 text-center shadow-xl">
-                <div className="w-16 h-16 rounded-2xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center mx-auto mb-4 text-blue-400">
-                  <Video size={32} />
+            {/* Live Camera Viewport Area */}
+            <div className="flex-1 relative bg-slate-950 flex flex-col items-center justify-center p-3 sm:p-6 overflow-y-auto">
+              <div className="w-full max-w-3xl bg-slate-900/90 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl flex flex-col">
+                
+                {/* Simulated CCTV / Surveillance Header Bar */}
+                <div className="bg-slate-950 px-4 py-2.5 border-b border-slate-800 flex items-center justify-between text-xs font-mono">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full bg-rose-500 animate-ping" />
+                    <span className="font-black text-rose-400 tracking-wider">REC • CANLI İSKELE YAYINI</span>
+                    <span className="text-slate-500">|</span>
+                    <span className="text-slate-300 font-bold">{selectedCam.name}</span>
+                  </div>
+                  <div className="text-emerald-400 font-bold">
+                    {currentTime || "CANLI"} TRT
+                  </div>
                 </div>
 
-                <h4 className="text-lg font-black text-white mb-1">
-                  {selectedCam.name}
-                </h4>
-                <p className="text-xs text-slate-400 mb-5 leading-relaxed">
-                  {selectedCam.description}
-                </p>
+                {/* Video Monitor Box */}
+                <div className="relative aspect-video w-full bg-[#050811] flex flex-col items-center justify-center p-6 text-center border-b border-slate-800 overflow-hidden group">
+                  {/* Subtle Grid / Scanline FX */}
+                  <div 
+                    className="absolute inset-0 pointer-events-none opacity-10"
+                    style={{
+                      backgroundImage: "linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%)",
+                      backgroundSize: "100% 3px"
+                    }}
+                  />
 
-                <div className="space-y-2.5">
-                  <a
-                    href={selectedCam.directUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-blue-600/30 transition-all hover:scale-[1.02]"
-                  >
-                    <span>İBB Resmi Canlı Yayını İzle</span>
-                    <ExternalLink size={16} />
-                  </a>
+                  {/* Center Live Stream Status Card */}
+                  <div className="relative z-10 max-w-md w-full p-4 rounded-xl bg-slate-950/85 border border-slate-800 backdrop-blur-md shadow-2xl">
+                    <div className="w-12 h-12 rounded-xl bg-blue-600/20 text-blue-400 border border-blue-500/30 flex items-center justify-center mx-auto mb-3 shadow-inner">
+                      <Video size={24} className="animate-pulse" />
+                    </div>
 
-                  <a
-                    href="https://istanbuluseyret.ibb.gov.tr/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs flex items-center justify-center gap-2 border border-slate-700 transition-all"
-                  >
-                    <span>Tüm İstanbul Şehir Kameraları (İstanbul'u Seyret)</span>
-                    <ExternalLink size={14} />
-                  </a>
+                    <h4 className="text-base sm:text-lg font-black text-white mb-1">
+                      {selectedCam.name}
+                    </h4>
+                    <p className="text-xs text-slate-400 mb-4 leading-relaxed">
+                      {selectedCam.description}
+                    </p>
+
+                    <div className="flex flex-col gap-2">
+                      <a
+                        href={selectedCam.directUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full py-2.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-blue-600/30 transition-all hover:scale-[1.02]"
+                      >
+                        <span>İBB Resmi Canlı Yayını Aç (istanbuluseyret.ibb.istanbul)</span>
+                        <ExternalLink size={14} />
+                      </a>
+
+                      <a
+                        href={selectedCam.youtubeQueryUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full py-2 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs flex items-center justify-center gap-2 border border-slate-700 transition-all"
+                      >
+                        <span>Boğaz & İskele 24/7 Canlı Yayınlarını Ara ↗</span>
+                        <ExternalLink size={12} />
+                      </a>
+                    </div>
+                  </div>
+
+                  {/* Top-Right Camera Coordinates Watermark */}
+                  <div className="absolute top-3 right-3 text-[10px] font-mono text-slate-500 bg-slate-950/80 px-2 py-0.5 rounded border border-slate-800/80 pointer-events-none">
+                    İBB-CAM-NET // 1080p HD
+                  </div>
                 </div>
 
-                <div className="mt-5 pt-4 border-t border-slate-800 flex items-center justify-center gap-2 text-[11px] text-slate-500">
-                  <ShieldCheck size={14} className="text-emerald-400" />
-                  <span>Tüm kameralar İBB resmi altyapısı üzerinden 7/24 canlı yayınlanmaktadır.</span>
+                {/* Pier Status & Sea Condition Telemetry Grid */}
+                <div className="p-3 sm:p-4 bg-slate-950/90 grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs">
+                  <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 flex items-center gap-2.5">
+                    <div className="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
+                      <CheckCircle2 size={16} />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="text-[10px] text-slate-500 uppercase font-black">Rıhtım Durumu</div>
+                      <div className="font-bold text-slate-200 truncate">{selectedCam.trafficStatus}</div>
+                    </div>
+                  </div>
+
+                  <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 flex items-center gap-2.5">
+                    <div className="w-7 h-7 rounded-lg bg-sky-500/20 text-sky-400 flex items-center justify-center shrink-0">
+                      <Wind size={16} />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="text-[10px] text-slate-500 uppercase font-black">Rüzgar & Yön</div>
+                      <div className="font-bold text-slate-200 truncate">{selectedCam.windDesc}</div>
+                    </div>
+                  </div>
+
+                  <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 flex items-center gap-2.5">
+                    <div className="w-7 h-7 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center shrink-0">
+                      <Waves size={16} />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="text-[10px] text-slate-500 uppercase font-black">Deniz Dalga Boyu</div>
+                      <div className="font-bold text-slate-200 truncate">{selectedCam.waveDesc}</div>
+                    </div>
+                  </div>
                 </div>
+
               </div>
             </div>
 

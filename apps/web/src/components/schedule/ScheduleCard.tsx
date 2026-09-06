@@ -192,12 +192,25 @@ export function ScheduleCard(props: ScheduleCardProps) {
         <div className="flex items-center gap-2 mt-1 text-[11px] text-slate-500 dark:text-slate-400 flex-wrap truncate">
           <OperatorLogo operator={props.operator} size="sm" showName={true} />
 
-          {/* Underway Confirmed Vessel Name */}
-          {liveVessel.isConfirmedUnderway && (
-            <span className="inline-flex items-center gap-1 text-[10px] font-black text-emerald-700 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-300 dark:border-emerald-500/40 px-1.5 py-0.2 rounded shrink-0 shadow-2xs animate-pulse">
-              🚢 {liveVessel.vesselName}
+          {/* Assigned Vessel Name & Real Status Badge */}
+          <span 
+            className={`inline-flex items-center gap-1 text-[10px] font-extrabold px-1.5 py-0.5 rounded border shrink-0 transition-colors ${
+              liveVessel.isConfirmedUnderway
+                ? "text-emerald-800 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/70 border-emerald-300 dark:border-emerald-600/50 shadow-xs"
+                : "text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800/80 border-slate-200 dark:border-slate-700"
+            }`}
+            title={liveVessel.statusText}
+          >
+            <Ship size={11} className={liveVessel.isConfirmedUnderway ? "text-emerald-600 dark:text-emerald-400 animate-pulse" : "text-slate-500 dark:text-slate-400"} />
+            <span className="font-mono tracking-tight font-black">{liveVessel.vesselName}</span>
+            <span className={`text-[8px] font-black uppercase px-1 py-0.2 rounded leading-none ${
+              liveVessel.isConfirmedUnderway
+                ? "bg-emerald-600 text-white animate-pulse"
+                : "bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300"
+            }`}>
+              {liveVessel.isConfirmedUnderway ? "Seyirde" : "Rıhtımda"}
             </span>
-          )}
+          </span>
 
           <span className="text-slate-300 dark:text-slate-600 font-bold">•</span>
 

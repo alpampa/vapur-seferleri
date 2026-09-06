@@ -210,23 +210,30 @@ export function TripDetailsSheet({ schedule, isOpen, onClose, serverTimeIso }: T
                 <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
                   liveVessel.isConfirmedUnderway
                     ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/40"
-                    : "bg-slate-800 text-slate-400 border border-slate-700"
+                    : "bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-400 border border-slate-300 dark:border-slate-700"
                 }`}>
                   <Ship size={16} className={liveVessel.isConfirmedUnderway ? "animate-pulse" : ""} />
                 </div>
                 <div className="min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className="text-xs font-black text-slate-900 dark:text-white">
-                      {liveVessel.isConfirmedUnderway ? `Gemi: ${liveVessel.vesselName}` : "Gemi: İskelede Hazırlanıyor"}
+                      🚢 Vapur: {liveVessel.vesselName}
+                    </span>
+                    <span className={`text-[9px] font-black uppercase px-1.5 py-0.2 rounded border ${
+                      liveVessel.isConfirmedUnderway
+                        ? "bg-emerald-500 text-white border-emerald-600 animate-pulse"
+                        : "bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700"
+                    }`}>
+                      {liveVessel.isConfirmedUnderway ? "Seyirde (Boğazda)" : "Rıhtımda Bağlı"}
                     </span>
                     {liveVessel.mmsi && (
-                      <span className="text-[9px] font-mono text-slate-400 bg-slate-950 px-1.5 py-0.2 rounded border border-slate-800">
+                      <span className="text-[9px] font-mono text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-950 px-1.5 py-0.2 rounded border border-slate-200 dark:border-slate-800">
                         MMSI: {liveVessel.mmsi}
                       </span>
                     )}
                   </div>
-                  <p className="text-[10px] text-slate-400 mt-0.5">
-                    {liveVessel.statusText}
+                  <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">
+                    {liveVessel.statusText} • Kapasite: {liveVessel.capacityPax} Yolcu ({liveVessel.builtYear})
                   </p>
                 </div>
               </div>
@@ -455,14 +462,22 @@ export function TripDetailsSheet({ schedule, isOpen, onClose, serverTimeIso }: T
       <MarineAisRadarModal
         isOpen={isRadarOpen}
         onClose={() => setIsRadarOpen(false)}
-        origin={schedule?.origin}
-        destination={schedule?.destination}
+        origin={dynState?.currentOrigin || schedule?.origin}
+        destination={dynState?.destination || schedule?.destination}
+        vesselName={liveVessel.vesselName}
+        mmsi={liveVessel.mmsi}
+        operator={schedule?.operator}
+        isConfirmedUnderway={liveVessel.isConfirmedUnderway}
+        statusText={liveVessel.statusText}
+        capacityPax={liveVessel.capacityPax}
+        builtYear={liveVessel.builtYear}
+        callSign={liveVessel.callSign}
       />
       <PierLiveCameraModal
         isOpen={isCameraOpen}
         onClose={() => setIsCameraOpen(false)}
-        origin={schedule?.origin}
-        destination={schedule?.destination}
+        origin={dynState?.currentOrigin || schedule?.origin}
+        destination={dynState?.destination || schedule?.destination}
       />
     </AnimatePresence>
   );

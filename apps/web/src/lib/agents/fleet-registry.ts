@@ -219,16 +219,20 @@ export const ISTANBUL_FERRY_FLEET: RegisteredVessel[] = [
 
 export interface LiveVesselResolution {
   vesselName: string;
-  mmsi?: string;
+  mmsi: string;
   statusText: string;
   isConfirmedUnderway: boolean;
   radarUrl: string;
+  vesselType: "VAPUR" | "MOTOR" | "DENIZ_OTOBUSU";
+  capacityPax: number;
+  builtYear: number;
+  callSign?: string;
 }
 
 /**
- * Resolves the real vessel name following authentic maritime AIS rules:
- * 1. Before departure: Vessel is docked at pier, preparing -> Status: "İskelede Hazırlanıyor"
- * 2. After departure: Vessel underway (>3 knots into channel) -> AIS confirmed real vessel!
+ * Resolves the real vessel name and maritime telemetry:
+ * 1. Before departure: Assigned vessel is docked at pier preparing for departure
+ * 2. After departure: Vessel is underway in Bosphorus / Marmara with active AIS broadcast
  */
 export function resolveLiveVesselName(
   origin: string,
@@ -256,11 +260,15 @@ export function resolveLiveVesselName(
   // IF STILL AT THE PIER (Not departed)
   if (!isDeparted && status !== "IN_TRANSIT") {
     return {
-      vesselName: "İskelede Hazırlanıyor",
+      vesselName: vessel.name,
       mmsi: vessel.mmsi,
-      statusText: "Rıhtımda bağlı • Kalkışta AIS sinyali doğrulanır",
+      statusText: "İskelede Hazırlanıyor • Rıhtıma Bağlı",
       isConfirmedUnderway: false,
-      radarUrl
+      radarUrl,
+      vesselType: vessel.type,
+      capacityPax: vessel.capacityPax,
+      builtYear: vessel.builtYear,
+      callSign: vessel.callSign
     };
   }
 
@@ -270,6 +278,10 @@ export function resolveLiveVesselName(
     mmsi: vessel.mmsi,
     statusText: `AIS Sinyali Aktif • ${vessel.name} seyirde`,
     isConfirmedUnderway: true,
-    radarUrl
+    radarUrl,
+    vesselType: vessel.type,
+    capacityPax: vessel.capacityPax,
+    builtYear: vessel.builtYear,
+    callSign: vessel.callSign
   };
 }
