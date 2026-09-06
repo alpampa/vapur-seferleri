@@ -33,6 +33,7 @@ import { useActiveVoyageStore } from "@/store/useActiveVoyageStore";
 import { useWalkingCatchStore } from "@/store/useWalkingCatchStore";
 import { MooringTelemetryCard } from "@/components/schedule/MooringTelemetryCard";
 import { TurnstileCheckBanner } from "@/components/turnstile/TurnstileCheckBanner";
+import { getOfficialRouteFare } from "@/lib/data/official-fares";
 
 interface TripDetailsSheetProps {
   schedule: ScheduleCardDto | null;
@@ -259,69 +260,80 @@ export function TripDetailsSheet({ schedule, isOpen, onClose, serverTimeIso }: T
               />
             </div>
 
-            {/* 3 YENİ ÖZELLİK: İstanbulkart QR, Onboard Kokpit, Boğaz Sesli Rehberi */}
-            <div className="grid grid-cols-3 gap-2 mb-3">
-              {/* İstanbulkart / QR Butonu */}
+            {/* Resmi UKOME Yasal Ücret Doğrulama Kartı */}
+            {(() => {
+              const fareInfo = getOfficialRouteFare(schedule.origin, schedule.destination);
+              return (
+                <div className="mb-3 p-3 rounded-2xl bg-emerald-50/90 dark:bg-emerald-950/30 border border-emerald-300 dark:border-emerald-800/60 text-xs space-y-2 shadow-2xs">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1.5 font-black text-emerald-900 dark:text-emerald-300">
+                      <ShieldCheck size={15} className="text-emerald-600 dark:text-emerald-400" />
+                      <span>RESMİ İBB UKOME ÜCRET TARİFESİ</span>
+                    </div>
+                    <a
+                      href={fareInfo.officialSourceUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[10px] font-bold text-emerald-700 dark:text-emerald-400 hover:underline inline-flex items-center gap-0.5"
+                      title="Şehir Hatları Resmi Ücret Tebliği Sayfası"
+                    >
+                      <span>Resmi Tebliğ ↗</span>
+                    </a>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-2 text-center pt-1 border-t border-emerald-200/60 dark:border-emerald-800/40">
+                    <div className="p-1.5 rounded-xl bg-white/90 dark:bg-slate-900/80 border border-emerald-100 dark:border-slate-800">
+                      <span className="text-[9px] text-slate-500 dark:text-slate-400 block font-bold">Tam Bilet</span>
+                      <strong className="text-xs sm:text-sm font-mono font-black text-emerald-600 dark:text-emerald-400">{fareInfo.fullFare}</strong>
+                    </div>
+                    <div className="p-1.5 rounded-xl bg-white/90 dark:bg-slate-900/80 border border-emerald-100 dark:border-slate-800">
+                      <span className="text-[9px] text-slate-500 dark:text-slate-400 block font-bold">İndirimli Öğrenci</span>
+                      <strong className="text-xs sm:text-sm font-mono font-black text-blue-600 dark:text-blue-400">{fareInfo.studentFare}</strong>
+                    </div>
+                    <div className="p-1.5 rounded-xl bg-white/90 dark:bg-slate-900/80 border border-emerald-100 dark:border-slate-800">
+                      <span className="text-[9px] text-slate-500 dark:text-slate-400 block font-bold">{fareInfo.isIslandRoute ? "Adakart Mukim" : "Sosyal / 60+"}</span>
+                      <strong className="text-xs sm:text-sm font-mono font-black text-amber-600 dark:text-amber-400">{fareInfo.islandResidentFare || fareInfo.socialFare}</strong>
+                    </div>
+                  </div>
+
+                  <div className="text-[10px] text-slate-600 dark:text-slate-400 flex items-center justify-between pt-0.5">
+                    <span>Yasal Dayanak: <strong>{fareInfo.legalCitation}</strong></span>
+                    <span>65+ Yaş: <strong>Ücretsiz</strong></span>
+                  </div>
+                </div>
+              );
+            })()}
+
+            {/* Hızlı Eylemler: QR Cüzdan & Vapuru Kaçırdım */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
               <button
                 type="button"
                 onClick={() => setIsWalletOpen(true)}
-                className="p-2.5 rounded-xl bg-red-50 hover:bg-red-100 dark:bg-red-950/40 dark:hover:bg-red-900/60 border border-red-200 dark:border-red-800/60 text-left flex flex-col items-start gap-1 transition-all shadow-2xs group"
+                className="p-2.5 rounded-xl bg-red-50 hover:bg-red-100 dark:bg-red-950/40 dark:hover:bg-red-900/60 border border-red-200 dark:border-red-800/60 text-left flex items-center justify-between transition-all shadow-2xs group cursor-pointer"
               >
-                <div className="flex items-center gap-1.5 text-red-600 dark:text-red-400">
-                  <CreditCard size={14} className="group-hover:scale-110 transition-transform" />
-                  <span className="text-[11px] font-black uppercase">İSTANBULKART</span>
+                <div className="flex items-center gap-2">
+                  <CreditCard size={15} className="text-red-600 dark:text-red-400 group-hover:scale-110 transition-transform" />
+                  <div>
+                    <span className="text-[11px] font-black uppercase text-slate-900 dark:text-white block">İSTANBULKART QR CÜZDAN</span>
+                    <span className="text-[10px] text-slate-500 dark:text-slate-400">Dijital barkod ile turnikeden hızlı geç</span>
+                  </div>
                 </div>
-                <span className="text-[10px] text-slate-500 dark:text-slate-400 line-clamp-1">
-                  QR Geçiş & Tarife
-                </span>
+                <span className="text-xs font-bold text-red-600 dark:text-red-400">Aç ➔</span>
               </button>
 
-              {/* ÖNERİ 2: Vapuru Kaçırdım Kurtarma Butonu */}
               <button
                 type="button"
                 onClick={() => setIsMissedOpen(true)}
-                className="col-span-3 p-2.5 rounded-xl bg-amber-50 hover:bg-amber-100 dark:bg-amber-950/40 dark:hover:bg-amber-900/60 border border-amber-300 dark:border-amber-500/50 flex items-center justify-between text-xs transition-all shadow-2xs group mb-1"
+                className="p-2.5 rounded-xl bg-amber-50 hover:bg-amber-100 dark:bg-amber-950/40 dark:hover:bg-amber-900/60 border border-amber-300 dark:border-amber-500/50 flex items-center justify-between text-left transition-all shadow-2xs group cursor-pointer"
               >
-                <div className="flex items-center gap-2 text-amber-900 dark:text-amber-200">
-                  <AlertOctagon size={16} className="text-amber-500 animate-pulse shrink-0" />
-                  <span className="font-black">VAPURU KAÇIRDIM! NE YAPMALIYIM?</span>
-                  <span className="text-[10px] text-amber-700 dark:text-amber-400 font-semibold hidden sm:inline">
-                    En hızlı alternatif raylı sistem ve motor rotasını hesapla
-                  </span>
+                <div className="flex items-center gap-2">
+                  <AlertOctagon size={15} className="text-amber-500 animate-pulse shrink-0" />
+                  <div>
+                    <span className="text-[11px] font-black text-amber-900 dark:text-amber-200 block">VAPURU KAÇIRDIM ASİSTANI</span>
+                    <span className="text-[10px] text-amber-700 dark:text-amber-400">En yakın Marmaray / motor alternatifleri</span>
+                  </div>
                 </div>
-                <span className="text-xs font-black text-amber-600 dark:text-amber-400 group-hover:translate-x-0.5 transition-transform">
-                  Alternatifleri Gör ➔
-                </span>
-              </button>
-
-              {/* Onboard Gemi İçi Kokpit Butonu */}
-              <button
-                type="button"
-                onClick={() => setIsOnboardOpen(true)}
-                className="p-2.5 rounded-xl bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/40 dark:hover:bg-blue-900/60 border border-blue-200 dark:border-blue-800/60 text-left flex flex-col items-start gap-1 transition-all shadow-2xs group"
-              >
-                <div className="flex items-center gap-1.5 text-blue-600 dark:text-blue-400">
-                  <Gauge size={14} className="group-hover:scale-110 transition-transform" />
-                  <span className="text-[11px] font-black uppercase">GEMİ KOKPİTİ</span>
-                </div>
-                <span className="text-[10px] text-slate-500 dark:text-slate-400 line-clamp-1">
-                  Telsiz Telemetri
-                </span>
-              </button>
-
-              {/* Boğaz Sesli Rehberi Butonu */}
-              <button
-                type="button"
-                onClick={() => setIsAudioGuideOpen(true)}
-                className="p-2.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-950/40 dark:hover:bg-indigo-900/60 border border-indigo-200 dark:border-indigo-800/60 text-left flex flex-col items-start gap-1 transition-all shadow-2xs group"
-              >
-                <div className="flex items-center gap-1.5 text-indigo-600 dark:text-indigo-400">
-                  <Headphones size={14} className="group-hover:scale-110 transition-transform" />
-                  <span className="text-[11px] font-black uppercase">SESLİ REHBER</span>
-                </div>
-                <span className="text-[10px] text-slate-500 dark:text-slate-400 line-clamp-1">
-                  12 Boğaz Eseri
-                </span>
+                <span className="text-xs font-bold text-amber-600 dark:text-amber-400">Gör ➔</span>
               </button>
             </div>
 

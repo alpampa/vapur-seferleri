@@ -1,6 +1,7 @@
-import { OFFICIAL_SCHEDULES_DATA } from '../data/official-schedules';
+import { OFFICIAL_SCHEDULES_DATA, RawOfficialTrip } from '../data/official-schedules';
 import type { ScheduleCardDto, SchedulesResponse } from '@/app/page';
 import type { TripStatus } from '@/components/schedule/ScheduleCard';
+import { getOfficialRouteFare, resolveRealisticPlatform } from '@/lib/data/official-fares';
 
 /**
  * Returns current Istanbul time components (UTC+3)
@@ -120,8 +121,8 @@ export async function getLiveOrOfficialSchedules(): Promise<SchedulesResponse> {
       status,
       delayText,
       targetTimeIso: targetIso,
-      platform: trip.platform,
-      price: trip.price,
+      platform: resolveRealisticPlatform(trip.origin, trip.destination, trip.operator),
+      price: getOfficialRouteFare(trip.origin, trip.destination).fullFare,
       progress,
       category: trip.category || (trip.destination.includes('ada') || trip.origin.includes('ada') || trip.destination === 'Büyükada' || trip.origin === 'Büyükada' ? 'ADALAR' : 'BOGAZ'),
       stops: trip.stops && trip.stops.length > 0 ? trip.stops : undefined
