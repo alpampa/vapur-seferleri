@@ -3,9 +3,11 @@
 import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Navigation, ExternalLink, ShieldCheck, Compass, Anchor, MapPin, Gauge } from "lucide-react";
+import { X, Navigation, ExternalLink, ShieldCheck, Compass, Anchor, MapPin, Gauge, Waves, Eye } from "lucide-react";
 import { ISTANBUL_PIERS } from "@/lib/services/route-planner";
 import { OperatorLogo } from "@/components/ui/OperatorLogo";
+import { getVesselVisualProfile } from "@/lib/data/vessel-visuals";
+import { VesselSilhouetteGraphic } from "@/components/vessel/VesselSilhouetteGraphic";
 
 interface MarineAisRadarModalProps {
   isOpen: boolean;
@@ -43,11 +45,18 @@ export function MarineAisRadarModal({
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
   const vesselMarkerRef = useRef<any>(null);
+  const wakePolylineRef = useRef<any>(null);
+  const wakeFoamLineRef = useRef<any>(null);
+  const wakeHistoryRef = useRef<[number, number][]>([]);
+
   const [mounted, setMounted] = useState(false);
+  const [showVesselProfile, setShowVesselProfile] = useState(false);
 
   // Live nautical telemetry
   const [progressRatio, setProgressRatio] = useState<number>(isConfirmedUnderway ? 0.45 : 0.02);
   const [currentSpeed, setCurrentSpeed] = useState<number>(isConfirmedUnderway ? 11.4 : 0.0);
+
+  const visualProfile = getVesselVisualProfile(vesselName, operator);
 
   useEffect(() => {
     setMounted(true);
@@ -117,9 +126,9 @@ export function MarineAisRadarModal({
       // Draw active voyage nautical polyline (ONLY this trip route!)
       const routeLine = L.polyline([originCoord, destCoord], {
         color: "#2563eb",
-        weight: 5,
+        weight: 4,
         dashArray: "8, 10",
-        opacity: 0.95
+        opacity: 0.8
       }).addTo(map);
 
       // Fit map view nicely to the route
@@ -157,19 +166,52 @@ export function MarineAisRadarModal({
       });
       L.marker(destCoord, { icon: destIcon }).addTo(map);
 
-      // 3. ONLY THIS ONE VESSEL: Real-Time Dynamic Moving Ferry Marker
+      // 3. NAUTICAL WAKE TRAIL (Dümen Suyu & Pervane Köpük İzi)
+      const wakePoints: [number, number][] = [];
+      const wakeSteps = 14;
+      for (let i = wakeSteps; i >= 0; i--) {
+        const ratio = Math.max(0, progressRatio - (i * 0.015));
+        wakePoints.push([
+          originCoord[0] + (destCoord[0] - originCoord[0]) * ratio,
+          originCoord[1] + (destCoord[1] - originCoord[1]) * ratio
+        ]);
+      }
+      wakeHistoryRef.current = wakePoints;
+
+      // Outer glowing wake trail (Dış Köpük Yolu)
+      wakePolylineRef.current = L.polyline(wakePoints, {
+        color: "#38bdf8",
+        weight: 9,
+        opacity: 0.55,
+        dashArray: "3, 6",
+        lineCap: "round"
+      }).addTo(map);
+
+      // Inner wake core line (Dümen Suyu Omurgası)
+      wakeFoamLineRef.current = L.polyline(wakePoints, {
+        color: "#ffffff",
+        weight: 3,
+        opacity: 0.85,
+        dashArray: "8, 5",
+        lineCap: "round"
+      }).addTo(map);
+
+      // 4. Moving Ferry Marker with Animated Stern Propeller Wash
       const curLat = originCoord[0] + (destCoord[0] - originCoord[0]) * progressRatio;
       const curLng = originCoord[1] + (destCoord[1] - originCoord[1]) * progressRatio;
 
       const singleVesselIcon = L.divIcon({
         className: "live-tracked-vessel-marker",
         html: `
-          <div style="transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center;">
-            <div style="position: relative; width: 44px; height: 44px; border-radius: 50%; background: #0284c7; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 20px #0284c7; border: 3px solid #ffffff;">
+          <div style="transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; position: relative;">
+            <!-- Stern Nautical Propeller Wash Ripple -->
+            <div style="position: absolute; top: 22px; left: 50%; transform: translate(-50%, -50%); width: 56px; height: 56px; border-radius: 50%; background: radial-gradient(circle, rgba(56,189,248,0.45) 0%, rgba(56,189,248,0) 70%); pointer-events: none; z-index: 1;"></div>
+
+            <div style="position: relative; width: 44px; height: 44px; border-radius: 50%; background: #0284c7; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 24px #0284c7; border: 3px solid #ffffff; z-index: 2;">
               <span style="font-size: 20px;">🚢</span>
-              <span style="position: absolute; inset: -6px; border-radius: 50%; border: 2px solid #38bdf8; animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite; opacity: 0.7;"></span>
+              <span style="position: absolute; inset: -6px; border-radius: 50%; border: 2px solid #38bdf8; animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite; opacity: 0.75;"></span>
             </div>
-            <div style="margin-top: 6px; background: rgba(15, 23, 42, 0.95); border: 2px solid #38bdf8; border-radius: 8px; padding: 3px 8px; color: #ffffff; font-family: monospace; font-weight: 900; font-size: 11px; white-space: nowrap; box-shadow: 0 4px 14px rgba(0,0,0,0.6); display: flex; align-items: center; gap: 4px;">
+            <div style="margin-top: 6px; background: rgba(15, 23, 42, 0.95); border: 2px solid #38bdf8; border-radius: 8px; padding: 3px 8px; color: #ffffff; font-family: monospace; font-weight: 900; font-size: 11px; white-space: nowrap; box-shadow: 0 4px 14px rgba(0,0,0,0.6); display: flex; align-items: center; gap: 4px; z-index: 2;">
               <span style="color: #ffffff;">${vesselName}</span>
               <span style="color: #4ade80; background: rgba(74,222,128,0.15); padding: 1px 4px; border-radius: 4px;">${currentSpeed} kn</span>
             </div>
@@ -192,22 +234,38 @@ export function MarineAisRadarModal({
       mapInstanceRef.current.remove();
       mapInstanceRef.current = null;
       vesselMarkerRef.current = null;
+      wakePolylineRef.current = null;
+      wakeFoamLineRef.current = null;
+      wakeHistoryRef.current = [];
     }
   }, [isOpen]);
 
-  // Live simulation: Glide ferry smoothly along the route line like subway tracker
+  // Live simulation: Glide ferry smoothly along the route line & extend nautical wake trail
   useEffect(() => {
     if (!isOpen || !isConfirmedUnderway) return;
 
     const interval = setInterval(() => {
       setProgressRatio((prev) => {
         const next = prev >= 0.95 ? 0.05 : prev + 0.015;
+        const newLat = originCoord[0] + (destCoord[0] - originCoord[0]) * next;
+        const newLng = originCoord[1] + (destCoord[1] - originCoord[1]) * next;
+
         // Update marker position on map if initialized
         if (vesselMarkerRef.current) {
-          const newLat = originCoord[0] + (destCoord[0] - originCoord[0]) * next;
-          const newLng = originCoord[1] + (destCoord[1] - originCoord[1]) * next;
           vesselMarkerRef.current.setLatLng([newLat, newLng]);
         }
+
+        // Update Nautical Wake Trail (Dümen Suyu İzi)
+        if (wakePolylineRef.current && wakeFoamLineRef.current) {
+          const currentWake = [...wakeHistoryRef.current, [newLat, newLng] as [number, number]];
+          if (currentWake.length > 18) {
+            currentWake.shift();
+          }
+          wakeHistoryRef.current = currentWake;
+          wakePolylineRef.current.setLatLngs(currentWake);
+          wakeFoamLineRef.current.setLatLngs(currentWake);
+        }
+
         return next;
       });
 
@@ -254,17 +312,32 @@ export function MarineAisRadarModal({
               </div>
             </div>
 
-            <button
-              onClick={onClose}
-              className="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center transition-colors cursor-pointer shrink-0"
-            >
-              <X size={16} />
-            </button>
+            <div className="flex items-center gap-2 shrink-0">
+              <button
+                type="button"
+                onClick={() => setShowVesselProfile(!showVesselProfile)}
+                className={`px-2.5 py-1.5 rounded-xl text-xs font-bold border transition-colors flex items-center gap-1.5 cursor-pointer ${
+                  showVesselProfile
+                    ? "bg-blue-600 border-blue-400 text-white"
+                    : "bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700"
+                }`}
+              >
+                <Eye size={13} />
+                <span className="hidden sm:inline">Gemi Mimarisi</span>
+              </button>
+
+              <button
+                onClick={onClose}
+                className="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center transition-colors cursor-pointer shrink-0"
+              >
+                <X size={16} />
+              </button>
+            </div>
           </div>
 
           {/* Metro-Style Linear Progress Bar */}
-          <div className="px-4 py-2.5 bg-slate-950/80 border-b border-slate-800 shrink-0">
-            <div className="flex items-center justify-between text-xs font-bold text-slate-300 mb-1.5">
+          <div className="px-4 py-2 bg-slate-950/80 border-b border-slate-800 shrink-0">
+            <div className="flex items-center justify-between text-xs font-bold text-slate-300 mb-1">
               <span className="flex items-center gap-1 text-blue-400">
                 <Anchor size={12} /> {origin}
               </span>
@@ -283,7 +356,7 @@ export function MarineAisRadarModal({
             </div>
           </div>
 
-          {/* Interactive Leaflet Map Container */}
+          {/* Interactive Leaflet Map Container with Wake Animation */}
           <div className="relative flex-1 min-h-[300px] sm:min-h-[360px] bg-slate-950">
             <div ref={mapContainerRef} className="w-full h-full min-h-[300px] sm:min-h-[360px]" />
 
@@ -301,10 +374,52 @@ export function MarineAisRadarModal({
                 <span className="text-slate-400">Kalan Mesafe:</span>
                 <strong className="text-amber-300">{remainingMiles} Deniz Mili</strong>
               </div>
+              <div className="flex items-center justify-between gap-3 pt-1 border-t border-slate-800 text-[10px]">
+                <span className="text-cyan-400 flex items-center gap-1">
+                  <Waves size={11} className="animate-pulse" /> Dümen Suyu:
+                </span>
+                <span className="text-cyan-200">Canlı Rota İzi</span>
+              </div>
             </div>
+
+            {/* Toggleable Vessel Architecture Silhouette Overlay */}
+            {showVesselProfile && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                className="absolute inset-x-3 bottom-3 z-[450] bg-slate-900/95 backdrop-blur-md rounded-2xl border border-slate-700 p-3 shadow-2xl space-y-2"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-black text-white">
+                      🚢 {vesselName} • {visualProfile.categoryTitle}
+                    </span>
+                    <span className="text-[10px] px-2 py-0.2 rounded-full bg-blue-500/20 text-blue-300 font-bold">
+                      {visualProfile.categoryBadge}
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => setShowVesselProfile(false)}
+                    className="text-slate-400 hover:text-white text-xs cursor-pointer"
+                  >
+                    ✕ Kapat
+                  </button>
+                </div>
+                <div className="h-24 sm:h-28 bg-slate-950/90 rounded-xl p-1 border border-slate-800 flex items-center justify-center">
+                  <VesselSilhouetteGraphic category={visualProfile.category} vesselName={vesselName} />
+                </div>
+                <div className="grid grid-cols-4 gap-2 text-center font-mono text-[10px] text-slate-300">
+                  <div className="p-1 rounded bg-slate-800/80">Boy: <strong>{visualProfile.lengthMeters}m</strong></div>
+                  <div className="p-1 rounded bg-slate-800/80">En: <strong>{visualProfile.beamMeters}m</strong></div>
+                  <div className="p-1 rounded bg-slate-800/80">Sürat: <strong>{visualProfile.speedKnots} kn</strong></div>
+                  <div className="p-1 rounded bg-slate-800/80">Kapasite: <strong>{capacityPax} Kişi</strong></div>
+                </div>
+              </motion.div>
+            )}
           </div>
 
-          {/* Official Maritime Registry Verification Card (İSPAT & GERÇEK BİLGİLER) */}
+          {/* Official Maritime Registry Verification Card */}
           <div className="p-4 border-t border-slate-800 bg-slate-950/95 shrink-0 space-y-2.5">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -344,7 +459,7 @@ export function MarineAisRadarModal({
             </div>
 
             <p className="text-[10px] text-slate-400 leading-tight">
-              💡 Bu seferde hizmet veren <strong>{vesselName}</strong> gemisi, T.C. Ulaştırma Bakanlığı ve Kıyı Emniyeti Genel Müdürlüğü AIS (Otomatik Tanımlama Sistemi) üzerinden doğrulanabilir resmi deniz aracıdır.
+              💡 Bu seferde hizmet veren <strong>{vesselName}</strong> gemisi, T.C. Ulaştırma Bakanlığı ve Kıyı Emniyeti Genel Müdürlüğü AIS üzerinden izlenmektedir. Haritadaki açık mavi köpük izi geminin anlık dümen suyunu (wake trail) gösterir.
             </p>
           </div>
         </motion.div>

@@ -34,6 +34,8 @@ import { useWalkingCatchStore } from "@/store/useWalkingCatchStore";
 import { MooringTelemetryCard } from "@/components/schedule/MooringTelemetryCard";
 import { TurnstileCheckBanner } from "@/components/turnstile/TurnstileCheckBanner";
 import { getOfficialRouteFare } from "@/lib/data/official-fares";
+import { VesselVisualCard } from "@/components/vessel/VesselVisualCard";
+import { BerthTurnaroundIndicator } from "@/components/schedule/BerthTurnaroundIndicator";
 
 interface TripDetailsSheetProps {
   schedule: ScheduleCardDto | null;
@@ -260,6 +262,18 @@ export function TripDetailsSheet({ schedule, isOpen, onClose, serverTimeIso }: T
               />
             </div>
 
+            {/* İskelede Kalacak Süre & Biniş Vakti Sayacı */}
+            <div className="mb-3">
+              <BerthTurnaroundIndicator
+                originPier={dynState?.currentOrigin || schedule.origin}
+                destinationPier={dynState?.destination || schedule.destination}
+                vesselName={liveVessel.vesselName}
+                status={dynState?.status || schedule.status}
+                countdown={dynState?.countdown}
+                isDeparted={dynState?.isDeparted}
+              />
+            </div>
+
             {/* Resmi UKOME Yasal Ücret Doğrulama Kartı */}
             {(() => {
               const fareInfo = getOfficialRouteFare(schedule.origin, schedule.destination);
@@ -370,6 +384,18 @@ export function TripDetailsSheet({ schedule, isOpen, onClose, serverTimeIso }: T
                   </p>
                 </div>
               </div>
+            </div>
+
+            {/* Vapur Tipi Silueti, Ölçekli Profil ve Gerçek Fotoğraf Önizlemesi */}
+            <div className="mb-3">
+              <VesselVisualCard
+                vesselName={liveVessel.vesselName}
+                operator={schedule.operator}
+                builtYear={liveVessel.builtYear}
+                capacityPax={liveVessel.capacityPax}
+                callSign={liveVessel.callSign}
+                mmsi={liveVessel.mmsi}
+              />
             </div>
 
             {/* Rıhtım Palamar & Canlı Rampa Operasyon Telemetrisi */}

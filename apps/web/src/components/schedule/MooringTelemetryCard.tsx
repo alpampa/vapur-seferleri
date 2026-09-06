@@ -1,6 +1,6 @@
 "use client";
 
-import { Anchor, Ship, Navigation, CheckCircle2, AlertCircle, DoorOpen } from "lucide-react";
+import { Anchor, Ship, Navigation, CheckCircle2, AlertCircle, DoorOpen, Clock, Footprints } from "lucide-react";
 
 interface MooringTelemetryCardProps {
   vesselName: string;
@@ -27,6 +27,15 @@ export function MooringTelemetryCard({
       remainingSec = parts[0] * 60 + parts[1];
     }
   }
+
+  const isIsland = originPier.includes("Ada") || destinationPier.includes("Ada");
+  const totalBerthWindowSec = isIsland ? 300 : 240;
+  const isAtBerth = !isDeparted && status !== "IN_TRANSIT" && remainingSec > 0 && remainingSec <= totalBerthWindowSec;
+
+  const dwellSec = isAtBerth ? remainingSec : 0;
+  const dwellMins = Math.floor(dwellSec / 60);
+  const dwellRemainderSec = dwellSec % 60;
+  const formattedDwell = `${String(dwellMins).padStart(2, "0")}:${String(dwellRemainderSec).padStart(2, "0")}`;
 
   // Mooring Telemetry State Calculation
   let distanceMeters = 0;
@@ -112,6 +121,32 @@ export function MooringTelemetryCard({
           </strong>
         </div>
       </div>
+
+      {/* İskelede Kalacak Süre (Berth Turnaround Countdown) Section */}
+      {isAtBerth ? (
+        <div className="p-2.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <div className={`w-7 h-7 rounded-lg flex items-center justify-center ${dwellSec <= 60 ? "bg-rose-500/20 text-rose-400" : "bg-emerald-500/20 text-emerald-400"}`}>
+              <Clock size={15} className={dwellSec <= 60 ? "animate-pulse" : ""} />
+            </div>
+            <div>
+              <span className="text-[9px] font-mono text-cyan-400 uppercase tracking-wider block">
+                İSKELEDE KALACAK SÜRE (DWELL TIME)
+              </span>
+              <span className="text-[11px] font-bold text-slate-200">
+                {dwellSec <= 60 ? "🚨 Kapılar Kapanıyor / Acele Edin" : "Turnikelerden Biniş Serbest"}
+              </span>
+            </div>
+          </div>
+
+          <div className="text-right">
+            <span className={`text-base font-mono font-black tabular-nums ${dwellSec <= 60 ? "text-rose-400 animate-pulse" : "text-emerald-400"}`}>
+              {formattedDwell}
+            </span>
+            <span className="text-[9px] font-bold text-slate-400 block">Kalan Vakit</span>
+          </div>
+        </div>
+      ) : null}
 
       {/* Visual Mooring Pier Dock Diagram */}
       <div className="p-2.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between gap-3">
