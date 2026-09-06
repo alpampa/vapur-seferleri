@@ -112,3 +112,17 @@ body {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
+
+/* Leaflet dark radar and clean marker overrides */
+.leaflet-container {
+  background: #090e1a !important;
+  font-family: inherit !important;
+}
+
+.clean-pier-marker,
+.clean-ship-marker {
+  background: transparent !important;
+  border: none !important;
+  overflow: visible !important;
+}
+

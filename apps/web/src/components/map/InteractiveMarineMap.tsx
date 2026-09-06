@@ -60,10 +60,15 @@ export function InteractiveMarineMap({
         touchZoom: interactive
       });
 
-      // Sleek Dark Matter Maritime Tiles (CartoDB Dark)
-      L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
-        subdomains: "abcd",
-        maxZoom: 19
+      // High-performance Esri Dark Maritime Base + Reference tiles (Zero API key, zero watermarks)
+      L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}", {
+        maxZoom: 16,
+        attribution: ""
+      }).addTo(map);
+
+      L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}", {
+        maxZoom: 16,
+        attribution: ""
       }).addTo(map);
 
       // Create Pier Markers
