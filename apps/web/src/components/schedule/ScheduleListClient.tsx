@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import { ScheduleCard } from "@/components/schedule/ScheduleCard";
 import { TripDetailsSheet } from "@/components/schedule/TripDetailsSheet";
 import type { ScheduleCardDto } from "@/app/page";
-import { Search, Navigation, ArrowLeftRight, Compass, MapPin, LayoutGrid, List } from "lucide-react";
+import { Search, Navigation, ArrowLeftRight, Compass, MapPin, LayoutGrid, List, WifiOff, Footprints, Waves } from "lucide-react";
 import { MarineWeatherBanner } from "@/components/weather/MarineWeatherBanner";
 import type { MarineWeatherStatus } from "@/lib/services/marine-weather";
 import { resolveDynamicTrip } from "@/lib/utils/dynamic-trip";
@@ -14,6 +14,10 @@ import { LastFerryAlert } from "@/components/schedule/LastFerryAlert";
 import { FavoritesWidget } from "@/components/schedule/FavoritesWidget";
 import { OperatorLogo } from "@/components/ui/OperatorLogo";
 import { useLanguageStore } from "@/store/useLanguageStore";
+import { useOfflineSync } from "@/hooks/useOfflineSync";
+import { MarineWeatherHUD } from "@/components/weather/MarineWeatherHUD";
+import { CatchFerryAssistant } from "@/components/planner/CatchFerryAssistant";
+import { LiveTripTrackerBar } from "@/components/schedule/LiveTripTrackerBar";
 
 // Istanbul Ferry Pier Coordinates (Latitude, Longitude)
 const PIER_COORDINATES: Record<string, { lat: number; lng: number; label: string }> = {
@@ -67,6 +71,9 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather }: 
   const [showPlanner, setShowPlanner] = useState<boolean>(false);
   const [onlyImminent, setOnlyImminent] = useState<boolean>(false);
   const [isCompactDensity, setIsCompactDensity] = useState<boolean>(false);
+  const { isOnline } = useOfflineSync();
+  const [showMarineHUD, setShowMarineHUD] = useState<boolean>(false);
+  const [showCatchAssistant, setShowCatchAssistant] = useState<boolean>(false);
 
   // Offline LocalStorage Caching
   const [effectiveSchedules, setEffectiveSchedules] = useState<ScheduleCardDto[]>(schedules);
@@ -262,6 +269,23 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather }: 
     <>
       <AlarmManager schedules={effectiveSchedules} />
 
+      {/* Offline Alert Banner */}
+      {!isOnline && (
+        <div className="px-3 pt-2">
+          <div className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-600 dark:text-amber-400 text-xs font-bold flex items-center justify-between gap-2 shadow-xs">
+            <span className="flex items-center gap-2">
+              <WifiOff size={15} className="shrink-0 text-amber-500" />
+              <span>
+                {language === "en" 
+                  ? "Offline Mode: Showing cached ferry timetables." 
+                  : "Çevrimdışı Mod: Kaydedilmiş vapur seferleri gösteriliyor."}
+              </span>
+            </span>
+            <span className="text-[10px] px-2 py-0.5 rounded bg-amber-500/20 font-mono font-bold shrink-0">OFFLINE</span>
+          </div>
+        </div>
+      )}
+
       {/* Marine Weather Report (Discreet 1-line chip or alert if storm) */}
       <MarineWeatherBanner weather={marineWeather} />
 
@@ -375,6 +399,36 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather }: 
               {geoStatus === "LOCATING" ? "..." : geoStatus === "ACTIVE" && nearestPier ? nearestPier.name : t("nearestPier")}
             </span>
           </button>
+
+          {/* Vapura Yetişme Asistanı Toggle */}
+          <button
+            onClick={() => setShowCatchAssistant(!showCatchAssistant)}
+            title="Vapura Yetişme ve Yürüme Asistanı"
+            className={`px-2.5 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap flex items-center gap-1 shrink-0 transition-colors shadow-2xs border ${
+              showCatchAssistant
+                ? "bg-emerald-600 text-white border-emerald-500"
+                : "bg-white hover:bg-slate-100 dark:bg-slate-900 dark:hover:bg-slate-800 text-emerald-700 dark:text-emerald-300 border-slate-300 dark:border-slate-700/80"
+            }`}
+          >
+            <Footprints size={13} className={showCatchAssistant ? "animate-pulse text-white" : "text-emerald-500"} />
+            <span className="hidden sm:inline">Yetişme Asistanı</span>
+            <span className="sm:hidden">Yetiş</span>
+          </button>
+
+          {/* Deniz Durumu & Dalga HUD Toggle */}
+          <button
+            onClick={() => setShowMarineHUD(!showMarineHUD)}
+            title="Canlı Boğaz & Rıhtım Deniz Durumu"
+            className={`px-2.5 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap flex items-center gap-1 shrink-0 transition-colors shadow-2xs border ${
+              showMarineHUD
+                ? "bg-indigo-600 text-white border-indigo-500"
+                : "bg-white hover:bg-slate-100 dark:bg-slate-900 dark:hover:bg-slate-800 text-indigo-700 dark:text-indigo-300 border-slate-300 dark:border-slate-700/80"
+            }`}
+          >
+            <Waves size={13} className={showMarineHUD ? "animate-pulse text-white" : "text-indigo-500"} />
+            <span className="hidden sm:inline">Deniz Durumu</span>
+            <span className="sm:hidden">Deniz</span>
+          </button>
         </div>
       </div>
 
@@ -386,6 +440,20 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather }: 
             serverTimeIso={serverTimeIso}
             onClose={() => setShowPlanner(false)}
           />
+        </div>
+      )}
+
+      {/* Marine Weather HUD */}
+      {showMarineHUD && (
+        <div className="px-3 pt-2 animate-fadeIn">
+          <MarineWeatherHUD pier={selectedOrigin !== "ALL" ? selectedOrigin : (nearestPier?.name || "Kadıköy")} />
+        </div>
+      )}
+
+      {/* Walking Catch Assistant */}
+      {showCatchAssistant && (
+        <div className="px-3 pt-2 animate-fadeIn">
+          <CatchFerryAssistant currentPier={selectedOrigin !== "ALL" ? selectedOrigin : (nearestPier?.name || "Kadıköy")} />
         </div>
       )}
 
@@ -562,6 +630,9 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather }: 
           </div>
         )}
       </div>
+
+      {/* Persistent Live Activity Bar (Sticky Bottom) */}
+      <LiveTripTrackerBar />
 
       {/* Bottom Sheet for Trip Details with AIS Live Radar & IBB Pier Camera */}
       <TripDetailsSheet

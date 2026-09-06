@@ -1,6 +1,6 @@
 "use client";
 
-import { Ship, Bell, BellRing, Star, ChevronRight, Radio } from "lucide-react";
+import { Ship, Bell, BellRing, Star, ChevronRight, Radio, Footprints } from "lucide-react";
 import { OperatorLogo } from "@/components/ui/OperatorLogo";
 import { resolveLiveVesselName } from "@/lib/agents/fleet-registry";
 import { useEffect, useState } from "react";
@@ -10,6 +10,9 @@ import { useFavoritesStore } from "@/store/useFavoritesStore";
 import { useLanguageStore } from "@/store/useLanguageStore";
 import { requestNotificationPermission } from "@/lib/utils/sound";
 import { predictTripOccupancy } from "@/lib/utils/occupancy";
+import { useWalkingCatchStore } from "@/store/useWalkingCatchStore";
+import { useActiveVoyageStore } from "@/store/useActiveVoyageStore";
+import { ISTANBUL_PIERS } from "@/lib/services/route-planner";
 
 export type TripStatus = "ON_TIME" | "DEPARTING_SOON" | "BOARDING" | "DELAYED" | "CANCELLED" | "IN_TRANSIT" | "ARRIVING" | "COMPLETED";
 
@@ -143,9 +146,51 @@ export function ScheduleCard(props: ScheduleCardProps) {
   // KULLANICI KURALI: Son 5 dakikada sefer saati de yanıp sönsün
   const isLast5Minutes = !!dynState.countdown && !dynState.isDeparted;
 
+  // Profesyonel Yetişme Asistanı Entegrasyonu
+  const { isEnabled: isCatchEnabled, getWalkingMinutesToPier } = useWalkingCatchStore();
+  const { setActiveVoyage } = useActiveVoyageStore();
+
+  const pierEntry = Object.entries(ISTANBUL_PIERS).find(([key]) => dynState.currentOrigin.toLowerCase().includes(key.toLowerCase()));
+  const walkingMinutes = isCatchEnabled ? getWalkingMinutesToPier(pierEntry?.[1].lat, pierEntry?.[1].lng) : 0;
+
+  let catchStatus: "CAN_CATCH" | "HURRY" | "MISS" | null = null;
+  let catchStatusText = "";
+  if (isCatchEnabled && !dynState.isDeparted) {
+    let remainingMins = 999;
+    if (dynState.countdown) {
+      const parts = dynState.countdown.split(':').map(Number);
+      if (parts.length === 2) remainingMins = parts[0] + parts[1] / 60;
+    }
+    if (remainingMins >= walkingMinutes + 2) {
+      catchStatus = "CAN_CATCH";
+      catchStatusText = `Yetişirsiniz (~${walkingMinutes} dk)`;
+    } else if (remainingMins >= walkingMinutes - 1) {
+      catchStatus = "HURRY";
+      catchStatusText = `Hızlı yürüyün! (~${walkingMinutes} dk)`;
+    } else {
+      catchStatus = "MISS";
+      catchStatusText = `Kaçırabilirsiniz`;
+    }
+  }
+
+  const handleCardClick = () => {
+    setActiveVoyage({
+      id: props.id,
+      origin: dynState.currentOrigin,
+      destination: dynState.destination,
+      operator: props.operator,
+      vesselName: liveVessel.vesselName,
+      mmsi: liveVessel.mmsi,
+      departureTime: dynState.currentDepartureTime,
+      arrivalTime: props.arrivalTime || "",
+      price: props.price
+    });
+    if (props.onClick) props.onClick();
+  };
+
   return (
     <div
-      onClick={props.onClick}
+      onClick={handleCardClick}
       className={`bg-white dark:bg-[#141d2e] hover:bg-slate-50 dark:hover:bg-[#1c283f] rounded-xl px-3 py-2.5 flex items-center justify-between gap-2.5 text-slate-900 dark:text-white shadow-xs dark:shadow-none transition-all duration-150 cursor-pointer group border ${
         isLast5Minutes
           ? "border-amber-400 dark:border-amber-500/60 shadow-sm shadow-amber-400/20 ring-1 ring-amber-400/30"
@@ -249,6 +294,23 @@ export function ScheduleCard(props: ScheduleCardProps) {
           <span className="text-slate-500 dark:text-slate-400 text-[10px]">
             {isDirect ? t("direct") : `${props.stops?.length} ${t("stops")}`}
           </span>
+
+          {/* Walking Catch Status Badge */}
+          {catchStatus && (
+            <>
+              <span className="text-slate-300 dark:text-slate-600 font-bold">•</span>
+              <span className={`inline-flex items-center gap-1 text-[9px] font-black px-1.5 py-0.2 rounded border ${
+                catchStatus === "CAN_CATCH"
+                  ? "bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-300 border-emerald-300 dark:border-emerald-600/40"
+                  : catchStatus === "HURRY"
+                  ? "bg-amber-50 dark:bg-amber-950/70 text-amber-700 dark:text-amber-300 border-amber-300 dark:border-amber-600/40 animate-pulse"
+                  : "bg-rose-50 dark:bg-rose-950/70 text-rose-700 dark:text-rose-300 border-rose-300 dark:border-rose-600/40"
+              }`}>
+                <Footprints size={9} />
+                <span>{catchStatusText}</span>
+              </span>
+            </>
+          )}
         </div>
       </div>
 

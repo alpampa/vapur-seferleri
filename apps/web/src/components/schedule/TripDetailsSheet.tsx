@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { Ship, MapPin, Clock, X, ChevronRight, Anchor, ShieldCheck, Ticket, Users, Train, Star, Bell, BellRing, Navigation, Radar, Camera } from "lucide-react";
+import { Ship, MapPin, Clock, X, ChevronRight, Anchor, ShieldCheck, Ticket, Users, Train, Star, Bell, BellRing, Navigation, Radar, Camera, Footprints, Pin } from "lucide-react";
 import { MarineAisRadarModal } from "@/components/map/MarineAisRadarModal";
 import { PierLiveCameraModal } from "@/components/map/PierLiveCameraModal";
 import { OperatorLogo } from "@/components/ui/OperatorLogo";
@@ -15,6 +15,8 @@ import { useEffect, useState } from "react";
 import { useAlarmStore } from "@/store/useAlarmStore";
 import { useFavoritesStore } from "@/store/useFavoritesStore";
 import { requestNotificationPermission } from "@/lib/utils/sound";
+import { useActiveVoyageStore } from "@/store/useActiveVoyageStore";
+import { useWalkingCatchStore } from "@/store/useWalkingCatchStore";
 
 interface TripDetailsSheetProps {
   schedule: ScheduleCardDto | null;
@@ -26,6 +28,7 @@ interface TripDetailsSheetProps {
 export function TripDetailsSheet({ schedule, isOpen, onClose, serverTimeIso }: TripDetailsSheetProps) {
   const { isAlarmSet, toggleAlarm } = useAlarmStore();
   const { isFavorite, toggleFavorite } = useFavoritesStore();
+  const { setActiveVoyage } = useActiveVoyageStore();
 
   const [dynState, setDynState] = useState<DynamicTripResolution | null>(null);
   const [isRadarOpen, setIsRadarOpen] = useState(false);
@@ -156,6 +159,27 @@ export function TripDetailsSheet({ schedule, isOpen, onClose, serverTimeIso }: T
                   ) : (
                     <Bell size={16} />
                   )}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setActiveVoyage({
+                      id: schedule.id,
+                      origin: dynState?.currentOrigin || schedule.origin,
+                      destination: dynState?.destination || schedule.destination,
+                      operator: schedule.operator,
+                      vesselName: liveVessel.vesselName,
+                      mmsi: liveVessel.mmsi,
+                      departureTime: dynState?.currentDepartureTime || schedule.departureTime,
+                      arrivalTime: schedule.arrivalTime || "",
+                      price: schedule.price
+                    });
+                  }}
+                  title="Canlı Takip Çubuğuna Sabitle"
+                  className="p-2 rounded-xl bg-blue-600/20 hover:bg-blue-600/40 text-blue-400 border border-blue-500/40 transition-all"
+                >
+                  <Pin size={16} />
                 </button>
 
                 <button 

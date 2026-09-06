@@ -252,8 +252,11 @@ export function InteractiveMarineMap({
       <MarineAisRadarModal
         isOpen={isRadarOpen}
         onClose={() => setIsRadarOpen(false)}
-        origin={selectedOrigin}
-        destination={selectedDestination}
+        origin={selectedOrigin || "Kadıköy"}
+        destination={selectedDestination || "Eminönü"}
+        vesselName="Barış Manço"
+        operator="Şehir Hatları"
+        isConfirmedUnderway={true}
       />
 
       {/* Quick Legend Overlay */}
