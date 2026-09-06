@@ -126,3 +126,108 @@ body {
   overflow: visible !important;
 }
 
+
+
+/* ==========================================================================
+   6 PROFESYONEL ULUSLARARASI TASARIM SİSTEMİ CSS DEĞİŞKENLERİ
+   ========================================================================== */
+
+:root, [data-theme="deep-navy"] {
+  --app-bg: #070e1e;
+  --app-surface: #0f172a;
+  --app-card: #0f172a;
+  --app-card-hover: #17243b;
+  --app-border: #1e293b;
+  --app-text: #f8fafc;
+  --app-text-muted: #94a3b8;
+  --app-accent: #2563eb;
+  --background: #070e1e;
+  --foreground: #f8fafc;
+}
+
+[data-theme="nordic-clean"] {
+  --app-bg: #f8fafc;
+  --app-surface: #ffffff;
+  --app-card: #ffffff;
+  --app-card-hover: #f1f5f9;
+  --app-border: #e2e8f0;
+  --app-text: #0f172a;
+  --app-text-muted: #64748b;
+  --app-accent: #0284c7;
+  --background: #f8fafc;
+  --foreground: #0f172a;
+}
+
+[data-theme="heritage-brass"] {
+  --app-bg: #faf7f2;
+  --app-surface: #f4ecdf;
+  --app-card: #ffffff;
+  --app-card-hover: #fdfbf7;
+  --app-border: #e7d8c5;
+  --app-text: #292524;
+  --app-text-muted: #78716c;
+  --app-accent: #b45309;
+  --background: #faf7f2;
+  --foreground: #292524;
+}
+
+[data-theme="cyber-radar"] {
+  --app-bg: #000000;
+  --app-surface: #060b17;
+  --app-card: #081220;
+  --app-card-hover: #0f1e33;
+  --app-border: rgba(16, 185, 129, 0.4);
+  --app-text: #ecfdf5;
+  --app-text-muted: #6ee7b7;
+  --app-accent: #10b981;
+  --background: #000000;
+  --foreground: #ecfdf5;
+}
+
+[data-theme="golden-hour"] {
+  --app-bg: #140d28;
+  --app-surface: #1e1338;
+  --app-card: #251644;
+  --app-card-hover: #321c5b;
+  --app-border: rgba(245, 158, 11, 0.35);
+  --app-text: #fffbeb;
+  --app-text-muted: #fcd34d;
+  --app-accent: #f59e0b;
+  --background: #140d28;
+  --foreground: #fffbeb;
+}
+
+[data-theme="aegean-emerald"] {
+  --app-bg: #f0fdf4;
+  --app-surface: #ffffff;
+  --app-card: #ffffff;
+  --app-card-hover: #f0fdf4;
+  --app-border: #bbf7d0;
+  --app-text: #064e3b;
+  --app-text-muted: #047857;
+  --app-accent: #059669;
+  --background: #f0fdf4;
+  --foreground: #064e3b;
+}
+
+/* Dynamic theme helper classes */
+.theme-app-shell {
+  background-color: var(--app-bg, var(--background)) !important;
+  color: var(--app-text, var(--foreground)) !important;
+}
+
+.theme-card {
+  background-color: var(--app-card) !important;
+  border-color: var(--app-border) !important;
+  color: var(--app-text) !important;
+}
+
+.theme-card:hover {
+  background-color: var(--app-card-hover) !important;
+}
+
+.theme-surface {
+  background-color: var(--app-surface) !important;
+  border-color: var(--app-border) !important;
+  color: var(--app-text) !important;
+}

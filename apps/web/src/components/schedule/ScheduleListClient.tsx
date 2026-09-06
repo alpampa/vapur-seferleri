@@ -4,7 +4,10 @@ import { useState, useEffect, useMemo } from "react";
 import { ScheduleCard } from "@/components/schedule/ScheduleCard";
 import { TripDetailsSheet } from "@/components/schedule/TripDetailsSheet";
 import type { ScheduleCardDto } from "@/app/page";
-import { Search, Navigation, ArrowLeftRight, Compass, MapPin, LayoutGrid, List, WifiOff, Footprints, Waves } from "lucide-react";
+import { Search, Navigation, ArrowLeftRight, Compass, MapPin, LayoutGrid, List, WifiOff, Footprints, Waves, Landmark, Tag, Sparkles, X, RotateCcw } from "lucide-react";
+import { matchesTurkishSearch } from "@/lib/utils/search-normalizer";
+import { AdalarHeritageModal } from "@/components/adalar/AdalarHeritageModal";
+import { SponsoredDealsModal } from "@/components/commercial/SponsoredDealsModal";
 import { MarineWeatherBanner } from "@/components/weather/MarineWeatherBanner";
 import type { MarineWeatherStatus } from "@/lib/services/marine-weather";
 import { resolveDynamicTrip } from "@/lib/utils/dynamic-trip";
@@ -68,13 +71,16 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
   const [selectedRoute, setSelectedRoute] = useState<string>("ALL");
   const [selectedOrigin, setSelectedOrigin] = useState<string>(initialOrigin || "ALL");
   const [selectedOperator, setSelectedOperator] = useState<string>("ALL");
-  const [searchQuery, setSearchQuery] = useState<string>(" ");
+  const [searchQuery, setSearchQuery] = useState<string>("");
   const [showPlanner, setShowPlanner] = useState<boolean>(false);
   const [onlyImminent, setOnlyImminent] = useState<boolean>(false);
   const [isCompactDensity, setIsCompactDensity] = useState<boolean>(false);
   const { isOnline } = useOfflineSync();
   const [showMarineHUD, setShowMarineHUD] = useState<boolean>(false);
   const [showCatchAssistant, setShowCatchAssistant] = useState<boolean>(false);
+  const [isAdalarModalOpen, setIsAdalarModalOpen] = useState<boolean>(false);
+  const [isSponsoredModalOpen, setIsSponsoredModalOpen] = useState<boolean>(false);
+  const [isSearchVisible, setIsSearchVisible] = useState<boolean>(true);
 
   // Offline LocalStorage Caching
   const [effectiveSchedules, setEffectiveSchedules] = useState<ScheduleCardDto[]>(schedules);
@@ -227,13 +233,13 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
     const q = searchQuery.toLowerCase().trim();
 
     return activeSchedulesWithDyn.filter(({ schedule, dyn }) => {
-      // Eğer arama kutusuna yazı yazılmışsa: Kategori, Hat ve İskele kısıtlamalarını esnetip GLOBAL arama yapar
+      // GLOBAL VE TÜRKÇE KARAKTERE DUYARLI ARAMA (İ/I/ı/i, ş/s, ç/c, ğ/g, ü/u, ö/o tam uyumlu)
       if (hasSearch) {
-        const inOrigin = schedule.origin.toLowerCase().includes(q) || dyn.currentOrigin.toLowerCase().includes(q);
-        const inDest = schedule.destination.toLowerCase().includes(q);
-        const inOperator = schedule.operator.toLowerCase().includes(q);
-        const inRoute = schedule.routeTitle?.toLowerCase().includes(q);
-        const inStops = schedule.stops?.some((st) => st.name.toLowerCase().includes(q));
+        const inOrigin = matchesTurkishSearch(schedule.origin, q) || matchesTurkishSearch(dyn.currentOrigin, q);
+        const inDest = matchesTurkishSearch(schedule.destination, q);
+        const inOperator = matchesTurkishSearch(schedule.operator, q);
+        const inRoute = matchesTurkishSearch(schedule.routeTitle, q);
+        const inStops = schedule.stops?.some((st) => matchesTurkishSearch(st.name, q));
         if (!inOrigin && !inDest && !inOperator && !inRoute && !inStops) return false;
       } else {
         if (selectedOrigin !== "ALL") {
@@ -349,29 +355,42 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
         </div>
       </div>
 
-      {/* Unified Compact Search & Action Row */}
+      {/* Hızlı Kültür & Sponsorluk & Araç Butonları Çubuğu */}
       <div className="px-3 pt-2">
-        <div className="flex items-center gap-1.5">
-          {/* Search Input */}
-          <div className="relative flex-1">
-            <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
-            <input
-              type="text"
-              placeholder={t("searchPlaceholder")}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-8 pr-6 py-1.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700/70 rounded-lg text-slate-900 dark:text-white text-xs placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-blue-500 transition-colors shadow-2xs"
-            />
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery("")}
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400 hover:text-rose-500 dark:hover:text-rose-400 px-1 py-0.5"
-                title="Aramayı Temizle"
-              >
-                ✕
-              </button>
-            )}
-          </div>
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 hide-scrollbar">
+          {/* Adalar Tarihi Miras & Kültür Notaları Butonu */}
+          <button
+            onClick={() => setIsAdalarModalOpen(true)}
+            className="px-2.5 py-1.5 rounded-lg text-xs font-black whitespace-nowrap flex items-center gap-1 shrink-0 bg-amber-50 hover:bg-amber-100 dark:bg-amber-950/40 dark:hover:bg-amber-900/60 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-700/60 shadow-2xs transition-all cursor-pointer"
+            title="Adalar Tarihi Miras, Sürgün Köşkleri ve Ulaşım Rehberi"
+          >
+            <Landmark size={13} className="text-amber-600 dark:text-amber-400" />
+            <span>Adalar Mirası & Rehber</span>
+          </button>
+
+          {/* İskele Ayrıcalıkları & Ticari Sponsorluk Butonu */}
+          <button
+            onClick={() => setIsSponsoredModalOpen(true)}
+            className="px-2.5 py-1.5 rounded-lg text-xs font-black whitespace-nowrap flex items-center gap-1 shrink-0 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:hover:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700/60 shadow-2xs transition-all cursor-pointer"
+            title="Vapur Yolcularına Özel İskele İndirimleri & Yerel Sponsorluk"
+          >
+            <Tag size={13} className="text-emerald-600 dark:text-emerald-400" />
+            <span>İskele Fırsatları</span>
+          </button>
+
+          {/* Arama Çubuğu Göster / Gizle Toggle Butonu */}
+          <button
+            onClick={() => setIsSearchVisible(!isSearchVisible)}
+            className={`px-2.5 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap flex items-center gap-1 shrink-0 border transition-all ${
+              isSearchVisible
+                ? "bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border-blue-300 dark:border-blue-700/60"
+                : "bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-300 dark:border-slate-800"
+            }`}
+            title="Arama Çubuğunu Aç/Kapat"
+          >
+            <Search size={13} />
+            <span>{isSearchVisible ? "Aramayı Gizle" : "İskele Ara"}</span>
+          </button>
 
           {/* Nasıl Giderim & Canlı Harita Toggle Button */}
           <button
@@ -384,8 +403,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
             }`}
           >
             <Compass size={14} className={showPlanner ? "animate-spin text-white" : "text-cyan-600 dark:text-cyan-400"} />
-            <span className="hidden sm:inline">{t("howToGo")}</span>
-            <span className="sm:hidden">{t("map")}</span>
+            <span>{t("howToGo")}</span>
           </button>
 
           {/* En Yakın İskele Geolocation Button */}
@@ -400,11 +418,8 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
             }`}
           >
             <Navigation size={13} className={geoStatus === "ACTIVE" ? "text-white" : "text-blue-600 dark:text-blue-400"} />
-            <span className="hidden sm:inline">
+            <span>
               {geoStatus === "LOCATING" ? t("locating") : geoStatus === "ACTIVE" && nearestPier ? nearestPier.name : t("nearestPier")}
-            </span>
-            <span className="sm:hidden">
-              {geoStatus === "LOCATING" ? "..." : geoStatus === "ACTIVE" && nearestPier ? nearestPier.name : t("nearestPier")}
             </span>
           </button>
 
@@ -419,8 +434,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
             }`}
           >
             <Footprints size={13} className={showCatchAssistant ? "animate-pulse text-white" : "text-emerald-500"} />
-            <span className="hidden sm:inline">Yetişme Asistanı</span>
-            <span className="sm:hidden">Yetiş</span>
+            <span>Yetişme Asistanı</span>
           </button>
 
           {/* Deniz Durumu & Dalga HUD Toggle */}
@@ -434,11 +448,71 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
             }`}
           >
             <Waves size={13} className={showMarineHUD ? "animate-pulse text-white" : "text-indigo-500"} />
-            <span className="hidden sm:inline">Deniz Durumu</span>
-            <span className="sm:hidden">Deniz</span>
+            <span>Deniz Durumu</span>
           </button>
         </div>
       </div>
+
+      {/* Akıllı Arama Çubuğu & Canlı Öneri Rozetleri (İsteğe Bağlı Görünüm) */}
+      {isSearchVisible && (
+        <div className="px-3 pt-2 space-y-1.5">
+          <div className="relative">
+            <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-500" />
+            <input
+              type="text"
+              placeholder="İskele, hat veya vapur adı yazın (Örn: Kadıköy, Bostancı, Büyükada, Paşabahçe)..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-9 pr-8 py-2 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white text-xs placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all shadow-xs"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400 hover:text-rose-500 dark:hover:text-rose-400 p-1"
+                title="Aramayı Temizle"
+              >
+                ✕
+              </button>
+            )}
+          </div>
+
+          {/* Hızlı İskele Öneri Rozetleri */}
+          <div className="flex items-center gap-1 overflow-x-auto pb-0.5 hide-scrollbar">
+            <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 whitespace-nowrap pl-0.5">
+              Hızlı İskeleler:
+            </span>
+            {["Kadıköy", "Bostancı", "Büyükada", "Heybeliada", "Eminönü", "Karaköy", "Beşiktaş", "Kabataş"].map((pier) => (
+              <button
+                key={pier}
+                onClick={() => setSearchQuery(searchQuery === pier ? "" : pier)}
+                className={`px-2 py-0.5 rounded-md text-[10px] font-bold whitespace-nowrap transition-all border ${
+                  searchQuery.toLowerCase().includes(pier.toLowerCase())
+                    ? "bg-blue-600 text-white border-blue-600 shadow-2xs"
+                    : "bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800"
+                }`}
+              >
+                {pier}
+              </button>
+            ))}
+          </div>
+
+          {/* Arama Sonucu Bildirim Rozeti */}
+          {searchQuery.trim().length > 0 && (
+            <div className="p-2 rounded-lg bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800/60 flex items-center justify-between text-xs text-blue-800 dark:text-blue-300">
+              <span>
+                🔍 <strong>\"{searchQuery}\"</strong> araması için <strong>{filteredList.length}</strong> sefer bulundu.
+              </span>
+              <button
+                onClick={() => setSearchQuery("")}
+                className="text-[11px] font-bold text-rose-600 dark:text-rose-400 hover:underline flex items-center gap-1"
+              >
+                <RotateCcw size={11} />
+                <span>Aramayı Sıfırla</span>
+              </button>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Expanded Trip Planner with Live Map */}
       {showPlanner && (
@@ -633,8 +707,29 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
             />
           ))
         ) : (
-          <div className="p-8 text-center text-slate-500 dark:text-slate-400 text-xs bg-white dark:bg-slate-900/50 rounded-2xl border border-slate-200 dark:border-slate-800">
-            {language === "en" ? "No scheduled trips found matching your filters." : "Seçtiğiniz kriterlere uygun aktif sefer bulunamadı."}
+          <div className="p-8 text-center bg-white dark:bg-slate-900/60 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-3 shadow-xs">
+            <div className="text-3xl">⚓</div>
+            <div className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200">
+              {searchQuery.trim().length > 0
+                ? `\"${searchQuery}\" aramasıyla eşleşen aktif vapur seferi bulunamadı.`
+                : language === "en" ? "No scheduled trips found matching your filters." : "Seçtiğiniz kriterlere uygun aktif sefer bulunamadı."}
+            </div>
+            <p className="text-[11px] text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
+              İskele adını kontrol edebilir veya filtreleri sıfırlayarak güncel tüm Boğaz ve Adalar seferlerini görebilirsiniz.
+            </p>
+            <button
+              onClick={() => {
+                setSearchQuery("");
+                setSelectedRoute("ALL");
+                setSelectedOrigin("ALL");
+                setSelectedCategory("ALL");
+                setSelectedOperator("ALL");
+              }}
+              className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-black text-xs shadow-md transition-all cursor-pointer inline-flex items-center gap-1.5"
+            >
+              <RotateCcw size={13} />
+              <span>Filtreleri Sıfırla ve Tüm Seferleri Göster</span>
+            </button>
           </div>
         )}
       </div>
@@ -648,6 +743,22 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
         isOpen={!!selectedSchedule}
         onClose={() => setSelectedSchedule(null)}
         serverTimeIso={serverTimeIso}
+      />
+
+      {/* Adalar Tarihi Miras & Ulaşım Rehberi Modalı */}
+      <AdalarHeritageModal
+        isOpen={isAdalarModalOpen}
+        onClose={() => setIsAdalarModalOpen(false)}
+        onSelectIslandFilter={(islandName) => {
+          setSelectedCategory("ADALAR");
+          setSearchQuery(islandName);
+        }}
+      />
+
+      {/* İskele Ayrıcalıkları & Ticari Sponsorluk Modalı */}
+      <SponsoredDealsModal
+        isOpen={isSponsoredModalOpen}
+        onClose={() => setIsSponsoredModalOpen(false)}
       />
     </>
   );
