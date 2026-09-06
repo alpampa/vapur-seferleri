@@ -4,12 +4,15 @@ import { useActiveVoyageStore } from "@/store/useActiveVoyageStore";
 import { Ship, Radar, X, Bell, AlarmClock, Volume2 } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { MarineAisRadarModal } from "@/components/map/MarineAisRadarModal";
+import { OnboardVoyageModal } from "@/components/voyage/OnboardVoyageModal";
+import { Gauge } from "lucide-react";
 import { useAlarmStore } from "@/store/useAlarmStore";
 import { playHistoricalFerryHorn } from "@/lib/utils/sound";
 
 export function LiveTripTrackerBar() {
   const { activeVoyage, clearActiveVoyage } = useActiveVoyageStore();
   const [isRadarOpen, setIsRadarOpen] = useState(false);
+  const [isOnboardOpen, setIsOnboardOpen] = useState(false);
   const { isAlarmSet, toggleAlarm } = useAlarmStore();
   const [secondsRemaining, setSecondsRemaining] = useState(600);
 
@@ -89,6 +92,17 @@ export function LiveTripTrackerBar() {
           </div>
 
           <div className="flex items-center gap-1.5 shrink-0">
+            {/* ÖNERİ 2: Gemi İçi Seyir Kokpiti (Onboard AIS) */}
+            <button
+              type="button"
+              onClick={() => setIsOnboardOpen(true)}
+              className="p-2 rounded-xl bg-blue-950/80 hover:bg-blue-900 border border-blue-500/50 text-blue-300 text-xs font-black flex items-center gap-1 shadow-sm transition-all"
+              title="Canlı Gemi İçi Seyir Kokpiti & Telemetri"
+            >
+              <Gauge size={14} className="text-blue-400" />
+              <span className="hidden xs:inline">Kokpit</span>
+            </button>
+
             {/* Buharlı Vapur Düdüğü Test / Çalma Butonu */}
             <button
               type="button"
@@ -131,6 +145,16 @@ export function LiveTripTrackerBar() {
           </div>
         </div>
       </div>
+
+      <OnboardVoyageModal
+        isOpen={isOnboardOpen}
+        onClose={() => setIsOnboardOpen(false)}
+        vesselName={activeVoyage.vesselName}
+        origin={activeVoyage.origin}
+        destination={activeVoyage.destination}
+        departureTime={activeVoyage.departureTime}
+        operator={activeVoyage.operator}
+      />
 
       <MarineAisRadarModal
         isOpen={isRadarOpen}

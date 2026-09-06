@@ -1,6 +1,8 @@
 "use client";
 
-import { Ship, Sun, Moon, Globe } from "lucide-react";
+import { Ship, Sun, Moon, Globe, CreditCard, Headphones } from "lucide-react";
+import { IstanbulkartWalletModal } from "@/components/wallet/IstanbulkartWalletModal";
+import { BosphorusAudioGuideModal } from "@/components/guide/BosphorusAudioGuideModal";
 import { useEffect, useState } from "react";
 import { useThemeStore } from "@/store/useThemeStore";
 import { useLanguageStore } from "@/store/useLanguageStore";
@@ -9,6 +11,8 @@ export function TopBar() {
   const [timeStr, setTimeStr] = useState<string>("");
   const [dateStr, setDateStr] = useState<string>("");
   const [mounted, setMounted] = useState<boolean>(false);
+  const [isWalletOpen, setIsWalletOpen] = useState<boolean>(false);
+  const [isAudioGuideOpen, setIsAudioGuideOpen] = useState<boolean>(false);
 
   const { theme, toggleTheme } = useThemeStore();
   const { language, toggleLanguage, t } = useLanguageStore();
@@ -62,6 +66,30 @@ export function TopBar() {
 
       {/* Right Controls: Language, Theme & National Clock */}
       <div className="flex items-center gap-1.5 sm:gap-2">
+        {/* ÖNERİ 1: İstanbulkart QR & Cüzdan Butonu */}
+        <button
+          type="button"
+          onClick={() => setIsWalletOpen(true)}
+          title="İstanbulkart / QR Kod Dijital Geçiş & Ücret Tarifesi"
+          className="px-2 py-1 rounded-lg text-[11px] font-black transition-all border flex items-center gap-1 bg-red-50 hover:bg-red-100 dark:bg-red-950/40 dark:hover:bg-red-900/60 border-red-200 dark:border-red-800/60 text-red-700 dark:text-red-300 shadow-2xs"
+        >
+          <CreditCard size={12} className="text-red-600 dark:text-red-400" />
+          <span className="hidden sm:inline">İstanbulkart</span>
+          <span className="sm:hidden">QR</span>
+        </button>
+
+        {/* ÖNERİ 3: Boğaz Yalıları & Tarihi Eserler Sesli Rehberi (Audioguide) */}
+        <button
+          type="button"
+          onClick={() => setIsAudioGuideOpen(true)}
+          title="Boğaz Yalıları & Tarihi Eserler Sesli Rehberi"
+          className="px-2 py-1 rounded-lg text-[11px] font-black transition-all border flex items-center gap-1 bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-950/40 dark:hover:bg-indigo-900/60 border-indigo-200 dark:border-indigo-800/60 text-indigo-700 dark:text-indigo-300 shadow-2xs"
+        >
+          <Headphones size={12} className="text-indigo-600 dark:text-indigo-400" />
+          <span className="hidden sm:inline">Sesli Rehber</span>
+          <span className="sm:hidden">Rehber</span>
+        </button>
+
         {/* Language Switcher (TR | EN) */}
         <button
           onClick={toggleLanguage}
@@ -104,6 +132,8 @@ export function TopBar() {
           </div>
         </div>
       </div>
+      <IstanbulkartWalletModal isOpen={isWalletOpen} onClose={() => setIsWalletOpen(false)} />
+      <BosphorusAudioGuideModal isOpen={isAudioGuideOpen} onClose={() => setIsAudioGuideOpen(false)} />
     </header>
   );
 }

@@ -5,6 +5,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Ship, MapPin, Clock, X, ChevronRight, Anchor, ShieldCheck, Ticket, Users, Train, Star, Bell, BellRing, Navigation, Radar, Camera, Footprints, Pin, Compass } from "lucide-react";
 import { MarineAisRadarModal } from "@/components/map/MarineAisRadarModal";
 import { PierLiveCameraModal } from "@/components/map/PierLiveCameraModal";
+import { IstanbulkartWalletModal } from "@/components/wallet/IstanbulkartWalletModal";
+import { BosphorusAudioGuideModal } from "@/components/guide/BosphorusAudioGuideModal";
+import { OnboardVoyageModal } from "@/components/voyage/OnboardVoyageModal";
+import { CreditCard, Headphones, Gauge } from "lucide-react";
 import { OperatorLogo } from "@/components/ui/OperatorLogo";
 import { resolveLiveVesselName } from "@/lib/agents/fleet-registry";
 import { TripStatusBadge } from "./ScheduleCard";
@@ -36,6 +40,9 @@ export function TripDetailsSheet({ schedule, isOpen, onClose, serverTimeIso }: T
   const [dynState, setDynState] = useState<DynamicTripResolution | null>(null);
   const [isRadarOpen, setIsRadarOpen] = useState(false);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
+  const [isWalletOpen, setIsWalletOpen] = useState(false);
+  const [isAudioGuideOpen, setIsAudioGuideOpen] = useState(false);
+  const [isOnboardOpen, setIsOnboardOpen] = useState(false);
 
   useEffect(() => {
     if (!schedule) {
@@ -231,6 +238,54 @@ export function TripDetailsSheet({ schedule, isOpen, onClose, serverTimeIso }: T
                 <div className="text-xl font-mono font-black text-emerald-400">{schedule.price}</div>
                 <div className="text-[10px] text-slate-400 font-medium">İstanbulkart</div>
               </div>
+            </div>
+
+            {/* 3 YENİ ÖZELLİK: İstanbulkart QR, Onboard Kokpit, Boğaz Sesli Rehberi */}
+            <div className="grid grid-cols-3 gap-2 mb-3">
+              {/* İstanbulkart / QR Butonu */}
+              <button
+                type="button"
+                onClick={() => setIsWalletOpen(true)}
+                className="p-2.5 rounded-xl bg-red-50 hover:bg-red-100 dark:bg-red-950/40 dark:hover:bg-red-900/60 border border-red-200 dark:border-red-800/60 text-left flex flex-col items-start gap-1 transition-all shadow-2xs group"
+              >
+                <div className="flex items-center gap-1.5 text-red-600 dark:text-red-400">
+                  <CreditCard size={14} className="group-hover:scale-110 transition-transform" />
+                  <span className="text-[11px] font-black uppercase">İSTANBULKART</span>
+                </div>
+                <span className="text-[10px] text-slate-500 dark:text-slate-400 line-clamp-1">
+                  QR Geçiş & Tarife
+                </span>
+              </button>
+
+              {/* Onboard Gemi İçi Kokpit Butonu */}
+              <button
+                type="button"
+                onClick={() => setIsOnboardOpen(true)}
+                className="p-2.5 rounded-xl bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/40 dark:hover:bg-blue-900/60 border border-blue-200 dark:border-blue-800/60 text-left flex flex-col items-start gap-1 transition-all shadow-2xs group"
+              >
+                <div className="flex items-center gap-1.5 text-blue-600 dark:text-blue-400">
+                  <Gauge size={14} className="group-hover:scale-110 transition-transform" />
+                  <span className="text-[11px] font-black uppercase">GEMİ KOKPİTİ</span>
+                </div>
+                <span className="text-[10px] text-slate-500 dark:text-slate-400 line-clamp-1">
+                  Telsiz Telemetri
+                </span>
+              </button>
+
+              {/* Boğaz Sesli Rehberi Butonu */}
+              <button
+                type="button"
+                onClick={() => setIsAudioGuideOpen(true)}
+                className="p-2.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-950/40 dark:hover:bg-indigo-900/60 border border-indigo-200 dark:border-indigo-800/60 text-left flex flex-col items-start gap-1 transition-all shadow-2xs group"
+              >
+                <div className="flex items-center gap-1.5 text-indigo-600 dark:text-indigo-400">
+                  <Headphones size={14} className="group-hover:scale-110 transition-transform" />
+                  <span className="text-[11px] font-black uppercase">SESLİ REHBER</span>
+                </div>
+                <span className="text-[10px] text-slate-500 dark:text-slate-400 line-clamp-1">
+                  12 Boğaz Eseri
+                </span>
+              </button>
             </div>
 
             {/* Gemi & AIS Canlı Durumu Kartı */}
