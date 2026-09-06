@@ -1,0 +1,90 @@
+{
+  "timestamp": "2026-09-06T18:14:01.081Z",
+  "daemonCycleCount": 2,
+  "overallStatus": "HEALTHY",
+  "complianceScore": 100,
+  "totalChecks": 13,
+  "passedChecks": 13,
+  "failedChecks": 0,
+  "warningChecks": 0,
+  "checks": [
+    {
+      "category": "TARİFE_DENETİMİ",
+      "testName": "UKOME 2026 Şehir İçi Vapur Tarifesi Doğrulaması",
+      "status": "PASSED",
+      "details": "Tam: 27.00 ₺, Öğrenci: 13.17 ₺, Sosyal: 19.34 ₺ resmi UKOME tebliği ile 100% uyuşuyor."
+    },
+    {
+      "category": "TARİFE_DENETİMİ",
+      "testName": "UKOME 2026 Adalar Özel Tarifesi Doğrulaması",
+      "status": "PASSED",
+      "details": "Adalar Tam: 90.00 ₺, Öğrenci: 45.00 ₺, Adakart: 45.00 ₺ resmi karar ile uyumlu."
+    },
+    {
+      "category": "TARİFE_DENETİMİ",
+      "testName": "Küçük İskele Peron Sahteciliği Önleme Testi (Kınalı/Burgaz)",
+      "status": "PASSED",
+      "details": "Kınalıada ve Burgazada rıhtımlarında gerçekte olmayan Peron 2/3 elendi, Ana Rıhtım doğrulandı."
+    },
+    {
+      "category": "DENİZ_TAKSİ_DENETİMİ",
+      "testName": "UKOME 2026 Deniz Taksi Açılış & Mil Katsayı Doğrulaması",
+      "status": "PASSED",
+      "details": "Açılış: 500 ₺, Mil Başı: 750 ₺, Maksimum Yolcu: 10 kişi resmi tebliğle birebir uyumlu."
+    },
+    {
+      "category": "DENİZ_TAKSİ_DENETİMİ",
+      "testName": "Deniz Taksi Yolcu Başına Ücret Bölüşüm Hesaplama Testi",
+      "status": "PASSED",
+      "details": "2.4 Deniz Mili için toplam 2300 ₺, 4 yolcu için kişi başı 575 ₺ tam matematiksel doğrulukla hesaplandı."
+    },
+    {
+      "category": "GECE_ULAŞIM_DENETİMİ",
+      "testName": "Son Vapur Kaçtığında 7/24 Sarı Dolmuş Matrisi Bütünlüğü",
+      "status": "PASSED",
+      "details": "Kadıköy, Beşiktaş ve Taksim rıhtımlarında 7/24 çalışan sarı dolmuş hatları ve tahmini taksi matrisi doğrulandı."
+    },
+    {
+      "category": "SEFER_VERİTABANI",
+      "testName": "Resmi Sefer Veritabanı Bütünlük Taraması (OFFICIAL_SCHEDULES_DATA)",
+      "status": "PASSED",
+      "details": "Tüm seferler incelendi: 0 hatalı saat formatı, 0 boş kalkış/varış, 0 yetkisiz operatör bulundu."
+    },
+    {
+      "category": "FİLO_AIS_DENETİMİ",
+      "testName": "Gemi Sicil & MMSI / IMO Uluslararası Uygunluk Testi",
+      "status": "PASSED",
+      "details": "Barış Manço (271002506), Paşabahçe (271002496) ve tüm kayıtlı filonun 9 haneli MMSI kayıtları doğrulandı."
+    },
+    {
+      "category": "FİLO_AIS_DENETİMİ",
+      "testName": "0 Uydurma Veri Politikası (Operasyonel Filo Şeffaflık Uyarısı)",
+      "status": "PASSED",
+      "details": "Şehir Hatları dinamik nöbetçi filo havuzu uyarısı ve doğrudan canlı MarineTraffic Boğaz AIS linki doğrulandı."
+    },
+    {
+      "category": "İSKELE_GPS_DENETİMİ",
+      "testName": "İskele Coğrafi GPS Koordinat Sınır Denetimi",
+      "status": "PASSED",
+      "details": "Tüm iskelelerin GPS koordinatları Marmara Denizi ve Boğaziçi sınırları içinde doğrulandı."
+    },
+    {
+      "category": "CANLI_SUNUCU_AĞI",
+      "testName": "Üretim Sunucusu HTTP Erişilebilirlik Testi (https://vapur-seferleri.vercel.app)",
+      "status": "PASSED",
+      "details": "HTTP 200 OK - Canlı sunucu aktif ve yanıt veriyor."
+    },
+    {
+      "category": "CANLI_SUNUCU_AĞI",
+      "testName": "Üretim Sunucusu HTTP Erişilebilirlik Testi (https://adalar-sefer-asistani.vercel.app)",
+      "status": "PASSED",
+      "details": "HTTP 200 OK - Canlı sunucu aktif ve yanıt veriyor."
+    },
+    {
+      "category": "CANLI_SUNUCU_AĞI",
+      "testName": "Üretim Sunucusu HTTP Erişilebilirlik Testi (https://vapur-seferleri.vercel.app/api/sync)",
+      "status": "PASSED",
+      "details": "HTTP 200 OK - Canlı sunucu aktif ve yanıt veriyor."
+    }
+  ]
+}
