@@ -1,10 +1,10 @@
 {
-  "timestamp": "2026-09-06T18:16:02.723Z",
-  "daemonCycleCount": 4,
+  "timestamp": "2026-09-06T18:28:26.075Z",
+  "daemonCycleCount": 11,
   "overallStatus": "HEALTHY",
   "complianceScore": 100,
-  "totalChecks": 13,
-  "passedChecks": 13,
+  "totalChecks": 14,
+  "passedChecks": 14,
   "failedChecks": 0,
   "warningChecks": 0,
   "checks": [
@@ -83,6 +83,12 @@
     {
       "category": "CANLI_SUNUCU_AĞI",
       "testName": "Üretim Sunucusu HTTP Erişilebilirlik Testi (https://vapur-seferleri.vercel.app/api/sync)",
+      "status": "PASSED",
+      "details": "HTTP 200 OK - Canlı sunucu aktif ve yanıt veriyor."
+    },
+    {
+      "category": "CANLI_SUNUCU_AĞI",
+      "testName": "Üretim Sunucusu HTTP Erişilebilirlik Testi (https://vapur-seferleri.vercel.app/api/audit)",
       "status": "PASSED",
       "details": "HTTP 200 OK - Canlı sunucu aktif ve yanıt veriyor."
     }
