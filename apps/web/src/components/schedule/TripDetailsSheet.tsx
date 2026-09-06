@@ -41,6 +41,8 @@ import { PierLiveAisRadarModal } from "@/components/map/PierLiveAisRadarModal";
 import { IslandStrandedAlertModal } from "@/components/schedule/IslandStrandedAlertModal";
 import { UkomeOfficialSealBadge } from "@/components/turnstile/UkomeOfficialSealBadge";
 import { HarbourMasterWeatherBarometer } from "@/components/weather/HarbourMasterWeatherBarometer";
+import { PierCrowdDensityChart } from "@/components/crowd/PierCrowdDensityChart";
+import { CatchFerryWalkingTimer } from "@/components/planner/CatchFerryWalkingTimer";
 
 interface TripDetailsSheetProps {
   schedule: ScheduleCardDto | null;
@@ -300,6 +302,21 @@ export function TripDetailsSheet({ schedule, isOpen, onClose, serverTimeIso }: T
             <div className="mb-3">
               <HarbourMasterWeatherBarometer
                 originPier={dynState?.currentOrigin || schedule.origin}
+              />
+            </div>
+
+            {/* Vapuru Kaçırma & Dinamik Yola Çıkış Sayacı */}
+            <div className="mb-3">
+              <CatchFerryWalkingTimer
+                departureTime={dynState?.currentDepartureTime || schedule.departureTime}
+                originPier={dynState?.currentOrigin || schedule.origin}
+              />
+            </div>
+
+            {/* İskele Yoğunluk Isı Haritası & Turnike Bekleme Süresi Modeli */}
+            <div className="mb-3">
+              <PierCrowdDensityChart
+                pierName={dynState?.currentOrigin || schedule.origin}
               />
             </div>
 
