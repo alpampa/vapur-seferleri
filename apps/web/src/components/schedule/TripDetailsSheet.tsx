@@ -1,7 +1,8 @@
 "use client";
 
+import { calculateDeckRecommendation } from "@/lib/utils/deck-guide";
 import { motion, AnimatePresence } from "framer-motion";
-import { Ship, MapPin, Clock, X, ChevronRight, Anchor, ShieldCheck, Ticket, Users, Train, Star, Bell, BellRing, Navigation, Radar, Camera, Footprints, Pin } from "lucide-react";
+import { Ship, MapPin, Clock, X, ChevronRight, Anchor, ShieldCheck, Ticket, Users, Train, Star, Bell, BellRing, Navigation, Radar, Camera, Footprints, Pin, Compass } from "lucide-react";
 import { MarineAisRadarModal } from "@/components/map/MarineAisRadarModal";
 import { PierLiveCameraModal } from "@/components/map/PierLiveCameraModal";
 import { OperatorLogo } from "@/components/ui/OperatorLogo";
@@ -68,6 +69,7 @@ export function TripDetailsSheet({ schedule, isOpen, onClose, serverTimeIso }: T
   const hasAlarm = isAlarmSet(schedule.id);
 
   const occupancy = predictTripOccupancy(schedule.origin, schedule.destination, schedule.departureTime);
+  const deckAdvice = calculateDeckRecommendation(schedule.origin, schedule.destination, schedule.departureTime);
   const amenities = getTripAmenities(schedule.operator);
   const liveVessel = resolveLiveVesselName(
     schedule.origin,
@@ -432,6 +434,72 @@ export function TripDetailsSheet({ schedule, isOpen, onClose, serverTimeIso }: T
                 />
               </div>
               <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed">{occupancy.description}</p>
+            </div>
+
+                        {/* ÖNERİ 2 (EK): VAPUR GÜVERTE VE OTURMA YERİ REHBERİ (Güneş / Rüzgar / Boğaz Manzarası) */}
+            <div className="p-3.5 border border-slate-200 dark:border-slate-800 rounded-xl mb-4 bg-gradient-to-br from-white via-slate-50 to-slate-100 dark:from-[#0f172a] dark:to-[#070d1a] shadow-sm">
+              <div className="flex items-center justify-between mb-2.5 flex-wrap gap-2">
+                <span className="text-[11px] font-black uppercase tracking-wider text-slate-600 dark:text-slate-400 flex items-center gap-1.5">
+                  <Compass size={14} className="text-amber-500" />
+                  <span>GÜVERTE KONUMLANDIRMA & MANZARA ASİSTANI</span>
+                </span>
+                <span className="text-[10px] font-mono font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30 px-2 py-0.5 rounded-full">
+                  ROTA AÇISI: {deckAdvice.headingDeg}°
+                </span>
+              </div>
+
+              {/* Tavsiye Edilen Taraf Kartı */}
+              <div className="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-300 dark:border-amber-500/40 mb-3">
+                <div className="flex items-center justify-between gap-2 mb-1">
+                  <span className="text-xs font-black text-amber-900 dark:text-amber-200 flex items-center gap-1.5">
+                    <span>🌟 Tavsiye Edilen Taraf:</span>
+                    <span className="px-2 py-0.5 rounded bg-amber-400 text-slate-950 font-black">
+                      {deckAdvice.recommendedSideLabel}
+                    </span>
+                  </span>
+                  <span className="text-[10px] font-bold text-amber-700 dark:text-amber-300">
+                    📸 En İyi Fotoğraf Yönü
+                  </span>
+                </div>
+                <p className="text-xs text-amber-950 dark:text-amber-100 leading-relaxed font-medium">
+                  {deckAdvice.summary}
+                </p>
+              </div>
+
+              {/* İskele (Sol) vs Sancak (Sağ) Manzara Karşılaştırması */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-2.5">
+                {/* Sancak (Sağ) Taraf */}
+                <div className="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs">
+                  <div className="font-black text-emerald-600 dark:text-emerald-400 flex items-center gap-1 mb-1">
+                    <span>👉 SANCAK (SAĞ TARAF)</span>
+                  </div>
+                  <p className="text-slate-600 dark:text-slate-300 text-[11px] leading-snug">
+                    {deckAdvice.starboardScenery}
+                  </p>
+                </div>
+
+                {/* İskele (Sol) Taraf */}
+                <div className="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs">
+                  <div className="font-black text-blue-600 dark:text-blue-400 flex items-center gap-1 mb-1">
+                    <span>👈 İSKELE (SOL TARAF)</span>
+                  </div>
+                  <p className="text-slate-600 dark:text-slate-300 text-[11px] leading-snug">
+                    {deckAdvice.portScenery}
+                  </p>
+                </div>
+              </div>
+
+              {/* Güneş ve Rüzgar Notları */}
+              <div className="space-y-1.5 text-[11px] text-slate-500 dark:text-slate-400 pt-2 border-t border-slate-200 dark:border-slate-800">
+                <div className="flex items-start gap-1.5">
+                  <span className="text-amber-500">☀️</span>
+                  <span><strong>Güneş Açısı:</strong> {deckAdvice.sunSceneryNote}</span>
+                </div>
+                <div className="flex items-start gap-1.5">
+                  <span className="text-blue-500">💨</span>
+                  <span><strong>Rüzgar Durumu:</strong> {deckAdvice.windProtectionNote}</span>
+                </div>
+              </div>
             </div>
 
             {/* ÖNERİ 2: Vapur İçi Konfor, Büfe ve Hizmet Rozetleri */}

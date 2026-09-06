@@ -13,5 +13,55 @@
       "sizes": "64x64 32x32 24x24 16x16",
       "type": "image/x-icon"
     }
+  ],
+  "shortcuts": [
+    {
+      "name": "En Yakın İskele",
+      "short_name": "İskeleler",
+      "description": "İstanbul genelindeki vapur iskeleleri rehberi ve canlı kameraları",
+      "url": "/?view=piers",
+      "icons": [
+        {
+          "src": "/favicon.ico",
+          "sizes": "64x64"
+        }
+      ]
+    },
+    {
+      "name": "Deniz Meteorolojisi & Radar",
+      "short_name": "Hava & Radar",
+      "description": "Boğaz ve Marmara dalga, akıntı ve fırtına erken uyarı merkezi",
+      "url": "/?view=weather",
+      "icons": [
+        {
+          "src": "/favicon.ico",
+          "sizes": "64x64"
+        }
+      ]
+    },
+    {
+      "name": "Adalar Vapurları",
+      "short_name": "Adalar",
+      "description": "Büyükada, Heybeliada, Kınalıada ve Burgazada seferleri",
+      "url": "/?category=ADALAR",
+      "icons": [
+        {
+          "src": "/favicon.ico",
+          "sizes": "64x64"
+        }
+      ]
+    },
+    {
+      "name": "Boğaz Hatları",
+      "short_name": "Boğaz",
+      "description": "Kadıköy, Üsküdar, Beşiktaş, Karaköy ve Boğaz turları",
+      "url": "/?category=BOGAZ",
+      "icons": [
+        {
+          "src": "/favicon.ico",
+          "sizes": "64x64"
+        }
+      ]
+    }
   ]
 }

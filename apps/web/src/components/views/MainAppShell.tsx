@@ -19,6 +19,17 @@ export function MainAppShell({ schedules, serverTimeIso, marineWeather }: MainAp
   const [activeTab, setActiveTab] = useState<string>("schedules");
   const [forcedPierFilter, setForcedPierFilter] = useState<string | null>(null);
 
+  // PWA App Shortcuts (Hızlı Kısayollar) Entegrasyonu (?view=piers, ?view=weather, vb.)
+  useState(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const view = params.get("view");
+      if (view === "piers" || view === "weather" || view === "favorites" || view === "schedules") {
+        setActiveTab(view);
+      }
+    }
+  });
+
   const handleSelectPierForSchedules = (pierName: string) => {
     setForcedPierFilter(pierName);
     setActiveTab("schedules");

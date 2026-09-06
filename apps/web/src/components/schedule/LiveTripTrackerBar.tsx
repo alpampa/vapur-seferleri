@@ -15,6 +15,24 @@ export function LiveTripTrackerBar() {
 
   const hornBlownRef = useRef(false);
 
+  // Kilit Ekranı Canlı Aktivite (W3C MediaSession & Notification API)
+  useEffect(() => {
+    if (!activeVoyage || typeof window === "undefined") return;
+
+    if ("mediaSession" in navigator) {
+      try {
+        navigator.mediaSession.metadata = new MediaMetadata({
+          title: `🚢 ${activeVoyage.vesselName} (${activeVoyage.departureTime})`,
+          artist: `${activeVoyage.origin} ➔ ${activeVoyage.destination}`,
+          album: `İBB Şehir Hatları • Canlı Takip`,
+          artwork: [
+            { src: "/favicon.ico", sizes: "64x64", type: "image/x-icon" }
+          ]
+        });
+      } catch (e) {}
+    }
+  }, [activeVoyage]);
+
   useEffect(() => {
     if (!activeVoyage) return;
     hornBlownRef.current = false;
