@@ -8,6 +8,7 @@ import { Search, Navigation, ArrowLeftRight, Compass, MapPin, LayoutGrid, List, 
 import { matchesTurkishSearch } from "@/lib/utils/search-normalizer";
 import { AdalarHeritageModal } from "@/components/adalar/AdalarHeritageModal";
 import { SponsoredDealsModal } from "@/components/commercial/SponsoredDealsModal";
+import { LateNightTransitModal } from "@/components/night/LateNightTransitModal";
 import { PinnedHomePierWidget } from "@/components/schedule/PinnedHomePierWidget";
 import { MarineWeatherBanner } from "@/components/weather/MarineWeatherBanner";
 import type { MarineWeatherStatus } from "@/lib/services/marine-weather";
@@ -81,6 +82,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
   const [showCatchAssistant, setShowCatchAssistant] = useState<boolean>(false);
   const [isAdalarModalOpen, setIsAdalarModalOpen] = useState<boolean>(false);
   const [isSponsoredModalOpen, setIsSponsoredModalOpen] = useState<boolean>(false);
+  const [isNightTransitOpen, setIsNightTransitOpen] = useState<boolean>(false);
   const [isSearchVisible, setIsSearchVisible] = useState<boolean>(true);
 
   // Offline LocalStorage Caching
@@ -404,6 +406,16 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
                 {geoStatus === "LOCATING" ? "..." : geoStatus === "ACTIVE" && nearestPier ? nearestPier.name : "Yakın"}
               </span>
             </button>
+
+            {/* Gece Seferleri & Dolmuş / Taksi Matrisi */}
+            <button
+              onClick={() => setIsNightTransitOpen(true)}
+              className="px-2 py-1 rounded-lg text-[11px] font-bold flex items-center gap-1 transition-all cursor-pointer border bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800/80 hover:bg-indigo-100 dark:hover:bg-indigo-900/60"
+              title="Gece Seferleri & Sabaha Karşı Taksi / Dolmuş Matrisi"
+            >
+              <span>🌙</span>
+              <span className="hidden sm:inline">Gece</span>
+            </button>
           </div>
         </div>
       </div>
@@ -684,6 +696,12 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
       <SponsoredDealsModal
         isOpen={isSponsoredModalOpen}
         onClose={() => setIsSponsoredModalOpen(false)}
+      />
+
+      {/* Gece Seferleri & Sabaha Karşı Dolmuş/Taksi Rehberi Modalı */}
+      <LateNightTransitModal
+        isOpen={isNightTransitOpen}
+        onClose={() => setIsNightTransitOpen(false)}
       />
     </>
   );

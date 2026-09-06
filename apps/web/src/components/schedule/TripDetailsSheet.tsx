@@ -31,6 +31,8 @@ import { useFavoritesStore } from "@/store/useFavoritesStore";
 import { requestNotificationPermission } from "@/lib/utils/sound";
 import { useActiveVoyageStore } from "@/store/useActiveVoyageStore";
 import { useWalkingCatchStore } from "@/store/useWalkingCatchStore";
+import { MooringTelemetryCard } from "@/components/schedule/MooringTelemetryCard";
+import { TurnstileCheckBanner } from "@/components/turnstile/TurnstileCheckBanner";
 
 interface TripDetailsSheetProps {
   schedule: ScheduleCardDto | null;
@@ -248,6 +250,15 @@ export function TripDetailsSheet({ schedule, isOpen, onClose, serverTimeIso }: T
               </div>
             </div>
 
+            {/* Turnike Geçiş & İstanbulkart Bakiye Erken Uyarısı */}
+            <div className="mb-3">
+              <TurnstileCheckBanner
+                tripPrice={schedule.price}
+                originPier={dynState?.currentOrigin || schedule.origin}
+                isAdalar={schedule.origin.includes("Ada") || schedule.destination.includes("Ada")}
+              />
+            </div>
+
             {/* 3 YENİ ÖZELLİK: İstanbulkart QR, Onboard Kokpit, Boğaz Sesli Rehberi */}
             <div className="grid grid-cols-3 gap-2 mb-3">
               {/* İstanbulkart / QR Butonu */}
@@ -347,6 +358,18 @@ export function TripDetailsSheet({ schedule, isOpen, onClose, serverTimeIso }: T
                   </p>
                 </div>
               </div>
+            </div>
+
+            {/* Rıhtım Palamar & Canlı Rampa Operasyon Telemetrisi */}
+            <div className="mb-3">
+              <MooringTelemetryCard
+                vesselName={liveVessel.vesselName}
+                originPier={dynState?.currentOrigin || schedule.origin}
+                destinationPier={dynState?.destination || schedule.destination}
+                status={dynState?.status || schedule.status}
+                countdown={dynState?.countdown}
+                isDeparted={dynState?.isDeparted}
+              />
             </div>
 
             {/* Canlı Deniz Radarı (AIS) ve İBB Canlı Kamera Butonları */}
