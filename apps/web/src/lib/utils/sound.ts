@@ -108,6 +108,40 @@ export function playHistoricalFerryHorn() {
   }
 }
 
+/**
+ * Synthesizes an escalating urgent siren for the last ferry leaving the Prince Islands
+ * to prevent passengers from being stranded on the island overnight.
+ */
+export function playStrandedEmergencySiren() {
+  if (typeof window === 'undefined') return;
+
+  try {
+    const AudioContextClass = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+    if (!AudioContextClass) return;
+
+    const ctx = new AudioContextClass();
+
+    [0, 0.25, 0.5, 0.75].forEach((offset, idx) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(idx % 2 === 0 ? 698.46 : 1174.66, ctx.currentTime + offset);
+      gain.gain.setValueAtTime(0.4, ctx.currentTime + offset);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + offset + 0.22);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(ctx.currentTime + offset);
+      osc.stop(ctx.currentTime + offset + 0.22);
+    });
+
+    if ('vibrate' in navigator) {
+      navigator.vibrate([400, 150, 400, 150, 700]);
+    }
+  } catch (err) {
+    console.warn('Emergency siren error:', err);
+  }
+}
+
 export async function requestNotificationPermission(): Promise<boolean> {
   if (typeof window === 'undefined' || !('Notification' in window)) {
     return false;

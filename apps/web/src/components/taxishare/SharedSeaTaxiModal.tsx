@@ -10,6 +10,8 @@ import {
   SEA_TAXI_OFFICIAL_TARIFF,
   COMMON_SEA_TAXI_ROUTES
 } from "@/lib/data/sea-taxi";
+import { PierSharingQrCard } from "./PierSharingQrCard";
+import { QrCode, Calculator } from "lucide-react";
 
 interface SharedSeaTaxiModalProps {
   isOpen: boolean;
@@ -28,6 +30,7 @@ export function SharedSeaTaxiModal({
   const [destination, setDestination] = useState(defaultDestination);
   const [passengers, setPassengers] = useState<number>(4);
   const [hasJoinedPool, setHasJoinedPool] = useState(false);
+  const [activeTab, setActiveTab] = useState<"CALCULATOR" | "QR">("CALCULATOR");
 
   if (!isOpen) return null;
 
@@ -47,7 +50,7 @@ export function SharedSeaTaxiModal({
           className="relative my-auto w-full max-w-lg bg-slate-900 border border-slate-700 rounded-3xl shadow-2xl text-white z-10 flex flex-col max-h-[92vh] overflow-hidden"
         >
           {/* Header */}
-          <div className="px-5 py-4 border-b border-slate-800 bg-slate-950 flex items-center justify-between gap-3 shrink-0">
+          <div className="px-5 py-3.5 border-b border-slate-800 bg-slate-950 flex items-center justify-between gap-3 shrink-0">
             <div className="flex items-center gap-3 min-w-0">
               <div className="w-10 h-10 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 shrink-0 font-bold shadow-md">
                 <Anchor size={20} className="animate-pulse" />
@@ -72,6 +75,35 @@ export function SharedSeaTaxiModal({
               className="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center transition-colors cursor-pointer shrink-0"
             >
               <X size={16} />
+            </button>
+          </div>
+
+          {/* Tab Selector: Hesaplayıcı vs Toplanma QR'ı */}
+          <div className="px-5 pt-3 pb-0 bg-slate-950/70 border-b border-slate-800 flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setActiveTab("CALCULATOR")}
+              className={`pb-2.5 px-3 text-xs font-bold border-b-2 transition-all flex items-center gap-1.5 cursor-pointer ${
+                activeTab === "CALCULATOR"
+                  ? "border-amber-400 text-amber-300"
+                  : "border-transparent text-slate-400 hover:text-slate-200"
+              }`}
+            >
+              <Calculator size={13} />
+              <span>Ücret Hesaplayıcı</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveTab("QR")}
+              className={`pb-2.5 px-3 text-xs font-bold border-b-2 transition-all flex items-center gap-1.5 cursor-pointer ${
+                activeTab === "QR"
+                  ? "border-amber-400 text-amber-300"
+                  : "border-transparent text-slate-400 hover:text-slate-200"
+              }`}
+            >
+              <QrCode size={13} />
+              <span>İskele Toplanma QR Kodu</span>
             </button>
           </div>
 
@@ -123,82 +155,93 @@ export function SharedSeaTaxiModal({
               </div>
             </div>
 
-            {/* Passenger Count Slider & Split Cost Calculator */}
-            <div className="p-4 rounded-2xl bg-gradient-to-br from-slate-950 to-slate-900 border border-slate-800 space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-black text-slate-200 flex items-center gap-1.5">
-                  <Users size={14} className="text-amber-400" />
-                  <span>PAYLAŞILAN YOLCU SAYISI</span>
-                </span>
-                <span className="px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-mono font-black text-xs border border-amber-500/40">
-                  {passengers} Yolcu
-                </span>
-              </div>
-
-              <input
-                type="range"
-                min="1"
-                max="10"
-                step="1"
-                value={passengers}
-                onChange={e => setPassengers(Number(e.target.value))}
-                className="w-full accent-amber-400 cursor-pointer h-2 bg-slate-800 rounded-lg"
+            {activeTab === "QR" ? (
+              <PierSharingQrCard
+                origin={origin}
+                destination={destination}
+                perPersonFare={fare.perPersonFare}
+                passengers={passengers}
               />
+            ) : (
+              <>
+                {/* Passenger Count Slider & Split Cost Calculator */}
+                <div className="p-4 rounded-2xl bg-gradient-to-br from-slate-950 to-slate-900 border border-slate-800 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-black text-slate-200 flex items-center gap-1.5">
+                      <Users size={14} className="text-amber-400" />
+                      <span>PAYLAŞILAN YOLCU SAYISI</span>
+                    </span>
+                    <span className="px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-mono font-black text-xs border border-amber-500/40">
+                      {passengers} Yolcu
+                    </span>
+                  </div>
 
-              <div className="flex justify-between text-[10px] font-mono text-slate-500">
-                <span>1 Kişi (Özel Tekne)</span>
-                <span>5 Kişi</span>
-                <span>10 Kişi (Maksimum)</span>
-              </div>
+                  <input
+                    type="range"
+                    min="1"
+                    max="10"
+                    step="1"
+                    value={passengers}
+                    onChange={e => setPassengers(Number(e.target.value))}
+                    className="w-full accent-amber-400 cursor-pointer h-2 bg-slate-800 rounded-lg"
+                  />
 
-              {/* Cost Box */}
-              <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-800 text-center">
-                <div className="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800">
-                  <span className="text-[10px] text-slate-400 block uppercase font-bold">
-                    Kişi Başı Tutar
-                  </span>
-                  <strong className="text-lg sm:text-xl font-mono font-black text-amber-400">
-                    {fare.perPersonFare} ₺
-                  </strong>
-                  <span className="text-[9px] text-slate-500 block">masraf bölüşüldüğünde</span>
+                  <div className="flex justify-between text-[10px] font-mono text-slate-500">
+                    <span>1 Kişi (Özel Tekne)</span>
+                    <span>5 Kişi</span>
+                    <span>10 Kişi (Maksimum)</span>
+                  </div>
+
+                  {/* Cost Box */}
+                  <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-800 text-center">
+                    <div className="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800">
+                      <span className="text-[10px] text-slate-400 block uppercase font-bold">
+                        Kişi Başı Tutar
+                      </span>
+                      <strong className="text-lg sm:text-xl font-mono font-black text-amber-400">
+                        {fare.perPersonFare} ₺
+                      </strong>
+                      <span className="text-[9px] text-slate-500 block">masraf bölüşüldüğünde</span>
+                    </div>
+
+                    <div className="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800">
+                      <span className="text-[10px] text-slate-400 block uppercase font-bold">
+                        Toplam Tekne Ücreti
+                      </span>
+                      <strong className="text-lg sm:text-xl font-mono font-black text-slate-200">
+                        {fare.totalBoatFare} ₺
+                      </strong>
+                      <span className="text-[9px] text-slate-500 block">
+                        (500₺ açılış + {fare.mileCost}₺ mil)
+                      </span>
+                    </div>
+                  </div>
                 </div>
 
-                <div className="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800">
-                  <span className="text-[10px] text-slate-400 block uppercase font-bold">
-                    Toplam Tekne Ücreti
-                  </span>
-                  <strong className="text-lg sm:text-xl font-mono font-black text-slate-200">
-                    {fare.totalBoatFare} ₺
-                  </strong>
-                  <span className="text-[9px] text-slate-500 block">
-                    (500₺ açılış + {fare.mileCost}₺ mil)
-                  </span>
+                {/* Simulated Live Pier Pool Notice */}
+                <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-xs space-y-2">
+                  <div className="flex items-center gap-2 font-black text-amber-300">
+                    <Sparkles size={15} className="text-amber-400 animate-spin" style={{ animationDuration: "6s" }} />
+                    <span>CANLI İSKELE PAYLAŞIM HAVUZU</span>
+                  </div>
+                  <p className="text-[11px] text-slate-300 leading-relaxed">
+                    Şu an <strong>{origin} İskelesi</strong> çevresinde gece veya acil geçiş için masrafı bölüşmek isteyen yolcular bekleniyor. Gruba katılarak kişi başı <strong>{fare.perPersonFare} ₺</strong> ile tekne çağırabilirsiniz.
+                  </p>
+
+                  <button
+                    type="button"
+                    onClick={() => setHasJoinedPool(!hasJoinedPool)}
+                    className={`w-full py-2 rounded-xl font-black text-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                      hasJoinedPool
+                        ? "bg-emerald-600 text-white shadow-md"
+                        : "bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-md"
+                    }`}
+                  >
+                    {hasJoinedPool ? "✓ İskele Paylaşım Grubuna Katıldınız (3 Yolcu)" : "İskele Paylaşım Grubuna Katıl"}
+                  </button>
                 </div>
-              </div>
-            </div>
-
-            {/* Simulated Live Pier Pool Notice */}
-            <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-xs space-y-2">
-              <div className="flex items-center gap-2 font-black text-amber-300">
-                <Sparkles size={15} className="text-amber-400 animate-spin" style={{ animationDuration: "6s" }} />
-                <span>CANLI İSKELE PAYLAŞIM HAVUZU</span>
-              </div>
-              <p className="text-[11px] text-slate-300 leading-relaxed">
-                Şu an <strong>{origin} İskelesi</strong> çevresinde gece veya acil geçiş için masrafı bölüşmek isteyen yolcular bekleniyor. Gruba katılarak kişi başı <strong>{fare.perPersonFare} ₺</strong> ile tekne çağırabilirsiniz.
-              </p>
-
-              <button
-                type="button"
-                onClick={() => setHasJoinedPool(!hasJoinedPool)}
-                className={`w-full py-2 rounded-xl font-black text-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
-                  hasJoinedPool
-                    ? "bg-emerald-600 text-white shadow-md"
-                    : "bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-md"
-                }`}
-              >
-                {hasJoinedPool ? "✓ İskele Paylaşım Grubuna Katıldınız (3 Yolcu)" : "İskele Paylaşım Grubuna Katıl"}
-              </button>
-            </div>
+              </>
+            )}
 
             {/* Official UKOME Citation */}
             <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-start gap-2 text-xs">

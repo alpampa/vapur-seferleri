@@ -2,7 +2,7 @@
 
 import { calculateDeckRecommendation } from "@/lib/utils/deck-guide";
 import { motion, AnimatePresence } from "framer-motion";
-import { Ship, MapPin, Clock, X, ChevronRight, Anchor, ShieldCheck, Ticket, Users, Train, Star, Bell, BellRing, Navigation, Radar, Camera, Footprints, Pin, Compass } from "lucide-react";
+import { Ship, MapPin, Clock, X, ChevronRight, Anchor, ShieldCheck, Ticket, Users, Train, Star, Bell, BellRing, Navigation, Radar, Camera, Footprints, Pin, Compass, Radio, AlertTriangle } from "lucide-react";
 import { MarineAisRadarModal } from "@/components/map/MarineAisRadarModal";
 import { PierLiveCameraModal } from "@/components/map/PierLiveCameraModal";
 import { IstanbulkartWalletModal } from "@/components/wallet/IstanbulkartWalletModal";
@@ -37,6 +37,8 @@ import { getOfficialRouteFare } from "@/lib/data/official-fares";
 import { VesselVisualCard } from "@/components/vessel/VesselVisualCard";
 import { BerthTurnaroundIndicator } from "@/components/schedule/BerthTurnaroundIndicator";
 import { SharedSeaTaxiModal } from "@/components/taxishare/SharedSeaTaxiModal";
+import { PierLiveAisRadarModal } from "@/components/map/PierLiveAisRadarModal";
+import { IslandStrandedAlertModal } from "@/components/schedule/IslandStrandedAlertModal";
 
 interface TripDetailsSheetProps {
   schedule: ScheduleCardDto | null;
@@ -52,6 +54,8 @@ export function TripDetailsSheet({ schedule, isOpen, onClose, serverTimeIso }: T
 
   const [dynState, setDynState] = useState<DynamicTripResolution | null>(null);
   const [isRadarOpen, setIsRadarOpen] = useState(false);
+  const [isPierAisRadarOpen, setIsPierAisRadarOpen] = useState(false);
+  const [isIslandAlertOpen, setIsIslandAlertOpen] = useState(false);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [isWalletOpen, setIsWalletOpen] = useState(false);
   const [isAudioGuideOpen, setIsAudioGuideOpen] = useState(false);
@@ -497,7 +501,62 @@ export function TripDetailsSheet({ schedule, isOpen, onClose, serverTimeIso }: T
                   ↗
                 </div>
               </button>
+
+              {/* İskele 500m Çevresi Canlı AIS Radarı Butonu */}
+              <button
+                type="button"
+                onClick={() => setIsPierAisRadarOpen(true)}
+                className="col-span-1 sm:col-span-2 p-3 rounded-xl bg-gradient-to-r from-cyan-950/80 via-blue-950/60 to-slate-900 border border-cyan-500/40 hover:border-cyan-400 text-left flex items-center justify-between gap-2.5 shadow-md group transition-all"
+              >
+                <div className="flex items-center gap-2 min-w-0">
+                  <div className="w-8 h-8 rounded-lg bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                    <Radio size={16} className="animate-pulse" />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className="text-xs font-black text-white tracking-tight">
+                        {dynState?.currentOrigin || schedule.origin} İSKELESİ 500M CANLI RADARI
+                      </span>
+                      <span className="text-[8px] font-mono font-bold bg-cyan-500/30 text-cyan-300 px-1 py-0.1 rounded">
+                        CANLI SEKTÖR
+                      </span>
+                    </div>
+                    <p className="text-[10px] text-slate-300 truncate mt-0.5">
+                      İskele etrafındaki 500 metrede sinyal veren tüm gerçek deniz araçları
+                    </p>
+                  </div>
+                </div>
+                <div className="text-cyan-400 group-hover:translate-x-0.5 transition-transform text-xs font-bold shrink-0">
+                  ↗
+                </div>
+              </button>
             </div>
+
+            {/* Adalar Mahsur Kalma Erken Uyarısı (Adalar Çıkışlı Seferler İçin) */}
+            {(schedule.origin.includes("Ada") || (dynState?.currentOrigin && dynState.currentOrigin.includes("Ada"))) && (
+              <div className="mb-4 p-3 rounded-2xl bg-rose-500/15 border-2 border-rose-500/50 flex items-center justify-between gap-3 shadow-sm">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="w-8 h-8 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center shrink-0">
+                    <AlertTriangle size={16} className="animate-pulse" />
+                  </div>
+                  <div className="min-w-0">
+                    <span className="text-xs font-black text-rose-900 dark:text-rose-200 block truncate">
+                      ADADA MAHSUR KALMA ERKEN UYARISI
+                    </span>
+                    <span className="text-[10px] text-rose-700 dark:text-rose-300 block truncate">
+                      Adadan anakaraya son vapur 15 dk sesli alarmı ve sireni
+                    </span>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsIslandAlertOpen(true)}
+                  className="px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-black text-xs transition-all cursor-pointer shadow-md shrink-0"
+                >
+                  Alarmı Kur ➔
+                </button>
+              </div>
+            )}
 
             {/* Metro / Marmaray Progressive Route Timeline */}
             {!isDirect && dynState?.waypoints && dynState.waypoints.length > 1 ? (
@@ -985,6 +1044,19 @@ export function TripDetailsSheet({ schedule, isOpen, onClose, serverTimeIso }: T
         onClose={() => setIsSeaTaxiOpen(false)}
         defaultOrigin={dynState?.currentOrigin || schedule?.origin || "Kadıköy"}
         defaultDestination={dynState?.destination || schedule?.destination || "Karaköy"}
+      />
+      <PierLiveAisRadarModal
+        isOpen={isPierAisRadarOpen}
+        onClose={() => setIsPierAisRadarOpen(false)}
+        pierName={dynState?.currentOrigin || schedule?.origin || "Kadıköy"}
+      />
+      <IslandStrandedAlertModal
+        isOpen={isIslandAlertOpen}
+        onClose={() => setIsIslandAlertOpen(false)}
+        originPier={dynState?.currentOrigin || schedule?.origin || "Büyükada"}
+        destinationPier={dynState?.destination || schedule?.destination || "Bostancı"}
+        departureTime={dynState?.currentDepartureTime || schedule?.departureTime || "21:00"}
+        countdown={dynState?.countdown}
       />
     </AnimatePresence>
   );
