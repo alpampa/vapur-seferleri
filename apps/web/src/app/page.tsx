@@ -1,6 +1,5 @@
 import { TopBar } from "@/components/navigation/TopBar";
-import { BottomNav } from "@/components/navigation/BottomNav";
-import { SearchBar } from "@/components/ui/SearchBar";
+import { MainAppShell } from "@/components/views/MainAppShell";
 import { TripStatus } from "@/components/schedule/ScheduleCard";
 import { NearbyRoutes } from "@/components/schedule/NearbyRoutes";
 import { ScheduleListClient } from "@/components/schedule/ScheduleListClient";
@@ -68,16 +67,13 @@ export default async function Home() {
     <div className="flex flex-col min-h-screen bg-slate-100 dark:bg-[#070b14] text-slate-900 dark:text-white transition-colors duration-150">
       <TopBar />
       
-      <main className="flex-1 overflow-y-auto hide-scrollbar relative pb-[76px]">
-        {/* Schedule Cards List via Client Component with Integrated Sleek Filters */}
-        <ScheduleListClient
+      <main className="flex-1 overflow-y-auto hide-scrollbar relative">
+        <MainAppShell
           schedules={schedules}
           serverTimeIso={serverTimeIso}
           marineWeather={weather}
         />
       </main>
-
-      <BottomNav />
     </div>
   );
 }

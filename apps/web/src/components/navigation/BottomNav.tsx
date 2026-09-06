@@ -9,12 +9,11 @@ interface BottomNavProps {
 }
 
 export function BottomNav({ activeTab = "schedules", onTabChange }: BottomNavProps) {
-  const [currentTab, setCurrentTab] = useState(activeTab);
-
   const handleSelect = (tab: string) => {
-    setCurrentTab(tab);
     if (onTabChange) onTabChange(tab);
   };
+
+  const currentTab = activeTab;
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 max-w-lg mx-auto bg-[#090d16]/95 backdrop-blur-xl border-t border-slate-800/90 pb-[env(safe-area-inset-bottom)] z-50 shadow-2xl">
@@ -34,16 +33,16 @@ export function BottomNav({ activeTab = "schedules", onTabChange }: BottomNavPro
           <span className="text-[10px] tracking-tight">Seferler</span>
         </button>
 
-        {/* Canlı Radar / İskeleler (Orta Vurgulu Buton) */}
+        {/* İskeleler (Orta Vurgulu Buton) */}
         <button
-          onClick={() => handleSelect("radar")}
+          onClick={() => handleSelect("piers")}
           className={`flex flex-col items-center gap-1 transition-all ${
-            currentTab === "radar"
+            currentTab === "piers"
               ? "text-emerald-400 scale-105 font-black"
               : "text-slate-400 hover:text-slate-200 font-semibold"
           }`}
         >
-          <div className={`p-1.5 rounded-xl ${currentTab === "radar" ? "bg-emerald-500/20" : ""}`}>
+          <div className={`p-1.5 rounded-xl ${currentTab === "piers" ? "bg-emerald-500/20" : ""}`}>
             <Compass size={20} />
           </div>
           <span className="text-[10px] tracking-tight">İskeleler</span>

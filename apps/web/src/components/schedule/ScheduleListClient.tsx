@@ -56,16 +56,17 @@ interface ScheduleListClientProps {
   schedules: ScheduleCardDto[];
   serverTimeIso: string;
   marineWeather?: MarineWeatherStatus | null;
+  initialOrigin?: string;
 }
 
-export function ScheduleListClient({ schedules, serverTimeIso, marineWeather }: ScheduleListClientProps) {
+export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, initialOrigin }: ScheduleListClientProps) {
   const { t, language } = useLanguageStore();
 
   const [selectedSchedule, setSelectedSchedule] = useState<ScheduleCardDto | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<"ADALAR" | "BOGAZ" | "ALL">("ADALAR");
   const [now, setNow] = useState(Date.now());
   const [selectedRoute, setSelectedRoute] = useState<string>("ALL");
-  const [selectedOrigin, setSelectedOrigin] = useState<string>("ALL");
+  const [selectedOrigin, setSelectedOrigin] = useState<string>(initialOrigin || "ALL");
   const [selectedOperator, setSelectedOperator] = useState<string>("ALL");
   const [searchQuery, setSearchQuery] = useState<string>(" ");
   const [showPlanner, setShowPlanner] = useState<boolean>(false);
