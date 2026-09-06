@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Moon, Car, Bus, Clock, ShieldCheck, MapPin, Sparkles, Navigation, AlertTriangle, ArrowRight } from "lucide-react";
 import { NIGHT_DOLMUS_ROUTES, NIGHT_TAXI_ESTIMATES, METROBUS_NIGHT_INFO } from "@/lib/data/night-transit-matrix";
@@ -12,12 +13,17 @@ interface LateNightTransitModalProps {
 
 export function LateNightTransitModal({ isOpen, onClose }: LateNightTransitModalProps) {
   const [activeTab, setActiveTab] = useState<"DOLMUS" | "TAXI" | "METROBUS">("DOLMUS");
+  const [mounted, setMounted] = useState(false);
 
-  if (!isOpen) return null;
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
-  return (
+  if (!isOpen || !mounted) return null;
+
+  return createPortal(
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-md p-3 sm:p-4 flex min-h-full items-start sm:items-center justify-center">
+      <div className="fixed inset-0 z-[99999] overflow-y-auto bg-black/80 backdrop-blur-md p-3 sm:p-4 flex min-h-full items-start sm:items-center justify-center">
         <div className="fixed inset-0" onClick={onClose} />
 
         <motion.div
@@ -235,6 +241,7 @@ export function LateNightTransitModal({ isOpen, onClose }: LateNightTransitModal
           </div>
         </motion.div>
       </div>
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }

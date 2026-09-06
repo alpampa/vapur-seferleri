@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { X, QrCode, CreditCard, ShieldCheck, RefreshCw, ExternalLink, Smartphone, AlertCircle } from "lucide-react";
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { useLanguageStore } from "@/store/useLanguageStore";
 
 interface IstanbulkartWalletModalProps {
@@ -14,6 +15,11 @@ export function IstanbulkartWalletModal({ isOpen, onClose }: IstanbulkartWalletM
   const { t, language } = useLanguageStore();
   const [secondsRemaining, setSecondsRemaining] = useState(60);
   const [qrToken, setQrToken] = useState("IST-8942-7104");
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Regenerate QR every 60 seconds (Standard BELBİM Digital Pass security protocol)
   useEffect(() => {
@@ -30,7 +36,7 @@ export function IstanbulkartWalletModal({ isOpen, onClose }: IstanbulkartWalletM
     return () => clearInterval(interval);
   }, [isOpen]);
 
-  if (!isOpen) return null;
+  if (!isOpen || !mounted) return null;
 
   const fares = [
     { title: "Şehir İçi Vapur (Tam)", price: "27.00 ₺", note: "İstanbulkart Tam Bilet" },
@@ -41,9 +47,9 @@ export function IstanbulkartWalletModal({ isOpen, onClose }: IstanbulkartWalletM
     { title: "65+ Yaş & Engelli", price: "0.00 ₺", note: "Ücretsiz Geçiş Hakkı" }
   ];
 
-  return (
+  return createPortal(
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-sm p-3 sm:p-4 flex min-h-full items-start sm:items-center justify-center">
+      <div className="fixed inset-0 z-[99999] overflow-y-auto bg-black/80 backdrop-blur-sm p-3 sm:p-4 flex min-h-full items-start sm:items-center justify-center">
         {/* Backdrop Click */}
         <div className="fixed inset-0" onClick={onClose} />
 
@@ -168,6 +174,7 @@ export function IstanbulkartWalletModal({ isOpen, onClose }: IstanbulkartWalletM
           </div>
         </motion.div>
       </div>
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }

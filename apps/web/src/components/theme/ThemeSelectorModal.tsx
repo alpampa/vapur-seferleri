@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Palette, Check, Sparkles, CheckCircle2 } from "lucide-react";
 import { useThemeStore, THEME_PRESETS, ThemePresetId } from "@/store/useThemeStore";
@@ -15,8 +16,13 @@ export function ThemeSelectorModal({ isOpen, onClose }: ThemeSelectorModalProps)
   const { theme, setTheme } = useThemeStore();
   const { language } = useLanguageStore();
   const [selectedId, setSelectedId] = useState<ThemePresetId>(theme);
+  const [mounted, setMounted] = useState(false);
 
-  if (!isOpen) return null;
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!isOpen || !mounted) return null;
 
   const handleSelectTheme = (id: ThemePresetId) => {
     setSelectedId(id);
@@ -36,9 +42,9 @@ export function ThemeSelectorModal({ isOpen, onClose }: ThemeSelectorModalProps)
 
   const activePreset = THEME_PRESETS.find(p => p.id === selectedId) || THEME_PRESETS[0];
 
-  return (
+  return createPortal(
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-md p-3 sm:p-4 flex min-h-full items-start sm:items-center justify-center">
+      <div className="fixed inset-0 z-[99999] overflow-y-auto bg-black/80 backdrop-blur-md p-3 sm:p-4 flex min-h-full items-start sm:items-center justify-center">
         <div className="fixed inset-0" onClick={handleConfirmAndClose} />
 
         {/* Modal Konteyneri - my-auto guarantees it never clips above top:0 */}
@@ -170,6 +176,7 @@ export function ThemeSelectorModal({ isOpen, onClose }: ThemeSelectorModalProps)
           </div>
         </motion.div>
       </div>
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }

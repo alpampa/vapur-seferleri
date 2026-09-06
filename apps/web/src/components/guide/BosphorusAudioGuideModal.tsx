@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Headphones, Volume2, Play, Pause, MapPin, Globe } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { BOSPHORUS_LANDMARKS, BosphorusLandmark } from "@/lib/data/bosphorus-landmarks";
 import { useLanguageStore } from "@/store/useLanguageStore";
 
@@ -18,6 +19,11 @@ export function BosphorusAudioGuideModal({ isOpen, onClose }: BosphorusAudioGuid
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [narrationLang, setNarrationLang] = useState<"tr" | "en">(language === "en" ? "en" : "tr");
   const [speechRate, setSpeechRate] = useState<number>(0.95);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const synthRef = useRef<SpeechSynthesis | null>(null);
 
@@ -78,11 +84,11 @@ export function BosphorusAudioGuideModal({ isOpen, onClose }: BosphorusAudioGuid
     setSelectedLandmark(landmark);
   };
 
-  if (!isOpen) return null;
+  if (!isOpen || !mounted) return null;
 
-  return (
+  return createPortal(
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-md p-3 sm:p-4 flex min-h-full items-start sm:items-center justify-center">
+      <div className="fixed inset-0 z-[99999] overflow-y-auto bg-black/80 backdrop-blur-md p-3 sm:p-4 flex min-h-full items-start sm:items-center justify-center">
         {/* Backdrop */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -260,6 +266,7 @@ export function BosphorusAudioGuideModal({ isOpen, onClose }: BosphorusAudioGuid
           </div>
         </motion.div>
       </div>
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }
