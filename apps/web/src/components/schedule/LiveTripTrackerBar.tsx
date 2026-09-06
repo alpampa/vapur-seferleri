@@ -1,10 +1,11 @@
 "use client";
 
 import { useActiveVoyageStore } from "@/store/useActiveVoyageStore";
-import { Ship, Radar, X, Bell, AlarmClock } from "lucide-react";
-import { useState, useEffect } from "react";
+import { Ship, Radar, X, Bell, AlarmClock, Volume2 } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
 import { MarineAisRadarModal } from "@/components/map/MarineAisRadarModal";
 import { useAlarmStore } from "@/store/useAlarmStore";
+import { playHistoricalFerryHorn } from "@/lib/utils/sound";
 
 export function LiveTripTrackerBar() {
   const { activeVoyage, clearActiveVoyage } = useActiveVoyageStore();
@@ -12,10 +13,21 @@ export function LiveTripTrackerBar() {
   const { isAlarmSet, toggleAlarm } = useAlarmStore();
   const [secondsRemaining, setSecondsRemaining] = useState(600);
 
+  const hornBlownRef = useRef(false);
+
   useEffect(() => {
     if (!activeVoyage) return;
+    hornBlownRef.current = false;
     const interval = setInterval(() => {
-      setSecondsRemaining((prev) => (prev > 0 ? prev - 1 : 0));
+      setSecondsRemaining((prev) => {
+        const next = prev > 0 ? prev - 1 : 0;
+        // ÖNERİ 3: Son 3 dakikada (180 saniye) otomatik buharlı vapur düdüğü çal
+        if (next === 180 && !hornBlownRef.current) {
+          hornBlownRef.current = true;
+          playHistoricalFerryHorn();
+        }
+        return next;
+      });
     }, 1000);
     return () => clearInterval(interval);
   }, [activeVoyage]);
@@ -59,6 +71,17 @@ export function LiveTripTrackerBar() {
           </div>
 
           <div className="flex items-center gap-1.5 shrink-0">
+            {/* Buharlı Vapur Düdüğü Test / Çalma Butonu */}
+            <button
+              type="button"
+              onClick={() => playHistoricalFerryHorn()}
+              className="p-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/50 text-amber-300 text-xs font-black flex items-center gap-1 shadow-sm transition-all"
+              title="Tarihi Vapur Düdüğü Çal (Ses + Titreşim)"
+            >
+              <Volume2 size={14} className="animate-pulse" />
+              <span className="hidden xs:inline">Düdük</span>
+            </button>
+
             <button
               onClick={() => setIsRadarOpen(true)}
               className="p-2 rounded-xl bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-500/50 text-emerald-300 text-xs font-bold flex items-center gap-1 shadow-sm transition-all"

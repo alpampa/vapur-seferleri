@@ -46,6 +46,68 @@ export function playMarineChime() {
   }
 }
 
+/**
+ * ÖNERİ 3: Synthesizes the authentic deep acoustic horn of historical Istanbul steam ferries.
+ * Uses a double-harmonic acoustic oscillator (A3 ~218 Hz + E4 ~327 Hz with steam low-pass resonance)
+ * echoing across the Bosphorus, accompanied by physical mobile haptic vibration!
+ */
+export function playHistoricalFerryHorn() {
+  if (typeof window === 'undefined') return;
+
+  try {
+    const AudioContextClass = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+    if (!AudioContextClass) return;
+
+    const ctx = new AudioContextClass();
+
+    // Fundamental steam horn tone (A3: ~218 Hz)
+    const osc1 = ctx.createOscillator();
+    const gain1 = ctx.createGain();
+    osc1.type = 'sawtooth';
+    osc1.frequency.setValueAtTime(218.0, ctx.currentTime);
+
+    // Harmonic fifth tone (E4: ~327 Hz)
+    const osc2 = ctx.createOscillator();
+    const gain2 = ctx.createGain();
+    osc2.type = 'triangle';
+    osc2.frequency.setValueAtTime(327.0, ctx.currentTime);
+
+    // Acoustic Low-pass filter to simulate steam whistle chamber resonance
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(750, ctx.currentTime);
+
+    // Envelope: Gentle steam attack, sustained powerful blast, realistic natural release
+    gain1.gain.setValueAtTime(0.01, ctx.currentTime);
+    gain1.gain.linearRampToValueAtTime(0.45, ctx.currentTime + 0.15);
+    gain1.gain.setValueAtTime(0.45, ctx.currentTime + 1.1);
+    gain1.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 2.2);
+
+    gain2.gain.setValueAtTime(0.01, ctx.currentTime);
+    gain2.gain.linearRampToValueAtTime(0.35, ctx.currentTime + 0.15);
+    gain2.gain.setValueAtTime(0.35, ctx.currentTime + 1.1);
+    gain2.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 2.2);
+
+    osc1.connect(gain1);
+    osc2.connect(gain2);
+    gain1.connect(filter);
+    gain2.connect(filter);
+    filter.connect(ctx.destination);
+
+    osc1.start(ctx.currentTime);
+    osc2.start(ctx.currentTime);
+    osc1.stop(ctx.currentTime + 2.3);
+    osc2.stop(ctx.currentTime + 2.3);
+
+    // Physical vibration on mobile devices
+    if ('vibrate' in navigator) {
+      navigator.vibrate([400, 150, 600]);
+    }
+  } catch (err) {
+    console.warn('Web Audio ferry horn error:', err);
+  }
+}
+
 export async function requestNotificationPermission(): Promise<boolean> {
   if (typeof window === 'undefined' || !('Notification' in window)) {
     return false;

@@ -4,6 +4,8 @@ import { useState, useMemo } from "react";
 import { Search, MapPin, Camera, Train, Navigation, Ship, ChevronRight } from "lucide-react";
 import { ISTANBUL_PIERS, PierLocation } from "@/lib/services/route-planner";
 import { getPierTransit } from "@/lib/data/pier-transit-connections";
+import { calculatePierCrowdDensity } from "@/lib/utils/occupancy";
+import { Users } from "lucide-react";
 import { PierLiveCameraModal } from "@/components/map/PierLiveCameraModal";
 import type { ScheduleCardDto } from "@/app/page";
 

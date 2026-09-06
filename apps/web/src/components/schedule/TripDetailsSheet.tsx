@@ -8,7 +8,9 @@ import { OperatorLogo } from "@/components/ui/OperatorLogo";
 import { resolveLiveVesselName } from "@/lib/agents/fleet-registry";
 import { TripStatusBadge } from "./ScheduleCard";
 import type { ScheduleCardDto } from "@/app/page";
-import { predictTripOccupancy } from "@/lib/utils/occupancy";
+import { predictTripOccupancy, getTripAmenities } from "@/lib/utils/occupancy";
+import { playHistoricalFerryHorn } from "@/lib/utils/sound";
+import { Volume2 } from "lucide-react";
 import { getPierTransit } from "@/lib/data/pier-transit-connections";
 import { resolveDynamicTrip, DynamicTripResolution } from "@/lib/utils/dynamic-trip";
 import { useEffect, useState } from "react";
@@ -66,6 +68,7 @@ export function TripDetailsSheet({ schedule, isOpen, onClose, serverTimeIso }: T
   const hasAlarm = isAlarmSet(schedule.id);
 
   const occupancy = predictTripOccupancy(schedule.origin, schedule.destination, schedule.departureTime);
+  const amenities = getTripAmenities(schedule.operator);
   const liveVessel = resolveLiveVesselName(
     schedule.origin,
     schedule.destination,
@@ -404,27 +407,90 @@ export function TripDetailsSheet({ schedule, isOpen, onClose, serverTimeIso }: T
               </div>
             )}
 
-            {/* Canlı Doluluk ve Yolcu Yoğunluğu */}
-            <div className="p-3.5 border border-slate-800 rounded-xl mb-4 bg-slate-900/80 shadow-inner">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-[11px] font-black uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-                  <Users size={13} className="text-cyan-400" />
-                  CANLI DOLULUK TAHMİNİ
+            {/* Canlı Doluluk ve Yolcu Yoğunluğu Isı Endeksi */}
+            <div className="p-3.5 border border-slate-200 dark:border-slate-800 rounded-xl mb-4 bg-slate-50 dark:bg-slate-900/80 shadow-inner">
+              <div className="flex items-center justify-between mb-2 flex-wrap gap-1.5">
+                <span className="text-[11px] font-black uppercase tracking-wider text-slate-600 dark:text-slate-400 flex items-center gap-1.5">
+                  <Users size={13} className="text-blue-500 dark:text-cyan-400" />
+                  RIHTIM & VAPUR DOLULUK ENDEKSİ
                 </span>
-                <span className={`px-2 py-0.5 rounded text-[11px] font-black ${occupancy.badgeClass}`}>
-                  {occupancy.label} (~%{occupancy.percentage})
+                <span className={`px-2 py-0.5 rounded text-[11px] font-black ${occupancy.badgeClass} ${occupancy.glowClass}`}>
+                  {occupancy.label}
                 </span>
               </div>
 
-              <div className="w-full h-2 bg-slate-800 rounded-full overflow-hidden mb-2">
+              <div className="w-full h-2.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden mb-2 shadow-inner">
                 <div
-                  className={`h-full rounded-full transition-all duration-500 ${
-                    occupancy.level === 'HIGH' ? 'bg-rose-500' : occupancy.level === 'MEDIUM' ? 'bg-amber-400' : 'bg-emerald-400'
+                  className={`h-full rounded-full transition-all duration-700 ${
+                    occupancy.level === 'RUSH' || occupancy.level === 'HIGH'
+                      ? 'bg-rose-500 shadow-sm shadow-rose-500'
+                      : occupancy.level === 'MEDIUM'
+                      ? 'bg-amber-400 shadow-sm shadow-amber-400'
+                      : 'bg-emerald-400 shadow-sm shadow-emerald-400'
                   }`}
                   style={{ width: `${occupancy.percentage}%` }}
                 />
               </div>
-              <p className="text-[11px] text-slate-400">{occupancy.description}</p>
+              <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed">{occupancy.description}</p>
+            </div>
+
+            {/* ÖNERİ 2: Vapur İçi Konfor, Büfe ve Hizmet Rozetleri */}
+            <div className="p-3.5 border border-slate-200 dark:border-slate-800 rounded-xl mb-4 bg-slate-50 dark:bg-slate-900/80 shadow-inner">
+              <div className="flex items-center justify-between mb-2.5">
+                <span className="text-[11px] font-black uppercase tracking-wider text-slate-600 dark:text-slate-400 flex items-center gap-1.5">
+                  <span>☕</span>
+                  <span>VAPUR İÇİ İKRAM & KONFOR HİZMETLERİ</span>
+                </span>
+                <span className="text-[9px] font-mono font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 px-1.5 py-0.2 rounded">
+                  UKOME STANDARDI
+                </span>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                {amenities.map((item) => (
+                  <div
+                    key={item.id}
+                    className="p-2.5 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800/80 shadow-2xs flex flex-col items-start gap-1"
+                  >
+                    <span className="text-lg">{item.icon}</span>
+                    <span className="text-[11px] font-black text-slate-900 dark:text-white leading-tight">
+                      {item.label}
+                    </span>
+                    <span className="text-[10px] text-slate-500 dark:text-slate-400 leading-snug line-clamp-2">
+                      {item.description}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* ÖNERİ 3: Tarihi Buharlı Vapur Düdüğü Butonu */}
+            <div className="mb-4 p-3 rounded-xl bg-gradient-to-r from-amber-950/40 via-amber-900/20 to-slate-900 border border-amber-500/40 flex items-center justify-between gap-3 shadow-sm">
+              <div className="flex items-center gap-2.5 min-w-0">
+                <div className="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/40 flex items-center justify-center shrink-0">
+                  <Volume2 size={18} className="animate-pulse" />
+                </div>
+                <div className="min-w-0">
+                  <h4 className="text-xs font-black text-white flex items-center gap-1.5">
+                    <span>TARİHİ VAPUR DÜDÜĞÜ BİLDİRİMİ</span>
+                    <span className="text-[9px] bg-amber-400 text-slate-950 px-1.5 py-0.2 rounded font-mono font-black">
+                      SES + TİTREŞİM
+                    </span>
+                  </h4>
+                  <p className="text-[10px] text-slate-300 truncate mt-0.5">
+                    Vapur iskeleye son 3 dakika yanaşırken buharlı düdük çalar ve telefonunuzu titretir.
+                  </p>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => playHistoricalFerryHorn()}
+                className="px-3 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs shrink-0 shadow-md flex items-center gap-1.5 active:scale-95 transition-all"
+              >
+                <span>🔊</span>
+                <span>Düdüğü Çal</span>
+              </button>
             </div>
 
             {/* İskelelerden Raylı Sistem & Metro / Marmaray Aktarmaları */}

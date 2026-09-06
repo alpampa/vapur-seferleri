@@ -9,7 +9,7 @@ import { useAlarmStore } from "@/store/useAlarmStore";
 import { useFavoritesStore } from "@/store/useFavoritesStore";
 import { useLanguageStore } from "@/store/useLanguageStore";
 import { requestNotificationPermission } from "@/lib/utils/sound";
-import { predictTripOccupancy } from "@/lib/utils/occupancy";
+import { predictTripOccupancy, getTripAmenities } from "@/lib/utils/occupancy";
 import { useWalkingCatchStore } from "@/store/useWalkingCatchStore";
 import { useActiveVoyageStore } from "@/store/useActiveVoyageStore";
 import { ISTANBUL_PIERS } from "@/lib/services/route-planner";
@@ -259,33 +259,35 @@ export function ScheduleCard(props: ScheduleCardProps) {
 
           <span className="text-slate-300 dark:text-slate-600 font-bold">•</span>
 
-          {/* Occupancy Indicator */}
+          {/* Occupancy Indicator & Real Passenger Density */}
           <span
-            className="inline-flex items-center gap-1 font-semibold text-[11px]"
+            className={`inline-flex items-center gap-1 text-[10px] font-extrabold px-1.5 py-0.5 rounded border transition-colors ${
+              occupancy.level === "RUSH" || occupancy.level === "HIGH"
+                ? "text-rose-600 dark:text-rose-300 bg-rose-50 dark:bg-rose-950/80 border-rose-300 dark:border-rose-600/50 animate-pulse"
+                : occupancy.level === "MEDIUM"
+                ? "text-amber-600 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/80 border-amber-300 dark:border-amber-600/40"
+                : "text-emerald-600 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/80 border-emerald-300 dark:border-emerald-600/40"
+            }`}
             title={occupancy.description}
           >
             <span
               className={`w-1.5 h-1.5 rounded-full shrink-0 ${
-                occupancy.level === "HIGH"
-                  ? "bg-rose-500"
+                occupancy.level === "RUSH" || occupancy.level === "HIGH"
+                  ? "bg-rose-500 shadow-xs shadow-rose-500"
                   : occupancy.level === "MEDIUM"
                   ? "bg-amber-500"
                   : "bg-emerald-500"
               }`}
             />
-            <span
-              className={
-                occupancy.level === "HIGH"
-                  ? "text-rose-600 dark:text-rose-300 font-bold"
-                  : occupancy.level === "MEDIUM"
-                  ? "text-amber-600 dark:text-amber-300 font-bold"
-                  : "text-emerald-600 dark:text-emerald-300 font-bold"
-              }
-            >
-              {language === "en" 
-                ? (occupancy.level === "HIGH" ? "Crowded" : occupancy.level === "MEDIUM" ? "Normal" : "Low")
-                : occupancy.label}
-            </span>
+            <span>{occupancy.label}</span>
+          </span>
+
+          {/* Vapur İçi Konfor & İkram Rozetleri (Büfe, Bisiklet, Evcil Hayvan) */}
+          <span className="hidden sm:inline-flex items-center gap-1.5 text-[11px] px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60" title="Vapur İçi İkram & Hizmetler">
+            <span title="Taze Çay & Büfe Servisi" className="cursor-help hover:scale-110 transition-transform">☕</span>
+            <span title="Bisiklet Taşımaya Uygun" className="cursor-help hover:scale-110 transition-transform">🚲</span>
+            <span title="Evcil Hayvan Dostu (Açık Güverte)" className="cursor-help hover:scale-110 transition-transform">🐾</span>
+            <span title="Engelli & Puset Rampası" className="cursor-help hover:scale-110 transition-transform">♿</span>
           </span>
 
           <span className="text-slate-300 dark:text-slate-600 font-bold">•</span>

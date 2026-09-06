@@ -159,6 +159,8 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
   const activeSchedulesWithDyn = useMemo(() => {
     return effectiveSchedules
       .filter((s) => {
+        // GLOBAL ARAMA: Kullanıcı bir arama terimi yazdığında kategori kilidi kalkar, tüm İstanbul taranır
+        if (searchQuery.trim().length > 0) return true;
         if (selectedCategory === "ALL") return true;
         const cat = s.category || (
           s.destination.toLowerCase().includes('ada') ||
@@ -221,29 +223,33 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
 
   // Final filtered list - KULLANICI KURALI: En üstte yer alacak ilk sefer (kesin kronolojik sıralama)
   const filteredList = useMemo(() => {
+    const hasSearch = searchQuery.trim().length > 0;
+    const q = searchQuery.toLowerCase().trim();
+
     return activeSchedulesWithDyn.filter(({ schedule, dyn }) => {
-      if (selectedOrigin !== "ALL") {
-        const matchesOrigin = schedule.origin === selectedOrigin || dyn.currentOrigin === selectedOrigin;
-        if (!matchesOrigin) return false;
-      }
-
-      if (selectedRoute !== "ALL") {
-        const matchesOriginal = `${schedule.origin} ➔ ${schedule.destination}` === selectedRoute;
-        const matchesDynamic = `${dyn.currentOrigin} ➔ ${dyn.destination}` === selectedRoute;
-        if (!matchesOriginal && !matchesDynamic) return false;
-      }
-
-      if (selectedOperator !== "ALL") {
-        if (schedule.operator !== selectedOperator) return false;
-      }
-
-      if (searchQuery.trim()) {
-        const q = searchQuery.toLowerCase().trim();
+      // Eğer arama kutusuna yazı yazılmışsa: Kategori, Hat ve İskele kısıtlamalarını esnetip GLOBAL arama yapar
+      if (hasSearch) {
         const inOrigin = schedule.origin.toLowerCase().includes(q) || dyn.currentOrigin.toLowerCase().includes(q);
         const inDest = schedule.destination.toLowerCase().includes(q);
         const inOperator = schedule.operator.toLowerCase().includes(q);
+        const inRoute = schedule.routeTitle?.toLowerCase().includes(q);
         const inStops = schedule.stops?.some((st) => st.name.toLowerCase().includes(q));
-        if (!inOrigin && !inDest && !inOperator && !inStops) return false;
+        if (!inOrigin && !inDest && !inOperator && !inRoute && !inStops) return false;
+      } else {
+        if (selectedOrigin !== "ALL") {
+          const matchesOrigin = schedule.origin === selectedOrigin || dyn.currentOrigin === selectedOrigin;
+          if (!matchesOrigin) return false;
+        }
+
+        if (selectedRoute !== "ALL") {
+          const matchesOriginal = `${schedule.origin} ➔ ${schedule.destination}` === selectedRoute;
+          const matchesDynamic = `${dyn.currentOrigin} ➔ ${dyn.destination}` === selectedRoute;
+          if (!matchesOriginal && !matchesDynamic) return false;
+        }
+
+        if (selectedOperator !== "ALL") {
+          if (schedule.operator !== selectedOperator) return false;
+        }
       }
 
       if (onlyImminent) {
@@ -359,7 +365,8 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery("")}
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-slate-400 hover:text-slate-700 dark:hover:text-white"
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400 hover:text-rose-500 dark:hover:text-rose-400 px-1 py-0.5"
+                title="Aramayı Temizle"
               >
                 ✕
               </button>
