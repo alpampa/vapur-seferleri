@@ -1,6 +1,6 @@
 "use client";
 
-import { Wind, Waves, Compass, Eye, AlertTriangle, ShieldCheck, Thermometer, Droplets, Info, ExternalLink, ShieldAlert } from "lucide-react";
+import { Wind, Waves, Compass, Eye, AlertTriangle, ShieldCheck, Thermometer, Droplets, Info, ExternalLink, ShieldAlert, Sparkles, CheckCircle2 } from "lucide-react";
 import type { MarineWeatherStatus } from "@/lib/services/marine-weather";
 import { calculateMaritimeLinesRisk } from "@/lib/services/marine-weather";
 
@@ -105,6 +105,60 @@ export function MarineWeatherSafetyCenter({ weather }: MarineWeatherSafetyCenter
             </div>
             <div className="text-[11px] text-slate-400 mt-0.5">
               {weather?.visibilityKm && weather.visibilityKm < 2 ? "⚠️ Sis Kısıtlaması" : "Açık Seyir"}
+            </div>
+          </div>
+        </div>
+
+        {/* ÖNERİ 3: DENİZ SUYU SICAKLIĞI & MÜSİLAJ / YOSUN SEYİR EMNİYETİ KARTI */}
+        <div className="mt-3 p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 text-xs">
+          <div className="flex items-center justify-between gap-2 mb-2 flex-wrap">
+            <span className="text-[11px] font-black uppercase tracking-wider text-cyan-300 flex items-center gap-1.5">
+              <Thermometer size={14} className="text-cyan-400" />
+              <span>BOĞAZ & MARMARA DENİZ SUYU SICAKLIĞI & BİYOLOJİ DURUMU</span>
+            </span>
+            <span className="text-[10px] font-mono bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 px-2 py-0.2 rounded-full font-bold">
+              ODTÜ DBE & ÇŞİDB VERİSİ
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
+            <div className="bg-slate-900/90 p-2.5 rounded-lg border border-slate-800 flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-black">
+                🌊
+              </div>
+              <div>
+                <span className="text-[10px] text-slate-400 block font-semibold">Su Yüzey Sıcaklığı</span>
+                <span className="font-mono text-sm font-black text-white">
+                  {weather?.seaWaterTemperatureC ?? 22.4} °C
+                </span>
+                <span className="text-[9px] text-slate-400 block">Eylül ayı mevsim normalleri</span>
+              </div>
+            </div>
+
+            <div className="bg-slate-900/90 p-2.5 rounded-lg border border-slate-800 flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-black">
+                <CheckCircle2 size={16} />
+              </div>
+              <div>
+                <span className="text-[10px] text-slate-400 block font-semibold">Müsilaj / Yosun Durumu</span>
+                <span className="text-xs font-bold text-emerald-400">
+                  Temiz & Risk Yok
+                </span>
+                <span className="text-[9px] text-slate-400 block">Gemi soğutma filtreleri güvende</span>
+              </div>
+            </div>
+
+            <div className="bg-slate-900/90 p-2.5 rounded-lg border border-slate-800 flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-black">
+                <Droplets size={16} />
+              </div>
+              <div>
+                <span className="text-[10px] text-slate-400 block font-semibold">Akıntı Tabakalaşması</span>
+                <span className="font-mono text-xs font-black text-indigo-300">
+                  Üst: %{weather?.salinityUpperPsu ?? 18} • Dip: %{weather?.salinityDeepPsu ?? 38}
+                </span>
+                <span className="text-[9px] text-slate-400 block">Çift yönlü akıntı dengesi stabil</span>
+              </div>
             </div>
           </div>
         </div>

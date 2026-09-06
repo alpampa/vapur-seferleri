@@ -8,6 +8,9 @@ import { PierLiveCameraModal } from "@/components/map/PierLiveCameraModal";
 import { IstanbulkartWalletModal } from "@/components/wallet/IstanbulkartWalletModal";
 import { BosphorusAudioGuideModal } from "@/components/guide/BosphorusAudioGuideModal";
 import { OnboardVoyageModal } from "@/components/voyage/OnboardVoyageModal";
+import { MissedFerryAssistantModal } from "@/components/planner/MissedFerryAssistantModal";
+import { getPierMobility } from "@/lib/data/pier-parking-bicycle";
+import { Car, Bike, AlertOctagon } from "lucide-react";
 import { CreditCard, Headphones, Gauge } from "lucide-react";
 import { OperatorLogo } from "@/components/ui/OperatorLogo";
 import { resolveLiveVesselName } from "@/lib/agents/fleet-registry";
@@ -43,6 +46,7 @@ export function TripDetailsSheet({ schedule, isOpen, onClose, serverTimeIso }: T
   const [isWalletOpen, setIsWalletOpen] = useState(false);
   const [isAudioGuideOpen, setIsAudioGuideOpen] = useState(false);
   const [isOnboardOpen, setIsOnboardOpen] = useState(false);
+  const [isMissedOpen, setIsMissedOpen] = useState(false);
 
   useEffect(() => {
     if (!schedule) {
@@ -254,6 +258,24 @@ export function TripDetailsSheet({ schedule, isOpen, onClose, serverTimeIso }: T
                 </div>
                 <span className="text-[10px] text-slate-500 dark:text-slate-400 line-clamp-1">
                   QR Geçiş & Tarife
+                </span>
+              </button>
+
+              {/* ÖNERİ 2: Vapuru Kaçırdım Kurtarma Butonu */}
+              <button
+                type="button"
+                onClick={() => setIsMissedOpen(true)}
+                className="col-span-3 p-2.5 rounded-xl bg-amber-50 hover:bg-amber-100 dark:bg-amber-950/40 dark:hover:bg-amber-900/60 border border-amber-300 dark:border-amber-500/50 flex items-center justify-between text-xs transition-all shadow-2xs group mb-1"
+              >
+                <div className="flex items-center gap-2 text-amber-900 dark:text-amber-200">
+                  <AlertOctagon size={16} className="text-amber-500 animate-pulse shrink-0" />
+                  <span className="font-black">VAPURU KAÇIRDIM! NE YAPMALIYIM?</span>
+                  <span className="text-[10px] text-amber-700 dark:text-amber-400 font-semibold hidden sm:inline">
+                    En hızlı alternatif raylı sistem ve motor rotasını hesapla
+                  </span>
+                </div>
+                <span className="text-xs font-black text-amber-600 dark:text-amber-400 group-hover:translate-x-0.5 transition-transform">
+                  Alternatifleri Gör ➔
                 </span>
               </button>
 
@@ -617,6 +639,59 @@ export function TripDetailsSheet({ schedule, isOpen, onClose, serverTimeIso }: T
             </div>
 
             {/* İskelelerden Raylı Sistem & Metro / Marmaray Aktarmaları */}
+            {/* ÖNERİ 1: İskele Çevresi Canlı İSPARK & İSBİKE Kapasitesi */}
+            {(() => {
+              const mob = getPierMobility(schedule.origin);
+              if (!mob) return null;
+              return (
+                <div className="p-3.5 border border-slate-200 dark:border-slate-800 rounded-xl mb-4 bg-slate-50 dark:bg-slate-900/80 shadow-inner">
+                  <div className="flex items-center justify-between mb-2.5">
+                    <span className="text-[11px] font-black uppercase tracking-wider text-slate-600 dark:text-slate-400 flex items-center gap-1.5">
+                      <Car size={14} className="text-blue-500" />
+                      <span>İSKELE ÇEVRESİ İSPARK & İSBİKE BİSİKLET DURUMU</span>
+                    </span>
+                    <span className="text-[9px] font-mono font-bold bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/30 px-1.5 py-0.2 rounded">
+                      {schedule.origin} İSKELESİ
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    {/* İSPARK Kartı */}
+                    <div className="p-2.5 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-lg bg-blue-600/20 text-blue-500 flex items-center justify-center shrink-0 font-bold text-xs">
+                          P
+                        </div>
+                        <div>
+                          <strong className="text-xs text-slate-900 dark:text-white block">{mob.parking.isparkName}</strong>
+                          <span className="text-[10px] text-slate-500 dark:text-slate-400">{mob.parking.pricingPerHour} • {mob.parking.walkMinutes} dk yürüme</span>
+                        </div>
+                      </div>
+                      <span className="font-mono text-xs font-black text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-lg">
+                        {mob.parking.availableSpots} Boş
+                      </span>
+                    </div>
+
+                    {/* İSBİKE Kartı */}
+                    <div className="p-2.5 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-lg bg-emerald-600/20 text-emerald-500 flex items-center justify-center shrink-0 font-bold text-xs">
+                          🚲
+                        </div>
+                        <div>
+                          <strong className="text-xs text-slate-900 dark:text-white block">{mob.bicycle.isbikeStationName}</strong>
+                          <span className="text-[10px] text-slate-500 dark:text-slate-400">Vapurla ücretsiz bisiklet geçişi</span>
+                        </div>
+                      </div>
+                      <span className="font-mono text-xs font-black text-blue-600 dark:text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-lg">
+                        {mob.bicycle.availableBikes} Bisiklet
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
+
             {(originTransit.length > 0 || destTransit.length > 0) && (
               <div className="p-3.5 border border-slate-800 rounded-xl mb-4 bg-slate-900/80 shadow-inner">
                 <h3 className="text-[11px] font-black uppercase tracking-wider text-slate-400 mb-2.5 flex items-center gap-1.5">
