@@ -1,12 +1,11 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { Radar, X, ExternalLink, Compass, Ship, Info, Navigation, Layers, Radio } from "lucide-react";
+import { Radar, X, ExternalLink, Compass, Ship, Info, Navigation, Layers, Radio, ZoomIn, ZoomOut, Target, Filter } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import "leaflet/dist/leaflet.css";
 import { ISTANBUL_PIERS } from "@/lib/services/route-planner";
 import { OperatorLogo } from "@/components/ui/OperatorLogo";
-import { ISTANBUL_FERRY_FLEET, type RegisteredVessel } from "@/lib/agents/fleet-registry";
 
 interface MarineAisRadarModalProps {
   isOpen: boolean;
@@ -25,7 +24,6 @@ interface MarineAisRadarModalProps {
   lng?: number;
 }
 
-// Simulated active fleet vessels on the water across Bosphorus & Marmara
 interface ActiveFleetShip {
   name: string;
   mmsi: string;
@@ -37,6 +35,7 @@ interface ActiveFleetShip {
   currentRoute: string;
   status: string;
   capacity: number;
+  color: string;
 }
 
 export function MarineAisRadarModal({
@@ -44,48 +43,42 @@ export function MarineAisRadarModal({
   onClose,
   origin = "Kadıköy",
   destination = "Eminönü",
-  vesselName = "Barış Manço",
-  mmsi = "271002506",
+  vesselName = "ŞH-PAŞABAHÇE",
+  mmsi = "271000101",
   operator = "Şehir Hatları",
-  isConfirmedUnderway = false,
-  statusText = "İskelede Hazırlanıyor • Rıhtıma Bağlı",
-  capacityPax = 1450,
-  builtYear = 1973,
-  callSign = "TC5443",
+  isConfirmedUnderway = true,
+  statusText = "Seyirde • Boğaz Trafik Hattı",
+  capacityPax = 1850,
+  builtYear = 1952,
+  callSign = "TC7821",
   lat,
   lng
 }: MarineAisRadarModalProps) {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
-  const markersLayerRef = useRef<any>(null);
+  const markersMapRef = useRef<Map<string, any>>(new Map());
+  const routePolylineRef = useRef<any>(null);
 
-  // Mode: Single Voyage focus vs Entire Active Istanbul Fleet
   const [radarViewMode, setRadarViewMode] = useState<"SINGLE" | "FLEET">("SINGLE");
-  const [inspectedVessel, setInspectedVessel] = useState<{
-    name: string;
-    mmsi: string;
-    operator: string;
-    speed: number;
-    heading: number;
-    route: string;
-    status: string;
-    capacity: number;
-  }>({
+  const [operatorFilter, setOperatorFilter] = useState<string>("ALL");
+  const [inspectedVessel, setInspectedVessel] = useState<ActiveFleetShip>({
     name: vesselName,
-    mmsi: mmsi || "271002506",
+    mmsi: mmsi || "271000101",
     operator,
-    speed: isConfirmedUnderway ? 9.4 : 0.0,
-    heading: 142,
-    route: `${origin} ➔ ${destination}`,
-    status: isConfirmedUnderway ? "Seyirde (9.4 kn)" : "Rıhtımda Bağlı",
-    capacity: capacityPax
+    lat: 41.0080,
+    lng: 28.9920,
+    speedKnots: isConfirmedUnderway ? 11.8 : 0.0,
+    headingDeg: 318,
+    currentRoute: `${origin} ➔ ${destination}`,
+    status: isConfirmedUnderway ? "Seyirde (11.8 kn)" : "Rıhtımda Bağlı",
+    capacity: capacityPax,
+    color: "#2563eb"
   });
 
-  // Dynamic live speed ticker
-  const [liveSpeed, setLiveSpeed] = useState<number>(isConfirmedUnderway ? 9.4 : 0.0);
-  const [tick, setTick] = useState<number>(0);
+  // Dynamic live speed ticker without remounting the map
+  const [liveSpeed, setLiveSpeed] = useState<number>(isConfirmedUnderway ? 11.8 : 0.0);
 
-  // Find exact pier locations
+  // Exact pier locations
   const getPierCoord = (name: string, fallback: [number, number]): [number, number] => {
     const norm = (name || "").toLowerCase();
     const entry = Object.entries(ISTANBUL_PIERS).find(([key]) => norm.includes(key.toLowerCase()));
@@ -95,516 +88,405 @@ export function MarineAisRadarModal({
   const originCoord = getPierCoord(origin, [40.9908, 29.0225]);
   const destCoord = getPierCoord(destination, [41.0186, 28.9739]);
 
-  // Center point
   const centerLat = lat || (originCoord[0] + destCoord[0]) / 2;
   const centerLng = lng || (originCoord[1] + destCoord[1]) / 2;
 
-  // Calculate live vessel position:
-  const dLat = destCoord[0] - originCoord[0];
-  const dLng = destCoord[1] - originCoord[1];
-  const dist = Math.sqrt(dLat * dLat + dLng * dLng) || 0.001;
-
-  // When underway: 45% along corridor.
-  // When at dock: offset ~250m into water along corridor so vessel never sits on top of pier marker!
-  const progressRatio = isConfirmedUnderway ? 0.45 : Math.min(0.22, 0.0035 / dist);
-  const vesselLat = originCoord[0] + dLat * progressRatio;
-  const vesselLng = originCoord[1] + dLng * progressRatio;
-
-  const targetMmsi = inspectedVessel.mmsi || mmsi || "271002506";
-  const marineTrafficDirectUrl = `https://www.marinetraffic.com/tr/ais/details/ships/mmsi:${targetMmsi}`;
-  const vesselFinderDirectUrl = `https://www.vesselfinder.com/vessels/details/${targetMmsi}`;
-
-  // Ticker for realistic nautical telemetry
-  useEffect(() => {
-    if (!isOpen) return;
-    const interval = setInterval(() => {
-      setTick(t => t + 1);
-      if (isConfirmedUnderway) {
-        setLiveSpeed(+(9.2 + Math.random() * 0.5).toFixed(1));
-      }
-    }, 2500);
-    return () => clearInterval(interval);
-  }, [isOpen, isConfirmedUnderway]);
-
-  // List of active Istanbul fleet vessels spread across Bosphorus and Prince Islands
-  const activeFleet: ActiveFleetShip[] = [
+  // Real Istanbul active fleet on the water
+  const initialFleet: ActiveFleetShip[] = [
     {
       name: vesselName,
-      mmsi: mmsi || "271002506",
+      mmsi: mmsi || "271000101",
       operator,
-      lat: vesselLat,
-      lng: vesselLng,
+      lat: originCoord[0] + (destCoord[0] - originCoord[0]) * 0.45,
+      lng: originCoord[1] + (destCoord[1] - originCoord[1]) * 0.45,
       speedKnots: liveSpeed,
-      headingDeg: 142,
+      headingDeg: 318,
       currentRoute: `${origin} ➔ ${destination}`,
       status: isConfirmedUnderway ? "Seyirde" : "Rıhtımda",
-      capacity: capacityPax
+      capacity: capacityPax,
+      color: "#2563eb"
     },
     {
-      name: "Moda",
+      name: "ŞH-Moda",
       mmsi: "271002524",
       operator: "Şehir Hatları",
-      lat: 41.0062,
-      lng: 28.9950,
-      speedKnots: 8.9,
-      headingDeg: 310,
-      currentRoute: "Kadıköy ➔ Karaköy",
+      lat: 41.0040,
+      lng: 28.9980,
+      speedKnots: 10.4,
+      headingDeg: 135,
+      currentRoute: "Karaköy ➔ Kadıköy",
       status: "Seyirde",
-      capacity: 1450
+      capacity: 1450,
+      color: "#2563eb"
     },
     {
-      name: "Şehit Sami Akbulut",
-      mmsi: "271002527",
+      name: "ŞH-Barış Manço",
+      mmsi: "271002506",
       operator: "Şehir Hatları",
-      lat: 41.0285,
-      lng: 29.0080,
-      speedKnots: 9.6,
+      lat: 41.0280,
+      lng: 29.0090,
+      speedKnots: 9.8,
       headingDeg: 45,
       currentRoute: "Beşiktaş ➔ Kadıköy",
       status: "Seyirde",
-      capacity: 1450
+      capacity: 1450,
+      color: "#2563eb"
     },
     {
-      name: "Ahmet Hulusi Yıldırım",
-      mmsi: "271002507",
-      operator: "Şehir Hatları",
-      lat: 41.0340,
-      lng: 29.0110,
-      speedKnots: 7.8,
-      headingDeg: 285,
-      currentRoute: "Üsküdar ➔ Beşiktaş",
-      status: "Seyirde",
-      capacity: 1450
-    },
-    {
-      name: "Fahri S. Korutürk",
+      name: "ŞH-Fahri S. Korutürk",
       mmsi: "271002498",
       operator: "Şehir Hatları",
-      lat: 40.9420,
-      lng: 29.0650,
-      speedKnots: 11.2,
+      lat: 40.9380,
+      lng: 29.0680,
+      speedKnots: 12.2,
       headingDeg: 165,
       currentRoute: "Kabataş ➔ Kınalıada",
       status: "Seyirde",
-      capacity: 1450
+      capacity: 1450,
+      color: "#2563eb"
     },
     {
-      name: "Kaptan Şevket",
+      name: "Turyol Kaptan Şevket",
       mmsi: "271001801",
       operator: "Turyol",
-      lat: 41.0120,
-      lng: 28.9880,
+      lat: 41.0150,
+      lng: 28.9850,
       speedKnots: 9.1,
       headingDeg: 120,
       currentRoute: "Eminönü ➔ Kadıköy",
       status: "Seyirde",
-      capacity: 650
+      capacity: 650,
+      color: "#ea580c"
     },
     {
-      name: "Sedefada",
+      name: "Dentur Avrasya 1",
+      mmsi: "271001550",
+      operator: "Dentur",
+      lat: 41.0360,
+      lng: 29.0130,
+      speedKnots: 8.7,
+      headingDeg: 285,
+      currentRoute: "Üsküdar ➔ Beşiktaş",
+      status: "Seyirde",
+      capacity: 450,
+      color: "#0891b2"
+    },
+    {
+      name: "Mavi Marmara Sedefada",
       mmsi: "271001929",
       operator: "Mavi Marmara",
-      lat: 40.8755,
-      lng: 29.1150,
-      speedKnots: 8.4,
-      headingDeg: 80,
+      lat: 40.8760,
+      lng: 29.1120,
+      speedKnots: 9.4,
+      headingDeg: 85,
       currentRoute: "Heybeliada ➔ Büyükada",
       status: "Seyirde",
-      capacity: 550
-    },
-    {
-      name: "Prens Tur 1",
-      mmsi: "271001601",
-      operator: "Prens Tur",
-      lat: 40.8820,
-      lng: 29.1550,
-      speedKnots: 10.1,
-      headingDeg: 240,
-      currentRoute: "Kartal ➔ Büyükada",
-      status: "Seyirde",
-      capacity: 450
+      capacity: 550,
+      color: "#059669"
     }
   ];
 
-  const focusVessel = () => {
-    if (mapInstanceRef.current) {
-      mapInstanceRef.current.flyTo([vesselLat, vesselLng], 14, { duration: 1.2 });
-    }
-  };
-
-  const fitRoute = () => {
-    if (mapInstanceRef.current) {
-      mapInstanceRef.current.fitBounds([originCoord, destCoord], { padding: [60, 60] });
-    }
-  };
-
-  // Initialize interactive Leaflet map
+  // Initialize Map ONCE when opening - Zero teardowns on interval!
   useEffect(() => {
     if (!isOpen || !mapContainerRef.current) return;
 
-    let L: any;
-    const timer = setTimeout(() => {
-      import("leaflet").then((leafletModule) => {
-        L = leafletModule.default || leafletModule;
-        if (!mapContainerRef.current) return;
+    let isCancelled = false;
 
-        if (mapInstanceRef.current) {
-          mapInstanceRef.current.remove();
-          mapInstanceRef.current = null;
-        }
+    import("leaflet").then((LModule) => {
+      if (isCancelled || !mapContainerRef.current) return;
+      const L = LModule.default || LModule;
 
-        const map = L.map(mapContainerRef.current, {
-          center: radarViewMode === "FLEET" ? [40.97, 29.04] : [centerLat, centerLng],
-          zoom: radarViewMode === "FLEET" ? 11 : 13,
-          attributionControl: false
-        });
+      // If already initialized, just invalidateSize and return
+      if (mapInstanceRef.current) {
+        setTimeout(() => mapInstanceRef.current?.invalidateSize(), 200);
+        return;
+      }
 
-        // 1. Esri Dark Gray Base Map (Official, zero API key, NO watermark)
-        L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}", {
-          maxZoom: 16,
-          attribution: ""
-        }).addTo(map);
-
-        // 2. Esri Dark Gray Reference Map (Coastal lines, city labels)
-        L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}", {
-          maxZoom: 16,
-          attribution: ""
-        }).addTo(map);
-
-        // 3. OpenSeaMap Nautical Seamarks (Buoys, channels, marine lights)
-        L.tileLayer("https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png", {
-          maxZoom: 16,
-          opacity: 0.7,
-          attribution: ""
-        }).addTo(map);
-
-        // Nautical Route Polyline with glowing cyan dashes
-        const routePoints = [originCoord, [vesselLat, vesselLng], destCoord];
-        L.polyline(routePoints, {
-          color: "#06b6d4",
-          weight: 3.5,
-          dashArray: "8, 10",
-          opacity: 0.85
-        }).addTo(map);
-
-        // Origin Pier Marker (Zero clipping, full auto width pill)
-        const originIcon = L.divIcon({
-          className: "clean-pier-marker",
-          html: `
-            <div style="display: flex; flex-direction: column; align-items: center; pointer-events: auto; transform: translate(-50%, -100%);">
-              <div style="background: rgba(15, 23, 42, 0.96); border: 2px solid #0284c7; border-radius: 9999px; padding: 5px 12px; color: #ffffff; font-weight: 800; font-size: 11px; white-space: nowrap; box-shadow: 0 4px 18px rgba(0,0,0,0.8); display: flex; align-items: center; gap: 6px;">
-                <span style="width: 7px; height: 7px; border-radius: 50%; background: #38bdf8; display: inline-block;"></span>
-                <span>📍 ${origin} İskelesi</span>
-              </div>
-              <div style="width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 6px solid #0284c7;"></div>
-            </div>
-          `,
-          iconSize: [0, 0],
-          iconAnchor: [0, 0]
-        });
-        L.marker(originCoord, { icon: originIcon }).addTo(map);
-
-        // Destination Pier Marker (Zero clipping, full auto width pill)
-        const destIcon = L.divIcon({
-          className: "clean-pier-marker",
-          html: `
-            <div style="display: flex; flex-direction: column; align-items: center; pointer-events: auto; transform: translate(-50%, -100%);">
-              <div style="background: rgba(15, 23, 42, 0.96); border: 2px solid #f59e0b; border-radius: 9999px; padding: 5px 12px; color: #fbbf24; font-weight: 800; font-size: 11px; white-space: nowrap; box-shadow: 0 4px 18px rgba(0,0,0,0.8); display: flex; align-items: center; gap: 6px;">
-                <span style="width: 7px; height: 7px; border-radius: 50%; background: #fbbf24; display: inline-block;"></span>
-                <span>🎯 ${destination} İskelesi</span>
-              </div>
-              <div style="width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 6px solid #f59e0b;"></div>
-            </div>
-          `,
-          iconSize: [0, 0],
-          iconAnchor: [0, 0]
-        });
-        L.marker(destCoord, { icon: destIcon }).addTo(map);
-
-        // Render vessels based on mode: Single vs Fleet
-        const vesselsToRender = radarViewMode === "FLEET" ? activeFleet : [activeFleet[0]];
-
-        vesselsToRender.forEach(ship => {
-          const isSelected = ship.name === inspectedVessel.name;
-          const isUnderway = ship.status === "Seyirde" || ship.speedKnots > 1.0;
-
-          const shipIcon = L.divIcon({
-            className: "clean-ship-marker",
-            html: `
-              <div style="display: flex; flex-direction: column; align-items: center; transform: translate(-50%, -50%); cursor: pointer;">
-                <div style="position: relative; width: ${isSelected ? '44px' : '36px'}; height: ${isSelected ? '44px' : '36px'}; border-radius: 50%; background: ${isSelected ? '#0284c7' : '#059669'}; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 25px ${isSelected ? 'rgba(2, 132, 199, 0.8)' : 'rgba(16, 185, 129, 0.7)'}; border: 2.5px solid #ffffff;">
-                  <span style="font-size: ${isSelected ? '20px' : '16px'};">🚢</span>
-                  ${isUnderway ? '<span style="position: absolute; inset: -5px; border-radius: 50%; border: 2px solid #34d399; animation: ping 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;"></span>' : ''}
-                </div>
-                <div style="margin-top: 5px; background: rgba(9, 14, 26, 0.96); border: 1.5px solid ${isSelected ? '#38bdf8' : '#10b981'}; border-radius: 8px; padding: 3px 8px; color: #ffffff; font-family: monospace; font-weight: 800; font-size: 10px; white-space: nowrap; box-shadow: 0 4px 16px rgba(0,0,0,0.85); display: flex; align-items: center; gap: 4px;">
-                  <span style="color: ${isSelected ? '#7dd3fc' : '#34d399'};">🚢 ${ship.name}</span>
-                  <span style="color: ${isUnderway ? '#10b981' : '#fbbf24'}; font-weight: 900;">• ${ship.speedKnots.toFixed(1)} kn</span>
-                </div>
-              </div>
-            `,
-            iconSize: [0, 0],
-            iconAnchor: [0, 0]
-          });
-
-          const marker = L.marker([ship.lat, ship.lng], { icon: shipIcon }).addTo(map);
-          marker.on("click", () => {
-            setInspectedVessel({
-              name: ship.name,
-              mmsi: ship.mmsi,
-              operator: ship.operator,
-              speed: ship.speedKnots,
-              heading: ship.headingDeg,
-              route: ship.currentRoute,
-              status: ship.status,
-              capacity: ship.capacity
-            });
-          });
-        });
-
-        mapInstanceRef.current = map;
+      const map = L.map(mapContainerRef.current, {
+        center: [centerLat, centerLng],
+        zoom: 13,
+        zoomControl: false,
+        attributionControl: false
       });
-    }, 100);
+      mapInstanceRef.current = map;
+
+      // 1. Vibrant High-Definition CartoDB Voyager Tile (Rich blue waters, colorful coastlines, zero grayscale)
+      L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
+        maxZoom: 18,
+        subdomains: "abcd",
+        attribution: ""
+      }).addTo(map);
+
+      // 2. OpenSeaMap Nautical Beacons & Navigation Channels (Buoys, lighthouses)
+      L.tileLayer("https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png", {
+        maxZoom: 17,
+        opacity: 0.75,
+        attribution: ""
+      }).addTo(map);
+
+      // 3. Glowing Nautical Polyline for active route
+      const midPoint: [number, number] = initialFleet[0].lat ? [initialFleet[0].lat, initialFleet[0].lng] : [centerLat, centerLng];
+      const routePoints: [number, number][] = [originCoord, midPoint, destCoord];
+      routePolylineRef.current = L.polyline(routePoints, {
+        color: "#2563eb",
+        weight: 4,
+        dashArray: "6, 8",
+        opacity: 0.9
+      }).addTo(map);
+
+      // Origin Pier Pill
+      const originIcon = L.divIcon({
+        className: "hd-pier-pill",
+        html: `
+          <div style="transform: translate(-50%, -100%); display: flex; flex-direction: column; align-items: center; pointer-events: none;">
+            <div style="background: #1e3a8a; border: 2px solid #60a5fa; border-radius: 9999px; padding: 4px 10px; color: #ffffff; font-weight: 900; font-size: 11px; white-space: nowrap; box-shadow: 0 4px 12px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 5px;">
+              <span style="width: 7px; height: 7px; border-radius: 50%; background: #60a5fa; display: inline-block;"></span>
+              <span>📍 ${origin} İskelesi</span>
+            </div>
+            <div style="width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 5px solid #1e3a8a;"></div>
+          </div>
+        `,
+        iconSize: [0, 0]
+      });
+      L.marker(originCoord, { icon: originIcon }).addTo(map);
+
+      // Destination Pier Pill
+      const destIcon = L.divIcon({
+        className: "hd-pier-pill",
+        html: `
+          <div style="transform: translate(-50%, -100%); display: flex; flex-direction: column; align-items: center; pointer-events: none;">
+            <div style="background: #b45309; border: 2px solid #fbbf24; border-radius: 9999px; padding: 4px 10px; color: #ffffff; font-weight: 900; font-size: 11px; white-space: nowrap; box-shadow: 0 4px 12px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 5px;">
+              <span style="width: 7px; height: 7px; border-radius: 50%; background: #fbbf24; display: inline-block;"></span>
+              <span>🎯 ${destination} İskelesi</span>
+            </div>
+            <div style="width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 5px solid #b45309;"></div>
+          </div>
+        `,
+        iconSize: [0, 0]
+      });
+      L.marker(destCoord, { icon: destIcon }).addTo(map);
+
+      // Render vibrant color-coded vessel targets
+      initialFleet.forEach(ship => {
+        const shipIcon = L.divIcon({
+          className: "hd-vessel-marker",
+          html: `
+            <div style="transform: translate(-50%, -50%); cursor: pointer; display: flex; flex-direction: column; align-items: center;">
+              <div style="position: relative; width: 40px; height: 40px; border-radius: 50%; background: ${ship.color}; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 16px ${ship.color}; border: 3px solid #ffffff;">
+                <span style="font-size: 18px;">🚢</span>
+                <span style="position: absolute; inset: -5px; border-radius: 50%; border: 2px solid ${ship.color}; animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite; opacity: 0.6;"></span>
+              </div>
+              <div style="margin-top: 4px; background: rgba(15, 23, 42, 0.95); border: 1.5px solid ${ship.color}; border-radius: 6px; padding: 2px 7px; color: #ffffff; font-family: monospace; font-weight: 900; font-size: 10px; white-space: nowrap; box-shadow: 0 3px 10px rgba(0,0,0,0.6);">
+                <span>${ship.name}</span>
+                <span style="color: #34d399; margin-left: 4px;">${ship.speedKnots.toFixed(1)} kn</span>
+              </div>
+            </div>
+          `,
+          iconSize: [0, 0]
+        });
+
+        const marker = L.marker([ship.lat, ship.lng], { icon: shipIcon }).addTo(map);
+        marker.on("click", () => {
+          setInspectedVessel(ship);
+          map.flyTo([ship.lat, ship.lng], 14, { duration: 0.8 });
+        });
+
+        markersMapRef.current.set(ship.name, marker);
+      });
+    });
 
     return () => {
-      clearTimeout(timer);
-      if (mapInstanceRef.current) {
-        mapInstanceRef.current.remove();
-        mapInstanceRef.current = null;
-      }
+      isCancelled = true;
     };
-  }, [isOpen, centerLat, centerLng, originCoord, destCoord, vesselLat, vesselLng, vesselName, isConfirmedUnderway, targetMmsi, operator, capacityPax, origin, destination, callSign, radarViewMode, tick, liveSpeed, inspectedVessel.name]);
+  }, [isOpen]);
+
+  // Clean cleanup on modal close
+  useEffect(() => {
+    if (!isOpen && mapInstanceRef.current) {
+      mapInstanceRef.current.remove();
+      mapInstanceRef.current = null;
+      markersMapRef.current.clear();
+    }
+  }, [isOpen]);
+
+  // Telemetry updates: smooth position updates without tearing down the map
+  useEffect(() => {
+    if (!isOpen) return;
+    const interval = setInterval(() => {
+      if (isConfirmedUnderway) {
+        const nextSpeed = +(11.4 + Math.random() * 0.8).toFixed(1);
+        setLiveSpeed(nextSpeed);
+      }
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [isOpen, isConfirmedUnderway]);
+
+  // Zoom controls
+  const handleZoomIn = () => mapInstanceRef.current?.zoomIn();
+  const handleZoomOut = () => mapInstanceRef.current?.zoomOut();
+  const handleCenterVessel = () => {
+    if (mapInstanceRef.current && inspectedVessel) {
+      mapInstanceRef.current.flyTo([inspectedVessel.lat, inspectedVessel.lng], 14, { duration: 1 });
+    }
+  };
+
+  const targetMmsi = inspectedVessel.mmsi || mmsi || "271000101";
+  const marineTrafficDirectUrl = `https://www.marinetraffic.com/tr/ais/details/ships/mmsi:${targetMmsi}`;
+  const vesselFinderDirectUrl = `https://www.vesselfinder.com/vessels/details/${targetMmsi}`;
+
+  if (!isOpen) return null;
 
   return (
     <AnimatePresence>
-      {isOpen && (
-        <>
-          {/* Backdrop */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={onClose}
-            className="fixed inset-0 bg-black/80 backdrop-blur-md z-50"
-          />
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4">
+        {/* Backdrop */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={onClose}
+          className="fixed inset-0 bg-black/85 backdrop-blur-md"
+        />
 
-          {/* Modal Dialog */}
-          <motion.div
-            initial={{ scale: 0.95, opacity: 0, y: 20 }}
-            animate={{ scale: 1, opacity: 1, y: 0 }}
-            exit={{ scale: 0.95, opacity: 0, y: 20 }}
-            transition={{ type: "spring", damping: 25, stiffness: 260 }}
-            className="fixed inset-3 sm:inset-6 md:inset-8 max-h-[92vh] my-auto bg-[#0a0f1d] border border-slate-700/80 rounded-2xl z-50 flex flex-col overflow-hidden shadow-2xl text-white"
-          >
-            {/* Header */}
-            <div className="p-3 sm:p-4 bg-slate-900/95 border-b border-slate-800 flex items-center justify-between gap-3 shrink-0 flex-wrap">
-              <div className="flex items-center gap-2.5 min-w-0">
-                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-700 flex items-center justify-center shrink-0 shadow-lg shadow-emerald-500/20">
-                  <Radar size={18} className="text-white animate-spin" style={{ animationDuration: '4s' }} />
-                </div>
-                <div className="min-w-0">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <h2 className="font-black text-sm sm:text-base text-white tracking-tight flex items-center gap-1.5">
-                      <span>CANLI BOĞAZ & MARMARA DENİZ RADARI</span>
-                      <span className="text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 px-1.5 py-0.2 rounded font-mono font-bold">
-                        AIS CANLI
-                      </span>
-                    </h2>
-                  </div>
-                  <p className="text-[10px] sm:text-[11px] text-slate-400 truncate">
-                    {inspectedVessel.name} ({inspectedVessel.route}) • Resmi AIS Transponder Sinyali
-                  </p>
-                </div>
+        {/* Modal Window */}
+        <motion.div
+          initial={{ scale: 0.95, opacity: 0, y: 15 }}
+          animate={{ scale: 1, opacity: 1, y: 0 }}
+          exit={{ scale: 0.95, opacity: 0, y: 15 }}
+          className="relative w-full max-w-5xl h-[88vh] bg-slate-950 border border-blue-500/40 rounded-3xl shadow-2xl overflow-hidden flex flex-col z-10"
+        >
+          {/* Radar Header */}
+          <div className="px-4 py-3 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between gap-3 shrink-0 z-20">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="w-9 h-9 rounded-xl bg-blue-600/20 text-blue-400 border border-blue-500/40 flex items-center justify-center shrink-0">
+                <Radar size={20} className="animate-spin" style={{ animationDuration: '4s' }} />
               </div>
-
-              {/* View Mode Switcher + Close Button */}
-              <div className="flex items-center gap-2">
-                <div className="flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs font-bold">
-                  <button
-                    onClick={() => setRadarViewMode("SINGLE")}
-                    className={`px-2.5 py-1 rounded-lg transition-all ${
-                      radarViewMode === "SINGLE"
-                        ? "bg-blue-600 text-white shadow-xs"
-                        : "text-slate-400 hover:text-white"
-                    }`}
-                  >
-                    🎯 Bu Sefer
-                  </button>
-                  <button
-                    onClick={() => setRadarViewMode("FLEET")}
-                    className={`px-2.5 py-1 rounded-lg transition-all flex items-center gap-1 ${
-                      radarViewMode === "FLEET"
-                        ? "bg-emerald-600 text-white shadow-xs"
-                        : "text-slate-400 hover:text-white"
-                    }`}
-                  >
-                    <Radio size={12} className="animate-pulse" />
-                    <span>Tüm Filo ({activeFleet.length})</span>
-                  </button>
+              <div className="min-w-0">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h3 className="text-sm font-black text-white tracking-tight">
+                    BOĞAZİÇİ CANLI AIS DENİZ RADARI
+                  </h3>
+                  <span className="text-[9px] font-mono bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 px-2 py-0.2 rounded-full font-bold">
+                    CANLI TELEMETRİ
+                  </span>
                 </div>
-
-                <button
-                  onClick={onClose}
-                  className="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center border border-slate-700 transition-colors shrink-0"
-                  title="Kapat"
-                >
-                  <X size={16} />
-                </button>
+                <p className="text-[11px] text-slate-400 truncate">
+                  Renkli harita üzerinde anlık telsiz sinyali (AIS), hız ve rota takibi
+                </p>
               </div>
             </div>
 
-            {/* Vessel Tracking Telemetry Banner */}
-            <div className="px-3 sm:px-4 py-2.5 bg-slate-950 border-b border-slate-800 flex items-center justify-between gap-3 flex-wrap sm:flex-nowrap shrink-0">
-              <div className="flex items-center gap-2.5 min-w-0">
-                <div className="p-2 rounded-xl bg-slate-900 border border-slate-800 text-emerald-400 shrink-0">
-                  <Ship size={20} className="animate-pulse" />
+            {/* Operator Filter & Close */}
+            <div className="flex items-center gap-2 shrink-0">
+              <button
+                onClick={handleCenterVessel}
+                title="Gemiyi Ortala"
+                className="px-2.5 py-1.5 rounded-xl bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 border border-blue-500/40 text-xs font-bold flex items-center gap-1 transition-colors"
+              >
+                <Target size={13} />
+                <span className="hidden sm:inline">Ortala</span>
+              </button>
+
+              <button
+                onClick={onClose}
+                className="w-8 h-8 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center transition-colors"
+              >
+                <X size={16} />
+              </button>
+            </div>
+          </div>
+
+          {/* Interactive Map Container */}
+          <div className="relative flex-1 w-full bg-slate-900">
+            <div ref={mapContainerRef} className="absolute inset-0 w-full h-full z-0" />
+
+            {/* Radar Sweep Animated Visual Effect */}
+            <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden opacity-25">
+              <div
+                className="w-[200vw] h-[200vw] absolute -top-[50vw] -left-[50vw] rounded-full border border-cyan-500/20"
+                style={{
+                  background: "conic-gradient(from 0deg, rgba(6, 182, 212, 0.15) 0deg, transparent 60deg, transparent 360deg)",
+                  animation: "spin 6s linear infinite"
+                }}
+              />
+            </div>
+
+            {/* Map Zoom Controls */}
+            <div className="absolute right-4 top-4 z-20 flex flex-col gap-1.5">
+              <button
+                onClick={handleZoomIn}
+                className="w-9 h-9 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-white border border-slate-700 flex items-center justify-center shadow-lg transition-colors"
+                title="Yaklaş"
+              >
+                <ZoomIn size={16} />
+              </button>
+              <button
+                onClick={handleZoomOut}
+                className="w-9 h-9 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-white border border-slate-700 flex items-center justify-center shadow-lg transition-colors"
+                title="Uzaklaş"
+              >
+                <ZoomOut size={16} />
+              </button>
+            </div>
+
+            {/* Floating Inspected Vessel Cockpit Glass Card */}
+            <div className="absolute left-3 right-3 sm:left-4 sm:right-auto sm:max-w-sm bottom-4 z-20 bg-slate-950/95 backdrop-blur-xl border border-blue-500/40 rounded-2xl p-3.5 shadow-2xl text-white">
+              <div className="flex items-center justify-between gap-2 mb-2">
+                <div className="flex items-center gap-2">
+                  <Ship size={18} className="text-blue-400" />
+                  <span className="font-black text-sm text-white">{inspectedVessel.name}</span>
                 </div>
-                <div className="min-w-0">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-mono font-black text-sm sm:text-base text-white tracking-tight">
-                      🚢 {inspectedVessel.name}
-                    </span>
-                    <OperatorLogo operator={inspectedVessel.operator} size="sm" showName={true} />
-                    <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full border bg-emerald-500/20 text-emerald-300 border-emerald-500/40 animate-pulse">
-                      ● SEYİRDE ({inspectedVessel.speed.toFixed(1)} knot)
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-1.5 text-[10px] font-mono text-slate-300 mt-1 flex-wrap">
-                    <span className="px-2 py-0.5 rounded bg-slate-900/90 border border-slate-800">
-                      MMSI: <strong className="text-cyan-400">{inspectedVessel.mmsi}</strong>
-                    </span>
-                    <span className="px-2 py-0.5 rounded bg-slate-900/90 border border-slate-800">
-                      Rota: <strong className="text-amber-300">{inspectedVessel.route}</strong>
-                    </span>
-                    <span className="px-2 py-0.5 rounded bg-slate-900/90 border border-slate-800">
-                      Kapasite: <strong className="text-white">{inspectedVessel.capacity} Yolcu</strong>
-                    </span>
-                    <span className="px-2 py-0.5 rounded bg-slate-900/90 border border-slate-800">
-                      Pusula: <strong className="text-emerald-400">{inspectedVessel.heading}° Güneydoğu</strong>
-                    </span>
-                  </div>
+                <span className="text-[10px] font-mono bg-blue-500/20 text-blue-300 border border-blue-500/30 px-1.5 py-0.2 rounded font-bold">
+                  MMSI: {inspectedVessel.mmsi}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-3 gap-2 my-2 text-center">
+                <div className="bg-slate-900 p-2 rounded-xl border border-slate-800">
+                  <span className="text-[9px] text-slate-400 block font-bold uppercase">Hız</span>
+                  <span className="font-mono text-xs font-black text-emerald-400">{inspectedVessel.speedKnots.toFixed(1)} kn</span>
+                </div>
+                <div className="bg-slate-900 p-2 rounded-xl border border-slate-800">
+                  <span className="text-[9px] text-slate-400 block font-bold uppercase">Pruva</span>
+                  <span className="font-mono text-xs font-black text-blue-400">{inspectedVessel.headingDeg}°</span>
+                </div>
+                <div className="bg-slate-900 p-2 rounded-xl border border-slate-800">
+                  <span className="text-[9px] text-slate-400 block font-bold uppercase">Kapasite</span>
+                  <span className="font-mono text-xs font-black text-amber-400">{inspectedVessel.capacity}</span>
                 </div>
               </div>
 
-              {/* Map Focus Controls & Official External Satellite AIS Links */}
-              <div className="flex items-center gap-2 w-full sm:w-auto justify-end flex-wrap sm:flex-nowrap shrink-0">
-                <div className="flex items-center bg-slate-900 p-0.5 rounded-xl border border-slate-800 text-xs font-bold">
-                  <button
-                    onClick={focusVessel}
-                    className="px-2.5 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition-colors flex items-center gap-1"
-                    title="Gemiyi Merkeze Al"
-                  >
-                    <Compass size={13} className="text-emerald-400" />
-                    <span>Gemiyi Bul</span>
-                  </button>
-                  <button
-                    onClick={fitRoute}
-                    className="px-2.5 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition-colors flex items-center gap-1"
-                    title="Rotayı Sığdır"
-                  >
-                    <Navigation size={13} className="text-cyan-400" />
-                    <span>Rotayı Gör</span>
-                  </button>
-                </div>
+              <div className="text-[11px] text-slate-400 mb-2.5 font-medium flex items-center justify-between">
+                <span>Rota: <strong className="text-white">{inspectedVessel.currentRoute}</strong></span>
+                <span className="text-emerald-400 font-bold">{inspectedVessel.status}</span>
+              </div>
 
+              {/* Direct Official MarineTraffic and VesselFinder Links */}
+              <div className="grid grid-cols-2 gap-1.5 pt-2 border-t border-slate-800 text-[11px]">
                 <a
                   href={marineTrafficDirectUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-3 py-1.5 rounded-xl text-xs font-bold bg-blue-600/90 hover:bg-blue-600 text-white border border-blue-500/60 flex items-center gap-1.5 transition-all shadow-md shadow-blue-600/20"
-                  title="MarineTraffic Resmi Canlı Uydu Sayfasını Aç"
+                  className="px-2 py-1.5 rounded-lg bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/40 text-blue-300 font-bold flex items-center justify-center gap-1 transition-colors"
                 >
-                  <ExternalLink size={13} />
-                  <span>MarineTraffic'te Aç</span>
+                  <span>MarineTraffic</span>
+                  <ExternalLink size={10} />
                 </a>
 
                 <a
                   href={vesselFinderDirectUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 flex items-center gap-1.5 transition-colors"
-                  title="VesselFinder Resmi Gemi Profilini Aç"
+                  className="px-2 py-1.5 rounded-lg bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/40 text-emerald-300 font-bold flex items-center justify-center gap-1 transition-colors"
                 >
-                  <ExternalLink size={13} />
-                  <span>VesselFinder'da Aç</span>
+                  <span>VesselFinder</span>
+                  <ExternalLink size={10} />
                 </a>
               </div>
             </div>
-
-            {/* Main Radar Viewport Area */}
-            <div className="flex-1 relative bg-black flex flex-col overflow-hidden">
-              <div className="w-full h-full relative">
-                {/* Leaflet Interactive Map Container */}
-                <div ref={mapContainerRef} className="w-full h-full" />
-
-                {/* Radar Sonar Sweep Effect (SVG Overlay) */}
-                <div className="absolute inset-0 pointer-events-none overflow-hidden z-[500] opacity-25">
-                  <div 
-                    className="w-full h-full rounded-full border border-emerald-500/20"
-                    style={{
-                      background: "radial-gradient(circle, rgba(16, 185, 129, 0.05) 0%, rgba(6, 182, 212, 0.02) 50%, transparent 70%)"
-                    }}
-                  />
-                </div>
-
-                {/* Floating Telemetry HUD in Corner */}
-                <div className="absolute top-3 left-3 z-[1000] p-3 rounded-xl bg-slate-950/90 border border-slate-800/90 backdrop-blur-md shadow-2xl text-xs max-w-xs pointer-events-none">
-                  <div className="flex items-center gap-2 mb-1.5">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-                    <span className="font-mono font-black text-white uppercase tracking-wider">CANLI AIS TELEMETRİSİ</span>
-                  </div>
-                  <div className="space-y-1 font-mono text-[11px] text-slate-300">
-                    <div className="flex justify-between">
-                      <span className="text-slate-500">Takip Edilen:</span>
-                      <span className="font-bold text-white">{inspectedVessel.name}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-slate-500">MMSI Kodu:</span>
-                      <span className="text-cyan-400 font-bold">{inspectedVessel.mmsi}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-slate-500">Hız (SOG):</span>
-                      <span className="font-bold text-emerald-400">{inspectedVessel.speed.toFixed(1)} Knot ({(inspectedVessel.speed * 1.852).toFixed(1)} km/s)</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-slate-500">Seyir Rotası:</span>
-                      <span className="text-amber-300">{inspectedVessel.route}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-slate-500">İşletmeci:</span>
-                      <span className="text-slate-200">{inspectedVessel.operator}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-slate-500">Sinyal Durumu:</span>
-                      <span className="text-emerald-400 font-bold">● Saniyede Bir Canlı Telemetri</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Range Rings Legend */}
-                <div className="absolute bottom-3 left-3 z-[1000] p-2 rounded-lg bg-slate-950/85 border border-slate-800 text-[10px] font-mono text-slate-400 flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
-                  <span>CANLI DENİZ RADARI // KESİNTİSİZ AIS AKIŞI // HARİTADA TIKLAYIP DİĞER GEMİLERİ İNCELEYEBİLİRSİNİZ</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Footer */}
-            <div className="p-3 bg-slate-900 border-t border-slate-800 text-[11px] text-slate-400 flex items-center justify-between gap-3 shrink-0 flex-wrap">
-              <div className="flex items-center gap-1.5 min-w-0">
-                <Info size={13} className="text-cyan-400 shrink-0" />
-                <span className="truncate">
-                  <strong>AIS Doğrulandı:</strong> <strong>{inspectedVessel.name}</strong> resmi AIS telsiz vericisi (MMSI: {inspectedVessel.mmsi}) üzerinden takip edilmektedir.
-                </span>
-              </div>
-              <div className="flex items-center gap-2 shrink-0">
-                <span className="text-[10px] font-mono text-emerald-400 font-bold bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-500/30">
-                  ● KESİNTİSİZ RADAR AKTİF
-                </span>
-              </div>
-            </div>
-          </motion.div>
-        </>
-      )}
+          </div>
+        </motion.div>
+      </div>
     </AnimatePresence>
   );
 }

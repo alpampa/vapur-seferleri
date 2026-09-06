@@ -1,6 +1,8 @@
 "use client";
 
-import { Ship, Sun, Moon, Globe, CreditCard, Headphones } from "lucide-react";
+import { Ship, Sun, Moon, Globe, CreditCard, Headphones, Palette } from "lucide-react";
+import { ThemeSelectorModal } from "@/components/theme/ThemeSelectorModal";
+import { SUPPORTED_LANGUAGES } from "@/store/useLanguageStore";
 import { IstanbulkartWalletModal } from "@/components/wallet/IstanbulkartWalletModal";
 import { BosphorusAudioGuideModal } from "@/components/guide/BosphorusAudioGuideModal";
 import { useEffect, useState } from "react";
@@ -13,8 +15,9 @@ export function TopBar() {
   const [mounted, setMounted] = useState<boolean>(false);
   const [isWalletOpen, setIsWalletOpen] = useState<boolean>(false);
   const [isAudioGuideOpen, setIsAudioGuideOpen] = useState<boolean>(false);
+  const [isThemeModalOpen, setIsThemeModalOpen] = useState<boolean>(false);
 
-  const { theme, toggleTheme } = useThemeStore();
+  const { theme, setTheme } = useThemeStore();
   const { language, toggleLanguage, t } = useLanguageStore();
 
   useEffect(() => {
@@ -90,31 +93,27 @@ export function TopBar() {
           <span className="sm:hidden">Rehber</span>
         </button>
 
-        {/* Language Switcher (TR | EN) */}
+        {/* 6 Profesyonel Tasarım Seçici Butonu */}
         <button
-          onClick={toggleLanguage}
-          title={language === "tr" ? "Switch to English" : "Türkçe'ye Geç"}
-          className="px-2 py-1 rounded-lg text-[11px] font-black tracking-wider transition-all border flex items-center gap-1 bg-slate-100 hover:bg-slate-200 dark:bg-slate-900 dark:hover:bg-slate-800 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 shadow-2xs"
+          type="button"
+          onClick={() => setIsThemeModalOpen(true)}
+          title="6 Profesyonel Tasarım & Renk Paleti Seç"
+          className="px-2 py-1 rounded-lg text-[11px] font-black transition-all border flex items-center gap-1 bg-amber-50 hover:bg-amber-100 dark:bg-amber-950/40 dark:hover:bg-amber-900/60 border-amber-200 dark:border-amber-800/60 text-amber-700 dark:text-amber-300 shadow-2xs"
         >
-          <Globe size={12} className="text-blue-600 dark:text-blue-400" />
-          <span>{language === "tr" ? "EN" : "TR"}</span>
+          <Palette size={13} className="text-amber-600 dark:text-amber-400" />
+          <span className="hidden sm:inline">Temalar</span>
+          <span className="sm:hidden">Tema</span>
         </button>
 
-        {/* Theme Toggle (Sun / Moon) */}
+        {/* 5 Dünya Dili Seçici (TR, EN, DE, AR, RU) */}
         <button
-          onClick={toggleTheme}
-          title={theme === "dark" ? "Gündüz Moduna Geç (Light Mode)" : "Gece Moduna Geç (Dark Mode)"}
-          className="p-1.5 rounded-lg text-slate-700 dark:text-slate-300 bg-slate-100 hover:bg-slate-200 dark:bg-slate-900 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 transition-all shadow-2xs flex items-center justify-center shrink-0"
+          type="button"
+          onClick={toggleLanguage}
+          title={`Aktif Dil: ${language.toUpperCase()} (Tıklayarak TR/EN/DE/AR/RU değiştirin)`}
+          className="px-2 py-1 rounded-lg text-[11px] font-black tracking-wider transition-all border flex items-center gap-1 bg-slate-100 hover:bg-slate-200 dark:bg-slate-900 dark:hover:bg-slate-800 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 shadow-2xs"
         >
-          {mounted ? (
-            theme === "dark" ? (
-              <Sun size={15} className="text-amber-400 hover:rotate-45 transition-transform" />
-            ) : (
-              <Moon size={15} className="text-indigo-600 hover:-rotate-12 transition-transform" />
-            )
-          ) : (
-            <Sun size={15} className="text-amber-500" />
-          )}
+          <span className="text-xs">{SUPPORTED_LANGUAGES.find(l => l.code === language)?.flag || "🌐"}</span>
+          <span>{language.toUpperCase()}</span>
         </button>
 
         {/* Compact Digital National Clock */}
@@ -134,6 +133,7 @@ export function TopBar() {
       </div>
       <IstanbulkartWalletModal isOpen={isWalletOpen} onClose={() => setIsWalletOpen(false)} />
       <BosphorusAudioGuideModal isOpen={isAudioGuideOpen} onClose={() => setIsAudioGuideOpen(false)} />
+      <ThemeSelectorModal isOpen={isThemeModalOpen} onClose={() => setIsThemeModalOpen(false)} />
     </header>
   );
 }

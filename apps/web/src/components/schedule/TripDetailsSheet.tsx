@@ -10,6 +10,10 @@ import { BosphorusAudioGuideModal } from "@/components/guide/BosphorusAudioGuide
 import { OnboardVoyageModal } from "@/components/voyage/OnboardVoyageModal";
 import { MissedFerryAssistantModal } from "@/components/planner/MissedFerryAssistantModal";
 import { getPierMobility } from "@/lib/data/pier-parking-bicycle";
+import { getPierGroundTransit } from "@/lib/data/pier-taxi-transit";
+import { calculateSeagullSimitDeck } from "@/lib/utils/seagull-simit-guide";
+import { FERRY_LIBRARY_BOOKS } from "@/lib/data/ferry-library-catalog";
+import { Phone, Bus, BookOpen, Feather } from "lucide-react";
 import { Car, Bike, AlertOctagon } from "lucide-react";
 import { CreditCard, Headphones, Gauge } from "lucide-react";
 import { OperatorLogo } from "@/components/ui/OperatorLogo";
@@ -636,6 +640,126 @@ export function TripDetailsSheet({ schedule, isOpen, onClose, serverTimeIso }: T
                 <span>🔊</span>
                 <span>Düdüğü Çal</span>
               </button>
+            </div>
+
+                        {/* MARTILARA SİMİT ATMA RÜZGARALTI GÜVERTE REHBERİ */}
+            {(() => {
+              const seagull = calculateSeagullSimitDeck(deckAdvice?.headingDeg || 315, 45, 12);
+              return (
+                <div className="p-3.5 border border-slate-200 dark:border-slate-800 rounded-xl mb-4 bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent dark:from-amber-950/30 dark:to-slate-900/40 shadow-sm">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-[11px] font-black uppercase tracking-wider text-amber-700 dark:text-amber-400 flex items-center gap-1.5">
+                      <span>🕊️</span>
+                      <span>MARTILARA SİMİT ATMA GÜVERTE REHBERİ</span>
+                    </span>
+                    <span className="text-[10px] font-mono font-bold bg-amber-400 text-slate-950 px-2 py-0.2 rounded-full">
+                      RÜZGARALTI (LEEWARD)
+                    </span>
+                  </div>
+
+                  <div className="p-2.5 rounded-xl bg-white dark:bg-slate-950 border border-amber-200 dark:border-amber-900/60 mb-2">
+                    <div className="flex items-center justify-between text-xs font-bold text-slate-900 dark:text-white mb-1">
+                      <span>📍 Tavsiye Edilen Simit Atma Noktası:</span>
+                      <strong className="text-amber-600 dark:text-amber-400 font-black">{seagull.recommendedDeckLabel}</strong>
+                    </div>
+                    <p className="text-[11px] text-slate-600 dark:text-slate-300 leading-snug">
+                      {seagull.throwAngleAdvice} {seagull.physicsReason}
+                    </p>
+                  </div>
+
+                  <div className="text-[10px] text-slate-500 dark:text-slate-400 flex items-center justify-between">
+                    <span>💡 {seagull.seagullBehaviorNote}</span>
+                    <span className="italic">{seagull.safetyTip}</span>
+                  </div>
+                </div>
+              );
+            })()}
+
+            {/* İSKELE ÇEVRESİ CANLI TAKSİ DURAĞI & İETT OTOBÜS PERONLARI REHBERİ */}
+            {(() => {
+              const ground = getPierGroundTransit(schedule.origin);
+              if (!ground) return null;
+              return (
+                <div className="p-3.5 border border-slate-200 dark:border-slate-800 rounded-xl mb-4 bg-slate-50 dark:bg-slate-900/80 shadow-inner">
+                  <div className="flex items-center justify-between mb-2.5">
+                    <span className="text-[11px] font-black uppercase tracking-wider text-slate-600 dark:text-slate-400 flex items-center gap-1.5">
+                      <Bus size={14} className="text-emerald-500" />
+                      <span>İSKELE ÇIKIŞI TAKSİ DURAĞI & İETT OTOBÜS PERONLARI</span>
+                    </span>
+                    <span className="text-[10px] font-mono font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 px-2 py-0.2 rounded">
+                      {schedule.origin} RIHTIM
+                    </span>
+                  </div>
+
+                  {/* Taksi Durağı */}
+                  <div className="p-2.5 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex items-center justify-between mb-2.5">
+                    <div>
+                      <strong className="text-xs text-slate-900 dark:text-white block flex items-center gap-1.5">
+                        <span>🚕</span>
+                        <span>{ground.taxi.standName}</span>
+                      </strong>
+                      <span className="text-[10px] text-slate-500 dark:text-slate-400 block mt-0.5">
+                        {ground.taxi.locationDescription} • {ground.taxi.walkMinutes} dk yürüme
+                      </span>
+                    </div>
+
+                    <a
+                      href={`tel:${ground.taxi.phone}`}
+                      className="px-2.5 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-mono font-black text-xs flex items-center gap-1 shadow-sm shrink-0 transition-transform active:scale-95"
+                    >
+                      <Phone size={12} />
+                      <span>{ground.taxi.phoneDisplay}</span>
+                    </a>
+                  </div>
+
+                  {/* İETT Peronları */}
+                  <div className="space-y-1.5">
+                    {ground.buses.map((bus, bIdx) => (
+                      <div key={bIdx} className="p-2 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800/80 flex items-center justify-between text-xs">
+                        <div className="min-w-0 pr-2">
+                          <span className="font-bold text-slate-900 dark:text-white block truncate">{bus.platformName}</span>
+                          <span className="text-[10px] text-slate-500 dark:text-slate-400 truncate block">➔ {bus.destinations}</span>
+                        </div>
+                        <div className="flex items-center gap-1 shrink-0">
+                          {bus.keyLines.map(line => (
+                            <span key={line} className="px-1.5 py-0.2 rounded bg-blue-600/10 text-blue-600 dark:text-blue-400 border border-blue-500/30 text-[9px] font-black font-mono">
+                              {line}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })()}
+
+            {/* İBB VAPUR KÜTÜPHANESİ VE DENİZCİLİK KİTAPLIĞI */}
+            <div className="p-3.5 border border-slate-200 dark:border-slate-800 rounded-xl mb-4 bg-slate-50 dark:bg-slate-900/80 shadow-inner">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-[11px] font-black uppercase tracking-wider text-slate-600 dark:text-slate-400 flex items-center gap-1.5">
+                  <BookOpen size={14} className="text-amber-500" />
+                  <span>ŞEHİR HATLARI VAPUR KÜTÜPHANESİ KİTAPLIĞI</span>
+                </span>
+                <span className="text-[9px] font-mono text-amber-500 border border-amber-500/30 px-1.5 py-0.2 rounded">
+                  PAŞABAHÇE & MODA
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 mb-2">
+                Vapurlarımızda bulunan İBB Vapur Kütüphanelerinde yolculuk süresince okuyabileceğiniz seçkin eserler:
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {FERRY_LIBRARY_BOOKS.slice(0, 4).map((book, bkIdx) => (
+                  <div key={bkIdx} className="p-2 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs">
+                    <div className="flex items-center justify-between gap-1 mb-0.5">
+                      <strong className="text-slate-900 dark:text-white truncate font-bold">{book.title}</strong>
+                      <span className="text-[8px] font-mono bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-1 rounded shrink-0">{book.category}</span>
+                    </div>
+                    <span className="text-[10px] text-amber-600 dark:text-amber-400 font-semibold block">{book.author}</span>
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400 line-clamp-1 mt-0.5">{book.description}</p>
+                  </div>
+                ))}
+              </div>
             </div>
 
             {/* İskelelerden Raylı Sistem & Metro / Marmaray Aktarmaları */}
