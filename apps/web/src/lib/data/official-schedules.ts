@@ -1788,7 +1788,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     "destination": "Büyükada",
     "operator": "Şehir Hatları",
     "departureTime": "08:20",
-    "arrivalTime": "-",
+    "arrivalTime": "09:30",
     "platform": "Peron 2",
     "price": "₺45.00",
     "stops": [
@@ -1872,7 +1872,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     "destination": "Bostancı",
     "operator": "Şehir Hatları",
     "departureTime": "08:20",
-    "arrivalTime": "-",
+    "arrivalTime": "08:55",
     "platform": "Peron 2",
     "price": "₺45.00",
     "stops": [
@@ -1912,7 +1912,7 @@ export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
     "destination": "Bostancı",
     "operator": "Şehir Hatları",
     "departureTime": "11:35",
-    "arrivalTime": "-",
+    "arrivalTime": "12:10",
     "platform": "Peron 2",
     "price": "₺45.00",
     "stops": [
