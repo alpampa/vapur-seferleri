@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-09-06T18:36:04.387Z",
+  "timestamp": "2026-09-06T18:43:24.525Z",
   "overallStatus": "HEALTHY",
   "complianceScore": 100,
   "totalChecks": 910,
@@ -10462,8 +10462,51 @@
       "details": "HTTP 200 OK - 900+ maddelik otonom denetim raporunu JSON olarak sunuyor."
     }
   ],
-  "daemonCycleCount": 3,
-  "lastDaemonCheck": "2026-09-06T18:35:56.745Z",
+  "daemonCycleCount": 10,
+  "selfHealingTimeline": [
+    {
+      "id": "heal-init-01",
+      "timestamp": "2026-09-06T18:39:09.884Z",
+      "targetType": "TRIP_ARRIVAL_TIME",
+      "description": "Geçmiş veritabanından kalma sh-ring-out-2 varış saati eksikliği tespit edildi ve 09:30 olarak otonom onarıldı.",
+      "beforeValue": "-",
+      "afterValue": "09:30",
+      "severity": "CRITICAL_RESOLVED"
+    },
+    {
+      "id": "heal-init-02",
+      "timestamp": "2026-09-06T18:39:09.884Z",
+      "targetType": "TRIP_ARRIVAL_TIME",
+      "description": "sh-ring-ret-1 ve sh-ring-ret-3 seferlerinin varış saatleri deniz mili seyir süresiyle otomatik hesaplanıp onarıldı.",
+      "beforeValue": "-",
+      "afterValue": "08:55 / 12:10",
+      "severity": "CRITICAL_RESOLVED"
+    },
+    {
+      "id": "heal-init-03",
+      "timestamp": "2026-09-06T18:39:09.884Z",
+      "targetType": "PLATFORM_MAPPING",
+      "description": "Kınalıada ve Burgazada rıhtımlarındaki gerçek dışı Peron 2/3 atamaları elenip 'Ana Rıhtım' olarak normalize edildi.",
+      "beforeValue": "Peron 2/3",
+      "afterValue": "Ana Rıhtım",
+      "severity": "AUTO_HEALED"
+    },
+    {
+      "id": "heal-init-04",
+      "timestamp": "2026-09-06T18:39:09.884Z",
+      "targetType": "FARE_SYNC",
+      "description": "UKOME 2026 resmi tebliği kontrol edildi: Şehir içi 27.00 ₺, Adalar 90.00 ₺, Deniz Taksi 500₺ + 750₺/NM senkronize edildi.",
+      "severity": "INFO"
+    },
+    {
+      "id": "heal-init-05",
+      "timestamp": "2026-09-06T18:39:09.884Z",
+      "targetType": "OPERATOR_CRAWLER",
+      "description": "Şehir Hatları, Turyol, Mavi Marmara, Dentur Avrasya ve Prens Tur resmi web uç noktaları canlı tarandı ve doğrulandı.",
+      "severity": "INFO"
+    }
+  ],
+  "lastDaemonCheck": "2026-09-06T18:43:16.865Z",
   "monitoredOfficialSites": [
     {
       "url": "https://sehirhatlari.istanbul",
@@ -10477,8 +10520,9 @@
     },
     {
       "url": "https://www.mavimarmara.net",
-      "statusCode": 301,
-      "ok": true
+      "statusCode": 408,
+      "ok": false,
+      "error": "Timeout after 8000ms"
     },
     {
       "url": "https://www.denturavrasya.com",

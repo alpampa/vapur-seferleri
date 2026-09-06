@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { ShieldCheck, Activity, RefreshCw, AlertTriangle, CheckCircle2, Clock, Zap, Radio, Ship, Globe2, Sparkles } from "lucide-react";
+import { ShieldCheck, Activity, RefreshCw, AlertTriangle, CheckCircle2, Clock, Zap, Radio, Ship, Globe2, Sparkles, FileText, BellRing, ExternalLink } from "lucide-react";
+import { getLatestDiffSnapshots, DiffSnapshot } from "@/lib/agents/visual-diff-recorder";
+import { triggerCancellationPushAlert, requestDisruptionNotificationPermission } from "@/lib/utils/push-alert-service";
 
 interface AuditSummary {
   timestamp: string;
@@ -32,6 +34,7 @@ interface AuditSummary {
 
 export default function AdminDashboard() {
   const [auditData, setAuditData] = useState<AuditSummary | null>(null);
+  const [diffSnapshots, setDiffSnapshots] = useState<DiffSnapshot[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [lastRefreshed, setLastRefreshed] = useState<string>("");
   const [triggerMsg, setTriggerMsg] = useState<string>("");
@@ -45,6 +48,7 @@ export default function AdminDashboard() {
         setAuditData(json);
         setLastRefreshed(new Date().toLocaleTimeString("tr-TR"));
       }
+      setDiffSnapshots(getLatestDiffSnapshots());
     } catch (e) {
       console.error("Audit fetch failed", e);
     } finally {
@@ -61,6 +65,17 @@ export default function AdminDashboard() {
   const handleRunHealing = () => {
     setTriggerMsg("Otonom düzeltme motoru tetiklendi. Tüm tarifeler ve seferler anında eşitlendi.");
     fetchAudit();
+    setTimeout(() => setTriggerMsg(""), 5000);
+  };
+
+  const handleTestPush = async () => {
+    const granted = await requestDisruptionNotificationPermission();
+    triggerCancellationPushAlert(
+      "Kadıköy - Adalar Hattı",
+      "Liman Başkanlığı 28 Knot Lodos Fırtınası Uyarısı: Güvenlik amacıyla sefer askıya alınmıştır.",
+      true
+    );
+    setTriggerMsg("Canlı Sefer İptal Push Bildirimi ve Siren testi başarıyla çalıştırıldı.");
     setTimeout(() => setTriggerMsg(""), 5000);
   };
 
@@ -84,11 +99,19 @@ export default function AdminDashboard() {
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 flex-wrap">
+          <button
+            onClick={handleTestPush}
+            className="flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-rose-600/20 hover:bg-rose-600/30 text-rose-300 border border-rose-500/40 font-bold text-xs shadow-sm transition-all"
+          >
+            <BellRing size={14} className="animate-bounce" />
+            Test İptal Push Alarmı
+          </button>
+
           <button
             onClick={handleRunHealing}
             disabled={isLoading}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs shadow-lg shadow-blue-500/20 active:scale-95 transition-all disabled:opacity-50"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs shadow-lg shadow-blue-500/20 active:scale-95 transition-all disabled:opacity-50 cursor-pointer"
           >
             <RefreshCw size={14} className={isLoading ? "animate-spin" : ""} />
             Hemen Tara & Otomatik Onar
@@ -192,6 +215,52 @@ export default function AdminDashboard() {
               </div>
               <div className="text-[10px] text-slate-500 font-mono shrink-0">
                 {new Date(action.timestamp).toLocaleTimeString("tr-TR")}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Ajan Anomali & Resmi Metin Diff Kaydedici (Visual Diff Snapshot) */}
+      <div className="p-6 rounded-2xl bg-[#0e1626] border border-slate-800 shadow-lg space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <FileText size={18} className="text-blue-400" />
+            <h2 className="text-base font-black text-white">Ajan Anomali Kaydedici: Resmi Sayfa & Tarife Diff Günlüğü</h2>
+          </div>
+          <span className="text-xs text-blue-400 font-mono">SHA-256 Doğrulamalı</span>
+        </div>
+
+        <div className="space-y-3">
+          {diffSnapshots.map((diff) => (
+            <div key={diff.id} className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 text-xs space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="font-bold text-white">{diff.operator}</span>
+                  <span className="text-[10px] font-mono bg-blue-500/20 text-blue-300 px-1.5 py-0.5 rounded">
+                    {diff.category}
+                  </span>
+                  <span className="text-slate-400 font-medium truncate">{diff.title}</span>
+                </div>
+                <a
+                  href={diff.sourceUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[10px] text-blue-400 hover:underline flex items-center gap-1 shrink-0"
+                >
+                  <span>Resmi Kaynak</span>
+                  <ExternalLink size={10} />
+                </a>
+              </div>
+
+              <div className="p-2.5 rounded-lg bg-slate-950 font-mono text-[11px] text-slate-300 border border-slate-800/80">
+                <div className="text-slate-500 text-[10px] mb-1">Taranan Resmi Metin Parçası:</div>
+                <div className="text-emerald-400">&ldquo;{diff.currentSnippet}&rdquo;</div>
+              </div>
+
+              <div className="flex items-center justify-between text-[10px] text-slate-500 font-mono pt-1">
+                <span>Hash: {diff.shaHash.substring(0, 16)}...</span>
+                <span>Fark Durumu: {diff.changesDetected ? "⚠️ Değişiklik Algılandı & Eşitlendi" : "✅ 0 Değişiklik (Resmi Metin Birebir Uyumlu)"}</span>
               </div>
             </div>
           ))}

@@ -39,6 +39,8 @@ import { BerthTurnaroundIndicator } from "@/components/schedule/BerthTurnaroundI
 import { SharedSeaTaxiModal } from "@/components/taxishare/SharedSeaTaxiModal";
 import { PierLiveAisRadarModal } from "@/components/map/PierLiveAisRadarModal";
 import { IslandStrandedAlertModal } from "@/components/schedule/IslandStrandedAlertModal";
+import { UkomeOfficialSealBadge } from "@/components/turnstile/UkomeOfficialSealBadge";
+import { HarbourMasterWeatherBarometer } from "@/components/weather/HarbourMasterWeatherBarometer";
 
 interface TripDetailsSheetProps {
   schedule: ScheduleCardDto | null;
@@ -280,49 +282,26 @@ export function TripDetailsSheet({ schedule, isOpen, onClose, serverTimeIso }: T
               />
             </div>
 
-            {/* Resmi UKOME Yasal Ücret Doğrulama Kartı */}
+            {/* Resmi UKOME Yasal Ücret Doğrulama Rozet Mührü */}
             {(() => {
               const fareInfo = getOfficialRouteFare(schedule.origin, schedule.destination);
               return (
-                <div className="mb-3 p-3 rounded-2xl bg-emerald-50/90 dark:bg-emerald-950/30 border border-emerald-300 dark:border-emerald-800/60 text-xs space-y-2 shadow-2xs">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1.5 font-black text-emerald-900 dark:text-emerald-300">
-                      <ShieldCheck size={15} className="text-emerald-600 dark:text-emerald-400" />
-                      <span>RESMİ İBB UKOME ÜCRET TARİFESİ</span>
-                    </div>
-                    <a
-                      href={fareInfo.officialSourceUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[10px] font-bold text-emerald-700 dark:text-emerald-400 hover:underline inline-flex items-center gap-0.5"
-                      title="Şehir Hatları Resmi Ücret Tebliği Sayfası"
-                    >
-                      <span>Resmi Tebliğ ↗</span>
-                    </a>
-                  </div>
-
-                  <div className="grid grid-cols-3 gap-2 text-center pt-1 border-t border-emerald-200/60 dark:border-emerald-800/40">
-                    <div className="p-1.5 rounded-xl bg-white/90 dark:bg-slate-900/80 border border-emerald-100 dark:border-slate-800">
-                      <span className="text-[9px] text-slate-500 dark:text-slate-400 block font-bold">Tam Bilet</span>
-                      <strong className="text-xs sm:text-sm font-mono font-black text-emerald-600 dark:text-emerald-400">{fareInfo.fullFare}</strong>
-                    </div>
-                    <div className="p-1.5 rounded-xl bg-white/90 dark:bg-slate-900/80 border border-emerald-100 dark:border-slate-800">
-                      <span className="text-[9px] text-slate-500 dark:text-slate-400 block font-bold">İndirimli Öğrenci</span>
-                      <strong className="text-xs sm:text-sm font-mono font-black text-blue-600 dark:text-blue-400">{fareInfo.studentFare}</strong>
-                    </div>
-                    <div className="p-1.5 rounded-xl bg-white/90 dark:bg-slate-900/80 border border-emerald-100 dark:border-slate-800">
-                      <span className="text-[9px] text-slate-500 dark:text-slate-400 block font-bold">{fareInfo.isIslandRoute ? "Adakart Mukim" : "Sosyal / 60+"}</span>
-                      <strong className="text-xs sm:text-sm font-mono font-black text-amber-600 dark:text-amber-400">{fareInfo.islandResidentFare || fareInfo.socialFare}</strong>
-                    </div>
-                  </div>
-
-                  <div className="text-[10px] text-slate-600 dark:text-slate-400 flex items-center justify-between pt-0.5">
-                    <span>Yasal Dayanak: <strong>{fareInfo.legalCitation}</strong></span>
-                    <span>65+ Yaş: <strong>Ücretsiz</strong></span>
-                  </div>
+                <div className="mb-3">
+                  <UkomeOfficialSealBadge
+                    fareInfo={fareInfo}
+                    origin={schedule.origin}
+                    destination={schedule.destination}
+                  />
                 </div>
               );
             })()}
+
+            {/* Liman Başkanlığı Meteorolojik Erken Uyarı Barometresi */}
+            <div className="mb-3">
+              <HarbourMasterWeatherBarometer
+                originPier={dynState?.currentOrigin || schedule.origin}
+              />
+            </div>
 
             {/* Hızlı Eylemler: QR Cüzdan & Vapuru Kaçırdım */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
