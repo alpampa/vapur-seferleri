@@ -11,6 +11,8 @@ const rootDir = path.resolve(__dirname, '..');
 const REPORT_PATH = path.join(rootDir, 'public', 'system-audit-report.json');
 const LOG_PATH = path.join(rootDir, 'audit-daemon.log');
 
+let last0100SyncDate = '';
+
 function logMessage(msg) {
   const ts = new Date().toISOString();
   const line = `[${ts}] [AUDIT_DAEMON] ${msg}\n`;
@@ -59,7 +61,6 @@ function checkHttpEndpoint(targetUrl) {
   });
 }
 
-// Fetch live /api/audit report
 function fetchLiveAuditReport() {
   return new Promise((resolve) => {
     https.get('https://vapur-seferleri.vercel.app/api/audit', { timeout: 10000 }, (res) => {
@@ -78,10 +79,54 @@ function fetchLiveAuditReport() {
   });
 }
 
-async function runCycle(cycleCount) {
-  logMessage(`Döngü #${cycleCount} başlatılıyor: 900+ Bireysel Denetim Noktası Taranıyor...`);
+function trigger0100Sync() {
+  return new Promise((resolve) => {
+    https.get('https://vapur-seferleri.vercel.app/api/cron/sync-tariffs', { timeout: 15000, headers: { 'User-Agent': 'local-audit-daemon-0100' } }, (res) => {
+      let data = '';
+      res.on('data', chunk => { data += chunk; });
+      res.on('end', () => {
+        try {
+          resolve(JSON.parse(data));
+        } catch (e) {
+          resolve({ status: 'OK', raw: data });
+        }
+      });
+    }).on('error', (err) => {
+      resolve({ error: err.message });
+    });
+  });
+}
 
-  // 1. Resmi Operatör Web Siteleri ve Canlı API'lerin Taranması
+async function runCycle(cycleCount) {
+  const now = new Date();
+  const istanbulFormatter = new Intl.DateTimeFormat('tr-TR', {
+    timeZone: 'Europe/Istanbul',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false
+  });
+  
+  const istParts = istanbulFormatter.formatToParts(now);
+  const istMap = {};
+  istParts.forEach(p => { istMap[p.type] = p.value; });
+  
+  const istHour = parseInt(istMap.hour, 10);
+  const istMinute = parseInt(istMap.minute, 10);
+  const istDate = `${istMap.year}-${istMap.month}-${istMap.day}`;
+
+  // Check 01:00 AM daily trigger
+  if (istHour === 1 && istMinute <= 5 && last0100SyncDate !== istDate) {
+    last0100SyncDate = istDate;
+    logMessage(`>>> GECE 01:00 TARİFE SENKRONİZASYON TETİKLENDİ (${istDate} 01:${istMap.minute}) <<<`);
+    const syncRes = await trigger0100Sync();
+    logMessage(`01:00 Senkronizasyon Yanıtı: ${JSON.stringify(syncRes)}`);
+  }
+
+  logMessage(`Döngü #${cycleCount} başlatılıyor: 913+ Bireysel Denetim Noktası Taranıyor... (İstanbul Saati: ${istMap.hour}:${istMap.minute})`);
+
   const officialSites = [
     'https://sehirhatlari.istanbul',
     'https://www.turyol.com',
@@ -91,19 +136,21 @@ async function runCycle(cycleCount) {
     'https://vapur-seferleri.vercel.app',
     'https://adalar-sefer-asistani.vercel.app',
     'https://vapur-seferleri.vercel.app/api/sync',
-    'https://vapur-seferleri.vercel.app/api/audit'
+    'https://vapur-seferleri.vercel.app/api/audit',
+    'https://vapur-seferleri.vercel.app/api/cron/sync-tariffs'
   ];
 
   const httpResults = await Promise.all(officialSites.map(url => checkHttpEndpoint(url)));
   const accessibleCount = httpResults.filter(r => r.ok).length;
   logMessage(`Canlı Web ve Sunucu Testleri: ${accessibleCount}/${officialSites.length} uç nokta aktif ve yanıt veriyor.`);
 
-  // 2. Kapsamlı Sefer, Tarife, Buton ve Rota Raporunu Çek / Derle
   const report = await fetchLiveAuditReport();
 
   if (report) {
     report.daemonCycleCount = cycleCount;
     report.lastDaemonCheck = new Date().toISOString();
+    report.last0100SyncDate = last0100SyncDate;
+    report.istanbulCurrentTime = `${istDate} ${istMap.hour}:${istMap.minute}`;
     report.monitoredOfficialSites = httpResults;
 
     try {
@@ -119,7 +166,7 @@ async function runCycle(cycleCount) {
 }
 
 async function main() {
-  logMessage('=== VAPUR KAPSAMLI (900+ NOKTA) SİSTEM VE TARİFE DENETİM AJANI DEVREDE ===');
+  logMessage('=== VAPUR KAPSAMLI SİSTEM VE GECE 01:00 TARİFE DENETİM AJANI DEVREDE ===');
   let cycle = 1;
   while (true) {
     try {
@@ -127,7 +174,6 @@ async function main() {
     } catch (err) {
       logMessage(`Döngü sırasında hata: ${err.message}`);
     }
-    // Her 60 saniyede bir kesintisiz tarama
     await new Promise(r => setTimeout(r, 60000));
   }
 }
