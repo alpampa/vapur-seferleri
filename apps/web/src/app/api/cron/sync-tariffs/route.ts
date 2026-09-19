@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { runDailyVerificationAudit } from "@/lib/agents/daily-sync-job";
 import { OFFICIAL_SCHEDULES_DATA } from "@/lib/data/official-schedules";
 
@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
  * Vercel Cron Endpoint: Triggered automatically every night at 01:00 Istanbul time (22:00 UTC).
  * Verifies and synchronizes official timetables across all operators.
  */
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   const isVercelCron = request.headers.get("user-agent")?.includes("vercel-cron");
   
   const now = new Date();

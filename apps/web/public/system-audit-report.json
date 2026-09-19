@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-09-19T13:11:57.029Z",
+  "timestamp": "2026-09-19T13:15:03.447Z",
   "overallStatus": "HEALTHY",
   "complianceScore": 100,
   "totalChecks": 913,
@@ -10480,7 +10480,7 @@
       "details": "HTTP 200 OK - 900+ maddelik otonom denetim raporunu JSON olarak sunuyor."
     }
   ],
-  "daemonCycleCount": 2,
+  "daemonCycleCount": 5,
   "selfHealingTimeline": [
     {
       "id": "heal-init-01",
@@ -10524,9 +10524,9 @@
       "severity": "INFO"
     }
   ],
-  "lastDaemonCheck": "2026-09-19T13:11:56.011Z",
+  "lastDaemonCheck": "2026-09-19T13:15:02.507Z",
   "last0100SyncDate": "",
-  "istanbulCurrentTime": "2026-09-19 16:11",
+  "istanbulCurrentTime": "2026-09-19 16:15",
   "monitoredOfficialSites": [
     {
       "url": "https://sehirhatlari.istanbul",
