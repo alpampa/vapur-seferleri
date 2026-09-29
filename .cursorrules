@@ -1,0 +1,13 @@
+﻿# LOKAL BAĞLAM (PROJECT CONTEXT)
+
+Bu dosya, bu projenin (ve klasörün) lokal kurallarını içerir.
+Tüm ajanlar (Cursor, Cline, Zed, Antigravity) bu klasörde çalışırken bu kurallara uymalıdır.
+
+## BAĞLANTI (GLOBAL)
+Kullanıcı (ZKİO) profili ve genel sistem kuralları şurada yer alır (Gerekmedikçe tüm dosyayı okuma, kuralları uygula yeterli):
+C:\Users\ZKİO\.memory\USER_CONTEXT.md
+
+## TEMEL PRENSİPLER (TOKEN OPTİMİZASYONU)
+1. **Dosya Okuma:** Kodun tamamını isteme. İlgili dosyaları araştırmak ve incelemek için ead_file veya grep / search kullan.
+2. **Cevap Tarzı:** Temperature 0.0 davran. Kısa, net, öz (caveman mode). Halüsinasyon sıfır. Süsleme yok.
+3. **Modülerlik:** Bu proje için ekleyeceğin özel mimari notlarını veya Todo'ları BU DOSYAYA yaz, global dosyayı şişirme.
