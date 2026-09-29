@@ -3,6 +3,7 @@ import type { ScheduleCardDto, SchedulesResponse } from '@/app/page';
 import type { TripStatus } from '@/components/schedule/ScheduleCard';
 import { getOfficialRouteFare, resolveRealisticPlatform } from '@/lib/data/official-fares';
 import { selfHealTripRecord } from '@/lib/agents/self-healing-engine';
+import { checkTurkishHoliday } from '@/lib/utils/holiday-calendar';
 
 /**
  * Returns current Istanbul time components (UTC+3)
@@ -45,6 +46,9 @@ export function getIstanbulTime() {
     day: 'numeric'
   });
 
+  const holiday = checkTurkishHoliday(year, month, day);
+  const isHoliday = holiday.isHoliday;
+
   return {
     year,
     month,
@@ -54,6 +58,8 @@ export function getIstanbulTime() {
     isSaturday,
     isSunday,
     isWeekend,
+    isHoliday,
+    holidayName: holiday.name,
     serverTimeIso: now.toISOString(),
     serverDateFormatted: dateFormatter.format(now)
   };
@@ -69,9 +75,10 @@ export async function getLiveOrOfficialSchedules(): Promise<SchedulesResponse> {
   const dayStr = String(ist.day).padStart(2, '0');
   const nowMs = Date.now();
 
-  // 1. Filter official schedule for today with precision day matching
+  // 1. Filter official schedule for today with precision day & holiday matching
   const todayOfficial = OFFICIAL_SCHEDULES_DATA.filter(trip => {
-    if (ist.isSunday) {
+    // Official holidays apply the Sunday / Holiday timetable
+    if (ist.isSunday || ist.isHoliday) {
       if (trip.runsSunday !== undefined) return trip.runsSunday;
       return !trip.isWeekdayOnly;
     } else if (ist.isSaturday) {

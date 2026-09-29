@@ -428,13 +428,13 @@ export function ScheduleCard(props: ScheduleCardProps) {
             toggleFavorite(routeKey);
           }}
           title={isFav ? "Favorilerden Çıkar" : "Favorilere Ekle"}
-          className={`p-1.5 rounded-lg transition-colors ${
+          className={`w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-xl transition-all active:scale-95 touch-manipulation ${
             isFav
-              ? "text-amber-500 dark:text-amber-400 bg-amber-100 dark:bg-amber-400/20"
+              ? "text-amber-500 dark:text-amber-400 bg-amber-100 dark:bg-amber-400/20 ring-1 ring-amber-400/30"
               : "text-slate-400 hover:text-amber-500 dark:hover:text-amber-300 hover:bg-slate-100 dark:hover:bg-slate-800"
           }`}
         >
-          <Star size={14} className={isFav ? "fill-amber-500 text-amber-500" : ""} />
+          <Star size={16} className={isFav ? "fill-amber-500 text-amber-500" : ""} />
         </button>
 
         {/* Alarm Bell Button */}
@@ -446,16 +446,16 @@ export function ScheduleCard(props: ScheduleCardProps) {
             toggleAlarm(props.id);
           }}
           title={hasAlarm ? "Hatırlatıcıyı Kaldır" : "15 Dk Önce Hatırlat"}
-          className={`p-1.5 rounded-lg transition-colors ${
+          className={`w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-xl transition-all active:scale-95 touch-manipulation ${
             hasAlarm
-              ? "text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-500/20"
+              ? "text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-500/20 ring-1 ring-blue-500/30"
               : "text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-slate-100 dark:hover:bg-slate-800"
           }`}
         >
           {hasAlarm ? (
-            <BellRing size={14} className="text-blue-600 dark:text-blue-400 animate-bounce" />
+            <BellRing size={16} className="text-blue-600 dark:text-blue-400 animate-bounce" />
           ) : (
-            <Bell size={14} />
+            <Bell size={16} />
           )}
         </button>
 
