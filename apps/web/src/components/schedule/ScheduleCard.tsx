@@ -372,15 +372,6 @@ export function ScheduleCard(props: ScheduleCardProps) {
             )}
           </span>
 
-          {/* Radar Sağlaması Rozeti */}
-          <span 
-            className="inline-flex items-center gap-1 text-[9px] font-extrabold px-1.5 py-0.5 rounded bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700/60 shrink-0"
-            title="Canlı AIS Uydu Radarı sağlaması için sefere dokunun"
-          >
-            <Radio size={9} className="text-blue-500 animate-pulse" />
-            <span>Radar Sağlaması</span>
-          </span>
-
           <span className="text-slate-300 dark:text-slate-600 font-bold">•</span>
 
           {/* Occupancy Indicator & Real Passenger Density */}
@@ -498,11 +489,11 @@ export function ScheduleCard(props: ScheduleCardProps) {
     {/* 2. ALT SATIR: TEK SATIR DİNAMİK ROTA VE İSTASYON ZİNCİRİ (Unified Station Chain) */}
     {!props.isCompact && dynState.activeChain && dynState.activeChain.length > 0 && (
       <div className="w-full pt-2 border-t border-slate-100 dark:border-slate-800/80">
-        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5 scroll-smooth">
+        <div className="flex flex-nowrap items-center gap-1.5 overflow-x-auto no-scrollbar py-1 scroll-smooth whitespace-nowrap">
           {/* Vapur geride kalan iskelelerden kalktıysa kök iskeleyi zarifçe belirt */}
           {dynState.initialOrigin && dynState.initialOrigin !== dynState.currentOrigin && (
             <span
-              className="shrink-0 text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 inline-flex items-center gap-1"
+              className="shrink-0 text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 inline-flex flex-nowrap items-center gap-1 whitespace-nowrap"
               title={`${dynState.initialOrigin} iskelesinden hareket etti`}
             >
               <Ship size={10} className="text-blue-500 shrink-0" />
@@ -520,9 +511,9 @@ export function ScheduleCard(props: ScheduleCardProps) {
             );
 
             return (
-              <div key={`${wp.name}-${idx}`} className="flex items-center gap-1 shrink-0">
+              <div key={`${wp.name}-${idx}`} className="inline-flex flex-nowrap items-center gap-1 shrink-0 whitespace-nowrap">
                 <div
-                  className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-lg text-xs font-bold transition-all ${
+                  className={`inline-flex flex-nowrap items-center gap-1.5 px-2 py-0.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap ${
                     isHighlighted
                       ? "bg-amber-100 dark:bg-amber-400/25 text-amber-950 dark:text-amber-200 border border-amber-400 ring-2 ring-amber-400/40 font-black shadow-xs"
                       : isFirst

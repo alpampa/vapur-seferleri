@@ -198,16 +198,28 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
       })
       .filter(({ dyn }) => !dyn.isExpired);
 
-    // KESİN TEKİLLEŞTİRME (Strict Deduplication):
+    // KESİN TEKİLLEŞTİRME VE MASTER SEFER FİLTRESİ (Strict Master Voyage Deduplication):
+    // Genel listede (selectedOrigin === "ALL") aynı fiziksel gemiye ait ara durak hayalet kartlarını eler.
+    // Bir vapurun ana kalkış seferi varken, o vapurun uğrayacağı ara duraklar için ayrı ayrı mükerrer kart basılmaz!
+    const masterList = selectedOrigin === "ALL" ? rawList.filter((item, idx) => {
+      return !rawList.some((other, oIdx) => {
+        if (idx === oIdx) return false;
+        if (other.schedule.operator !== item.schedule.operator) return false;
+        // Eğer başka bir ana seferin ara duraklarında bu seferin kalkış iskelesi ve saati varsa, bu bir ara bacaktır!
+        return (other.schedule.stops || []).some(
+          (st) => st.name === item.schedule.origin && st.time === item.schedule.departureTime
+        );
+      });
+    }) : rawList;
+
     // Aynı kalkış iskelesi, aynı varış iskelesi ve aynı kalkış saatine sahip tekrarlayan kartları tekilleştir
     const dedupMap = new Map<string, { schedule: ScheduleCardDto; dyn: any }>();
-    for (const item of rawList) {
+    for (const item of masterList) {
       const key = `${item.dyn.currentOrigin}➔${item.dyn.destination}@${item.dyn.currentDepartureTime}`;
       if (!dedupMap.has(key)) {
         dedupMap.set(key, item);
       } else {
         const existing = dedupMap.get(key)!;
-        // Eğer yeni gelen sefer doğrudan o iskeleden kalkan orijinal ana sefer ise onu koru
         const itemIsDirect = item.schedule.origin === item.dyn.currentOrigin;
         const existingIsDirect = existing.schedule.origin === existing.dyn.currentOrigin;
         if (itemIsDirect && !existingIsDirect) {
@@ -217,7 +229,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
     }
 
     return Array.from(dedupMap.values());
-  }, [effectiveSchedules, selectedCategory, now, serverTimeIso]);
+  }, [effectiveSchedules, selectedCategory, selectedOrigin, now, serverTimeIso]);
 
   // Compute unique routes
   const uniqueRoutes = useMemo(() => {

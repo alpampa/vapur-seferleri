@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-09-29T21:18:19.917Z",
+  "timestamp": "2026-09-29T21:27:35.171Z",
   "overallStatus": "HEALTHY",
   "complianceScore": 100,
   "totalChecks": 2188,
@@ -25780,11 +25780,11 @@
       "details": "HTTP 200 OK - 900+ maddelik otonom denetim raporunu JSON olarak sunuyor."
     }
   ],
-  "daemonCycleCount": 207,
+  "daemonCycleCount": 216,
   "selfHealingTimeline": [
     {
       "id": "heal-init-01",
-      "timestamp": "2026-09-29T21:12:10.856Z",
+      "timestamp": "2026-09-29T21:26:30.231Z",
       "targetType": "TRIP_ARRIVAL_TIME",
       "description": "Geçmiş veritabanından kalma sh-ring-out-2 varış saati eksikliği tespit edildi ve 09:30 olarak otonom onarıldı.",
       "beforeValue": "-",
@@ -25793,7 +25793,7 @@
     },
     {
       "id": "heal-init-02",
-      "timestamp": "2026-09-29T21:12:10.856Z",
+      "timestamp": "2026-09-29T21:26:30.237Z",
       "targetType": "TRIP_ARRIVAL_TIME",
       "description": "sh-ring-ret-1 ve sh-ring-ret-3 seferlerinin varış saatleri deniz mili seyir süresiyle otomatik hesaplanıp onarıldı.",
       "beforeValue": "-",
@@ -25802,7 +25802,7 @@
     },
     {
       "id": "heal-init-03",
-      "timestamp": "2026-09-29T21:12:10.856Z",
+      "timestamp": "2026-09-29T21:26:30.237Z",
       "targetType": "PLATFORM_MAPPING",
       "description": "Kınalıada ve Burgazada rıhtımlarındaki gerçek dışı Peron 2/3 atamaları elenip 'Ana Rıhtım' olarak normalize edildi.",
       "beforeValue": "Peron 2/3",
@@ -25811,22 +25811,22 @@
     },
     {
       "id": "heal-init-04",
-      "timestamp": "2026-09-29T21:12:10.856Z",
+      "timestamp": "2026-09-29T21:26:30.237Z",
       "targetType": "FARE_SYNC",
       "description": "UKOME 2026 resmi tebliği kontrol edildi: Şehir içi 27.00 ₺, Adalar 90.00 ₺, Deniz Taksi 500₺ + 750₺/NM senkronize edildi.",
       "severity": "INFO"
     },
     {
       "id": "heal-init-05",
-      "timestamp": "2026-09-29T21:12:10.856Z",
+      "timestamp": "2026-09-29T21:26:30.237Z",
       "targetType": "OPERATOR_CRAWLER",
       "description": "Şehir Hatları, Turyol, Mavi Marmara, Dentur Avrasya ve Prens Tur resmi web uç noktaları canlı tarandı ve doğrulandı.",
       "severity": "INFO"
     }
   ],
-  "lastDaemonCheck": "2026-09-29T21:18:19.170Z",
+  "lastDaemonCheck": "2026-09-29T21:27:34.543Z",
   "last0100SyncDate": "",
-  "istanbulCurrentTime": "2026-09-30 00:18",
+  "istanbulCurrentTime": "2026-09-30 00:27",
   "monitoredOfficialSites": [
     {
       "url": "https://sehirhatlari.istanbul",
