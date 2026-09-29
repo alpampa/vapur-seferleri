@@ -30,10 +30,12 @@ export function getIstanbulTime() {
   const hour = parseInt(map.hour, 10);
   const minute = parseInt(map.minute, 10);
 
-  // Day of week in Istanbul
+  // Day of week in Istanbul (0 = Sun, 1 = Mon, ..., 6 = Sat)
   const istanbulDate = new Date(Date.UTC(year, month - 1, day, hour, minute));
-  const dayOfWeek = istanbulDate.getUTCDay(); // 0 = Sun, 6 = Sat
-  const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+  const dayOfWeek = istanbulDate.getUTCDay();
+  const isSaturday = dayOfWeek === 6;
+  const isSunday = dayOfWeek === 0;
+  const isWeekend = isSaturday || isSunday;
 
   // Formatted date in Turkish
   const dateFormatter = new Intl.DateTimeFormat('tr-TR', {
@@ -49,6 +51,8 @@ export function getIstanbulTime() {
     day,
     hour,
     minute,
+    isSaturday,
+    isSunday,
     isWeekend,
     serverTimeIso: now.toISOString(),
     serverDateFormatted: dateFormatter.format(now)
@@ -65,11 +69,17 @@ export async function getLiveOrOfficialSchedules(): Promise<SchedulesResponse> {
   const dayStr = String(ist.day).padStart(2, '0');
   const nowMs = Date.now();
 
-  // 1. Filter official schedule for today (weekend vs weekday)
+  // 1. Filter official schedule for today with precision day matching
   const todayOfficial = OFFICIAL_SCHEDULES_DATA.filter(trip => {
-    if (ist.isWeekend) {
+    if (ist.isSunday) {
+      if (trip.runsSunday !== undefined) return trip.runsSunday;
+      return !trip.isWeekdayOnly;
+    } else if (ist.isSaturday) {
+      if (trip.runsSaturday !== undefined) return trip.runsSaturday;
       return !trip.isWeekdayOnly;
     } else {
+      // Monday to Friday (Weekday)
+      if (trip.runsWeekday !== undefined) return trip.runsWeekday;
       return !trip.isWeekendOnly;
     }
   });
