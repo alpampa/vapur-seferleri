@@ -40,6 +40,7 @@ import { useAlarmStore } from "@/store/useAlarmStore";
 import { useFavoritesStore } from "@/store/useFavoritesStore";
 import { useActiveVoyageStore } from "@/store/useActiveVoyageStore";
 import { requestNotificationPermission } from "@/lib/utils/sound";
+import { correlateAisVessel } from "@/lib/services/ais-corridor-tracker";
 
 import { MarineAisRadarModal } from "@/components/map/MarineAisRadarModal";
 import { PierLiveCameraModal } from "@/components/map/PierLiveCameraModal";
@@ -114,6 +115,14 @@ export function TripDetailsSheet({
     dynState?.isDeparted || false,
     dynState?.status || schedule.status,
     schedule.id
+  );
+
+  const aisData = correlateAisVessel(
+    schedule.origin,
+    schedule.destination,
+    schedule.departureTime,
+    schedule.targetTimeIso,
+    Date.now()
   );
 
   const originTransit = getPierTransit(schedule.origin);
@@ -345,39 +354,79 @@ export function TripDetailsSheet({
               ) : null}
             </div>
 
-            {/* 4. GEMİ & HİZMET ÖZETİ (TEMİZ KART) */}
-            <div className="bg-slate-50 dark:bg-slate-900/90 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-500 border border-blue-500/20 flex items-center justify-center shrink-0">
-                  <Ship size={20} />
-                </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-black text-slate-900 dark:text-white">
-                      {liveVessel.vesselName}
-                    </span>
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
-                      Kapasite: ~{liveVessel.capacityPax} Yolcu
-                    </span>
+            {/* 4. GEMİ & HİZMET ÖZETİ (AIS KORİDOR DOĞRULAMASI) */}
+            <div className="bg-slate-50 dark:bg-slate-900/90 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 mb-4 flex flex-col gap-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <div className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 border transition-all ${
+                    aisData.isVerified
+                      ? "bg-emerald-500/20 text-emerald-500 border-emerald-500/40 shadow-xs"
+                      : "bg-blue-500/10 text-blue-500 border-blue-500/20"
+                  }`}>
+                    <Ship size={20} className={aisData.isVerified ? "animate-pulse" : ""} />
                   </div>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
-                    {occupancy.label} • {occupancy.description}
-                  </p>
+                  <div>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="text-sm font-black text-slate-900 dark:text-white">
+                        {aisData.isVerified ? `🚢 ${aisData.vesselName}` : liveVessel.vesselName}
+                      </span>
+                      {aisData.isVerified ? (
+                        <span className="inline-flex items-center gap-1 text-[10px] font-black px-2 py-0.5 rounded-full bg-emerald-500 text-slate-950">
+                          <span>✓ AIS DOĞRULANDI</span>
+                        </span>
+                      ) : (
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                          Kalkışta Eşleşecek
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                      {aisData.explanation}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Olanaklar (4'lü chip) */}
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  {amenities.slice(0, 4).map((item) => (
+                    <span
+                      key={item.id}
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-[11px] font-bold text-slate-700 dark:text-slate-300"
+                      title={item.description}
+                    >
+                      <span>{item.icon}</span>
+                      <span>{item.label}</span>
+                    </span>
+                  ))}
                 </div>
               </div>
 
-              {/* Olanaklar (4'lü chip) */}
-              <div className="flex items-center gap-2 flex-wrap">
-                {amenities.slice(0, 4).map((item) => (
-                  <span
-                    key={item.id}
-                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-[11px] font-bold text-slate-700 dark:text-slate-300"
-                    title={item.description}
-                  >
-                    <span>{item.icon}</span>
-                    <span>{item.label}</span>
+              {/* Canlı AIS Koridor Telemetrisi Çubuğu */}
+              <div className="pt-2 border-t border-slate-200 dark:border-slate-800/80 grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-xs">
+                <div className="p-2 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
+                  <span className="text-[10px] text-slate-400 font-bold block uppercase">Hız (SOG)</span>
+                  <span className="text-xs font-mono font-black text-emerald-600 dark:text-emerald-400">
+                    {aisData.speedKnots} Knot
                   </span>
-                ))}
+                </div>
+                <div className="p-2 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
+                  <span className="text-[10px] text-slate-400 font-bold block uppercase">Rota (COG)</span>
+                  <span className="text-xs font-mono font-black text-blue-600 dark:text-blue-400">
+                    {aisData.headingDeg}° Koridor
+                  </span>
+                </div>
+                <div className="p-2 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
+                  <span className="text-[10px] text-slate-400 font-bold block uppercase">Koridor Uyumu</span>
+                  <span className="text-xs font-mono font-black text-amber-500">
+                    %{aisData.corridorMatchScore}
+                  </span>
+                </div>
+                <div className="p-2 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
+                  <span className="text-[10px] text-slate-400 font-bold block uppercase">Tahmini Varış</span>
+                  <span className="text-xs font-mono font-black text-slate-900 dark:text-white">
+                    ~{aisData.etaMinutes} dk
+                  </span>
+                </div>
               </div>
             </div>
 
