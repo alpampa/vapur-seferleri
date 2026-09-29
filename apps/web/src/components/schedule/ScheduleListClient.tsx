@@ -447,6 +447,20 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
               <span>🌙</span>
               <span className="hidden sm:inline">Gece</span>
             </button>
+
+            {/* Görünüm Yoğunluğu (Kompakt / Kart) */}
+            <button
+              onClick={() => setIsCompactDensity(!isCompactDensity)}
+              className={`px-2 py-1 rounded-lg text-[11px] font-bold flex items-center gap-1 transition-all cursor-pointer border ${
+                isCompactDensity
+                  ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900 border-slate-900 dark:border-white shadow-2xs font-black"
+                  : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:bg-slate-100"
+              }`}
+              title={isCompactDensity ? "Geniş Kart Görünümüne Geç" : "Kompakt Liste Görünümüne Geç"}
+            >
+              {isCompactDensity ? <LayoutGrid size={12} /> : <List size={12} />}
+              <span className="hidden sm:inline">{isCompactDensity ? t("viewComfort") : t("viewCompact")}</span>
+            </button>
           </div>
         </div>
       </div>
