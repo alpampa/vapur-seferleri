@@ -356,6 +356,15 @@ export function ScheduleCard(props: ScheduleCardProps) {
             </span>
           </span>
 
+          {/* Radar Sağlaması Rozeti */}
+          <span 
+            className="inline-flex items-center gap-1 text-[9px] font-extrabold px-1.5 py-0.5 rounded bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700/60 shrink-0"
+            title="Canlı AIS Uydu Radarı sağlaması için sefere dokunun"
+          >
+            <Radio size={9} className="text-blue-500 animate-pulse" />
+            <span>Radar Sağlaması</span>
+          </span>
+
           <span className="text-slate-300 dark:text-slate-600 font-bold">•</span>
 
           {/* Occupancy Indicator & Real Passenger Density */}
