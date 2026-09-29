@@ -165,7 +165,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
 
   // 1. Filter and resolve dynamic state for active trips
   const activeSchedulesWithDyn = useMemo(() => {
-    return effectiveSchedules
+    const rawList = effectiveSchedules
       .filter((s) => {
         // GLOBAL ARAMA: Kullanıcı bir arama terimi yazdığında kategori kilidi kalkar, tüm İstanbul taranır
         if (searchQuery.trim().length > 0) return true;
@@ -197,6 +197,26 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
         };
       })
       .filter(({ dyn }) => !dyn.isExpired);
+
+    // KESİN TEKİLLEŞTİRME (Strict Deduplication):
+    // Aynı kalkış iskelesi, aynı varış iskelesi ve aynı kalkış saatine sahip tekrarlayan kartları tekilleştir
+    const dedupMap = new Map<string, { schedule: ScheduleCardDto; dyn: any }>();
+    for (const item of rawList) {
+      const key = `${item.dyn.currentOrigin}➔${item.dyn.destination}@${item.dyn.currentDepartureTime}`;
+      if (!dedupMap.has(key)) {
+        dedupMap.set(key, item);
+      } else {
+        const existing = dedupMap.get(key)!;
+        // Eğer yeni gelen sefer doğrudan o iskeleden kalkan orijinal ana sefer ise onu koru
+        const itemIsDirect = item.schedule.origin === item.dyn.currentOrigin;
+        const existingIsDirect = existing.schedule.origin === existing.dyn.currentOrigin;
+        if (itemIsDirect && !existingIsDirect) {
+          dedupMap.set(key, item);
+        }
+      }
+    }
+
+    return Array.from(dedupMap.values());
   }, [effectiveSchedules, selectedCategory, now, serverTimeIso]);
 
   // Compute unique routes

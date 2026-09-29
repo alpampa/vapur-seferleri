@@ -113,7 +113,8 @@ export function ScheduleCard(props: ScheduleCardProps) {
     props.operator,
     dynState.isDeparted,
     dynState.status,
-    props.id
+    props.id,
+    props.departureTime
   );
 
   useEffect(() => {

@@ -254,16 +254,18 @@ export function resolveLiveVesselName(
   operator: string,
   isDeparted: boolean,
   status: string,
-  tripId: string
+  tripId: string,
+  departureTime?: string
 ): LiveVesselResolution {
   // Find matching fleet candidate
   const operatorFleet = ISTANBUL_FERRY_FLEET.filter(v => v.operator.toLowerCase() === operator.toLowerCase());
   const fleetPool = operatorFleet.length > 0 ? operatorFleet : ISTANBUL_FERRY_FLEET;
 
-  // Deterministic seed based on trip ID so same trip run consistently maps to same physical ship in rotation
+  // Fiziksel gemiyi kalkış saatine ve koridora göre tutarlı eşle (ara duraklarda gemi adı değişmez)
+  const seed = departureTime ? `${departureTime}-${origin.slice(0, 3)}-${operator}` : tripId;
   let hash = 0;
-  for (let i = 0; i < tripId.length; i++) {
-    hash = (hash << 5) - hash + tripId.charCodeAt(i);
+  for (let i = 0; i < seed.length; i++) {
+    hash = (hash << 5) - hash + seed.charCodeAt(i);
     hash |= 0;
   }
   const assignedIndex = Math.abs(hash) % fleetPool.length;

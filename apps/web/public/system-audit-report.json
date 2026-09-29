@@ -1,11 +1,11 @@
 {
-  "timestamp": "2026-09-29T17:40:56.225Z",
+  "timestamp": "2026-09-29T18:14:22.069Z",
   "overallStatus": "HEALTHY",
   "complianceScore": 100,
-  "totalChecks": 6614,
-  "passedChecks": 6614,
+  "totalChecks": 5902,
+  "passedChecks": 5902,
   "failedChecks": 0,
   "warningChecks": 0,
-  "verifiedOfficialTrips": 6380,
-  "lastSyncStatus": "SYNCHRONIZED_WITH_SEHIRHATLARI_LIVE_2026"
+  "verifiedOfficialTrips": 5668,
+  "lastSyncStatus": "SYNCHRONIZED_AND_STRICTLY_DEDUPLICATED"
 }
