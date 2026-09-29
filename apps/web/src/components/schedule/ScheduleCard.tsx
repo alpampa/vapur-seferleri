@@ -14,6 +14,8 @@ import { useWalkingCatchStore } from "@/store/useWalkingCatchStore";
 import { useActiveVoyageStore } from "@/store/useActiveVoyageStore";
 import { ISTANBUL_PIERS } from "@/lib/services/route-planner";
 
+import { matchesTurkishSearch } from "@/lib/utils/search-normalizer";
+
 export type TripStatus = "ON_TIME" | "DEPARTING_SOON" | "BOARDING" | "DELAYED" | "CANCELLED" | "IN_TRANSIT" | "ARRIVING" | "COMPLETED";
 
 export interface ScheduleCardProps {
@@ -36,6 +38,7 @@ export interface ScheduleCardProps {
   arrivalTime?: string;
   onClick?: () => void;
   isCompact?: boolean;
+  highlightStopName?: string;
 }
 
 export function TripStatusBadge({ status, delayText }: { status: TripStatus; delayText?: string }) {
@@ -213,7 +216,7 @@ export function ScheduleCard(props: ScheduleCardProps) {
   return (
     <div
       onClick={handleCardClick}
-      className={`theme-card rounded-xl px-3 py-2.5 flex items-center justify-between gap-2.5 text-slate-900 dark:text-white shadow-xs dark:shadow-none transition-all duration-150 cursor-pointer group border ${
+      className={`theme-card rounded-xl px-3 py-2.5 flex flex-col gap-2 text-slate-900 dark:text-white shadow-xs dark:shadow-none transition-all duration-150 cursor-pointer group border ${
         isCancelled
           ? "border-rose-500/90 bg-rose-50/50 dark:bg-rose-950/25 ring-1 ring-rose-500/40 shadow-xs shadow-rose-500/10"
           : isLast5Minutes
@@ -221,8 +224,10 @@ export function ScheduleCard(props: ScheduleCardProps) {
           : "border-slate-200 dark:border-slate-700/60 hover:border-blue-400 dark:hover:border-blue-500/40 bg-white dark:bg-[#141d2e]"
       }`}
     >
-      {/* 1. Left Column: Departure Time & Dairesel Geri Sayım Progress Ring */}
-      <div className="flex items-center gap-2 shrink-0">
+      {/* 1. ÜST SATIR: Kalkış Zamanı, Rota, Gemi Bilgisi ve Eylemler */}
+      <div className="flex items-center justify-between gap-2.5 w-full">
+        {/* 1. Left Column: Departure Time & Dairesel Geri Sayım Progress Ring */}
+        <div className="flex items-center gap-2 shrink-0">
         {/* KULLANICI KURALI: Son 3 Dakika Kalan Saniye Dairesel Progress Halkası */}
         {isLast3Minutes && (
           <div className="relative w-11 h-11 flex items-center justify-center shrink-0" title={`Kalkışa ${remainingSec} saniye kaldı!`}>
@@ -461,8 +466,81 @@ export function ScheduleCard(props: ScheduleCardProps) {
         </button>
 
         {/* Details Chevron */}
-        <ChevronRight size={16} className="text-slate-400 group-hover:text-slate-700 dark:group-hover:text-white group-hover:translate-x-0.5 transition-all" />
+        <ChevronRight size={16} className="text-slate-400 group-hover:text-slate-700 dark:group-hover:text-white group-hover:translate-x-0.5 transition-all shrink-0" />
       </div>
     </div>
-  );
+
+    {/* 2. ALT SATIR: TEK SATIR DİNAMİK ROTA VE İSTASYON ZİNCİRİ (Unified Station Chain) */}
+    {!props.isCompact && dynState.activeChain && dynState.activeChain.length > 0 && (
+      <div className="w-full pt-2 border-t border-slate-100 dark:border-slate-800/80">
+        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5 scroll-smooth">
+          {/* Vapur geride kalan iskelelerden kalktıysa kök iskeleyi zarifçe belirt */}
+          {dynState.initialOrigin && dynState.initialOrigin !== dynState.currentOrigin && (
+            <span
+              className="shrink-0 text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 inline-flex items-center gap-1"
+              title={`${dynState.initialOrigin} iskelesinden hareket etti`}
+            >
+              <Ship size={10} className="text-blue-500 shrink-0" />
+              <span>{dynState.initialOrigin} kalkışlı</span>
+            </span>
+          )}
+
+          {dynState.activeChain.map((wp, idx) => {
+            const isFirst = idx === 0;
+            const isLast = idx === dynState.activeChain.length - 1;
+            const isHighlighted = Boolean(
+              props.highlightStopName &&
+              props.highlightStopName.trim().length > 0 &&
+              matchesTurkishSearch(wp.name, props.highlightStopName)
+            );
+
+            return (
+              <div key={`${wp.name}-${idx}`} className="flex items-center gap-1 shrink-0">
+                <div
+                  className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-lg text-xs font-bold transition-all ${
+                    isHighlighted
+                      ? "bg-amber-100 dark:bg-amber-400/25 text-amber-950 dark:text-amber-200 border border-amber-400 ring-2 ring-amber-400/40 font-black shadow-xs"
+                      : isFirst
+                      ? "bg-emerald-50 dark:bg-emerald-950/70 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-600/50"
+                      : isLast
+                      ? "bg-blue-50 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300 border border-blue-200 dark:border-blue-700/60"
+                      : "bg-slate-100 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700/60"
+                  }`}
+                >
+                  {isFirst ? (
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping shrink-0" />
+                  ) : isLast ? (
+                    <span className="text-[10px] leading-none shrink-0">🏁</span>
+                  ) : (
+                    <span className="w-1.5 h-1.5 rounded-full bg-slate-400 dark:bg-slate-500 shrink-0" />
+                  )}
+
+                  <span className="truncate max-w-[85px] sm:max-w-[120px]">{wp.name}</span>
+
+                  <span
+                    className={`font-mono text-[10px] px-1 py-0.2 rounded font-black tabular-nums ${
+                      isFirst
+                        ? "bg-emerald-600 text-white"
+                        : isLast
+                        ? "bg-blue-600 text-white"
+                        : "bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-200"
+                    }`}
+                  >
+                    {wp.time}
+                  </span>
+                </div>
+
+                {!isLast && (
+                  <span className="text-slate-300 dark:text-slate-600 font-extrabold text-[11px] shrink-0 px-0.5">
+                    ➔
+                  </span>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    )}
+  </div>
+);
 }

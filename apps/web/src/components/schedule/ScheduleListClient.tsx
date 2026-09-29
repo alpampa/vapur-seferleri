@@ -628,9 +628,9 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
       {/* Schedules List (Comfortable or Compact Rows) */}
       <div className={`px-3 flex flex-col ${isCompactDensity ? "gap-1.5" : "gap-2"} pb-12 mt-1`}>
         {filteredList.length > 0 ? (
-          filteredList.map(({ schedule }) => (
+          filteredList.map(({ schedule, dyn }) => (
             <ScheduleCard
-              key={schedule.id}
+              key={`${schedule.id}-${dyn.currentOrigin}`}
               id={schedule.id}
               origin={schedule.origin}
               destination={schedule.destination}
@@ -649,6 +649,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
               stops={schedule.stops}
               arrivalTime={schedule.arrivalTime}
               isCompact={isCompactDensity}
+              highlightStopName={searchQuery}
               onClick={() => setSelectedSchedule(schedule)}
             />
           ))

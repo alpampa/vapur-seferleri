@@ -11,10 +11,13 @@ export interface DynamicWaypointView {
   name: string;
   time: string;
   state: "COMPLETED" | "CURRENT" | "UPCOMING";
+  isOrigin?: boolean;
+  isDestination?: boolean;
 }
 
 export interface DynamicTripResolution {
   currentOrigin: string;
+  initialOrigin: string;
   destination: string;
   routeTitle: string;
   currentDepartureTime: string;
@@ -25,6 +28,7 @@ export interface DynamicTripResolution {
   status: TripStatus;
   isExpired: boolean;          // True if 30s passed after last departure leg (should be removed from screen)
   waypoints: DynamicWaypointView[];
+  activeChain: DynamicWaypointView[];
   activeLegIndex: number;
 }
 
@@ -153,8 +157,15 @@ export function resolveDynamicTrip(
         };
       });
 
+      const activeChain: DynamicWaypointView[] = waypointsView.slice(i).map((wp, cIdx, arr) => ({
+        ...wp,
+        isOrigin: cIdx === 0,
+        isDestination: cIdx === arr.length - 1
+      }));
+
       return {
         currentOrigin: leg.name,
+        initialOrigin,
         destination,
         routeTitle: `${leg.name} ➔ ${destination} Hattı`,
         currentDepartureTime: leg.time,
@@ -165,6 +176,7 @@ export function resolveDynamicTrip(
         status,
         isExpired: false,
         waypoints: waypointsView,
+        activeChain,
         activeLegIndex: i
       };
     }
@@ -172,15 +184,18 @@ export function resolveDynamicTrip(
 
   // If all departure legs have passed by more than 30 seconds:
   // The trip is expired and will be automatically removed from the screen!
-  const finalWaypointsView: DynamicWaypointView[] = allWaypoints.map(wp => ({
+  const finalWaypointsView: DynamicWaypointView[] = allWaypoints.map((wp, cIdx, arr) => ({
     name: wp.name,
     time: wp.time,
-    state: "COMPLETED"
+    state: "COMPLETED",
+    isOrigin: cIdx === 0,
+    isDestination: cIdx === arr.length - 1
   }));
 
   const lastLeg = allWaypoints[numLegs - 1];
   return {
     currentOrigin: lastLeg.name,
+    initialOrigin,
     destination,
     routeTitle: `${lastLeg.name} ➔ ${destination} Hattı`,
     currentDepartureTime: lastLeg.time,
@@ -191,6 +206,7 @@ export function resolveDynamicTrip(
     status: "COMPLETED",
     isExpired: true, // EXPIRED: Will be automatically removed from the list!
     waypoints: finalWaypointsView,
+    activeChain: [],
     activeLegIndex: numLegs
   };
 }
