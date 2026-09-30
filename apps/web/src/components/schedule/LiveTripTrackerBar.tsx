@@ -106,7 +106,7 @@ export function LiveTripTrackerBar() {
   return (
     <>
       {/* Dynamic Island / Kilit Ekranı Canlı Takip Çubuğu */}
-      <div className="fixed bottom-16 sm:bottom-6 left-3 right-3 sm:left-auto sm:right-6 z-40 sm:max-w-lg bg-[#080d1a]/95 text-white border-2 border-emerald-500/40 rounded-3xl p-3.5 shadow-2xl backdrop-blur-xl animate-in slide-in-from-bottom-5 duration-300">
+      <div className="fixed bottom-[74px] sm:bottom-6 left-2.5 right-2.5 sm:left-auto sm:right-6 z-40 sm:max-w-md bg-[#080d1a]/95 text-white border-2 border-emerald-500/40 rounded-2xl p-2.5 sm:p-3.5 shadow-2xl backdrop-blur-xl animate-in slide-in-from-bottom-5 duration-300">
         <div className="flex items-center justify-between gap-3 mb-2">
           <div className="flex items-center gap-2.5 min-w-0">
             <div className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 border transition-all ${

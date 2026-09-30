@@ -21,7 +21,7 @@ export function BottomNav({ activeTab = "schedules", onTabChange }: BottomNavPro
         {/* Seferler (Ana Akış) */}
         <button
           onClick={() => handleSelect("schedules")}
-          className={`flex flex-col items-center gap-1 transition-all ${
+          className={`flex flex-col items-center gap-1 transition-all touch-manipulation cursor-pointer active:scale-95 min-w-[64px] ${
             currentTab === "schedules"
               ? "text-blue-400 scale-105 font-black"
               : "text-slate-400 hover:text-slate-200 font-semibold"
@@ -36,7 +36,7 @@ export function BottomNav({ activeTab = "schedules", onTabChange }: BottomNavPro
         {/* İskeleler (Orta Vurgulu Buton) */}
         <button
           onClick={() => handleSelect("piers")}
-          className={`flex flex-col items-center gap-1 transition-all ${
+          className={`flex flex-col items-center gap-1 transition-all touch-manipulation cursor-pointer active:scale-95 min-w-[64px] ${
             currentTab === "piers"
               ? "text-emerald-400 scale-105 font-black"
               : "text-slate-400 hover:text-slate-200 font-semibold"
@@ -51,7 +51,7 @@ export function BottomNav({ activeTab = "schedules", onTabChange }: BottomNavPro
         {/* Deniz Durumu / Lodos Uyarıları */}
         <button
           onClick={() => handleSelect("weather")}
-          className={`flex flex-col items-center gap-1 transition-all ${
+          className={`flex flex-col items-center gap-1 transition-all touch-manipulation cursor-pointer active:scale-95 min-w-[64px] ${
             currentTab === "weather"
               ? "text-amber-400 scale-105 font-black"
               : "text-slate-400 hover:text-slate-200 font-semibold"
@@ -66,7 +66,7 @@ export function BottomNav({ activeTab = "schedules", onTabChange }: BottomNavPro
         {/* Favori Rotalarım */}
         <button
           onClick={() => handleSelect("favorites")}
-          className={`flex flex-col items-center gap-1 transition-all ${
+          className={`flex flex-col items-center gap-1 transition-all touch-manipulation cursor-pointer active:scale-95 min-w-[64px] ${
             currentTab === "favorites"
               ? "text-purple-400 scale-105 font-black"
               : "text-slate-400 hover:text-slate-200 font-semibold"

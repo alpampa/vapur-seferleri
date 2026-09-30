@@ -82,7 +82,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
   const [isAdalarModalOpen, setIsAdalarModalOpen] = useState<boolean>(false);
   const [isSponsoredModalOpen, setIsSponsoredModalOpen] = useState<boolean>(false);
   const [isNightTransitOpen, setIsNightTransitOpen] = useState<boolean>(false);
-  const [isSearchVisible, setIsSearchVisible] = useState<boolean>(true);
+  const [isSearchVisible, setIsSearchVisible] = useState<boolean>(false);
 
   // Offline LocalStorage Caching
   const [effectiveSchedules, setEffectiveSchedules] = useState<ScheduleCardDto[]>(schedules);
@@ -652,7 +652,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
       </div>
 
       {/* Schedules List (Comfortable or Compact Rows) */}
-      <div className={`px-3 flex flex-col ${isCompactDensity ? "gap-1.5" : "gap-2"} pb-12 mt-1`}>
+      <div className={`px-3 flex flex-col ${isCompactDensity ? "gap-1.5" : "gap-2"} pb-36 sm:pb-28 mt-1`}>
         {filteredList.length > 0 ? (
           filteredList.map(({ schedule, dyn }) => (
             <ScheduleCard

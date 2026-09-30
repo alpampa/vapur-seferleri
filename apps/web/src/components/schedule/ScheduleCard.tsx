@@ -494,7 +494,8 @@ export function ScheduleCard(props: ScheduleCardProps) {
           {/* KULLANICI KURALI: Gece Seferleri İçin UKOME Çift Tarife HUD Rozeti */}
           {isNightTrip && !isCancelled && (
             <span className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded bg-indigo-500/25 text-amber-300 text-[10px] font-black uppercase tracking-wider border border-indigo-500/50 shrink-0 shadow-2xs">
-              <span>🌙 GECE • UKOME ÇİFT TARİFE</span>
+              <span>🌙 GECE</span>
+              <span className="hidden sm:inline">• UKOME ÇİFT TARİFE</span>
             </span>
           )}
 

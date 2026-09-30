@@ -70,6 +70,7 @@ export function TripDetailsSheet({
   const [isMissedOpen, setIsMissedOpen] = useState(false);
   const [isSeaTaxiOpen, setIsSeaTaxiOpen] = useState(false);
   const [showAdvancedDetails, setShowAdvancedDetails] = useState(false);
+  const [activeDetailTab, setActiveDetailTab] = useState<"TICKET" | "RADAR" | "TRANSIT">("TICKET");
 
   useEffect(() => {
     if (!schedule) {
@@ -250,378 +251,375 @@ export function TripDetailsSheet({
                 <button
                   onClick={onClose}
                   aria-label="Kapat"
-                  className="w-8 h-8 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 rounded-full flex items-center justify-center text-slate-600 dark:text-slate-300 transition-colors border border-slate-200 dark:border-slate-700"
+                  className="w-8 h-8 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 rounded-full flex items-center justify-center text-slate-600 dark:text-slate-300 transition-colors border border-slate-200 dark:border-slate-700 cursor-pointer"
                 >
                   <X size={16} />
                 </button>
               </div>
             </div>
 
-            {/* 2. TEMEL SEYAHAT KARTLARI (3'LÜ GRID) */}
-            <div className="grid grid-cols-3 gap-2.5 mb-4">
-              {/* Kalkış Saati */}
-              <div className="bg-slate-50 dark:bg-slate-900/90 p-3 rounded-2xl border border-slate-200 dark:border-slate-800">
-                <div className="flex items-center gap-1 text-blue-500 dark:text-blue-400 mb-1">
-                  <Clock size={13} />
-                  <span className="text-[10px] font-black uppercase tracking-wider">Kalkış</span>
-                </div>
-                <div className="text-xl sm:text-2xl font-mono font-black text-slate-900 dark:text-white">
-                  {dynState?.currentDepartureTime || schedule.departureTime}
-                </div>
-                <div className="text-[11px] text-slate-500 dark:text-slate-400 font-semibold mt-0.5 truncate">
-                  {schedule.arrivalTime ? `Varış ~${schedule.arrivalTime}` : "Planlı Sefer"}
-                </div>
-              </div>
-
-              {/* İskele / Peron */}
-              <div className="bg-slate-50 dark:bg-slate-900/90 p-3 rounded-2xl border border-slate-200 dark:border-slate-800">
-                <div className="flex items-center gap-1 text-amber-500 dark:text-amber-400 mb-1">
-                  <MapPin size={13} />
-                  <span className="text-[10px] font-black uppercase tracking-wider">İskele</span>
-                </div>
-                <div className="text-sm sm:text-base font-black text-slate-900 dark:text-white truncate">
-                  {dynState?.currentOrigin || schedule.origin}
-                </div>
-                <div className="text-[11px] text-amber-600 dark:text-amber-400 font-bold truncate mt-0.5">
-                  {schedule.platform || "Yolcu Rıhtımı"}
-                </div>
-              </div>
-
-              {/* Tarife / Ücret */}
-              <div className="bg-slate-50 dark:bg-slate-900/90 p-3 rounded-2xl border border-slate-200 dark:border-slate-800">
-                <div className="flex items-center gap-1 text-emerald-500 dark:text-emerald-400 mb-1">
-                  <Ticket size={13} />
-                  <span className="text-[10px] font-black uppercase tracking-wider">Tarife</span>
-                </div>
-                <div className="text-xl sm:text-2xl font-mono font-black text-emerald-600 dark:text-emerald-400">
-                  {schedule.price}
-                </div>
-                <div className="text-[11px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">
-                  İstanbulkart
-                </div>
-              </div>
+            {/* 2. ERGONOMİK 3 SEKME ÇUBUĞU (Apple Transit & Wallet Tarzı) */}
+            <div className="flex items-center gap-1 p-1 bg-slate-100 dark:bg-slate-900 rounded-2xl mb-4 border border-slate-200 dark:border-slate-800 shrink-0">
+              <button
+                type="button"
+                onClick={() => setActiveDetailTab("TICKET")}
+                className={`flex-1 py-2 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                  activeDetailTab === "TICKET"
+                    ? "bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 shadow-xs scale-[1.01]"
+                    : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                }`}
+              >
+                <span>🎫</span>
+                <span>Sefer & Bilet</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveDetailTab("RADAR")}
+                className={`flex-1 py-2 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                  activeDetailTab === "RADAR"
+                    ? "bg-white dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 shadow-xs scale-[1.01]"
+                    : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                }`}
+              >
+                <span>🛰️</span>
+                <span>Gemi & Radar</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveDetailTab("TRANSIT")}
+                className={`flex-1 py-2 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                  activeDetailTab === "TRANSIT"
+                    ? "bg-white dark:bg-slate-800 text-purple-600 dark:text-purple-400 shadow-xs scale-[1.01]"
+                    : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                }`}
+              >
+                <span>🚇</span>
+                <span>İskele Aktarma</span>
+              </button>
             </div>
 
-            {/* 3. GÜZERGAH VE DURAK AKIŞI (DURAK ÇİZGİSİ) */}
-            <div className="bg-slate-50 dark:bg-slate-900/90 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 mb-4">
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-xs font-black uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
-                  <Ship size={14} className="text-blue-500" />
-                  <span>Güzergah ve Durak Durumu</span>
-                </span>
-                <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400">
-                  {isDirect ? "Direkt Sefer" : `${schedule.stops?.length} Ara Durak`}
-                </span>
-              </div>
+            {/* SEKME 1: SEFER & BİLET (Varsayılan Özet) */}
+            {activeDetailTab === "TICKET" && (
+              <div className="space-y-4 animate-fadeIn">
+                {/* 3'LÜ GRID: Kalkış, İskele, Tarife */}
+                <div className="grid grid-cols-3 gap-2">
+                  <div className="bg-slate-50 dark:bg-slate-900/90 p-2.5 sm:p-3 rounded-2xl border border-slate-200 dark:border-slate-800">
+                    <div className="flex items-center gap-1 text-blue-500 dark:text-blue-400 mb-1">
+                      <Clock size={12} />
+                      <span className="text-[9px] font-black uppercase tracking-wider">Kalkış</span>
+                    </div>
+                    <div className="text-lg sm:text-2xl font-mono font-black text-slate-900 dark:text-white">
+                      {dynState?.currentDepartureTime || schedule.departureTime}
+                    </div>
+                    <div className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold mt-0.5 truncate">
+                      {schedule.arrivalTime ? `Varış ~${schedule.arrivalTime}` : "Planlı Sefer"}
+                    </div>
+                  </div>
 
-              {isDirect ? (
-                <div className="flex items-center gap-2.5 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 dark:text-emerald-300 text-xs font-bold">
-                  <ShieldCheck size={18} className="shrink-0 text-emerald-500" />
-                  <span>
-                    Bu sefer direkt seferdir; ara duraklara uğramadan doğrudan {schedule.destination} iskelesine ulaşır.
-                  </span>
+                  <div className="bg-slate-50 dark:bg-slate-900/90 p-2.5 sm:p-3 rounded-2xl border border-slate-200 dark:border-slate-800">
+                    <div className="flex items-center gap-1 text-amber-500 dark:text-amber-400 mb-1">
+                      <MapPin size={12} />
+                      <span className="text-[9px] font-black uppercase tracking-wider">İskele</span>
+                    </div>
+                    <div className="text-xs sm:text-base font-black text-slate-900 dark:text-white truncate">
+                      {dynState?.currentOrigin || schedule.origin}
+                    </div>
+                    <div className="text-[10px] text-amber-600 dark:text-amber-400 font-bold truncate mt-0.5">
+                      {schedule.platform || "Yolcu Rıhtımı"}
+                    </div>
+                  </div>
+
+                  <div className="bg-slate-50 dark:bg-slate-900/90 p-2.5 sm:p-3 rounded-2xl border border-slate-200 dark:border-slate-800">
+                    <div className="flex items-center gap-1 text-emerald-500 dark:text-emerald-400 mb-1">
+                      <Ticket size={12} />
+                      <span className="text-[9px] font-black uppercase tracking-wider">Tarife</span>
+                    </div>
+                    <div className="text-lg sm:text-2xl font-mono font-black text-emerald-600 dark:text-emerald-400">
+                      {schedule.price}
+                    </div>
+                    <div className="text-[10px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">
+                      İstanbulkart
+                    </div>
+                  </div>
                 </div>
-              ) : dynState?.waypoints && dynState.waypoints.length > 0 ? (
-                <div className="space-y-2">
-                  <div className="flex items-center gap-1.5 overflow-x-auto pb-2 hide-scrollbar">
-                    {dynState.waypoints.map((wp, wIdx) => {
-                      const isCompleted = wp.state === "COMPLETED";
-                      const isCurrent = wp.state === "CURRENT";
-                      const isLast = wIdx === (dynState.waypoints?.length ?? 1) - 1;
 
-                      return (
-                        <div key={wIdx} className="flex items-center shrink-0">
-                          <div
-                            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
-                              isCompleted
-                                ? "bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400"
-                                : isCurrent
-                                ? "bg-amber-400 text-slate-950 font-black shadow-md ring-2 ring-amber-300"
-                                : "bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200"
-                            }`}
-                          >
-                            <span>{wp.name}</span>
-                            <span className="font-mono text-[10px] opacity-80">({wp.time})</span>
+                {/* GÜZERGAH VE DURAK AKIŞI */}
+                <div className="bg-slate-50 dark:bg-slate-900/90 p-3 sm:p-4 rounded-2xl border border-slate-200 dark:border-slate-800">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-xs font-black uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+                      <Ship size={13} className="text-blue-500" />
+                      <span>Güzergah ve Durak Durumu</span>
+                    </span>
+                    <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400">
+                      {isDirect ? "Direkt Sefer" : `${schedule.stops?.length} Ara Durak`}
+                    </span>
+                  </div>
+
+                  {isDirect ? (
+                    <div className="flex items-center gap-2 p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 dark:text-emerald-300 text-xs font-bold">
+                      <ShieldCheck size={16} className="shrink-0 text-emerald-500" />
+                      <span>Bu sefer direkt seferdir; ara duraklara uğramadan doğrudan {schedule.destination} iskelesine ulaşır.</span>
+                    </div>
+                  ) : dynState?.waypoints && dynState.waypoints.length > 0 ? (
+                    <div className="flex items-center gap-1.5 overflow-x-auto pb-1 hide-scrollbar">
+                      {dynState.waypoints.map((wp, wIdx) => {
+                        const isCompleted = wp.state === "COMPLETED";
+                        const isCurrent = wp.state === "CURRENT";
+                        const isLast = wIdx === (dynState.waypoints?.length ?? 1) - 1;
+
+                        return (
+                          <div key={wIdx} className="flex items-center shrink-0">
+                            <div
+                              className={`flex items-center gap-1 px-2.5 py-1 rounded-xl text-xs font-bold transition-all ${
+                                isCompleted
+                                  ? "bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400"
+                                  : isCurrent
+                                  ? "bg-amber-400 text-slate-950 font-black shadow-md ring-2 ring-amber-300"
+                                  : "bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200"
+                              }`}
+                            >
+                              <span>{wp.name}</span>
+                              <span className="font-mono text-[9px] opacity-80">({wp.time})</span>
+                            </div>
+                            {!isLast && <div className="w-3 h-0.5 bg-slate-300 dark:bg-slate-700 mx-0.5 shrink-0" />}
                           </div>
-                          {!isLast && (
-                            <div className="w-4 h-0.5 bg-slate-300 dark:bg-slate-700 mx-1 shrink-0" />
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
+                        );
+                      })}
+                    </div>
+                  ) : null}
                 </div>
-              ) : null}
-            </div>
 
-            {/* 4. GEMİ & HİZMET ÖZETİ (AIS KORİDOR DOĞRULAMASI) */}
-            <div className="bg-slate-50 dark:bg-slate-900/90 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 mb-4 flex flex-col gap-3">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div className="flex items-center gap-3">
-                  <div className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 border transition-all ${
-                    aisData.isVerified
-                      ? "bg-emerald-500/20 text-emerald-500 border-emerald-500/40 shadow-xs"
-                      : "bg-blue-500/10 text-blue-500 border-blue-500/20"
-                  }`}>
-                    <Ship size={20} className={aisData.isVerified ? "animate-pulse" : ""} />
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-sm font-black text-slate-900 dark:text-white">
-                        {aisData.isVerified ? `🚢 ${aisData.vesselName}` : liveVessel.vesselName}
-                      </span>
-                      {aisData.isVerified ? (
-                        <span className="inline-flex items-center gap-1 text-[10px] font-black px-2 py-0.5 rounded-full bg-emerald-500 text-slate-950">
-                          <span>✓ AIS DOĞRULANDI</span>
+                {/* VAPUR İÇİ OLANAKLAR VE GÜVERTE TAVSİYESİ */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                  <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800">
+                    <span className="text-[10px] font-black uppercase text-slate-400 block mb-1.5">Vapur İçi İkram & Hizmetler</span>
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      {amenities.map((item) => (
+                        <span key={item.id} className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-[10px] font-bold text-slate-700 dark:text-slate-300">
+                          <span>{item.icon}</span>
+                          <span>{item.label}</span>
                         </span>
-                      ) : (
-                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
-                          Kalkışta Eşleşecek
-                        </span>
-                      )}
+                      ))}
                     </div>
-                    <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
-                      {aisData.explanation}
-                    </p>
                   </div>
-                </div>
 
-                {/* Olanaklar (4'lü chip) */}
-                <div className="flex items-center gap-1.5 flex-wrap">
-                  {amenities.slice(0, 4).map((item) => (
-                    <span
-                      key={item.id}
-                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-[11px] font-bold text-slate-700 dark:text-slate-300"
-                      title={item.description}
-                    >
-                      <span>{item.icon}</span>
-                      <span>{item.label}</span>
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              {/* Canlı AIS Koridor Telemetrisi Çubuğu */}
-              <div className="pt-2 border-t border-slate-200 dark:border-slate-800/80 grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-xs">
-                <div className="p-2 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
-                  <span className="text-[10px] text-slate-400 font-bold block uppercase">Hız (SOG)</span>
-                  <span className="text-xs font-mono font-black text-emerald-600 dark:text-emerald-400">
-                    {aisData.speedKnots} Knot
-                  </span>
-                </div>
-                <div className="p-2 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
-                  <span className="text-[10px] text-slate-400 font-bold block uppercase">Rota (COG)</span>
-                  <span className="text-xs font-mono font-black text-blue-600 dark:text-blue-400">
-                    {aisData.headingDeg}° Koridor
-                  </span>
-                </div>
-                <div className="p-2 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
-                  <span className="text-[10px] text-slate-400 font-bold block uppercase">Koridor Uyumu</span>
-                  <span className="text-xs font-mono font-black text-amber-500">
-                    %{aisData.corridorMatchScore}
-                  </span>
-                </div>
-                <div className="p-2 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
-                  <span className="text-[10px] text-slate-400 font-bold block uppercase">Tahmini Varış</span>
-                  <span className="text-xs font-mono font-black text-slate-900 dark:text-white">
-                    ~{aisData.etaMinutes} dk
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* 5. 2 ANA HIZLI CANLI AKSİYON BUTONU */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mb-4">
-              {/* Canlı AIS Radarı */}
-              <button
-                type="button"
-                onClick={() => setIsRadarOpen(true)}
-                className="p-3.5 rounded-2xl bg-gradient-to-r from-emerald-600/15 via-teal-600/10 to-transparent hover:from-emerald-600/25 border border-emerald-500/40 text-left flex items-center justify-between transition-all cursor-pointer shadow-sm group"
-              >
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                    <Radar size={18} className="animate-spin" style={{ animationDuration: "6s" }} />
-                  </div>
-                  <div>
-                    <span className="text-xs font-black text-slate-900 dark:text-white block">
-                      CANLI AIS UYDU RADARI
-                    </span>
-                    <span className="text-[10px] text-slate-500 dark:text-slate-400">
-                      Boğazdaki gerçek zamanlı gemi konumları ve telsiz verisi
-                    </span>
-                  </div>
-                </div>
-                <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 shrink-0">
-                  Aç ➔
-                </span>
-              </button>
-
-              {/* İskele Canlı Kamera */}
-              <button
-                type="button"
-                onClick={() => setIsCameraOpen(true)}
-                className="p-3.5 rounded-2xl bg-gradient-to-r from-blue-600/15 via-indigo-600/10 to-transparent hover:from-blue-600/25 border border-blue-500/40 text-left flex items-center justify-between transition-all cursor-pointer shadow-sm group"
-              >
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-xl bg-blue-500/20 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                    <Camera size={18} className="animate-pulse" />
-                  </div>
-                  <div>
-                    <span className="text-xs font-black text-slate-900 dark:text-white block">
-                      İSKELE CANLI KAMERA
-                    </span>
-                    <span className="text-[10px] text-slate-500 dark:text-slate-400">
-                      Rıhtım ve yolcu yoğunluğu canlı yayını
-                    </span>
-                  </div>
-                </div>
-                <span className="text-xs font-bold text-blue-600 dark:text-blue-400 shrink-0">
-                  İzle ➔
-                </span>
-              </button>
-            </div>
-
-            {/* 6. İKİNCİL DETAYLAR: DÜZENLİ VE SADE KATLANABİLİR AKORDEON */}
-            <div className="border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden mb-4 bg-slate-50 dark:bg-slate-900/50">
-              <button
-                type="button"
-                onClick={() => setShowAdvancedDetails(!showAdvancedDetails)}
-                className="w-full p-3.5 flex items-center justify-between text-left text-xs font-black text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/80 transition-colors"
-              >
-                <span className="flex items-center gap-2">
-                  <span>ℹ️</span>
-                  <span>Diğer İskele & Ulaşım Bilgileri (Metro, Taksi, İSPARK, Güverte)</span>
-                </span>
-                {showAdvancedDetails ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-              </button>
-
-              {showAdvancedDetails && (
-                <div className="p-4 space-y-4 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950">
-                  {/* Metro / Raylı Sistem Aktarmaları */}
-                  {(originTransit.length > 0 || destTransit.length > 0) && (
-                    <div>
-                      <div className="text-[11px] font-black uppercase text-slate-500 dark:text-slate-400 mb-2 flex items-center gap-1.5">
-                        <Train size={13} className="text-blue-500" />
-                        <span>Raylı Sistem & Metro Aktarmaları</span>
-                      </div>
-                      <div className="flex items-center gap-1.5 flex-wrap">
-                        {originTransit.map((t, idx) => (
-                          <div
-                            key={idx}
-                            className="flex items-center gap-1 bg-slate-100 dark:bg-slate-900 px-2 py-1 rounded-xl border border-slate-200 dark:border-slate-800 text-xs"
-                          >
-                            <span className={`text-[10px] font-black text-white px-1.5 py-0.2 rounded ${t.badgeBg}`}>
-                              {t.line}
-                            </span>
-                            <span className="font-semibold text-slate-800 dark:text-slate-200">{t.name}</span>
-                            <span className="text-blue-600 dark:text-blue-400 font-bold">({t.walkMinutes} dk)</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Taksi & İETT */}
-                  {groundTransit && (
-                    <div className="pt-3 border-t border-slate-200 dark:border-slate-800/80">
-                      <div className="text-[11px] font-black uppercase text-slate-500 dark:text-slate-400 mb-2 flex items-center gap-1.5">
-                        <Bus size={13} className="text-emerald-500" />
-                        <span>İskele Çıkışı Taksi Durağı & Otobüsler</span>
-                      </div>
-                      <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
-                        <div>
-                          <strong className="text-xs text-slate-900 dark:text-white block">
-                            🚕 {groundTransit.taxi.standName}
-                          </strong>
-                          <span className="text-[10px] text-slate-500">
-                            {groundTransit.taxi.locationDescription} • {groundTransit.taxi.walkMinutes} dk yürüme
-                          </span>
-                        </div>
-                        <a
-                          href={`tel:${groundTransit.taxi.phone}`}
-                          className="px-2.5 py-1.5 rounded-xl bg-amber-400 text-slate-950 font-black text-xs flex items-center gap-1"
-                        >
-                          <Phone size={12} />
-                          <span>Ara</span>
-                        </a>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* İSPARK & İSBİKE */}
-                  {pierMobility && (
-                    <div className="pt-3 border-t border-slate-200 dark:border-slate-800/80">
-                      <div className="text-[11px] font-black uppercase text-slate-500 dark:text-slate-400 mb-2 flex items-center gap-1.5">
-                        <Car size={13} className="text-blue-500" />
-                        <span>İSPARK Otopark & İSBİKE Bisiklet</span>
-                      </div>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                        <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex justify-between items-center">
-                          <span>🅿️ {pierMobility.parking.isparkName}</span>
-                          <span className="font-mono font-bold text-emerald-600 dark:text-emerald-400">
-                            {pierMobility.parking.availableSpots} Boş
-                          </span>
-                        </div>
-                        <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex justify-between items-center">
-                          <span>🚲 {pierMobility.bicycle.isbikeStationName}</span>
-                          <span className="font-mono font-bold text-blue-600 dark:text-blue-400">
-                            {pierMobility.bicycle.availableBikes} Bisiklet
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Güverte Manzara Önerisi */}
                   {deckAdvice && (
-                    <div className="pt-3 border-t border-slate-200 dark:border-slate-800/80">
-                      <div className="text-[11px] font-black uppercase text-slate-500 dark:text-slate-400 mb-1 flex items-center gap-1.5">
-                        <Compass size={13} className="text-amber-500" />
+                    <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 flex flex-col justify-center">
+                      <span className="text-[10px] font-black uppercase text-amber-500 block mb-1 flex items-center gap-1">
+                        <Compass size={11} />
                         <span>Güverte & Manzara Tavsiyesi</span>
-                      </div>
-                      <p className="text-xs text-slate-700 dark:text-slate-300">
-                        🌟 <strong>Tavsiye:</strong> {deckAdvice.recommendedSideLabel} — {deckAdvice.summary}
+                      </span>
+                      <p className="text-[11px] text-slate-700 dark:text-slate-300 font-medium">
+                        🌟 <strong>{deckAdvice.recommendedSideLabel}:</strong> {deckAdvice.summary}
                       </p>
                     </div>
                   )}
+                </div>
+              </div>
+            )}
 
-                  {/* Alternatifler: Vapuru Kaçırdım & Deniz Taksi */}
-                  <div className="pt-3 border-t border-slate-200 dark:border-slate-800/80 grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setIsMissedOpen(true)}
-                      className="p-2 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-300 dark:border-amber-500/40 text-amber-900 dark:text-amber-200 text-xs font-bold flex items-center justify-between"
-                    >
-                      <span className="flex items-center gap-1.5">
-                        <AlertOctagon size={14} className="text-amber-500" />
-                        <span>Vapuru Kaçırdım Asistanı</span>
-                      </span>
-                      <span>➔</span>
-                    </button>
+            {/* SEKME 2: GEMİ & RADAR (AIS Telemetrisi & Harita) */}
+            {activeDetailTab === "RADAR" && (
+              <div className="space-y-4 animate-fadeIn">
+                {/* AIS Canlı Gemi Kartı */}
+                <div className="bg-slate-50 dark:bg-slate-900/90 p-4 rounded-2xl border border-slate-200 dark:border-slate-800">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className={`w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 border transition-all ${
+                      aisData.isVerified
+                        ? "bg-emerald-500/20 text-emerald-500 border-emerald-500/40 shadow-xs"
+                        : "bg-blue-500/10 text-blue-500 border-blue-500/20"
+                    }`}>
+                      <Ship size={22} className={aisData.isVerified ? "animate-pulse" : ""} />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-base font-black text-slate-900 dark:text-white">
+                          🚢 {aisData.isVerified ? aisData.vesselName : liveVessel.vesselName}
+                        </span>
+                        {aisData.isVerified ? (
+                          <span className="inline-flex items-center gap-1 text-[10px] font-black px-2 py-0.5 rounded-full bg-emerald-500 text-slate-950">
+                            ✓ AIS DOĞRULANDI
+                          </span>
+                        ) : (
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                            Kalkışta Eşleşecek
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                        {aisData.explanation}
+                      </p>
+                    </div>
+                  </div>
 
-                    <button
-                      type="button"
-                      onClick={() => setIsSeaTaxiOpen(true)}
-                      className="p-2 rounded-xl bg-cyan-50 dark:bg-cyan-950/30 border border-cyan-300 dark:border-cyan-500/40 text-cyan-900 dark:text-cyan-200 text-xs font-bold flex items-center justify-between"
-                    >
-                      <span className="flex items-center gap-1.5">
-                        <Anchor size={14} className="text-cyan-500" />
-                        <span>İBB Paylaşımlı Deniz Taksi</span>
+                  {/* AIS Koridor Telemetrisi */}
+                  <div className="pt-2 border-t border-slate-200 dark:border-slate-800 grid grid-cols-4 gap-2 text-center">
+                    <div className="p-2 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
+                      <span className="text-[9px] text-slate-400 font-bold block uppercase">Hız (SOG)</span>
+                      <span className="text-xs font-mono font-black text-emerald-600 dark:text-emerald-400">
+                        {aisData.speedKnots} Kn
                       </span>
-                      <span>➔</span>
-                    </button>
+                    </div>
+                    <div className="p-2 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
+                      <span className="text-[9px] text-slate-400 font-bold block uppercase">Rota (COG)</span>
+                      <span className="text-xs font-mono font-black text-blue-600 dark:text-blue-400">
+                        {aisData.headingDeg}°
+                      </span>
+                    </div>
+                    <div className="p-2 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
+                      <span className="text-[9px] text-slate-400 font-bold block uppercase">Uyum</span>
+                      <span className="text-xs font-mono font-black text-amber-500">
+                        %{aisData.corridorMatchScore}
+                      </span>
+                    </div>
+                    <div className="p-2 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
+                      <span className="text-[9px] text-slate-400 font-bold block uppercase">Varış</span>
+                      <span className="text-xs font-mono font-black text-slate-900 dark:text-white">
+                        ~{aisData.etaMinutes} dk
+                      </span>
+                    </div>
                   </div>
                 </div>
-              )}
-            </div>
 
-            {/* 7. KAPAT BUTONU */}
-            <button
-              onClick={onClose}
-              className="w-full py-3 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-white text-xs font-black rounded-2xl border border-slate-300 dark:border-slate-700 transition-colors uppercase tracking-wider shrink-0 cursor-pointer"
-            >
-              Kapat
-            </button>
+                {/* 2 Canlı Aksiyon Butonu */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                  <button
+                    type="button"
+                    onClick={() => setIsRadarOpen(true)}
+                    className="p-3.5 rounded-2xl bg-gradient-to-r from-emerald-600/15 via-teal-600/10 to-transparent hover:from-emerald-600/25 border border-emerald-500/40 text-left flex items-center justify-between transition-all cursor-pointer shadow-sm group"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                        <Radar size={18} className="animate-spin" style={{ animationDuration: "6s" }} />
+                      </div>
+                      <div>
+                        <span className="text-xs font-black text-slate-900 dark:text-white block">CANLI AIS UYDU RADARI</span>
+                        <span className="text-[10px] text-slate-500 dark:text-slate-400">Boğazdaki gerçek zamanlı gemi haritası</span>
+                      </div>
+                    </div>
+                    <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 shrink-0">Aç ➔</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setIsCameraOpen(true)}
+                    className="p-3.5 rounded-2xl bg-gradient-to-r from-blue-600/15 via-indigo-600/10 to-transparent hover:from-blue-600/25 border border-blue-500/40 text-left flex items-center justify-between transition-all cursor-pointer shadow-sm group"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-9 h-9 rounded-xl bg-blue-500/20 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                        <Camera size={18} className="animate-pulse" />
+                      </div>
+                      <div>
+                        <span className="text-xs font-black text-slate-900 dark:text-white block">İSKELE CANLI KAMERA</span>
+                        <span className="text-[10px] text-slate-500 dark:text-slate-400">Rıhtım ve yolcu yoğunluğu canlı yayını</span>
+                      </div>
+                    </div>
+                    <span className="text-xs font-bold text-blue-600 dark:text-blue-400 shrink-0">İzle ➔</span>
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* SEKME 3: İSKELE AKTARMA & ULAŞIM */}
+            {activeDetailTab === "TRANSIT" && (
+              <div className="space-y-3.5 animate-fadeIn text-xs">
+                {/* Metro & Raylı Sistem Aktarmaları */}
+                {(originTransit.length > 0 || destTransit.length > 0) && (
+                  <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800">
+                    <div className="text-[11px] font-black uppercase text-slate-500 dark:text-slate-400 mb-2 flex items-center gap-1.5">
+                      <Train size={13} className="text-blue-500" />
+                      <span>Raylı Sistem & Metro Aktarmaları</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      {originTransit.map((t, idx) => (
+                        <div key={idx} className="flex items-center gap-1 bg-white dark:bg-slate-950 px-2.5 py-1 rounded-xl border border-slate-200 dark:border-slate-800">
+                          <span className={`text-[10px] font-black text-white px-1.5 py-0.2 rounded ${t.badgeBg}`}>{t.line}</span>
+                          <span className="font-semibold text-slate-800 dark:text-slate-200">{t.name}</span>
+                          <span className="text-blue-600 dark:text-blue-400 font-bold">({t.walkMinutes} dk)</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Taksi & İETT */}
+                {groundTransit && (
+                  <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800">
+                    <div className="text-[11px] font-black uppercase text-slate-500 dark:text-slate-400 mb-2 flex items-center gap-1.5">
+                      <Bus size={13} className="text-emerald-500" />
+                      <span>İskele Çıkışı Taksi Durağı</span>
+                    </div>
+                    <div className="flex items-center justify-between p-2.5 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
+                      <div>
+                        <strong className="text-xs text-slate-900 dark:text-white block">🚕 {groundTransit.taxi.standName}</strong>
+                        <span className="text-[10px] text-slate-500">{groundTransit.taxi.locationDescription} • {groundTransit.taxi.walkMinutes} dk yürüme</span>
+                      </div>
+                      <a href={`tel:${groundTransit.taxi.phone}`} className="px-3 py-1.5 rounded-xl bg-amber-400 text-slate-950 font-black text-xs flex items-center gap-1">
+                        <Phone size={12} />
+                        <span>Ara</span>
+                      </a>
+                    </div>
+                  </div>
+                )}
+
+                {/* İSPARK & İSBİKE */}
+                {pierMobility && (
+                  <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800">
+                    <div className="text-[11px] font-black uppercase text-slate-500 dark:text-slate-400 mb-2 flex items-center gap-1.5">
+                      <Car size={13} className="text-blue-500" />
+                      <span>İSPARK Otopark & İSBİKE Bisiklet</span>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 text-xs">
+                      <div className="p-2.5 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex justify-between items-center">
+                        <span className="truncate">🅿️ {pierMobility.parking.isparkName}</span>
+                        <span className="font-mono font-bold text-emerald-600 dark:text-emerald-400 shrink-0">{pierMobility.parking.availableSpots} Boş</span>
+                      </div>
+                      <div className="p-2.5 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex justify-between items-center">
+                        <span className="truncate">🚲 {pierMobility.bicycle.isbikeStationName}</span>
+                        <span className="font-mono font-bold text-blue-600 dark:text-blue-400 shrink-0">{pierMobility.bicycle.availableBikes} Bisiklet</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Vapuru Kaçırdım & Deniz Taksi Alternatifi */}
+                <div className="grid grid-cols-2 gap-2 pt-1">
+                  <button
+                    type="button"
+                    onClick={() => setIsMissedOpen(true)}
+                    className="p-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-300 dark:border-amber-500/40 text-amber-900 dark:text-amber-200 text-xs font-bold flex items-center justify-between cursor-pointer"
+                  >
+                    <span className="flex items-center gap-1.5 truncate">
+                      <AlertOctagon size={13} className="text-amber-500 shrink-0" />
+                      <span className="truncate">Kaçırdım Asistanı</span>
+                    </span>
+                    <span>➔</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setIsSeaTaxiOpen(true)}
+                    className="p-2.5 rounded-xl bg-cyan-50 dark:bg-cyan-950/30 border border-cyan-300 dark:border-cyan-500/40 text-cyan-900 dark:text-cyan-200 text-xs font-bold flex items-center justify-between cursor-pointer"
+                  >
+                    <span className="flex items-center gap-1.5 truncate">
+                      <Anchor size={13} className="text-cyan-500 shrink-0" />
+                      <span className="truncate">İBB Deniz Taksi</span>
+                    </span>
+                    <span>➔</span>
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* 4. KAPAT BUTONU */}
+            <div className="pt-3 border-t border-slate-200 dark:border-slate-800 mt-4">
+              <button
+                onClick={onClose}
+                className="w-full py-3 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-white text-xs font-black rounded-2xl border border-slate-300 dark:border-slate-700 transition-colors uppercase tracking-wider shrink-0 cursor-pointer active:scale-98"
+              >
+                Kapat
+              </button>
+            </div>
           </motion.div>
         </>
       )}
