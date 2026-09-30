@@ -77,6 +77,26 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
   const [showPlanner, setShowPlanner] = useState<boolean>(false);
   const [onlyImminent, setOnlyImminent] = useState<boolean>(false);
   const [isCompactDensity, setIsCompactDensity] = useState<boolean>(false);
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("vapur_compact_view");
+      if (saved !== null) {
+        setIsCompactDensity(saved === "true");
+      }
+    } catch (e) {}
+  }, []);
+
+  const handleToggleDensity = () => {
+    setIsCompactDensity((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem("vapur_compact_view", String(next));
+      } catch (e) {}
+      return next;
+    });
+  };
+
   const { isOnline } = useOfflineSync();
   const [showMarineHUD, setShowMarineHUD] = useState<boolean>(false);
   const [showCatchAssistant, setShowCatchAssistant] = useState<boolean>(false);
@@ -450,7 +470,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
 
           {/* Görünüm Yoğunluğu (Kompakt / Kart) */}
           <button
-            onClick={() => setIsCompactDensity(!isCompactDensity)}
+            onClick={handleToggleDensity}
             className={`px-2.5 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 shrink-0 transition-all cursor-pointer border ${
               isCompactDensity
                 ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900 border-slate-900 dark:border-white shadow-2xs font-black"
@@ -626,7 +646,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
           </span>
 
           <button
-            onClick={() => setIsCompactDensity(!isCompactDensity)}
+            onClick={handleToggleDensity}
             title={isCompactDensity ? "Geniş Kart Görünümü" : "Kompakt Liste Görünümü"}
             className="px-1.5 py-0.5 rounded border border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-900 text-[10px] text-slate-600 dark:text-slate-400 hover:text-blue-600 flex items-center gap-1 shadow-2xs cursor-pointer"
           >
@@ -705,6 +725,57 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
             </button>
           </div>
         )}
+      </div>
+
+      {/* Mobilde Başparmak Hizası Hızlı Erişim Kayan Barı (Thumb Zone Sticky Quick Bar) */}
+      <div className="sm:hidden fixed bottom-[74px] left-0 right-0 z-30 px-3 pointer-events-none flex justify-center">
+        <div className="pointer-events-auto flex items-center gap-1.5 p-1 bg-slate-900/95 dark:bg-[#070e1e]/95 backdrop-blur-xl border border-slate-700/80 dark:border-slate-800 rounded-2xl shadow-2xl text-white">
+          <button
+            type="button"
+            onClick={requestLocation}
+            disabled={geoStatus === "LOCATING"}
+            className="px-2.5 py-1.5 rounded-xl text-[11px] font-bold flex items-center gap-1 bg-slate-800 hover:bg-slate-700 active:scale-95 transition-all text-white border border-slate-700/60 cursor-pointer"
+          >
+            <Navigation size={12} className={geoStatus === "ACTIVE" ? "text-emerald-400" : "text-blue-400"} />
+            <span>{geoStatus === "LOCATING" ? "..." : geoStatus === "ACTIVE" && nearestPier ? nearestPier.name : "En Yakın"}</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setOnlyImminent(!onlyImminent)}
+            className={`px-2.5 py-1.5 rounded-xl text-[11px] font-bold flex items-center gap-1 transition-all active:scale-95 border cursor-pointer ${
+              onlyImminent
+                ? "bg-amber-400 text-slate-950 border-amber-300 font-black shadow-xs"
+                : "bg-slate-800 text-slate-200 border-slate-700/60 hover:bg-slate-700"
+            }`}
+          >
+            <span className="text-amber-400">⚡</span>
+            <span>≤15 dk</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setIsSearchVisible(!isSearchVisible)}
+            className={`px-2.5 py-1.5 rounded-xl text-[11px] font-bold flex items-center gap-1 transition-all active:scale-95 border cursor-pointer ${
+              isSearchVisible || searchQuery.trim().length > 0
+                ? "bg-blue-600 text-white border-blue-500 shadow-xs"
+                : "bg-slate-800 text-slate-200 border-slate-700/60 hover:bg-slate-700"
+            }`}
+          >
+            <Search size={12} />
+            <span>Ara</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={handleToggleDensity}
+            className="px-2.5 py-1.5 rounded-xl text-[11px] font-bold flex items-center gap-1 bg-slate-800 text-slate-300 border border-slate-700/60 hover:bg-slate-700 active:scale-95 transition-all cursor-pointer"
+            title="Görünüm Değiştir"
+          >
+            {isCompactDensity ? <LayoutGrid size={12} /> : <List size={12} />}
+            <span>{isCompactDensity ? "Geniş" : "Kompakt"}</span>
+          </button>
+        </div>
       </div>
 
       {/* Persistent Live Activity Bar (Sticky Bottom) */}
