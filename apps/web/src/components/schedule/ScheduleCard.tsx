@@ -327,12 +327,8 @@ export function ScheduleCard(props: ScheduleCardProps) {
             )}
           </div>
 
-          {/* Sağ: Ücret & Eylemler */}
+          {/* Sağ: Eylemler */}
           <div className="flex items-center gap-1 shrink-0 text-right">
-            <span className="font-mono font-bold text-xs text-emerald-600 dark:text-emerald-400 tabular-nums hidden xs:inline">
-              {props.price}
-            </span>
-
             {/* Favori Butonu */}
             <button
               type="button"
@@ -541,17 +537,8 @@ export function ScheduleCard(props: ScheduleCardProps) {
           </div>
         </div>
 
-        {/* 3. Sağ: Fiyat & Hızlı Eylemler (Favori, Alarm, Detay Oku) */}
+        {/* 3. Sağ: Hızlı Eylemler (Favori, Alarm, Detay Oku) */}
         <div className="flex items-center gap-1 shrink-0">
-          <div className="text-right flex flex-col items-end pr-0.5">
-            <span className="font-mono font-bold text-xs sm:text-sm text-emerald-600 dark:text-emerald-400 tabular-nums leading-none">
-              {props.price}
-            </span>
-            <span className="text-[9px] text-slate-400 dark:text-slate-500 mt-0.5 hidden xs:block">
-              {props.platform}
-            </span>
-          </div>
-
           {/* Favori Yıldızı */}
           <button
             type="button"

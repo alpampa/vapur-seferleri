@@ -1,16 +1,16 @@
 {
-  "timestamp": "2026-09-30T18:26:33.787Z",
+  "timestamp": "2026-09-30T19:13:41.134Z",
   "overallStatus": "HEALTHY",
   "complianceScore": 100,
-  "totalChecks": 1077,
-  "passedChecks": 1077,
+  "totalChecks": 1501,
+  "passedChecks": 1501,
   "failedChecks": 0,
   "warningChecks": 0,
   "categoryMetrics": [
     {
       "category": "SEFERLER_DETAYLI_DENETİM",
-      "total": 856,
-      "passed": 856,
+      "total": 1280,
+      "passed": 1280,
       "failed": 0,
       "warning": 0,
       "status": "PASSED"
@@ -559,7 +559,7 @@
     },
     {
       "category": "SEFERLER_DETAYLI_DENETİM",
-      "testName": "Sefer #sh-2026-497 (Aşiyan -> K��çüksu - Anadolu Hisarı Ring @ 09:30)",
+      "testName": "Sefer #sh-2026-497 (Aşiyan -> Küçüksu - Anadolu Hisarı Ring @ 09:30)",
       "status": "PASSED",
       "details": "Operatör: Şehir Hatları | Saat: 09:30 | Platform: Ana Rıhtım | Bilet: 27.00 ₺",
       "metadata": {
@@ -3453,7 +3453,7 @@
       "category": "SEFERLER_DETAYLI_DENETİM",
       "testName": "Sefer #sh-2026-2274 (Eyüpsultan -> Beşiktaş @ 17:20)",
       "status": "PASSED",
-      "details": "Operatör: Şehir Hatları | Saat: 17:20 | Platform: Ana Rıhtım | Bilet: 27.00 ₺",
+      "details": "Operatör: Şehir Hatlar�� | Saat: 17:20 | Platform: Ana Rıhtım | Bilet: 27.00 ₺",
       "metadata": {
         "tripId": "sh-2026-2274",
         "origin": "Eyüpsultan",
@@ -10362,6 +10362,5094 @@
       }
     },
     {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-bos-ada-0 (Bostancı -> Büyükada @ 06:30)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 06:30 | Platform: Bostancı Mavi Marmara Motor İskelesi | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-bos-ada-0",
+        "origin": "Bostancı",
+        "destination": "Büyükada",
+        "departureTime": "06:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-bos-ada-1 (Bostancı -> Büyükada @ 07:15)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 07:15 | Platform: Bostancı Mavi Marmara Motor İskelesi | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-bos-ada-1",
+        "origin": "Bostancı",
+        "destination": "Büyükada",
+        "departureTime": "07:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-bos-ada-2 (Bostancı -> Büyükada @ 08:00)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 08:00 | Platform: Bostancı Mavi Marmara Motor İskelesi | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-bos-ada-2",
+        "origin": "Bostancı",
+        "destination": "Büyükada",
+        "departureTime": "08:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-bos-ada-3 (Bostancı -> Büyükada @ 08:45)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 08:45 | Platform: Bostancı Mavi Marmara Motor İskelesi | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-bos-ada-3",
+        "origin": "Bostancı",
+        "destination": "Büyükada",
+        "departureTime": "08:45"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-bos-ada-4 (Bostancı -> Büyükada @ 09:30)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 09:30 | Platform: Bostancı Mavi Marmara Motor İskelesi | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-bos-ada-4",
+        "origin": "Bostancı",
+        "destination": "Büyükada",
+        "departureTime": "09:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-bos-ada-5 (Bostancı -> Büyükada @ 10:15)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 10:15 | Platform: Bostancı Mavi Marmara Motor İskelesi | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-bos-ada-5",
+        "origin": "Bostancı",
+        "destination": "Büyükada",
+        "departureTime": "10:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-bos-ada-6 (Bostancı -> Büyükada @ 11:00)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 11:00 | Platform: Bostancı Mavi Marmara Motor İskelesi | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-bos-ada-6",
+        "origin": "Bostancı",
+        "destination": "Büyükada",
+        "departureTime": "11:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-bos-ada-7 (Bostancı -> Büyükada @ 11:45)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 11:45 | Platform: Bostancı Mavi Marmara Motor İskelesi | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-bos-ada-7",
+        "origin": "Bostancı",
+        "destination": "Büyükada",
+        "departureTime": "11:45"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-bos-ada-8 (Bostancı -> Büyükada @ 12:30)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 12:30 | Platform: Bostancı Mavi Marmara Motor İskelesi | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-bos-ada-8",
+        "origin": "Bostancı",
+        "destination": "Büyükada",
+        "departureTime": "12:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-bos-ada-9 (Bostancı -> Büyükada @ 13:15)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 13:15 | Platform: Bostancı Mavi Marmara Motor İskelesi | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-bos-ada-9",
+        "origin": "Bostancı",
+        "destination": "Büyükada",
+        "departureTime": "13:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-bos-ada-10 (Bostancı -> Büyükada @ 14:00)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 14:00 | Platform: Bostancı Mavi Marmara Motor İskelesi | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-bos-ada-10",
+        "origin": "Bostancı",
+        "destination": "Büyükada",
+        "departureTime": "14:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-bos-ada-11 (Bostancı -> Büyükada @ 14:45)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 14:45 | Platform: Bostancı Mavi Marmara Motor İskelesi | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-bos-ada-11",
+        "origin": "Bostancı",
+        "destination": "Büyükada",
+        "departureTime": "14:45"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-bos-ada-12 (Bostancı -> Büyükada @ 15:30)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 15:30 | Platform: Bostancı Mavi Marmara Motor İskelesi | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-bos-ada-12",
+        "origin": "Bostancı",
+        "destination": "Büyükada",
+        "departureTime": "15:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-bos-ada-13 (Bostancı -> Büyükada @ 16:15)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 16:15 | Platform: Bostancı Mavi Marmara Motor İskelesi | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-bos-ada-13",
+        "origin": "Bostancı",
+        "destination": "Büyükada",
+        "departureTime": "16:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-bos-ada-14 (Bostancı -> Büyükada @ 17:00)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 17:00 | Platform: Bostancı Mavi Marmara Motor İskelesi | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-bos-ada-14",
+        "origin": "Bostancı",
+        "destination": "Büyükada",
+        "departureTime": "17:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-bos-ada-15 (Bostancı -> Büyükada @ 17:45)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 17:45 | Platform: Bostancı Mavi Marmara Motor İskelesi | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-bos-ada-15",
+        "origin": "Bostancı",
+        "destination": "Büyükada",
+        "departureTime": "17:45"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-bos-ada-16 (Bostancı -> Büyükada @ 18:30)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 18:30 | Platform: Bostancı Mavi Marmara Motor İskelesi | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-bos-ada-16",
+        "origin": "Bostancı",
+        "destination": "Büyükada",
+        "departureTime": "18:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-bos-ada-17 (Bostancı -> Büyükada @ 19:15)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 19:15 | Platform: Bostancı Mavi Marmara Motor İskelesi | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-bos-ada-17",
+        "origin": "Bostancı",
+        "destination": "Büyükada",
+        "departureTime": "19:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-bos-ada-18 (Bostancı -> Büyükada @ 20:00)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 20:00 | Platform: Bostancı Mavi Marmara Motor İskelesi | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-bos-ada-18",
+        "origin": "Bostancı",
+        "destination": "Büyükada",
+        "departureTime": "20:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-bos-ada-19 (Bostancı -> Büyükada @ 21:00)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 21:00 | Platform: Bostancı Mavi Marmara Motor İskelesi | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-bos-ada-19",
+        "origin": "Bostancı",
+        "destination": "Büyükada",
+        "departureTime": "21:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-bos-ada-20 (Bostancı -> Büyükada @ 22:00)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 22:00 | Platform: Bostancı Mavi Marmara Motor İskelesi | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-bos-ada-20",
+        "origin": "Bostancı",
+        "destination": "Büyükada",
+        "departureTime": "22:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-bos-ada-21 (Bostancı -> Büyükada @ 23:00)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 23:00 | Platform: Bostancı Mavi Marmara Motor İskelesi | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-bos-ada-21",
+        "origin": "Bostancı",
+        "destination": "Büyükada",
+        "departureTime": "23:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-bos-ada-22 (Bostancı -> Büyükada @ 00:00)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 00:00 | Platform: Bostancı Mavi Marmara Motor İskelesi | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-bos-ada-22",
+        "origin": "Bostancı",
+        "destination": "Büyükada",
+        "departureTime": "00:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-bos-ada-23 (Bostancı -> Büyükada @ 01:00)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 01:00 | Platform: Bostancı Mavi Marmara Motor İskelesi | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-bos-ada-23",
+        "origin": "Bostancı",
+        "destination": "Büyükada",
+        "departureTime": "01:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-ada-bos-0 (Büyükada -> Bostancı @ 06:30)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 06:30 | Platform: Tarihi İskele Rıhtımı | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-ada-bos-0",
+        "origin": "Büyükada",
+        "destination": "Bostancı",
+        "departureTime": "06:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-ada-bos-1 (Büyükada -> Bostancı @ 07:15)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 07:15 | Platform: Tarihi İskele Rıhtımı | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-ada-bos-1",
+        "origin": "Büyükada",
+        "destination": "Bostancı",
+        "departureTime": "07:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-ada-bos-2 (Büyükada -> Bostancı @ 08:00)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 08:00 | Platform: Tarihi İskele Rıhtımı | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-ada-bos-2",
+        "origin": "Büyükada",
+        "destination": "Bostancı",
+        "departureTime": "08:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-ada-bos-3 (Büyükada -> Bostancı @ 08:45)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 08:45 | Platform: Tarihi İskele Rıhtımı | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-ada-bos-3",
+        "origin": "Büyükada",
+        "destination": "Bostancı",
+        "departureTime": "08:45"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-ada-bos-4 (Büyükada -> Bostancı @ 09:30)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 09:30 | Platform: Tarihi İskele Rıhtımı | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-ada-bos-4",
+        "origin": "Büyükada",
+        "destination": "Bostancı",
+        "departureTime": "09:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-ada-bos-5 (Büyükada -> Bostancı @ 10:15)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 10:15 | Platform: Tarihi İskele Rıhtımı | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-ada-bos-5",
+        "origin": "Büyükada",
+        "destination": "Bostancı",
+        "departureTime": "10:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-ada-bos-6 (Büyükada -> Bostancı @ 11:00)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 11:00 | Platform: Tarihi İskele Rıhtımı | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-ada-bos-6",
+        "origin": "Büyükada",
+        "destination": "Bostancı",
+        "departureTime": "11:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-ada-bos-7 (Büyükada -> Bostancı @ 11:45)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 11:45 | Platform: Tarihi İskele Rıhtımı | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-ada-bos-7",
+        "origin": "Büyükada",
+        "destination": "Bostancı",
+        "departureTime": "11:45"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-ada-bos-8 (Büyükada -> Bostancı @ 12:30)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 12:30 | Platform: Tarihi İskele Rıhtımı | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-ada-bos-8",
+        "origin": "Büyükada",
+        "destination": "Bostancı",
+        "departureTime": "12:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-ada-bos-9 (Büyükada -> Bostancı @ 13:15)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 13:15 | Platform: Tarihi İskele Rıhtımı | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-ada-bos-9",
+        "origin": "Büyükada",
+        "destination": "Bostancı",
+        "departureTime": "13:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-ada-bos-10 (Büyükada -> Bostancı @ 14:00)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 14:00 | Platform: Tarihi İskele Rıhtımı | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-ada-bos-10",
+        "origin": "Büyükada",
+        "destination": "Bostancı",
+        "departureTime": "14:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-ada-bos-11 (Büyükada -> Bostancı @ 14:45)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 14:45 | Platform: Tarihi İskele Rıhtımı | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-ada-bos-11",
+        "origin": "Büyükada",
+        "destination": "Bostancı",
+        "departureTime": "14:45"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-ada-bos-12 (Büyükada -> Bostancı @ 15:30)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 15:30 | Platform: Tarihi İskele Rıhtımı | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-ada-bos-12",
+        "origin": "Büyükada",
+        "destination": "Bostancı",
+        "departureTime": "15:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-ada-bos-13 (Büyükada -> Bostancı @ 16:15)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 16:15 | Platform: Tarihi İskele Rıhtımı | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-ada-bos-13",
+        "origin": "Büyükada",
+        "destination": "Bostancı",
+        "departureTime": "16:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-ada-bos-14 (Büyükada -> Bostancı @ 17:00)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 17:00 | Platform: Tarihi İskele Rıhtımı | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-ada-bos-14",
+        "origin": "Büyükada",
+        "destination": "Bostancı",
+        "departureTime": "17:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-ada-bos-15 (Büyükada -> Bostancı @ 17:45)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 17:45 | Platform: Tarihi İskele Rıhtımı | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-ada-bos-15",
+        "origin": "Büyükada",
+        "destination": "Bostancı",
+        "departureTime": "17:45"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-ada-bos-16 (Büyükada -> Bostancı @ 18:30)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 18:30 | Platform: Tarihi İskele Rıhtımı | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-ada-bos-16",
+        "origin": "Büyükada",
+        "destination": "Bostancı",
+        "departureTime": "18:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-ada-bos-17 (Büyükada -> Bostancı @ 19:15)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 19:15 | Platform: Tarihi İskele Rıhtımı | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-ada-bos-17",
+        "origin": "Büyükada",
+        "destination": "Bostancı",
+        "departureTime": "19:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-ada-bos-18 (Büyükada -> Bostancı @ 20:00)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 20:00 | Platform: Tarihi İskele Rıhtımı | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-ada-bos-18",
+        "origin": "Büyükada",
+        "destination": "Bostancı",
+        "departureTime": "20:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-ada-bos-19 (Büyükada -> Bostancı @ 21:00)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 21:00 | Platform: Tarihi İskele Rıhtımı | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-ada-bos-19",
+        "origin": "Büyükada",
+        "destination": "Bostancı",
+        "departureTime": "21:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-ada-bos-20 (Büyükada -> Bostancı @ 22:00)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 22:00 | Platform: Tarihi İskele Rıhtımı | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-ada-bos-20",
+        "origin": "Büyükada",
+        "destination": "Bostancı",
+        "departureTime": "22:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-ada-bos-21 (Büyükada -> Bostancı @ 23:00)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 23:00 | Platform: Tarihi İskele Rıhtımı | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-ada-bos-21",
+        "origin": "Büyükada",
+        "destination": "Bostancı",
+        "departureTime": "23:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-kab-ada-0 (Kabataş -> Büyükada @ 07:15)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 07:15 | Platform: Kabataş Adalar İskelesi | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-kab-ada-0",
+        "origin": "Kabataş",
+        "destination": "Büyükada",
+        "departureTime": "07:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-kab-ada-1 (Kabataş -> Büyükada @ 08:30)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 08:30 | Platform: Kabataş Adalar İskelesi | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-kab-ada-1",
+        "origin": "Kabataş",
+        "destination": "Büyükada",
+        "departureTime": "08:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-kab-ada-2 (Kabataş -> Büyükada @ 10:00)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 10:00 | Platform: Kabataş Adalar İskelesi | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-kab-ada-2",
+        "origin": "Kabataş",
+        "destination": "Büyükada",
+        "departureTime": "10:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-kab-ada-3 (Kabataş -> Büyükada @ 11:30)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 11:30 | Platform: Kabataş Adalar İskelesi | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-kab-ada-3",
+        "origin": "Kabataş",
+        "destination": "Büyükada",
+        "departureTime": "11:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-kab-ada-4 (Kabataş -> Büyükada @ 13:00)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 13:00 | Platform: Kabataş Adalar İskelesi | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-kab-ada-4",
+        "origin": "Kabataş",
+        "destination": "Büyükada",
+        "departureTime": "13:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-kab-ada-5 (Kabataş -> Büyükada @ 14:30)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 14:30 | Platform: Kabataş Adalar İskelesi | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-kab-ada-5",
+        "origin": "Kabataş",
+        "destination": "Büyükada",
+        "departureTime": "14:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-kab-ada-6 (Kabataş -> Büyükada @ 16:00)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 16:00 | Platform: Kabataş Adalar İskelesi | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-kab-ada-6",
+        "origin": "Kabataş",
+        "destination": "Büyükada",
+        "departureTime": "16:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-kab-ada-7 (Kabataş -> Büyükada @ 17:30)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 17:30 | Platform: Kabataş Adalar İskelesi | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-kab-ada-7",
+        "origin": "Kabataş",
+        "destination": "Büyükada",
+        "departureTime": "17:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-kab-ada-8 (Kabataş -> Büyükada @ 19:00)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 19:00 | Platform: Kabataş Adalar İskelesi | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-kab-ada-8",
+        "origin": "Kabataş",
+        "destination": "Büyükada",
+        "departureTime": "19:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-kab-ada-9 (Kabataş -> Büyükada @ 20:30)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 20:30 | Platform: Kabataş Adalar İskelesi | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-kab-ada-9",
+        "origin": "Kabataş",
+        "destination": "Büyükada",
+        "departureTime": "20:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-ada-kab-0 (Büyükada -> Kabataş @ 07:00)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 07:00 | Platform: Tarihi İskele Rıhtımı | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-ada-kab-0",
+        "origin": "Büyükada",
+        "destination": "Kabataş",
+        "departureTime": "07:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-ada-kab-1 (Büyükada -> Kabataş @ 08:30)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 08:30 | Platform: Tarihi İskele Rıhtımı | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-ada-kab-1",
+        "origin": "Büyükada",
+        "destination": "Kabataş",
+        "departureTime": "08:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-ada-kab-2 (Büyükada -> Kabataş @ 10:00)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 10:00 | Platform: Tarihi İskele Rıhtımı | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-ada-kab-2",
+        "origin": "Büyükada",
+        "destination": "Kabataş",
+        "departureTime": "10:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-ada-kab-3 (Büyükada -> Kabataş @ 11:30)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 11:30 | Platform: Tarihi İskele Rıhtımı | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-ada-kab-3",
+        "origin": "Büyükada",
+        "destination": "Kabataş",
+        "departureTime": "11:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-ada-kab-4 (Büyükada -> Kabataş @ 13:00)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 13:00 | Platform: Tarihi İskele Rıhtımı | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-ada-kab-4",
+        "origin": "Büyükada",
+        "destination": "Kabataş",
+        "departureTime": "13:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-ada-kab-5 (Büyükada -> Kabataş @ 14:30)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 14:30 | Platform: Tarihi İskele Rıhtımı | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-ada-kab-5",
+        "origin": "Büyükada",
+        "destination": "Kabataş",
+        "departureTime": "14:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-ada-kab-6 (Büyükada -> Kabataş @ 16:00)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 16:00 | Platform: Tarihi İskele Rıhtımı | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-ada-kab-6",
+        "origin": "Büyükada",
+        "destination": "Kabataş",
+        "departureTime": "16:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-ada-kab-7 (Büyükada -> Kabataş @ 17:30)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 17:30 | Platform: Tarihi İskele Rıhtımı | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-ada-kab-7",
+        "origin": "Büyükada",
+        "destination": "Kabataş",
+        "departureTime": "17:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-ada-kab-8 (Büyükada -> Kabataş @ 19:00)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 19:00 | Platform: Tarihi İskele Rıhtımı | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-ada-kab-8",
+        "origin": "Büyükada",
+        "destination": "Kabataş",
+        "departureTime": "19:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #mm-ada-kab-9 (Büyükada -> Kabataş @ 20:30)",
+      "status": "PASSED",
+      "details": "Operatör: Mavi Marmara | Saat: 20:30 | Platform: Tarihi İskele Rıhtımı | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "mm-ada-kab-9",
+        "origin": "Büyükada",
+        "destination": "Kabataş",
+        "departureTime": "20:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #pt-kar-ada-0 (Kartal -> Heybeliada @ 06:45)",
+      "status": "PASSED",
+      "details": "Operatör: Prens Tur | Saat: 06:45 | Platform: Ana Rıhtım | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "pt-kar-ada-0",
+        "origin": "Kartal",
+        "destination": "Heybeliada",
+        "departureTime": "06:45"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #pt-kar-ada-1 (Kartal -> Heybeliada @ 07:30)",
+      "status": "PASSED",
+      "details": "Operatör: Prens Tur | Saat: 07:30 | Platform: Ana Rıhtım | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "pt-kar-ada-1",
+        "origin": "Kartal",
+        "destination": "Heybeliada",
+        "departureTime": "07:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #pt-kar-ada-2 (Kartal -> Heybeliada @ 08:15)",
+      "status": "PASSED",
+      "details": "Operatör: Prens Tur | Saat: 08:15 | Platform: Ana Rıhtım | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "pt-kar-ada-2",
+        "origin": "Kartal",
+        "destination": "Heybeliada",
+        "departureTime": "08:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #pt-kar-ada-3 (Kartal -> Heybeliada @ 09:00)",
+      "status": "PASSED",
+      "details": "Operatör: Prens Tur | Saat: 09:00 | Platform: Ana Rıhtım | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "pt-kar-ada-3",
+        "origin": "Kartal",
+        "destination": "Heybeliada",
+        "departureTime": "09:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #pt-kar-ada-4 (Kartal -> Heybeliada @ 09:45)",
+      "status": "PASSED",
+      "details": "Operatör: Prens Tur | Saat: 09:45 | Platform: Ana Rıhtım | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "pt-kar-ada-4",
+        "origin": "Kartal",
+        "destination": "Heybeliada",
+        "departureTime": "09:45"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #pt-kar-ada-5 (Kartal -> Heybeliada @ 10:30)",
+      "status": "PASSED",
+      "details": "Operatör: Prens Tur | Saat: 10:30 | Platform: Ana Rıhtım | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "pt-kar-ada-5",
+        "origin": "Kartal",
+        "destination": "Heybeliada",
+        "departureTime": "10:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #pt-kar-ada-6 (Kartal -> Heybeliada @ 11:30)",
+      "status": "PASSED",
+      "details": "Operatör: Prens Tur | Saat: 11:30 | Platform: Ana Rıhtım | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "pt-kar-ada-6",
+        "origin": "Kartal",
+        "destination": "Heybeliada",
+        "departureTime": "11:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #pt-kar-ada-7 (Kartal -> Heybeliada @ 12:30)",
+      "status": "PASSED",
+      "details": "Operatör: Prens Tur | Saat: 12:30 | Platform: Ana Rıhtım | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "pt-kar-ada-7",
+        "origin": "Kartal",
+        "destination": "Heybeliada",
+        "departureTime": "12:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #pt-kar-ada-8 (Kartal -> Heybeliada @ 13:30)",
+      "status": "PASSED",
+      "details": "Operatör: Prens Tur | Saat: 13:30 | Platform: Ana Rıhtım | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "pt-kar-ada-8",
+        "origin": "Kartal",
+        "destination": "Heybeliada",
+        "departureTime": "13:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #pt-kar-ada-9 (Kartal -> Heybeliada @ 14:30)",
+      "status": "PASSED",
+      "details": "Operatör: Prens Tur | Saat: 14:30 | Platform: Ana Rıhtım | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "pt-kar-ada-9",
+        "origin": "Kartal",
+        "destination": "Heybeliada",
+        "departureTime": "14:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #pt-kar-ada-10 (Kartal -> Heybeliada @ 15:30)",
+      "status": "PASSED",
+      "details": "Operatör: Prens Tur | Saat: 15:30 | Platform: Ana Rıhtım | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "pt-kar-ada-10",
+        "origin": "Kartal",
+        "destination": "Heybeliada",
+        "departureTime": "15:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #pt-kar-ada-11 (Kartal -> Heybeliada @ 16:30)",
+      "status": "PASSED",
+      "details": "Operatör: Prens Tur | Saat: 16:30 | Platform: Ana Rıhtım | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "pt-kar-ada-11",
+        "origin": "Kartal",
+        "destination": "Heybeliada",
+        "departureTime": "16:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #pt-kar-ada-12 (Kartal -> Heybeliada @ 17:15)",
+      "status": "PASSED",
+      "details": "Operatör: Prens Tur | Saat: 17:15 | Platform: Ana Rıhtım | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "pt-kar-ada-12",
+        "origin": "Kartal",
+        "destination": "Heybeliada",
+        "departureTime": "17:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #pt-kar-ada-13 (Kartal -> Heybeliada @ 18:00)",
+      "status": "PASSED",
+      "details": "Operatör: Prens Tur | Saat: 18:00 | Platform: Ana Rıhtım | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "pt-kar-ada-13",
+        "origin": "Kartal",
+        "destination": "Heybeliada",
+        "departureTime": "18:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #pt-kar-ada-14 (Kartal -> Heybeliada @ 18:45)",
+      "status": "PASSED",
+      "details": "Operatör: Prens Tur | Saat: 18:45 | Platform: Ana Rıhtım | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "pt-kar-ada-14",
+        "origin": "Kartal",
+        "destination": "Heybeliada",
+        "departureTime": "18:45"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #pt-kar-ada-15 (Kartal -> Heybeliada @ 19:30)",
+      "status": "PASSED",
+      "details": "Operatör: Prens Tur | Saat: 19:30 | Platform: Ana Rıhtım | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "pt-kar-ada-15",
+        "origin": "Kartal",
+        "destination": "Heybeliada",
+        "departureTime": "19:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #pt-kar-ada-16 (Kartal -> Heybeliada @ 20:30)",
+      "status": "PASSED",
+      "details": "Operatör: Prens Tur | Saat: 20:30 | Platform: Ana Rıhtım | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "pt-kar-ada-16",
+        "origin": "Kartal",
+        "destination": "Heybeliada",
+        "departureTime": "20:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #pt-kar-ada-17 (Kartal -> Heybeliada @ 21:30)",
+      "status": "PASSED",
+      "details": "Operatör: Prens Tur | Saat: 21:30 | Platform: Ana Rıhtım | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "pt-kar-ada-17",
+        "origin": "Kartal",
+        "destination": "Heybeliada",
+        "departureTime": "21:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #pt-ada-kar-0 (Heybeliada -> Kartal @ 07:15)",
+      "status": "PASSED",
+      "details": "Operatör: Prens Tur | Saat: 07:15 | Platform: Ana Rıhtım | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "pt-ada-kar-0",
+        "origin": "Heybeliada",
+        "destination": "Kartal",
+        "departureTime": "07:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #pt-ada-kar-1 (Heybeliada -> Kartal @ 08:00)",
+      "status": "PASSED",
+      "details": "Operatör: Prens Tur | Saat: 08:00 | Platform: Ana Rıhtım | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "pt-ada-kar-1",
+        "origin": "Heybeliada",
+        "destination": "Kartal",
+        "departureTime": "08:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #pt-ada-kar-2 (Heybeliada -> Kartal @ 08:45)",
+      "status": "PASSED",
+      "details": "Operatör: Prens Tur | Saat: 08:45 | Platform: Ana Rıhtım | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "pt-ada-kar-2",
+        "origin": "Heybeliada",
+        "destination": "Kartal",
+        "departureTime": "08:45"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #pt-ada-kar-3 (Heybeliada -> Kartal @ 09:30)",
+      "status": "PASSED",
+      "details": "Operatör: Prens Tur | Saat: 09:30 | Platform: Ana Rıhtım | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "pt-ada-kar-3",
+        "origin": "Heybeliada",
+        "destination": "Kartal",
+        "departureTime": "09:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #pt-ada-kar-4 (Heybeliada -> Kartal @ 10:15)",
+      "status": "PASSED",
+      "details": "Operatör: Prens Tur | Saat: 10:15 | Platform: Ana Rıhtım | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "pt-ada-kar-4",
+        "origin": "Heybeliada",
+        "destination": "Kartal",
+        "departureTime": "10:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #pt-ada-kar-5 (Heybeliada -> Kartal @ 11:15)",
+      "status": "PASSED",
+      "details": "Operatör: Prens Tur | Saat: 11:15 | Platform: Ana Rıhtım | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "pt-ada-kar-5",
+        "origin": "Heybeliada",
+        "destination": "Kartal",
+        "departureTime": "11:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #pt-ada-kar-6 (Heybeliada -> Kartal @ 12:15)",
+      "status": "PASSED",
+      "details": "Operatör: Prens Tur | Saat: 12:15 | Platform: Ana Rıhtım | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "pt-ada-kar-6",
+        "origin": "Heybeliada",
+        "destination": "Kartal",
+        "departureTime": "12:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #pt-ada-kar-7 (Heybeliada -> Kartal @ 13:15)",
+      "status": "PASSED",
+      "details": "Operatör: Prens Tur | Saat: 13:15 | Platform: Ana Rıhtım | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "pt-ada-kar-7",
+        "origin": "Heybeliada",
+        "destination": "Kartal",
+        "departureTime": "13:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #pt-ada-kar-8 (Heybeliada -> Kartal @ 14:15)",
+      "status": "PASSED",
+      "details": "Operatör: Prens Tur | Saat: 14:15 | Platform: Ana Rıhtım | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "pt-ada-kar-8",
+        "origin": "Heybeliada",
+        "destination": "Kartal",
+        "departureTime": "14:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #pt-ada-kar-9 (Heybeliada -> Kartal @ 15:15)",
+      "status": "PASSED",
+      "details": "Operatör: Prens Tur | Saat: 15:15 | Platform: Ana Rıhtım | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "pt-ada-kar-9",
+        "origin": "Heybeliada",
+        "destination": "Kartal",
+        "departureTime": "15:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #pt-ada-kar-10 (Heybeliada -> Kartal @ 16:15)",
+      "status": "PASSED",
+      "details": "Operatör: Prens Tur | Saat: 16:15 | Platform: Ana Rıhtım | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "pt-ada-kar-10",
+        "origin": "Heybeliada",
+        "destination": "Kartal",
+        "departureTime": "16:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #pt-ada-kar-11 (Heybeliada -> Kartal @ 17:00)",
+      "status": "PASSED",
+      "details": "Operatör: Prens Tur | Saat: 17:00 | Platform: Ana Rıhtım | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "pt-ada-kar-11",
+        "origin": "Heybeliada",
+        "destination": "Kartal",
+        "departureTime": "17:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #pt-ada-kar-12 (Heybeliada -> Kartal @ 17:45)",
+      "status": "PASSED",
+      "details": "Operatör: Prens Tur | Saat: 17:45 | Platform: Ana Rıhtım | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "pt-ada-kar-12",
+        "origin": "Heybeliada",
+        "destination": "Kartal",
+        "departureTime": "17:45"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #pt-ada-kar-13 (Heybeliada -> Kartal @ 18:30)",
+      "status": "PASSED",
+      "details": "Operatör: Prens Tur | Saat: 18:30 | Platform: Ana Rıhtım | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "pt-ada-kar-13",
+        "origin": "Heybeliada",
+        "destination": "Kartal",
+        "departureTime": "18:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #pt-ada-kar-14 (Heybeliada -> Kartal @ 19:15)",
+      "status": "PASSED",
+      "details": "Operatör: Prens Tur | Saat: 19:15 | Platform: Ana Rıhtım | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "pt-ada-kar-14",
+        "origin": "Heybeliada",
+        "destination": "Kartal",
+        "departureTime": "19:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #pt-ada-kar-15 (Heybeliada -> Kartal @ 20:15)",
+      "status": "PASSED",
+      "details": "Operatör: Prens Tur | Saat: 20:15 | Platform: Ana Rıhtım | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "pt-ada-kar-15",
+        "origin": "Heybeliada",
+        "destination": "Kartal",
+        "departureTime": "20:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #pt-ada-kar-16 (Heybeliada -> Kartal @ 21:15)",
+      "status": "PASSED",
+      "details": "Operatör: Prens Tur | Saat: 21:15 | Platform: Ana Rıhtım | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "pt-ada-kar-16",
+        "origin": "Heybeliada",
+        "destination": "Kartal",
+        "departureTime": "21:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #pt-ada-kar-17 (Heybeliada -> Kartal @ 22:15)",
+      "status": "PASSED",
+      "details": "Operatör: Prens Tur | Saat: 22:15 | Platform: Ana Rıhtım | Bilet: 90.00 ₺",
+      "metadata": {
+        "tripId": "pt-ada-kar-17",
+        "origin": "Heybeliada",
+        "destination": "Kartal",
+        "departureTime": "22:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-em-kad-0 (Eminönü -> Kadıköy @ 06:40)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 06:40 | Platform: Eminönü 2 Nolu İskele (Kadıköy) | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-em-kad-0",
+        "origin": "Eminönü",
+        "destination": "Kadıköy",
+        "departureTime": "06:40"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-em-kad-1 (Eminönü -> Kadıköy @ 07:00)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 07:00 | Platform: Eminönü 2 Nolu İskele (Kadıköy) | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-em-kad-1",
+        "origin": "Eminönü",
+        "destination": "Kadıköy",
+        "departureTime": "07:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-em-kad-2 (Eminönü -> Kadıköy @ 07:20)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 07:20 | Platform: Eminönü 2 Nolu İskele (Kadıköy) | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-em-kad-2",
+        "origin": "Eminönü",
+        "destination": "Kadıköy",
+        "departureTime": "07:20"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-em-kad-3 (Eminönü -> Kadıköy @ 07:40)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 07:40 | Platform: Eminönü 2 Nolu İskele (Kadıköy) | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-em-kad-3",
+        "origin": "Eminönü",
+        "destination": "Kadıköy",
+        "departureTime": "07:40"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-em-kad-4 (Eminönü -> Kadıköy @ 08:00)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 08:00 | Platform: Eminönü 2 Nolu İskele (Kadıköy) | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-em-kad-4",
+        "origin": "Eminönü",
+        "destination": "Kadıköy",
+        "departureTime": "08:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-em-kad-5 (Eminönü -> Kadıköy @ 08:20)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 08:20 | Platform: Eminönü 2 Nolu İskele (Kadıköy) | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-em-kad-5",
+        "origin": "Eminönü",
+        "destination": "Kadıköy",
+        "departureTime": "08:20"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-em-kad-6 (Eminönü -> Kadıköy @ 08:40)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 08:40 | Platform: Eminönü 2 Nolu İskele (Kadıköy) | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-em-kad-6",
+        "origin": "Eminönü",
+        "destination": "Kadıköy",
+        "departureTime": "08:40"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-em-kad-7 (Eminönü -> Kadıköy @ 09:00)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 09:00 | Platform: Eminönü 2 Nolu İskele (Kadıköy) | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-em-kad-7",
+        "origin": "Eminönü",
+        "destination": "Kadıköy",
+        "departureTime": "09:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-em-kad-8 (Eminönü -> Kad��köy @ 09:20)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 09:20 | Platform: Eminönü 2 Nolu İskele (Kadıköy) | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-em-kad-8",
+        "origin": "Eminönü",
+        "destination": "Kadıköy",
+        "departureTime": "09:20"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-em-kad-9 (Eminönü -> Kadıköy @ 09:40)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 09:40 | Platform: Eminönü 2 Nolu İskele (Kadıköy) | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-em-kad-9",
+        "origin": "Eminönü",
+        "destination": "Kadıköy",
+        "departureTime": "09:40"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-em-kad-10 (Eminönü -> Kadıköy @ 10:00)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 10:00 | Platform: Eminönü 2 Nolu İskele (Kadıköy) | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-em-kad-10",
+        "origin": "Eminönü",
+        "destination": "Kadıköy",
+        "departureTime": "10:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-em-kad-11 (Eminönü -> Kadıköy @ 10:20)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 10:20 | Platform: Eminönü 2 Nolu İskele (Kadıköy) | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-em-kad-11",
+        "origin": "Eminönü",
+        "destination": "Kadıköy",
+        "departureTime": "10:20"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-em-kad-12 (Eminönü -> Kadıköy @ 10:40)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 10:40 | Platform: Eminönü 2 Nolu İskele (Kadıköy) | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-em-kad-12",
+        "origin": "Eminönü",
+        "destination": "Kadıköy",
+        "departureTime": "10:40"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-em-kad-13 (Eminönü -> Kadıköy @ 11:00)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 11:00 | Platform: Eminönü 2 Nolu İskele (Kadıköy) | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-em-kad-13",
+        "origin": "Eminönü",
+        "destination": "Kadıköy",
+        "departureTime": "11:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-em-kad-14 (Eminönü -> Kadıköy @ 11:20)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 11:20 | Platform: Eminönü 2 Nolu İskele (Kadıköy) | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-em-kad-14",
+        "origin": "Eminönü",
+        "destination": "Kadıköy",
+        "departureTime": "11:20"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-em-kad-15 (Eminönü -> Kadıköy @ 11:40)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 11:40 | Platform: Eminönü 2 Nolu İskele (Kadıköy) | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-em-kad-15",
+        "origin": "Eminönü",
+        "destination": "Kadıköy",
+        "departureTime": "11:40"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-em-kad-16 (Eminönü -> Kadıköy @ 12:00)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 12:00 | Platform: Eminönü 2 Nolu İskele (Kadıköy) | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-em-kad-16",
+        "origin": "Eminönü",
+        "destination": "Kadıköy",
+        "departureTime": "12:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-em-kad-17 (Eminönü -> Kadıköy @ 12:20)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 12:20 | Platform: Eminönü 2 Nolu İskele (Kadıköy) | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-em-kad-17",
+        "origin": "Eminönü",
+        "destination": "Kadıköy",
+        "departureTime": "12:20"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-em-kad-18 (Eminönü -> Kadıköy @ 12:40)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 12:40 | Platform: Eminönü 2 Nolu İskele (Kadıköy) | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-em-kad-18",
+        "origin": "Eminönü",
+        "destination": "Kadıköy",
+        "departureTime": "12:40"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-em-kad-19 (Eminönü -> Kadıköy @ 13:00)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 13:00 | Platform: Eminönü 2 Nolu İskele (Kadıköy) | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-em-kad-19",
+        "origin": "Eminönü",
+        "destination": "Kadıköy",
+        "departureTime": "13:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-em-kad-20 (Eminönü -> Kadıköy @ 13:20)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 13:20 | Platform: Eminönü 2 Nolu İskele (Kadıköy) | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-em-kad-20",
+        "origin": "Eminönü",
+        "destination": "Kadıköy",
+        "departureTime": "13:20"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-em-kad-21 (Eminönü -> Kadıköy @ 13:40)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 13:40 | Platform: Eminönü 2 Nolu İskele (Kadıköy) | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-em-kad-21",
+        "origin": "Eminönü",
+        "destination": "Kadıköy",
+        "departureTime": "13:40"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-em-kad-22 (Eminönü -> Kadıköy @ 14:00)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 14:00 | Platform: Eminönü 2 Nolu İskele (Kadıköy) | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-em-kad-22",
+        "origin": "Eminönü",
+        "destination": "Kadıköy",
+        "departureTime": "14:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-em-kad-23 (Eminönü -> Kadıköy @ 14:20)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 14:20 | Platform: Eminönü 2 Nolu İskele (Kadıköy) | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-em-kad-23",
+        "origin": "Eminönü",
+        "destination": "Kadıköy",
+        "departureTime": "14:20"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-em-kad-24 (Eminönü -> Kadıköy @ 14:40)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 14:40 | Platform: Eminönü 2 Nolu İskele (Kadıköy) | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-em-kad-24",
+        "origin": "Eminönü",
+        "destination": "Kadıköy",
+        "departureTime": "14:40"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-em-kad-25 (Eminönü -> Kadıköy @ 15:00)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 15:00 | Platform: Eminönü 2 Nolu İskele (Kadıköy) | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-em-kad-25",
+        "origin": "Eminönü",
+        "destination": "Kadıköy",
+        "departureTime": "15:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-em-kad-26 (Eminönü -> Kadıköy @ 15:20)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 15:20 | Platform: Eminönü 2 Nolu İskele (Kadıköy) | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-em-kad-26",
+        "origin": "Eminönü",
+        "destination": "Kadıköy",
+        "departureTime": "15:20"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-em-kad-27 (Eminönü -> Kadıköy @ 15:40)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 15:40 | Platform: Eminönü 2 Nolu İskele (Kadıköy) | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-em-kad-27",
+        "origin": "Eminönü",
+        "destination": "Kadıköy",
+        "departureTime": "15:40"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-em-kad-28 (Eminönü -> Kadıköy @ 16:00)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 16:00 | Platform: Eminönü 2 Nolu İskele (Kadıköy) | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-em-kad-28",
+        "origin": "Eminönü",
+        "destination": "Kadıköy",
+        "departureTime": "16:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-em-kad-29 (Eminönü -> Kadıköy @ 16:20)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 16:20 | Platform: Eminönü 2 Nolu İskele (Kadıköy) | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-em-kad-29",
+        "origin": "Eminönü",
+        "destination": "Kadıköy",
+        "departureTime": "16:20"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-em-kad-30 (Eminönü -> Kadıköy @ 16:40)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 16:40 | Platform: Eminönü 2 Nolu İskele (Kadıköy) | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-em-kad-30",
+        "origin": "Eminönü",
+        "destination": "Kadıköy",
+        "departureTime": "16:40"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-em-kad-31 (Eminönü -> Kadıköy @ 17:00)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 17:00 | Platform: Eminönü 2 Nolu İskele (Kadıköy) | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-em-kad-31",
+        "origin": "Eminönü",
+        "destination": "Kadıköy",
+        "departureTime": "17:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-em-kad-32 (Eminönü -> Kadıköy @ 17:20)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 17:20 | Platform: Eminönü 2 Nolu İskele (Kadıköy) | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-em-kad-32",
+        "origin": "Eminönü",
+        "destination": "Kadıköy",
+        "departureTime": "17:20"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-em-kad-33 (Eminönü -> Kadıköy @ 17:40)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 17:40 | Platform: Eminönü 2 Nolu İskele (Kadıköy) | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-em-kad-33",
+        "origin": "Eminönü",
+        "destination": "Kadıköy",
+        "departureTime": "17:40"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-em-kad-34 (Eminönü -> Kadıköy @ 18:00)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 18:00 | Platform: Eminönü 2 Nolu İskele (Kadıköy) | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-em-kad-34",
+        "origin": "Eminönü",
+        "destination": "Kadıköy",
+        "departureTime": "18:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-em-kad-35 (Eminönü -> Kadıköy @ 18:20)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 18:20 | Platform: Eminönü 2 Nolu İskele (Kadıköy) | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-em-kad-35",
+        "origin": "Eminönü",
+        "destination": "Kadıköy",
+        "departureTime": "18:20"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-em-kad-36 (Eminönü -> Kadıköy @ 18:40)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 18:40 | Platform: Eminönü 2 Nolu İskele (Kadıköy) | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-em-kad-36",
+        "origin": "Eminönü",
+        "destination": "Kadıköy",
+        "departureTime": "18:40"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-em-kad-37 (Eminönü -> Kadıköy @ 19:00)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 19:00 | Platform: Eminönü 2 Nolu İskele (Kadıköy) | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-em-kad-37",
+        "origin": "Eminönü",
+        "destination": "Kadıköy",
+        "departureTime": "19:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-em-kad-38 (Eminönü -> Kadıköy @ 19:20)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 19:20 | Platform: Eminönü 2 Nolu İskele (Kadıköy) | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-em-kad-38",
+        "origin": "Eminönü",
+        "destination": "Kadıköy",
+        "departureTime": "19:20"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-em-kad-39 (Eminönü -> Kadıköy @ 19:40)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 19:40 | Platform: Eminönü 2 Nolu İskele (Kadıköy) | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-em-kad-39",
+        "origin": "Eminönü",
+        "destination": "Kadıköy",
+        "departureTime": "19:40"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-em-kad-40 (Eminönü -> Kadıköy @ 20:00)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 20:00 | Platform: Eminönü 2 Nolu İskele (Kadıköy) | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-em-kad-40",
+        "origin": "Eminönü",
+        "destination": "Kadıköy",
+        "departureTime": "20:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-em-kad-41 (Eminönü -> Kadıköy @ 20:20)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 20:20 | Platform: Eminönü 2 Nolu İskele (Kadıköy) | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-em-kad-41",
+        "origin": "Eminönü",
+        "destination": "Kadıköy",
+        "departureTime": "20:20"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-em-kad-42 (Eminönü -> Kadıköy @ 20:40)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 20:40 | Platform: Eminönü 2 Nolu İskele (Kadıköy) | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-em-kad-42",
+        "origin": "Eminönü",
+        "destination": "Kadıköy",
+        "departureTime": "20:40"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-em-kad-43 (Eminönü -> Kadıköy @ 21:00)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 21:00 | Platform: Eminönü 2 Nolu İskele (Kadıköy) | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-em-kad-43",
+        "origin": "Eminönü",
+        "destination": "Kadıköy",
+        "departureTime": "21:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-em-kad-44 (Eminönü -> Kadıköy @ 21:20)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 21:20 | Platform: Eminönü 2 Nolu İskele (Kadıköy) | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-em-kad-44",
+        "origin": "Eminönü",
+        "destination": "Kadıköy",
+        "departureTime": "21:20"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-em-kad-45 (Eminönü -> Kadıköy @ 21:40)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 21:40 | Platform: Eminönü 2 Nolu İskele (Kadıköy) | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-em-kad-45",
+        "origin": "Eminönü",
+        "destination": "Kadıköy",
+        "departureTime": "21:40"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-em-kad-46 (Eminönü -> Kadıköy @ 22:00)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 22:00 | Platform: Eminönü 2 Nolu İskele (Kadıköy) | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-em-kad-46",
+        "origin": "Eminönü",
+        "destination": "Kadıköy",
+        "departureTime": "22:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-em-kad-47 (Eminönü -> Kadıköy @ 22:20)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 22:20 | Platform: Eminönü 2 Nolu İskele (Kadıköy) | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-em-kad-47",
+        "origin": "Eminönü",
+        "destination": "Kadıköy",
+        "departureTime": "22:20"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-em-kad-48 (Eminönü -> Kadıköy @ 22:40)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 22:40 | Platform: Eminönü 2 Nolu İskele (Kadıköy) | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-em-kad-48",
+        "origin": "Eminönü",
+        "destination": "Kadıköy",
+        "departureTime": "22:40"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-em-0 (Kadıköy -> Eminönü @ 06:40)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 06:40 | Platform: Kadıköy Eminönü İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-em-0",
+        "origin": "Kadıköy",
+        "destination": "Eminönü",
+        "departureTime": "06:40"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-em-1 (Kadıköy -> Eminönü @ 07:00)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 07:00 | Platform: Kadıköy Eminönü İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-em-1",
+        "origin": "Kadıköy",
+        "destination": "Eminönü",
+        "departureTime": "07:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-em-2 (Kadıköy -> Eminönü @ 07:20)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 07:20 | Platform: Kadıköy Eminönü İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-em-2",
+        "origin": "Kadıköy",
+        "destination": "Eminönü",
+        "departureTime": "07:20"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-em-3 (Kadıköy -> Eminönü @ 07:40)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 07:40 | Platform: Kadıköy Eminönü İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-em-3",
+        "origin": "Kadıköy",
+        "destination": "Eminönü",
+        "departureTime": "07:40"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-em-4 (Kadıköy -> Eminönü @ 08:00)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 08:00 | Platform: Kadıköy Eminönü İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-em-4",
+        "origin": "Kadıköy",
+        "destination": "Eminönü",
+        "departureTime": "08:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-em-5 (Kadıköy -> Eminönü @ 08:20)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 08:20 | Platform: Kadıköy Eminönü İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-em-5",
+        "origin": "Kadıköy",
+        "destination": "Eminönü",
+        "departureTime": "08:20"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-em-6 (Kadıköy -> Eminönü @ 08:40)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 08:40 | Platform: Kadıköy Eminönü İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-em-6",
+        "origin": "Kadıköy",
+        "destination": "Eminönü",
+        "departureTime": "08:40"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-em-7 (Kadıköy -> Eminönü @ 09:00)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 09:00 | Platform: Kadıköy Eminönü İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-em-7",
+        "origin": "Kadıköy",
+        "destination": "Eminönü",
+        "departureTime": "09:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-em-8 (Kadıköy -> Eminönü @ 09:20)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 09:20 | Platform: Kadıköy Eminönü İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-em-8",
+        "origin": "Kadıköy",
+        "destination": "Eminönü",
+        "departureTime": "09:20"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-em-9 (Kadıköy -> Eminönü @ 09:40)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 09:40 | Platform: Kadıköy Eminönü İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-em-9",
+        "origin": "Kadıköy",
+        "destination": "Eminönü",
+        "departureTime": "09:40"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-em-10 (Kadıköy -> Eminönü @ 10:00)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 10:00 | Platform: Kadıköy Eminönü İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-em-10",
+        "origin": "Kadıköy",
+        "destination": "Eminönü",
+        "departureTime": "10:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-em-11 (Kadıköy -> Eminönü @ 10:20)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 10:20 | Platform: Kadıköy Eminönü İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-em-11",
+        "origin": "Kadıköy",
+        "destination": "Eminönü",
+        "departureTime": "10:20"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-em-12 (Kadıköy -> Eminönü @ 10:40)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 10:40 | Platform: Kadıköy Eminönü İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-em-12",
+        "origin": "Kadıköy",
+        "destination": "Eminönü",
+        "departureTime": "10:40"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-em-13 (Kadıköy -> Eminönü @ 11:00)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 11:00 | Platform: Kadıköy Eminönü İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-em-13",
+        "origin": "Kadıköy",
+        "destination": "Eminönü",
+        "departureTime": "11:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-em-14 (Kadıköy -> Eminönü @ 11:20)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 11:20 | Platform: Kadıköy Eminönü İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-em-14",
+        "origin": "Kadıköy",
+        "destination": "Eminönü",
+        "departureTime": "11:20"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-em-15 (Kadıköy -> Eminönü @ 11:40)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 11:40 | Platform: Kadıköy Eminönü İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-em-15",
+        "origin": "Kadıköy",
+        "destination": "Eminönü",
+        "departureTime": "11:40"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-em-16 (Kadıköy -> Eminönü @ 12:00)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 12:00 | Platform: Kadıköy Eminönü İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-em-16",
+        "origin": "Kadıköy",
+        "destination": "Eminönü",
+        "departureTime": "12:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-em-17 (Kadıköy -> Eminönü @ 12:20)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 12:20 | Platform: Kadıköy Eminönü İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-em-17",
+        "origin": "Kadıköy",
+        "destination": "Eminönü",
+        "departureTime": "12:20"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-em-18 (Kadıköy -> Eminönü @ 12:40)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 12:40 | Platform: Kadıköy Eminönü İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-em-18",
+        "origin": "Kadıköy",
+        "destination": "Eminönü",
+        "departureTime": "12:40"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-em-19 (Kadıköy -> Eminönü @ 13:00)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 13:00 | Platform: Kadıköy Eminönü İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-em-19",
+        "origin": "Kadıköy",
+        "destination": "Eminönü",
+        "departureTime": "13:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-em-20 (Kadıköy -> Eminönü @ 13:20)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 13:20 | Platform: Kadıköy Eminönü İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-em-20",
+        "origin": "Kadıköy",
+        "destination": "Eminönü",
+        "departureTime": "13:20"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-em-21 (Kadıköy -> Eminönü @ 13:40)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 13:40 | Platform: Kadıköy Eminönü İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-em-21",
+        "origin": "Kadıköy",
+        "destination": "Eminönü",
+        "departureTime": "13:40"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-em-22 (Kadıköy -> Eminönü @ 14:00)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 14:00 | Platform: Kadıköy Eminönü İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-em-22",
+        "origin": "Kadıköy",
+        "destination": "Eminönü",
+        "departureTime": "14:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-em-23 (Kadıköy -> Eminönü @ 14:20)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 14:20 | Platform: Kadıköy Eminönü İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-em-23",
+        "origin": "Kadıköy",
+        "destination": "Eminönü",
+        "departureTime": "14:20"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-em-24 (Kadıköy -> Eminönü @ 14:40)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 14:40 | Platform: Kadıköy Eminönü İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-em-24",
+        "origin": "Kadıköy",
+        "destination": "Eminönü",
+        "departureTime": "14:40"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-em-25 (Kadıköy -> Eminönü @ 15:00)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 15:00 | Platform: Kadıköy Eminönü İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-em-25",
+        "origin": "Kadıköy",
+        "destination": "Eminönü",
+        "departureTime": "15:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-em-26 (Kadıköy -> Eminönü @ 15:20)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 15:20 | Platform: Kadıköy Eminönü İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-em-26",
+        "origin": "Kadıköy",
+        "destination": "Eminönü",
+        "departureTime": "15:20"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-em-27 (Kadıköy -> Eminönü @ 15:40)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 15:40 | Platform: Kadıköy Eminönü İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-em-27",
+        "origin": "Kadıköy",
+        "destination": "Eminönü",
+        "departureTime": "15:40"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-em-28 (Kadıköy -> Eminönü @ 16:00)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 16:00 | Platform: Kadıköy Eminönü İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-em-28",
+        "origin": "Kadıköy",
+        "destination": "Eminönü",
+        "departureTime": "16:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-em-29 (Kadıköy -> Eminönü @ 16:20)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 16:20 | Platform: Kadıköy Eminönü İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-em-29",
+        "origin": "Kadıköy",
+        "destination": "Eminönü",
+        "departureTime": "16:20"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-em-30 (Kadıköy -> Eminönü @ 16:40)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 16:40 | Platform: Kadıköy Eminönü İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-em-30",
+        "origin": "Kadıköy",
+        "destination": "Eminönü",
+        "departureTime": "16:40"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-em-31 (Kadıköy -> Eminönü @ 17:00)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 17:00 | Platform: Kadıköy Eminönü İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-em-31",
+        "origin": "Kadıköy",
+        "destination": "Eminönü",
+        "departureTime": "17:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-em-32 (Kadıköy -> Eminönü @ 17:20)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 17:20 | Platform: Kadıköy Eminönü İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-em-32",
+        "origin": "Kadıköy",
+        "destination": "Eminönü",
+        "departureTime": "17:20"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-em-33 (Kadıköy -> Eminönü @ 17:40)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 17:40 | Platform: Kadıköy Eminönü İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-em-33",
+        "origin": "Kadıköy",
+        "destination": "Eminönü",
+        "departureTime": "17:40"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-em-34 (Kadıköy -> Eminönü @ 18:00)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 18:00 | Platform: Kadıköy Eminönü İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-em-34",
+        "origin": "Kadıköy",
+        "destination": "Eminönü",
+        "departureTime": "18:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-em-35 (Kadıköy -> Eminönü @ 18:20)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 18:20 | Platform: Kadıköy Eminönü İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-em-35",
+        "origin": "Kadıköy",
+        "destination": "Eminönü",
+        "departureTime": "18:20"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-em-36 (Kadıköy -> Eminönü @ 18:40)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 18:40 | Platform: Kadıköy Eminönü İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-em-36",
+        "origin": "Kadıköy",
+        "destination": "Eminönü",
+        "departureTime": "18:40"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-em-37 (Kadıköy -> Eminönü @ 19:00)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 19:00 | Platform: Kadıköy Eminönü İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-em-37",
+        "origin": "Kadıköy",
+        "destination": "Eminönü",
+        "departureTime": "19:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-em-38 (Kadıköy -> Eminönü @ 19:20)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 19:20 | Platform: Kadıköy Eminönü İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-em-38",
+        "origin": "Kadıköy",
+        "destination": "Eminönü",
+        "departureTime": "19:20"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-em-39 (Kadıköy -> Eminönü @ 19:40)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 19:40 | Platform: Kadıköy Eminönü İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-em-39",
+        "origin": "Kadıköy",
+        "destination": "Eminönü",
+        "departureTime": "19:40"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-em-40 (Kadıköy -> Eminönü @ 20:00)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 20:00 | Platform: Kadıköy Eminönü İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-em-40",
+        "origin": "Kadıköy",
+        "destination": "Eminönü",
+        "departureTime": "20:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-em-41 (Kadıköy -> Eminönü @ 20:20)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 20:20 | Platform: Kadıköy Eminönü İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-em-41",
+        "origin": "Kadıköy",
+        "destination": "Eminönü",
+        "departureTime": "20:20"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-em-42 (Kadıköy -> Eminönü @ 20:40)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 20:40 | Platform: Kadıköy Eminönü İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-em-42",
+        "origin": "Kadıköy",
+        "destination": "Eminönü",
+        "departureTime": "20:40"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-em-43 (Kadıköy -> Eminönü @ 21:00)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 21:00 | Platform: Kadıköy Eminönü İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-em-43",
+        "origin": "Kadıköy",
+        "destination": "Eminönü",
+        "departureTime": "21:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-em-44 (Kadıköy -> Eminönü @ 21:20)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 21:20 | Platform: Kadıköy Eminönü İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-em-44",
+        "origin": "Kadıköy",
+        "destination": "Eminönü",
+        "departureTime": "21:20"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-em-45 (Kadıköy -> Eminönü @ 21:40)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 21:40 | Platform: Kadıköy Eminönü İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-em-45",
+        "origin": "Kadıköy",
+        "destination": "Eminönü",
+        "departureTime": "21:40"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-em-46 (Kadıköy -> Eminönü @ 22:00)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 22:00 | Platform: Kadıköy Eminönü İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-em-46",
+        "origin": "Kadıköy",
+        "destination": "Eminönü",
+        "departureTime": "22:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-em-47 (Kadıköy -> Eminönü @ 22:20)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 22:20 | Platform: Kadıköy Eminönü İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-em-47",
+        "origin": "Kadıköy",
+        "destination": "Eminönü",
+        "departureTime": "22:20"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-em-48 (Kadıköy -> Eminönü @ 22:40)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 22:40 | Platform: Kadıköy Eminönü İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-em-48",
+        "origin": "Kadıköy",
+        "destination": "Eminönü",
+        "departureTime": "22:40"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kar-kad-0 (Karaköy -> Kadıköy @ 07:10)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 07:10 | Platform: Karaköy Şehir Hatları İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kar-kad-0",
+        "origin": "Karaköy",
+        "destination": "Kadıköy",
+        "departureTime": "07:10"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-kar-0 (Kadıköy -> Karaköy @ 07:10)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 07:10 | Platform: Kadıköy Karaköy İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-kar-0",
+        "origin": "Kadıköy",
+        "destination": "Karaköy",
+        "departureTime": "07:10"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kar-kad-1 (Karaköy -> Kadıköy @ 07:30)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 07:30 | Platform: Karaköy Şehir Hatları İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kar-kad-1",
+        "origin": "Karaköy",
+        "destination": "Kadıköy",
+        "departureTime": "07:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-kar-1 (Kadıköy -> Karaköy @ 07:30)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 07:30 | Platform: Kadıköy Karaköy İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-kar-1",
+        "origin": "Kadıköy",
+        "destination": "Karaköy",
+        "departureTime": "07:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kar-kad-2 (Karaköy -> Kadıköy @ 07:50)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 07:50 | Platform: Karaköy Şehir Hatları İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kar-kad-2",
+        "origin": "Karaköy",
+        "destination": "Kadıköy",
+        "departureTime": "07:50"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-kar-2 (Kadıköy -> Karaköy @ 07:50)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 07:50 | Platform: Kadıköy Karaköy İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-kar-2",
+        "origin": "Kadıköy",
+        "destination": "Karaköy",
+        "departureTime": "07:50"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kar-kad-3 (Karaköy -> Kadıköy @ 08:10)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 08:10 | Platform: Karaköy Şehir Hatları İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kar-kad-3",
+        "origin": "Karaköy",
+        "destination": "Kadıköy",
+        "departureTime": "08:10"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-kar-3 (Kadıköy -> Karaköy @ 08:10)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 08:10 | Platform: Kadıköy Karaköy İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-kar-3",
+        "origin": "Kadıköy",
+        "destination": "Karaköy",
+        "departureTime": "08:10"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kar-kad-4 (Karaköy -> Kadıköy @ 08:30)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 08:30 | Platform: Karaköy Şehir Hatları İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kar-kad-4",
+        "origin": "Karaköy",
+        "destination": "Kadıköy",
+        "departureTime": "08:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-kar-4 (Kadıköy -> Karaköy @ 08:30)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 08:30 | Platform: Kadıköy Karaköy İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-kar-4",
+        "origin": "Kadıköy",
+        "destination": "Karaköy",
+        "departureTime": "08:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kar-kad-5 (Karaköy -> Kadıköy @ 08:50)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 08:50 | Platform: Karaköy Şehir Hatları İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kar-kad-5",
+        "origin": "Karaköy",
+        "destination": "Kadıköy",
+        "departureTime": "08:50"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-kar-5 (Kadıköy -> Karaköy @ 08:50)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 08:50 | Platform: Kadıköy Karaköy İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-kar-5",
+        "origin": "Kadıköy",
+        "destination": "Karaköy",
+        "departureTime": "08:50"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kar-kad-6 (Karaköy -> Kadıköy @ 09:10)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 09:10 | Platform: Karaköy Şehir Hatları İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kar-kad-6",
+        "origin": "Karaköy",
+        "destination": "Kadıköy",
+        "departureTime": "09:10"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-kar-6 (Kadıköy -> Karaköy @ 09:10)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 09:10 | Platform: Kadıköy Karaköy İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-kar-6",
+        "origin": "Kadıköy",
+        "destination": "Karaköy",
+        "departureTime": "09:10"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kar-kad-7 (Karaköy -> Kadıköy @ 09:30)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 09:30 | Platform: Karaköy Şehir Hatları İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kar-kad-7",
+        "origin": "Karaköy",
+        "destination": "Kadıköy",
+        "departureTime": "09:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-kar-7 (Kadıköy -> Karaköy @ 09:30)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 09:30 | Platform: Kadıköy Karaköy İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-kar-7",
+        "origin": "Kadıköy",
+        "destination": "Karaköy",
+        "departureTime": "09:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kar-kad-8 (Karaköy -> Kadıköy @ 09:50)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 09:50 | Platform: Karaköy Şehir Hatları İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kar-kad-8",
+        "origin": "Karaköy",
+        "destination": "Kadıköy",
+        "departureTime": "09:50"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-kar-8 (Kadıköy -> Karaköy @ 09:50)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 09:50 | Platform: Kadıköy Karaköy İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-kar-8",
+        "origin": "Kadıköy",
+        "destination": "Karaköy",
+        "departureTime": "09:50"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kar-kad-9 (Karaköy -> Kadıköy @ 10:10)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 10:10 | Platform: Karaköy Şehir Hatları İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kar-kad-9",
+        "origin": "Karaköy",
+        "destination": "Kadıköy",
+        "departureTime": "10:10"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-kar-9 (Kadıköy -> Karaköy @ 10:10)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 10:10 | Platform: Kadıköy Karaköy İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-kar-9",
+        "origin": "Kadıköy",
+        "destination": "Karaköy",
+        "departureTime": "10:10"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kar-kad-10 (Karaköy -> Kadıköy @ 10:30)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 10:30 | Platform: Karaköy Şehir Hatları İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kar-kad-10",
+        "origin": "Karaköy",
+        "destination": "Kadıköy",
+        "departureTime": "10:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-kar-10 (Kadıköy -> Karaköy @ 10:30)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 10:30 | Platform: Kadıköy Karaköy İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-kar-10",
+        "origin": "Kadıköy",
+        "destination": "Karaköy",
+        "departureTime": "10:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kar-kad-11 (Karaköy -> Kadıköy @ 10:50)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 10:50 | Platform: Karaköy Şehir Hatları İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kar-kad-11",
+        "origin": "Karaköy",
+        "destination": "Kadıköy",
+        "departureTime": "10:50"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-kar-11 (Kadıköy -> Karaköy @ 10:50)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 10:50 | Platform: Kadıköy Karaköy İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-kar-11",
+        "origin": "Kadıköy",
+        "destination": "Karaköy",
+        "departureTime": "10:50"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kar-kad-12 (Karaköy -> Kadıköy @ 11:10)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 11:10 | Platform: Karaköy Şehir Hatları İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kar-kad-12",
+        "origin": "Karaköy",
+        "destination": "Kadıköy",
+        "departureTime": "11:10"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-kar-12 (Kadıköy -> Karaköy @ 11:10)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 11:10 | Platform: Kadıköy Karaköy İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-kar-12",
+        "origin": "Kadıköy",
+        "destination": "Karaköy",
+        "departureTime": "11:10"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kar-kad-13 (Karaköy -> Kadıköy @ 11:30)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 11:30 | Platform: Karaköy Şehir Hatları İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kar-kad-13",
+        "origin": "Karaköy",
+        "destination": "Kadıköy",
+        "departureTime": "11:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-kar-13 (Kadıköy -> Karaköy @ 11:30)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 11:30 | Platform: Kadıköy Karaköy İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-kar-13",
+        "origin": "Kadıköy",
+        "destination": "Karaköy",
+        "departureTime": "11:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kar-kad-14 (Karaköy -> Kadıköy @ 11:50)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 11:50 | Platform: Karaköy Şehir Hatları İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kar-kad-14",
+        "origin": "Karaköy",
+        "destination": "Kadıköy",
+        "departureTime": "11:50"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-kar-14 (Kadıköy -> Karaköy @ 11:50)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 11:50 | Platform: Kadıköy Karaköy İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-kar-14",
+        "origin": "Kadıköy",
+        "destination": "Karaköy",
+        "departureTime": "11:50"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kar-kad-15 (Karaköy -> Kadıköy @ 12:10)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 12:10 | Platform: Karaköy Şehir Hatları İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kar-kad-15",
+        "origin": "Karaköy",
+        "destination": "Kadıköy",
+        "departureTime": "12:10"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-kar-15 (Kadıköy -> Karaköy @ 12:10)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 12:10 | Platform: Kadıköy Karaköy İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-kar-15",
+        "origin": "Kadıköy",
+        "destination": "Karaköy",
+        "departureTime": "12:10"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kar-kad-16 (Karaköy -> Kadıköy @ 12:30)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 12:30 | Platform: Karaköy Şehir Hatları İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kar-kad-16",
+        "origin": "Karaköy",
+        "destination": "Kadıköy",
+        "departureTime": "12:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-kar-16 (Kadıköy -> Karaköy @ 12:30)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 12:30 | Platform: Kadıköy Karaköy İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-kar-16",
+        "origin": "Kadıköy",
+        "destination": "Karaköy",
+        "departureTime": "12:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kar-kad-17 (Karaköy -> Kadıköy @ 12:50)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 12:50 | Platform: Karaköy Şehir Hatları İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kar-kad-17",
+        "origin": "Karaköy",
+        "destination": "Kadıköy",
+        "departureTime": "12:50"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-kar-17 (Kadıköy -> Karaköy @ 12:50)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 12:50 | Platform: Kadıköy Karaköy İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-kar-17",
+        "origin": "Kadıköy",
+        "destination": "Karaköy",
+        "departureTime": "12:50"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kar-kad-18 (Karaköy -> Kadıköy @ 13:10)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 13:10 | Platform: Karaköy Şehir Hatları İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kar-kad-18",
+        "origin": "Karaköy",
+        "destination": "Kadıköy",
+        "departureTime": "13:10"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-kar-18 (Kadıköy -> Karaköy @ 13:10)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 13:10 | Platform: Kadıköy Karaköy İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-kar-18",
+        "origin": "Kadıköy",
+        "destination": "Karaköy",
+        "departureTime": "13:10"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kar-kad-19 (Karaköy -> Kadıköy @ 13:30)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 13:30 | Platform: Karaköy Şehir Hatları İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kar-kad-19",
+        "origin": "Karaköy",
+        "destination": "Kadıköy",
+        "departureTime": "13:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-kar-19 (Kadıköy -> Karaköy @ 13:30)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 13:30 | Platform: Kadıköy Karaköy İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-kar-19",
+        "origin": "Kadıköy",
+        "destination": "Karaköy",
+        "departureTime": "13:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kar-kad-20 (Karaköy -> Kadıköy @ 13:50)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 13:50 | Platform: Karaköy Şehir Hatları İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kar-kad-20",
+        "origin": "Karaköy",
+        "destination": "Kadıköy",
+        "departureTime": "13:50"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-kar-20 (Kadıköy -> Karaköy @ 13:50)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 13:50 | Platform: Kadıköy Karaköy İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-kar-20",
+        "origin": "Kadıköy",
+        "destination": "Karaköy",
+        "departureTime": "13:50"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kar-kad-21 (Karaköy -> Kadıköy @ 14:10)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 14:10 | Platform: Karaköy Şehir Hatları İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kar-kad-21",
+        "origin": "Karaköy",
+        "destination": "Kadıköy",
+        "departureTime": "14:10"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-kar-21 (Kadıköy -> Karaköy @ 14:10)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 14:10 | Platform: Kadıköy Karaköy İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-kar-21",
+        "origin": "Kadıköy",
+        "destination": "Karaköy",
+        "departureTime": "14:10"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kar-kad-22 (Karaköy -> Kadıköy @ 14:30)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 14:30 | Platform: Karaköy Şehir Hatları İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kar-kad-22",
+        "origin": "Karaköy",
+        "destination": "Kadıköy",
+        "departureTime": "14:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-kar-22 (Kadıköy -> Karaköy @ 14:30)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 14:30 | Platform: Kadıköy Karaköy İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-kar-22",
+        "origin": "Kadıköy",
+        "destination": "Karaköy",
+        "departureTime": "14:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kar-kad-23 (Karaköy -> Kadıköy @ 14:50)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 14:50 | Platform: Karaköy Şehir Hatları İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kar-kad-23",
+        "origin": "Karaköy",
+        "destination": "Kadıköy",
+        "departureTime": "14:50"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-kar-23 (Kadıköy -> Karaköy @ 14:50)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 14:50 | Platform: Kadıköy Karaköy İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-kar-23",
+        "origin": "Kadıköy",
+        "destination": "Karaköy",
+        "departureTime": "14:50"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kar-kad-24 (Karaköy -> Kadıköy @ 15:10)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 15:10 | Platform: Karaköy Şehir Hatları İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kar-kad-24",
+        "origin": "Karaköy",
+        "destination": "Kadıköy",
+        "departureTime": "15:10"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-kar-24 (Kadıköy -> Karaköy @ 15:10)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 15:10 | Platform: Kadıköy Karaköy İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-kar-24",
+        "origin": "Kadıköy",
+        "destination": "Karaköy",
+        "departureTime": "15:10"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kar-kad-25 (Karaköy -> Kadıköy @ 15:30)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 15:30 | Platform: Karaköy Şehir Hatları İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kar-kad-25",
+        "origin": "Karaköy",
+        "destination": "Kadıköy",
+        "departureTime": "15:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-kar-25 (Kadıköy -> Karaköy @ 15:30)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 15:30 | Platform: Kadıköy Karaköy İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-kar-25",
+        "origin": "Kadıköy",
+        "destination": "Karaköy",
+        "departureTime": "15:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kar-kad-26 (Karaköy -> Kadıköy @ 15:50)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 15:50 | Platform: Karaköy Şehir Hatları İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kar-kad-26",
+        "origin": "Karaköy",
+        "destination": "Kadıköy",
+        "departureTime": "15:50"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-kar-26 (Kadıköy -> Karaköy @ 15:50)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 15:50 | Platform: Kadıköy Karaköy İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-kar-26",
+        "origin": "Kadıköy",
+        "destination": "Karaköy",
+        "departureTime": "15:50"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kar-kad-27 (Karaköy -> Kadıköy @ 16:10)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 16:10 | Platform: Karaköy Şehir Hatları İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kar-kad-27",
+        "origin": "Karaköy",
+        "destination": "Kadıköy",
+        "departureTime": "16:10"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-kar-27 (Kadıköy -> Karaköy @ 16:10)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 16:10 | Platform: Kadıköy Karaköy İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-kar-27",
+        "origin": "Kadıköy",
+        "destination": "Karaköy",
+        "departureTime": "16:10"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kar-kad-28 (Karaköy -> Kadıköy @ 16:30)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 16:30 | Platform: Karaköy Şehir Hatları İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kar-kad-28",
+        "origin": "Karaköy",
+        "destination": "Kadıköy",
+        "departureTime": "16:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-kar-28 (Kadıköy -> Karaköy @ 16:30)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 16:30 | Platform: Kadıköy Karaköy İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-kar-28",
+        "origin": "Kadıköy",
+        "destination": "Karaköy",
+        "departureTime": "16:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kar-kad-29 (Karaköy -> Kadıköy @ 16:50)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 16:50 | Platform: Karaköy Şehir Hatları İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kar-kad-29",
+        "origin": "Karaköy",
+        "destination": "Kadıköy",
+        "departureTime": "16:50"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-kar-29 (Kadıköy -> Karaköy @ 16:50)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 16:50 | Platform: Kadıköy Karaköy İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-kar-29",
+        "origin": "Kadıköy",
+        "destination": "Karaköy",
+        "departureTime": "16:50"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kar-kad-30 (Karaköy -> Kadıköy @ 17:10)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 17:10 | Platform: Karaköy Şehir Hatları İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kar-kad-30",
+        "origin": "Karaköy",
+        "destination": "Kadıköy",
+        "departureTime": "17:10"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-kar-30 (Kadıköy -> Karaköy @ 17:10)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 17:10 | Platform: Kadıköy Karaköy İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-kar-30",
+        "origin": "Kadıköy",
+        "destination": "Karaköy",
+        "departureTime": "17:10"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kar-kad-31 (Karaköy -> Kadıköy @ 17:30)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 17:30 | Platform: Karaköy Şehir Hatları İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kar-kad-31",
+        "origin": "Karaköy",
+        "destination": "Kadıköy",
+        "departureTime": "17:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-kar-31 (Kadıköy -> Karaköy @ 17:30)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 17:30 | Platform: Kadıköy Karaköy İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-kar-31",
+        "origin": "Kadıköy",
+        "destination": "Karaköy",
+        "departureTime": "17:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kar-kad-32 (Karaköy -> Kadıköy @ 17:50)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 17:50 | Platform: Karaköy Şehir Hatları İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kar-kad-32",
+        "origin": "Karaköy",
+        "destination": "Kadıköy",
+        "departureTime": "17:50"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-kar-32 (Kadıköy -> Karaköy @ 17:50)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 17:50 | Platform: Kadıköy Karaköy İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-kar-32",
+        "origin": "Kadıköy",
+        "destination": "Karaköy",
+        "departureTime": "17:50"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kar-kad-33 (Karaköy -> Kadıköy @ 18:10)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 18:10 | Platform: Karaköy Şehir Hatları İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kar-kad-33",
+        "origin": "Karaköy",
+        "destination": "Kadıköy",
+        "departureTime": "18:10"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-kar-33 (Kadıköy -> Karaköy @ 18:10)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 18:10 | Platform: Kadıköy Karaköy İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-kar-33",
+        "origin": "Kadıköy",
+        "destination": "Karaköy",
+        "departureTime": "18:10"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kar-kad-34 (Karaköy -> Kadıköy @ 18:30)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 18:30 | Platform: Karaköy Şehir Hatları İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kar-kad-34",
+        "origin": "Karaköy",
+        "destination": "Kadıköy",
+        "departureTime": "18:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-kar-34 (Kadıköy -> Karaköy @ 18:30)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 18:30 | Platform: Kadıköy Karaköy İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-kar-34",
+        "origin": "Kadıköy",
+        "destination": "Karaköy",
+        "departureTime": "18:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kar-kad-35 (Karaköy -> Kadıköy @ 18:50)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 18:50 | Platform: Karaköy Şehir Hatları İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kar-kad-35",
+        "origin": "Karaköy",
+        "destination": "Kadıköy",
+        "departureTime": "18:50"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-kar-35 (Kadıköy -> Karaköy @ 18:50)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 18:50 | Platform: Kadıköy Karaköy İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-kar-35",
+        "origin": "Kadıköy",
+        "destination": "Karaköy",
+        "departureTime": "18:50"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kar-kad-36 (Karaköy -> Kadıköy @ 19:10)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 19:10 | Platform: Karaköy Şehir Hatları İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kar-kad-36",
+        "origin": "Karaköy",
+        "destination": "Kadıköy",
+        "departureTime": "19:10"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-kar-36 (Kadıköy -> Karaköy @ 19:10)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 19:10 | Platform: Kadıköy Karaköy İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-kar-36",
+        "origin": "Kadıköy",
+        "destination": "Karaköy",
+        "departureTime": "19:10"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kar-kad-37 (Karaköy -> Kadıköy @ 19:30)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 19:30 | Platform: Karaköy Şehir Hatları İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kar-kad-37",
+        "origin": "Karaköy",
+        "destination": "Kadıköy",
+        "departureTime": "19:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-kar-37 (Kadıköy -> Karaköy @ 19:30)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 19:30 | Platform: Kadıköy Karaköy İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-kar-37",
+        "origin": "Kadıköy",
+        "destination": "Karaköy",
+        "departureTime": "19:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kar-kad-38 (Karaköy -> Kadıköy @ 19:50)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 19:50 | Platform: Karaköy Şehir Hatları İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kar-kad-38",
+        "origin": "Karaköy",
+        "destination": "Kadıköy",
+        "departureTime": "19:50"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-kar-38 (Kadıköy -> Karaköy @ 19:50)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 19:50 | Platform: Kadıköy Karaköy İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-kar-38",
+        "origin": "Kadıköy",
+        "destination": "Karaköy",
+        "departureTime": "19:50"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kar-kad-39 (Karaköy -> Kadıköy @ 20:10)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 20:10 | Platform: Karaköy Şehir Hatları İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kar-kad-39",
+        "origin": "Karaköy",
+        "destination": "Kadıköy",
+        "departureTime": "20:10"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-kar-39 (Kadıköy -> Karaköy @ 20:10)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 20:10 | Platform: Kadıköy Karaköy İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-kar-39",
+        "origin": "Kadıköy",
+        "destination": "Karaköy",
+        "departureTime": "20:10"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kar-kad-40 (Karaköy -> Kadıköy @ 20:30)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 20:30 | Platform: Karaköy Şehir Hatları İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kar-kad-40",
+        "origin": "Karaköy",
+        "destination": "Kadıköy",
+        "departureTime": "20:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-kar-40 (Kadıköy -> Karaköy @ 20:30)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 20:30 | Platform: Kadıköy Karaköy İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-kar-40",
+        "origin": "Kadıköy",
+        "destination": "Karaköy",
+        "departureTime": "20:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kar-kad-41 (Karaköy -> Kadıköy @ 20:50)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 20:50 | Platform: Karaköy Şehir Hatları İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kar-kad-41",
+        "origin": "Karaköy",
+        "destination": "Kadıköy",
+        "departureTime": "20:50"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-kar-41 (Kadıköy -> Karaköy @ 20:50)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 20:50 | Platform: Kadıköy Karaköy İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-kar-41",
+        "origin": "Kadıköy",
+        "destination": "Karaköy",
+        "departureTime": "20:50"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kar-kad-42 (Karaköy -> Kadıköy @ 21:10)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 21:10 | Platform: Karaköy Şehir Hatları İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kar-kad-42",
+        "origin": "Karaköy",
+        "destination": "Kadıköy",
+        "departureTime": "21:10"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-kar-42 (Kadıköy -> Karaköy @ 21:10)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 21:10 | Platform: Kadıköy Karaköy İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-kar-42",
+        "origin": "Kadıköy",
+        "destination": "Karaköy",
+        "departureTime": "21:10"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kar-kad-43 (Karaköy -> Kadıköy @ 21:30)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 21:30 | Platform: Karaköy Şehir Hatları İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kar-kad-43",
+        "origin": "Karaköy",
+        "destination": "Kadıköy",
+        "departureTime": "21:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-kar-43 (Kadıköy -> Karaköy @ 21:30)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 21:30 | Platform: Kadıköy Karaköy İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-kar-43",
+        "origin": "Kadıköy",
+        "destination": "Karaköy",
+        "departureTime": "21:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kar-kad-44 (Karaköy -> Kadıköy @ 21:50)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 21:50 | Platform: Karaköy Şehir Hatları İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kar-kad-44",
+        "origin": "Karaköy",
+        "destination": "Kadıköy",
+        "departureTime": "21:50"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-kar-44 (Kadıköy -> Karaköy @ 21:50)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 21:50 | Platform: Kadıköy Karaköy İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-kar-44",
+        "origin": "Kadıköy",
+        "destination": "Karaköy",
+        "departureTime": "21:50"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kar-kad-45 (Karaköy -> Kadıköy @ 22:10)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 22:10 | Platform: Karaköy Şehir Hatları İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kar-kad-45",
+        "origin": "Karaköy",
+        "destination": "Kadıköy",
+        "departureTime": "22:10"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #tur-kad-kar-45 (Kadıköy -> Karaköy @ 22:10)",
+      "status": "PASSED",
+      "details": "Operatör: Turyol | Saat: 22:10 | Platform: Kadıköy Karaköy İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "tur-kad-kar-45",
+        "origin": "Kadıköy",
+        "destination": "Karaköy",
+        "departureTime": "22:10"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-0 (Beşiktaş -> Üsküdar @ 06:30)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 06:30 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-0",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "06:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-0 (Üsküdar -> Beşiktaş @ 06:30)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 06:30 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-0",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "06:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-1 (Beşiktaş -> Üsküdar @ 06:45)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 06:45 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-1",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "06:45"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-1 (Üsküdar -> Beşiktaş @ 06:45)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 06:45 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-1",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "06:45"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-2 (Beşiktaş -> Üsküdar @ 07:00)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 07:00 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-2",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "07:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-2 (Üsküdar -> Beşiktaş @ 07:00)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 07:00 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-2",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "07:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-3 (Beşiktaş -> Üsküdar @ 07:15)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 07:15 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-3",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "07:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-3 (Üsküdar -> Beşiktaş @ 07:15)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 07:15 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-3",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "07:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-4 (Beşiktaş -> Üsküdar @ 07:30)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 07:30 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-4",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "07:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-4 (Üsküdar -> Beşiktaş @ 07:30)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 07:30 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-4",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "07:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-5 (Beşiktaş -> Üsküdar @ 07:45)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 07:45 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-5",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "07:45"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-5 (Üsküdar -> Beşiktaş @ 07:45)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 07:45 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-5",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "07:45"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-6 (Beşiktaş -> Üsküdar @ 08:00)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 08:00 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-6",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "08:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-6 (Üsküdar -> Beşiktaş @ 08:00)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 08:00 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-6",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "08:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-7 (Beşiktaş -> Üsküdar @ 08:15)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 08:15 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-7",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "08:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-7 (Üsküdar -> Beşiktaş @ 08:15)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 08:15 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-7",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "08:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-8 (Beşiktaş -> Üsküdar @ 08:30)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 08:30 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-8",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "08:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-8 (Üsküdar -> Beşiktaş @ 08:30)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 08:30 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-8",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "08:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-9 (Beşiktaş -> Üsküdar @ 08:45)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 08:45 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-9",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "08:45"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-9 (Üsküdar -> Beşiktaş @ 08:45)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 08:45 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-9",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "08:45"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-10 (Beşiktaş -> Üsküdar @ 09:00)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 09:00 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-10",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "09:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-10 (Üsküdar -> Beşiktaş @ 09:00)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 09:00 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-10",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "09:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-11 (Beşiktaş -> Üsküdar @ 09:15)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 09:15 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-11",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "09:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-11 (Üsküdar -> Beşiktaş @ 09:15)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 09:15 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-11",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "09:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-12 (Beşiktaş -> Üsküdar @ 09:30)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 09:30 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-12",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "09:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-12 (Üsküdar -> Beşiktaş @ 09:30)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 09:30 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-12",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "09:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-13 (Beşiktaş -> Üsküdar @ 09:45)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 09:45 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-13",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "09:45"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-13 (Üsküdar -> Beşiktaş @ 09:45)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 09:45 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-13",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "09:45"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-14 (Beşiktaş -> Üsküdar @ 10:00)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 10:00 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-14",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "10:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-14 (Üsküdar -> Beşiktaş @ 10:00)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 10:00 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-14",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "10:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-15 (Beşiktaş -> Üsküdar @ 10:15)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 10:15 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-15",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "10:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-15 (Üsküdar -> Beşiktaş @ 10:15)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 10:15 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-15",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "10:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-16 (Beşiktaş -> Üsküdar @ 10:30)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 10:30 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-16",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "10:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-16 (Üsküdar -> Beşiktaş @ 10:30)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 10:30 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-16",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "10:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-17 (Beşiktaş -> Üsküdar @ 10:45)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 10:45 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-17",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "10:45"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-17 (Üsküdar -> Beşiktaş @ 10:45)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 10:45 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-17",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "10:45"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-18 (Beşiktaş -> Üsküdar @ 11:00)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 11:00 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-18",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "11:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-18 (Üsküdar -> Beşiktaş @ 11:00)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 11:00 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-18",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "11:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-19 (Beşiktaş -> Üsküdar @ 11:15)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 11:15 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-19",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "11:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-19 (Üsküdar -> Beşiktaş @ 11:15)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 11:15 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-19",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "11:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-20 (Beşiktaş -> Üsküdar @ 11:30)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 11:30 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-20",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "11:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-20 (Üsküdar -> Beşiktaş @ 11:30)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 11:30 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-20",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "11:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-21 (Beşiktaş -> Üsküdar @ 11:45)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 11:45 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-21",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "11:45"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-21 (Üsküdar -> Beşiktaş @ 11:45)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 11:45 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-21",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "11:45"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-22 (Beşiktaş -> Üsküdar @ 12:00)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 12:00 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-22",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "12:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-22 (Üsküdar -> Beşiktaş @ 12:00)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 12:00 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-22",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "12:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-23 (Beşiktaş -> Üsküdar @ 12:15)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 12:15 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-23",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "12:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-23 (Üsküdar -> Beşiktaş @ 12:15)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 12:15 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-23",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "12:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-24 (Beşiktaş -> Üsküdar @ 12:30)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 12:30 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-24",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "12:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-24 (Üsküdar -> Beşiktaş @ 12:30)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 12:30 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-24",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "12:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-25 (Beşiktaş -> Üsküdar @ 12:45)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 12:45 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-25",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "12:45"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-25 (Üsküdar -> Beşiktaş @ 12:45)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 12:45 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-25",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "12:45"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-26 (Beşiktaş -> Üsküdar @ 13:00)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 13:00 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-26",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "13:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-26 (Üsküdar -> Beşiktaş @ 13:00)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 13:00 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-26",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "13:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-27 (Beşiktaş -> Üsküdar @ 13:15)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 13:15 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-27",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "13:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-27 (Üsküdar -> Beşiktaş @ 13:15)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 13:15 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-27",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "13:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-28 (Beşiktaş -> Üsküdar @ 13:30)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 13:30 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-28",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "13:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-28 (Üsküdar -> Beşiktaş @ 13:30)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 13:30 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-28",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "13:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-29 (Beşiktaş -> Üsküdar @ 13:45)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 13:45 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-29",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "13:45"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-29 (Üsküdar -> Beşiktaş @ 13:45)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 13:45 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-29",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "13:45"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-30 (Beşiktaş -> Üsküdar @ 14:00)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 14:00 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-30",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "14:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-30 (Üsküdar -> Beşiktaş @ 14:00)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 14:00 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-30",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "14:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-31 (Beşiktaş -> Üsküdar @ 14:15)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 14:15 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-31",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "14:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-31 (Üsküdar -> Beşiktaş @ 14:15)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 14:15 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-31",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "14:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-32 (Beşiktaş -> Üsküdar @ 14:30)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 14:30 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-32",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "14:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-32 (Üsküdar -> Beşiktaş @ 14:30)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 14:30 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-32",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "14:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-33 (Beşiktaş -> Üsküdar @ 14:45)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 14:45 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-33",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "14:45"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-33 (Üsküdar -> Beşiktaş @ 14:45)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 14:45 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-33",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "14:45"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-34 (Beşiktaş -> Üsküdar @ 15:00)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 15:00 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-34",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "15:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-34 (Üsküdar -> Beşiktaş @ 15:00)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 15:00 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-34",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "15:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-35 (Beşiktaş -> Üsküdar @ 15:15)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 15:15 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-35",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "15:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-35 (Üsküdar -> Beşiktaş @ 15:15)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 15:15 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-35",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "15:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-36 (Beşiktaş -> Üsküdar @ 15:30)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 15:30 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-36",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "15:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-36 (Üsküdar -> Beşiktaş @ 15:30)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 15:30 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-36",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "15:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-37 (Beşiktaş -> Üsküdar @ 15:45)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 15:45 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-37",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "15:45"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-37 (Üsküdar -> Beşiktaş @ 15:45)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 15:45 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-37",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "15:45"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-38 (Beşiktaş -> Üsküdar @ 16:00)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 16:00 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-38",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "16:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-38 (Üsküdar -> Beşiktaş @ 16:00)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 16:00 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-38",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "16:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-39 (Beşiktaş -> Üsküdar @ 16:15)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 16:15 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-39",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "16:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-39 (Üsküdar -> Beşiktaş @ 16:15)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 16:15 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-39",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "16:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-40 (Beşiktaş -> Üsküdar @ 16:30)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 16:30 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-40",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "16:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-40 (Üsküdar -> Beşiktaş @ 16:30)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 16:30 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-40",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "16:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-41 (Beşiktaş -> Üsküdar @ 16:45)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 16:45 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-41",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "16:45"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-41 (Üsküdar -> Beşiktaş @ 16:45)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 16:45 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-41",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "16:45"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-42 (Beşiktaş -> Üsküdar @ 17:00)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 17:00 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-42",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "17:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-42 (Üsküdar -> Beşiktaş @ 17:00)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 17:00 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-42",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "17:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-43 (Beşiktaş -> Üsküdar @ 17:15)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 17:15 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-43",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "17:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-43 (Üsküdar -> Beşiktaş @ 17:15)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 17:15 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-43",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "17:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-44 (Beşiktaş -> Üsküdar @ 17:30)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 17:30 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-44",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "17:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-44 (Üsküdar -> Beşiktaş @ 17:30)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 17:30 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-44",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "17:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-45 (Beşiktaş -> Üsküdar @ 17:45)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 17:45 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-45",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "17:45"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-45 (Üsküdar -> Beşiktaş @ 17:45)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 17:45 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-45",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "17:45"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-46 (Beşiktaş -> Üsküdar @ 18:00)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 18:00 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-46",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "18:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-46 (Üsküdar -> Beşiktaş @ 18:00)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 18:00 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-46",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "18:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-47 (Beşiktaş -> Üsküdar @ 18:15)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 18:15 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-47",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "18:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-47 (Üsküdar -> Beşiktaş @ 18:15)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 18:15 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-47",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "18:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-48 (Beşiktaş -> Üsküdar @ 18:30)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 18:30 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-48",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "18:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-48 (Üsküdar -> Beşiktaş @ 18:30)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 18:30 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-48",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "18:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-49 (Beşiktaş -> Üsküdar @ 18:45)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 18:45 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-49",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "18:45"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-49 (Üsküdar -> Beşiktaş @ 18:45)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 18:45 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-49",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "18:45"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-50 (Beşiktaş -> Üsküdar @ 19:00)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 19:00 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-50",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "19:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-50 (Üsküdar -> Beşiktaş @ 19:00)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 19:00 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-50",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "19:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-51 (Beşiktaş -> Üsküdar @ 19:15)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 19:15 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-51",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "19:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-51 (Üsküdar -> Beşiktaş @ 19:15)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 19:15 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-51",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "19:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-52 (Beşiktaş -> Üsküdar @ 19:30)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 19:30 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-52",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "19:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-52 (Üsküdar -> Beşiktaş @ 19:30)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 19:30 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-52",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "19:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-53 (Beşiktaş -> Üsküdar @ 19:45)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 19:45 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-53",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "19:45"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-53 (Üsküdar -> Beşiktaş @ 19:45)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 19:45 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-53",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "19:45"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-54 (Beşiktaş -> Üsküdar @ 20:00)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 20:00 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-54",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "20:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-54 (Üsküdar -> Beşiktaş @ 20:00)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 20:00 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-54",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "20:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-55 (Beşiktaş -> Üsküdar @ 20:15)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 20:15 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-55",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "20:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-55 (Üsküdar -> Beşiktaş @ 20:15)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 20:15 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-55",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "20:15"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-56 (Beşiktaş -> Üsküdar @ 20:30)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 20:30 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-56",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "20:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-56 (Üsküdar -> Beşiktaş @ 20:30)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 20:30 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-56",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "20:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-57 (Beşiktaş -> Üsküdar @ 20:45)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 20:45 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-57",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "20:45"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-57 (Üsküdar -> Beşiktaş @ 20:45)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 20:45 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-57",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "20:45"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-58 (Beşiktaş -> Üsküdar @ 21:00)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 21:00 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-58",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "21:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-58 (Üsküdar -> Beşiktaş @ 21:00)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 21:00 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-58",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "21:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-59 (Beşiktaş -> Üsküdar @ 21:20)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 21:20 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-59",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "21:20"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-59 (Üsküdar -> Beşiktaş @ 21:20)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 21:20 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-59",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "21:20"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-60 (Beşiktaş -> Üsküdar @ 21:40)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 21:40 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-60",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "21:40"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-60 (Üsküdar -> Beşiktaş @ 21:40)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 21:40 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-60",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "21:40"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-61 (Beşiktaş -> Üsküdar @ 22:00)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 22:00 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-61",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "22:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-61 (Üsküdar -> Beşiktaş @ 22:00)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 22:00 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-61",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "22:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-62 (Beşiktaş -> Üsküdar @ 22:20)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 22:20 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-62",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "22:20"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-62 (Üsküdar -> Beşiktaş @ 22:20)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 22:20 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-62",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "22:20"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-63 (Beşiktaş -> Üsküdar @ 22:40)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 22:40 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-63",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "22:40"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-63 (Üsküdar -> Beşiktaş @ 22:40)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 22:40 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-63",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "22:40"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-64 (Beşiktaş -> Üsküdar @ 23:00)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 23:00 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-64",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "23:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-64 (Üsküdar -> Beşiktaş @ 23:00)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 23:00 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-64",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "23:00"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-bes-usk-65 (Beşiktaş -> Üsküdar @ 23:30)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 23:30 | Platform: Beşiktaş Üsküdar İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-bes-usk-65",
+        "origin": "Beşiktaş",
+        "destination": "Üsküdar",
+        "departureTime": "23:30"
+      }
+    },
+    {
+      "category": "SEFERLER_DETAYLI_DENETİM",
+      "testName": "Sefer #den-usk-bes-65 (Üsküdar -> Beşiktaş @ 23:30)",
+      "status": "PASSED",
+      "details": "Operatör: Dentur Avrasya | Saat: 23:30 | Platform: Üsküdar Rıhtım İskelesi | Bilet: 27.00 ₺",
+      "metadata": {
+        "tripId": "den-usk-bes-65",
+        "origin": "Üsküdar",
+        "destination": "Beşiktaş",
+        "departureTime": "23:30"
+      }
+    },
+    {
       "category": "ROTA_VE_İSKELE_MATRİSİ",
       "testName": "İskele Hattı: Kabataş <-> Kadıköy",
       "status": "PASSED",
@@ -10638,7 +15726,7 @@
     },
     {
       "category": "ROTA_VE_İSKELE_MATRİSİ",
-      "testName": "İskele Hattı: Eminönü <-> Üsküdar",
+      "testName": "İskele Hatt��: Eminönü <-> Üsküdar",
       "status": "PASSED",
       "details": "Mesafe: 1.9 NM (~8 dk) | Deniz Taksi: 1925 ₺",
       "metadata": {
@@ -12448,11 +17536,11 @@
       "details": "HTTP 200 OK - 900+ maddelik otonom denetim raporunu JSON olarak sunuyor."
     }
   ],
-  "daemonCycleCount": 1020,
+  "daemonCycleCount": 1066,
   "selfHealingTimeline": [
     {
       "id": "heal-init-01",
-      "timestamp": "2026-09-30T18:19:23.628Z",
+      "timestamp": "2026-09-30T18:30:39.007Z",
       "targetType": "TRIP_ARRIVAL_TIME",
       "description": "Geçmiş veritabanından kalma sh-ring-out-2 varış saati eksikliği tespit edildi ve 09:30 olarak otonom onarıldı.",
       "beforeValue": "-",
@@ -12461,7 +17549,7 @@
     },
     {
       "id": "heal-init-02",
-      "timestamp": "2026-09-30T18:19:23.628Z",
+      "timestamp": "2026-09-30T18:30:39.009Z",
       "targetType": "TRIP_ARRIVAL_TIME",
       "description": "sh-ring-ret-1 ve sh-ring-ret-3 seferlerinin varış saatleri deniz mili seyir süresiyle otomatik hesaplanıp onarıldı.",
       "beforeValue": "-",
@@ -12470,7 +17558,7 @@
     },
     {
       "id": "heal-init-03",
-      "timestamp": "2026-09-30T18:19:23.628Z",
+      "timestamp": "2026-09-30T18:30:39.009Z",
       "targetType": "PLATFORM_MAPPING",
       "description": "Kınalıada ve Burgazada rıhtımlarındaki gerçek dışı Peron 2/3 atamaları elenip 'Ana Rıhtım' olarak normalize edildi.",
       "beforeValue": "Peron 2/3",
@@ -12479,22 +17567,22 @@
     },
     {
       "id": "heal-init-04",
-      "timestamp": "2026-09-30T18:19:23.628Z",
+      "timestamp": "2026-09-30T18:30:39.009Z",
       "targetType": "FARE_SYNC",
       "description": "UKOME 2026 resmi tebliği kontrol edildi: Şehir içi 27.00 ₺, Adalar 90.00 ₺, Deniz Taksi 500₺ + 750₺/NM senkronize edildi.",
       "severity": "INFO"
     },
     {
       "id": "heal-init-05",
-      "timestamp": "2026-09-30T18:19:23.628Z",
+      "timestamp": "2026-09-30T18:30:39.009Z",
       "targetType": "OPERATOR_CRAWLER",
       "description": "Şehir Hatları, Turyol, Mavi Marmara, Dentur Avrasya ve Prens Tur resmi web uç noktaları canlı tarandı ve doğrulandı.",
       "severity": "INFO"
     }
   ],
-  "lastDaemonCheck": "2026-09-30T18:26:31.981Z",
+  "lastDaemonCheck": "2026-09-30T19:13:39.418Z",
   "last0100SyncDate": "2026-09-30",
-  "istanbulCurrentTime": "2026-09-30 21:26",
+  "istanbulCurrentTime": "2026-09-30 22:13",
   "monitoredOfficialSites": [
     {
       "url": "https://sehirhatlari.istanbul",
