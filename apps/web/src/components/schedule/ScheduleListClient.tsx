@@ -22,6 +22,7 @@ import { useOfflineSync } from "@/hooks/useOfflineSync";
 import { MarineWeatherHUD } from "@/components/weather/MarineWeatherHUD";
 import { CatchFerryAssistant } from "@/components/planner/CatchFerryAssistant";
 import { LiveTripTrackerBar } from "@/components/schedule/LiveTripTrackerBar";
+import { IslandHopPickerModal } from "@/components/schedule/IslandHopPickerModal";
 
 // Istanbul Ferry Pier Coordinates (Latitude, Longitude)
 const PIER_COORDINATES: Record<string, { lat: number; lng: number; label: string }> = {
@@ -83,6 +84,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
   const [isSponsoredModalOpen, setIsSponsoredModalOpen] = useState<boolean>(false);
   const [isNightTransitOpen, setIsNightTransitOpen] = useState<boolean>(false);
   const [isSearchVisible, setIsSearchVisible] = useState<boolean>(false);
+  const [selectedHopSchedule, setSelectedHopSchedule] = useState<ScheduleCardDto | null>(null);
 
   // Offline LocalStorage Caching
   const [effectiveSchedules, setEffectiveSchedules] = useState<ScheduleCardDto[]>(schedules);
@@ -677,6 +679,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
               isCompact={isCompactDensity}
               highlightStopName={searchQuery}
               onClick={() => setSelectedSchedule(schedule)}
+              onSelectHop={(s) => setSelectedHopSchedule(s)}
             />
           ))
         ) : (
@@ -738,6 +741,13 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
       <LateNightTransitModal
         isOpen={isNightTransitOpen}
         onClose={() => setIsNightTransitOpen(false)}
+      />
+
+      {/* Global Ada İskeleleri Arası Biniş & İniş Seçim Modalı */}
+      <IslandHopPickerModal
+        isOpen={!!selectedHopSchedule}
+        onClose={() => setSelectedHopSchedule(null)}
+        schedule={selectedHopSchedule}
       />
     </>
   );

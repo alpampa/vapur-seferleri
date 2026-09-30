@@ -55,10 +55,31 @@ async function getSchedules(): Promise<SchedulesResponse> {
 }
 
 export default async function Home() {
-  const [data, weather] = await Promise.all([
-    getSchedules(),
-    fetchLiveMarineWeather()
-  ]);
+  let data: SchedulesResponse | null = null;
+  let weather: MarineWeatherStatus | null = null;
+
+  try {
+    const results = await Promise.allSettled([
+      getSchedules(),
+      fetchLiveMarineWeather()
+    ]);
+    if (results[0].status === "fulfilled") {
+      data = results[0].value;
+    }
+    if (results[1].status === "fulfilled") {
+      weather = results[1].value;
+    }
+  } catch (e) {
+    console.error("Home data fetching error:", e);
+  }
+
+  if (!data || !data.schedules || data.schedules.length === 0) {
+    try {
+      data = await getLiveOrOfficialSchedules();
+    } catch (fallbackErr) {
+      console.error("Critical fallback failed:", fallbackErr);
+    }
+  }
 
   const schedules = data?.schedules || [];
   const serverTimeIso = data?.serverTimeIso || new Date().toISOString();

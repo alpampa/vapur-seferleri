@@ -13,7 +13,7 @@ import { getOfficialRouteFare } from "@/lib/data/official-fares";
 interface IslandHopPickerModalProps {
   isOpen: boolean;
   onClose: () => void;
-  schedule: ScheduleCardDto;
+  schedule: ScheduleCardDto | null;
 }
 
 export function IslandHopPickerModal({
@@ -24,13 +24,21 @@ export function IslandHopPickerModal({
   const { toggleAlarm, isAlarmSet } = useAlarmStore();
   const { setActiveVoyage } = useActiveVoyageStore();
 
+  const [fromIndex, setFromIndex] = useState<number>(0);
+  const [toIndex, setToIndex] = useState<number>(1);
+
   // Build the chronological station list for this master voyage
   const stations = useMemo(() => {
+    if (!schedule) return [];
     const list: { name: string; time: string }[] = [
-      { name: schedule.origin, time: schedule.departureTime }
+      { name: schedule.origin, time: schedule.departureTime || "00:00" }
     ];
     if (schedule.stops && schedule.stops.length > 0) {
-      schedule.stops.forEach((st) => list.push({ name: st.name, time: st.time }));
+      schedule.stops.forEach((st) => {
+        if (st.name && st.time) {
+          list.push({ name: st.name, time: st.time });
+        }
+      });
     }
     if (schedule.arrivalTime && schedule.destination && !schedule.destination.includes("Ring")) {
       list.push({ name: schedule.destination, time: schedule.arrivalTime });
@@ -38,28 +46,32 @@ export function IslandHopPickerModal({
     return list;
   }, [schedule]);
 
-  const [fromIndex, setFromIndex] = useState<number>(0);
-  const [toIndex, setToIndex] = useState<number>(Math.min(stations.length - 1, 1));
+  if (!isOpen || !schedule || typeof document === "undefined" || stations.length < 2) return null;
 
-  if (!isOpen || typeof document === "undefined") return null;
+  const validFromIdx = Math.min(Math.max(0, fromIndex), stations.length - 1);
+  const validToIdx = Math.min(Math.max(validFromIdx + 1, toIndex), stations.length - 1);
 
-  const fromStation = stations[fromIndex] || stations[0];
-  const toStation = stations[toIndex] || stations[stations.length - 1];
+  const fromStation = stations[validFromIdx] || stations[0];
+  const toStation = stations[validToIdx] || stations[stations.length - 1];
 
   // Calculate elapsed duration in minutes
   const calcMinutes = () => {
-    const [h1, m1] = fromStation.time.split(":").map(Number);
-    const [h2, m2] = toStation.time.split(":").map(Number);
-    let diff = (h2 * 60 + m2) - (h1 * 60 + m1);
-    if (diff < 0) diff += 24 * 60; // Crosses midnight
-    return diff;
+    try {
+      const [h1, m1] = (fromStation?.time || "00:00").split(":").map(Number);
+      const [h2, m2] = (toStation?.time || "00:00").split(":").map(Number);
+      let diff = (h2 * 60 + m2) - (h1 * 60 + m1);
+      if (diff < 0) diff += 24 * 60; // Crosses midnight
+      return diff;
+    } catch {
+      return 15;
+    }
   };
 
   const durationMin = calcMinutes();
-  const fare = getOfficialRouteFare(fromStation.name, toStation.name).fullFare;
-  const intermediateStops = stations.slice(fromIndex + 1, toIndex);
+  const fare = getOfficialRouteFare(fromStation?.name || "", toStation?.name || "").fullFare;
+  const intermediateStops = stations.slice(validFromIdx + 1, validToIdx);
 
-  const customTripId = `${schedule.id}-${fromStation.name}-${toStation.name}`;
+  const customTripId = `${schedule.id}-${fromStation?.name}-${toStation?.name}`;
   const hasAlarm = isAlarmSet(customTripId) || isAlarmSet(schedule.id);
 
   const handlePin = () => {

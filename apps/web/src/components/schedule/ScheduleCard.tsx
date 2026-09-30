@@ -16,7 +16,6 @@ import { ISTANBUL_PIERS } from "@/lib/services/route-planner";
 
 import { matchesTurkishSearch } from "@/lib/utils/search-normalizer";
 import { correlateAisVessel } from "@/lib/services/ais-corridor-tracker";
-import { IslandHopPickerModal } from "./IslandHopPickerModal";
 import type { ScheduleCardDto } from "@/app/page";
 
 export type TripStatus = "ON_TIME" | "DEPARTING_SOON" | "BOARDING" | "DELAYED" | "CANCELLED" | "IN_TRANSIT" | "ARRIVING" | "COMPLETED";
@@ -42,6 +41,7 @@ export interface ScheduleCardProps {
   onClick?: () => void;
   isCompact?: boolean;
   highlightStopName?: string;
+  onSelectHop?: (schedule: ScheduleCardDto) => void;
 }
 
 export function TripStatusBadge({ status, delayText }: { status: TripStatus; delayText?: string }) {
@@ -189,8 +189,6 @@ export function ScheduleCard(props: ScheduleCardProps) {
   const pierEntry = Object.entries(ISTANBUL_PIERS).find(([key]) => dynState.currentOrigin.toLowerCase().includes(key.toLowerCase()));
   const walkingMinutes = isCatchEnabled ? getWalkingMinutesToPier(pierEntry?.[1].lat, pierEntry?.[1].lng) : 0;
 
-  const [isHopModalOpen, setIsHopModalOpen] = useState(false);
-
   // Gece Seferi Tespiti (00:00 - 05:59 arası seferler UKOME Çift Tarife)
   const departureHour = parseInt(dynState.currentDepartureTime.split(":")[0], 10);
   const isNightTrip = !isNaN(departureHour) && departureHour >= 0 && departureHour < 6;
@@ -319,10 +317,10 @@ export function ScheduleCard(props: ScheduleCardProps) {
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
-                  setIsHopModalOpen(true);
+                  props.onSelectHop?.(scheduleDto);
                 }}
                 title="Ada İskeleleri Arası Biniş Seç"
-                className="px-1 py-0.2 rounded text-[9px] font-extrabold bg-blue-50 dark:bg-blue-950/70 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700 hover:bg-blue-100 shrink-0"
+                className="px-1.5 py-0.5 rounded text-[9px] font-extrabold bg-blue-50 dark:bg-blue-950/70 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700 hover:bg-blue-100 shrink-0 cursor-pointer active:scale-95"
               >
                 🔄 Seç
               </button>
@@ -373,15 +371,6 @@ export function ScheduleCard(props: ScheduleCardProps) {
             <ChevronRight size={14} className="text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200 transition-all shrink-0" />
           </div>
         </div>
-
-        {/* Çok Duraklı Ada Seçim Modalı */}
-        {hasMultiStops && (
-          <IslandHopPickerModal
-            isOpen={isHopModalOpen}
-            onClose={() => setIsHopModalOpen(false)}
-            schedule={scheduleDto}
-          />
-        )}
       </>
     );
   }
@@ -735,25 +724,16 @@ export function ScheduleCard(props: ScheduleCardProps) {
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
-                setIsHopModalOpen(true);
+                props.onSelectHop?.(scheduleDto);
               }}
               title="Ada İskeleleri Arası Biniş ve İniş Seç"
-              className="ml-auto shrink-0 px-2 py-0.5 rounded-md text-[10px] font-extrabold bg-blue-50 dark:bg-blue-950/80 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700 hover:bg-blue-100 dark:hover:bg-blue-900/60 flex items-center gap-1 shadow-2xs whitespace-nowrap cursor-pointer transition-all"
+              className="ml-auto shrink-0 px-2 py-0.5 rounded-md text-[10px] font-extrabold bg-blue-50 dark:bg-blue-950/80 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700 hover:bg-blue-100 dark:hover:bg-blue-900/60 flex items-center gap-1 shadow-2xs whitespace-nowrap cursor-pointer transition-all active:scale-95"
             >
               <span>🔄 Ada İskele Seç</span>
             </button>
           )}
         </div>
       </div>
-    )}
-
-    {/* Çok Duraklı / Ring Seferler İçin Biniş-İniş Seçim Modalı */}
-    {hasMultiStops && (
-      <IslandHopPickerModal
-        isOpen={isHopModalOpen}
-        onClose={() => setIsHopModalOpen(false)}
-        schedule={scheduleDto}
-      />
     )}
   </div>
 );
