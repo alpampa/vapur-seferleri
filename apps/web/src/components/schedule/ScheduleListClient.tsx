@@ -325,145 +325,142 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
     <>
       <AlarmManager schedules={effectiveSchedules} />
 
-      {/* 1. ÜST KONTROL BARI (TEK VE KOMPAKT SATIR): Kategori + Hızlı Eylemler */}
+      {/* 1. ÜST KONTROL BARI: Kategori Seçici (Tam Genişlik Segmented Control) */}
       <div className="px-3 pt-2">
-        <div className="flex items-center justify-between gap-1.5 p-1 bg-slate-200/90 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-800 rounded-xl shadow-xs transition-colors">
-          {/* Sol Kısım: 3 Ana Kategori (Adalar, Boğaz, Tümü) */}
-          <div className="flex items-center gap-1">
-            <button
-              onClick={() => {
-                setSelectedCategory("ADALAR");
-                setSelectedRoute("ALL");
-                setSelectedOrigin("ALL");
-              }}
-              className={`py-1 px-2.5 rounded-lg text-xs font-black transition-all flex items-center gap-1 cursor-pointer ${
-                selectedCategory === "ADALAR"
-                  ? "bg-amber-400 text-slate-950 shadow-xs scale-[1.01]"
-                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
-              }`}
-            >
-              <span>🏝️</span>
-              <span>{t("adalarLines")}</span>
-            </button>
+        <div className="grid grid-cols-3 p-1 bg-slate-200/90 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-800 rounded-xl shadow-xs">
+          <button
+            onClick={() => {
+              setSelectedCategory("ADALAR");
+              setSelectedRoute("ALL");
+              setSelectedOrigin("ALL");
+            }}
+            className={`py-1.5 text-xs font-black rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+              selectedCategory === "ADALAR"
+                ? "bg-amber-400 text-slate-950 shadow-xs scale-[1.01]"
+                : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+            }`}
+          >
+            <span>🏝️</span>
+            <span>{t("adalarLines")}</span>
+          </button>
 
-            <button
-              onClick={() => {
-                setSelectedCategory("BOGAZ");
-                setSelectedRoute("ALL");
-                setSelectedOrigin("ALL");
-              }}
-              className={`py-1 px-2.5 rounded-lg text-xs font-black transition-all flex items-center gap-1 cursor-pointer ${
-                selectedCategory === "BOGAZ"
-                  ? "bg-blue-600 text-white shadow-xs scale-[1.01]"
-                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
-              }`}
-            >
-              <span>🌊</span>
-              <span>{t("bogazLines")}</span>
-            </button>
+          <button
+            onClick={() => {
+              setSelectedCategory("BOGAZ");
+              setSelectedRoute("ALL");
+              setSelectedOrigin("ALL");
+            }}
+            className={`py-1.5 text-xs font-black rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+              selectedCategory === "BOGAZ"
+                ? "bg-blue-600 text-white shadow-xs scale-[1.01]"
+                : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+            }`}
+          >
+            <span>🌊</span>
+            <span>{t("bogazLines")}</span>
+          </button>
 
-            <button
-              onClick={() => {
-                setSelectedCategory("ALL");
-                setSelectedRoute("ALL");
-                setSelectedOrigin("ALL");
-              }}
-              className={`py-1 px-2 rounded-lg text-xs font-black transition-all flex items-center gap-1 cursor-pointer ${
-                selectedCategory === "ALL"
-                  ? "bg-slate-800 dark:bg-slate-700 text-white shadow-xs scale-[1.01]"
-                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
-              }`}
-            >
-              <span>⚓</span>
-              <span>{t("allLines")}</span>
-            </button>
-          </div>
+          <button
+            onClick={() => {
+              setSelectedCategory("ALL");
+              setSelectedRoute("ALL");
+              setSelectedOrigin("ALL");
+            }}
+            className={`py-1.5 text-xs font-black rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+              selectedCategory === "ALL"
+                ? "bg-slate-800 dark:bg-slate-700 text-white shadow-xs scale-[1.01]"
+                : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+            }`}
+          >
+            <span>⚓</span>
+            <span>{t("allLines")}</span>
+          </button>
+        </div>
 
-          {/* Sağ Kısım: Kompakt Hızlı Araçlar */}
-          <div className="flex items-center gap-1">
-            {/* Arama Aç/Kapat Butonu */}
-            <button
-              onClick={() => setIsSearchVisible(!isSearchVisible)}
-              className={`px-2 py-1 rounded-lg text-[11px] font-bold flex items-center gap-1 transition-all cursor-pointer border ${
-                isSearchVisible || searchQuery.trim().length > 0
-                  ? "bg-blue-600 text-white border-blue-500 shadow-2xs"
-                  : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:bg-slate-100"
-              }`}
-              title="İskele veya Hat Ara"
-            >
-              <Search size={12} />
-              <span className="hidden sm:inline">Ara</span>
-            </button>
+        {/* Hızlı Eylemler & Araçlar (Yatay Kaydırılabilir Şerit - Dokunma Ergonomisi) */}
+        <div className="flex items-center gap-1.5 overflow-x-auto hide-scrollbar pt-2 pb-0.5">
+          {/* Arama Aç/Kapat Butonu */}
+          <button
+            onClick={() => setIsSearchVisible(!isSearchVisible)}
+            className={`px-2.5 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 shrink-0 transition-all cursor-pointer border ${
+              isSearchVisible || searchQuery.trim().length > 0
+                ? "bg-blue-600 text-white border-blue-500 shadow-2xs"
+                : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:bg-slate-100"
+            }`}
+            title="İskele veya Hat Ara"
+          >
+            <Search size={13} />
+            <span>Ara</span>
+          </button>
 
-            {/* Son 15 Dakika (Last Call) */}
-            <button
-              onClick={() => setOnlyImminent(!onlyImminent)}
-              className={`px-2 py-1 rounded-lg text-[11px] font-bold flex items-center gap-1 transition-all cursor-pointer border ${
-                onlyImminent
-                  ? "bg-amber-400 text-slate-950 border-amber-400 shadow-2xs font-black"
-                  : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:bg-slate-100"
-              }`}
-              title="Kalkışına 15 dk veya daha az kalanlar"
-            >
-              <span className="text-amber-500">⚡</span>
-              <span className="hidden sm:inline">≤15 dk</span>
-            </button>
+          {/* Son 15 Dakika (Last Call) */}
+          <button
+            onClick={() => setOnlyImminent(!onlyImminent)}
+            className={`px-2.5 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 shrink-0 transition-all cursor-pointer border ${
+              onlyImminent
+                ? "bg-amber-400 text-slate-950 border-amber-400 shadow-2xs font-black"
+                : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:bg-slate-100"
+            }`}
+            title="Kalkışına 15 dk veya daha az kalanlar"
+          >
+            <span className="text-amber-500">⚡</span>
+            <span>≤15 dk</span>
+          </button>
 
-            {/* Harita / Nasıl Giderim Toggle */}
-            <button
-              onClick={() => setShowPlanner(!showPlanner)}
-              className={`px-2 py-1 rounded-lg text-[11px] font-bold flex items-center gap-1 transition-all cursor-pointer border ${
-                showPlanner
-                  ? "bg-cyan-600 text-white border-cyan-500 shadow-2xs"
-                  : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:bg-slate-100"
-              }`}
-              title="Harita ve Rota Planlayıcı"
-            >
-              <Compass size={12} />
-              <span className="hidden sm:inline">Harita</span>
-            </button>
+          {/* Harita / Nasıl Giderim Toggle */}
+          <button
+            onClick={() => setShowPlanner(!showPlanner)}
+            className={`px-2.5 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 shrink-0 transition-all cursor-pointer border ${
+              showPlanner
+                ? "bg-cyan-600 text-white border-cyan-500 shadow-2xs"
+                : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:bg-slate-100"
+            }`}
+            title="Harita ve Rota Planlayıcı"
+          >
+            <Compass size={13} />
+            <span>Harita</span>
+          </button>
 
-            {/* En Yakın İskele */}
-            <button
-              onClick={requestLocation}
-              disabled={geoStatus === "LOCATING"}
-              className={`px-2 py-1 rounded-lg text-[11px] font-bold flex items-center gap-1 transition-all cursor-pointer border ${
-                geoStatus === "ACTIVE"
-                  ? "bg-emerald-600 text-white border-emerald-500"
-                  : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:bg-slate-100"
-              }`}
-              title="Konumuma En Yakın İskele"
-            >
-              <Navigation size={12} className={geoStatus === "ACTIVE" ? "text-white" : "text-blue-500"} />
-              <span className="hidden sm:inline">
-                {geoStatus === "LOCATING" ? "..." : geoStatus === "ACTIVE" && nearestPier ? nearestPier.name : "Yakın"}
-              </span>
-            </button>
+          {/* En Yakın İskele */}
+          <button
+            onClick={requestLocation}
+            disabled={geoStatus === "LOCATING"}
+            className={`px-2.5 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 shrink-0 transition-all cursor-pointer border ${
+              geoStatus === "ACTIVE"
+                ? "bg-emerald-600 text-white border-emerald-500"
+                : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:bg-slate-100"
+            }`}
+            title="Konumuma En Yakın İskele"
+          >
+            <Navigation size={13} className={geoStatus === "ACTIVE" ? "text-white" : "text-blue-500"} />
+            <span>
+              {geoStatus === "LOCATING" ? "..." : geoStatus === "ACTIVE" && nearestPier ? nearestPier.name : "Yakın"}
+            </span>
+          </button>
 
-            {/* Gece Seferleri & Dolmuş / Taksi Matrisi */}
-            <button
-              onClick={() => setIsNightTransitOpen(true)}
-              className="px-2 py-1 rounded-lg text-[11px] font-bold flex items-center gap-1 transition-all cursor-pointer border bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800/80 hover:bg-indigo-100 dark:hover:bg-indigo-900/60"
-              title="Gece Seferleri & Sabaha Karşı Taksi / Dolmuş Matrisi"
-            >
-              <span>🌙</span>
-              <span className="hidden sm:inline">Gece</span>
-            </button>
+          {/* Gece Seferleri & Dolmuş / Taksi Matrisi */}
+          <button
+            onClick={() => setIsNightTransitOpen(true)}
+            className="px-2.5 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 shrink-0 transition-all cursor-pointer border bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800/80 hover:bg-indigo-100 dark:hover:bg-indigo-900/60"
+            title="Gece Seferleri & Sabaha Karşı Taksi / Dolmuş Matrisi"
+          >
+            <span>🌙</span>
+            <span>Gece</span>
+          </button>
 
-            {/* Görünüm Yoğunluğu (Kompakt / Kart) */}
-            <button
-              onClick={() => setIsCompactDensity(!isCompactDensity)}
-              className={`px-2 py-1 rounded-lg text-[11px] font-bold flex items-center gap-1 transition-all cursor-pointer border ${
-                isCompactDensity
-                  ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900 border-slate-900 dark:border-white shadow-2xs font-black"
-                  : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:bg-slate-100"
-              }`}
-              title={isCompactDensity ? "Geniş Kart Görünümüne Geç" : "Kompakt Liste Görünümüne Geç"}
-            >
-              {isCompactDensity ? <LayoutGrid size={12} /> : <List size={12} />}
-              <span className="hidden sm:inline">{isCompactDensity ? t("viewComfort") : t("viewCompact")}</span>
-            </button>
-          </div>
+          {/* Görünüm Yoğunluğu (Kompakt / Kart) */}
+          <button
+            onClick={() => setIsCompactDensity(!isCompactDensity)}
+            className={`px-2.5 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 shrink-0 transition-all cursor-pointer border ${
+              isCompactDensity
+                ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900 border-slate-900 dark:border-white shadow-2xs font-black"
+                : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:bg-slate-100"
+            }`}
+            title={isCompactDensity ? "Geniş Kart Görünümüne Geç" : "Kompakt Liste Görünümüne Geç"}
+          >
+            {isCompactDensity ? <LayoutGrid size={13} /> : <List size={13} />}
+            <span>{isCompactDensity ? t("viewComfort") : t("viewCompact")}</span>
+          </button>
         </div>
       </div>
 
