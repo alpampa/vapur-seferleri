@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import { ScheduleCard } from "@/components/schedule/ScheduleCard";
 import { TripDetailsSheet } from "@/components/schedule/TripDetailsSheet";
 import type { ScheduleCardDto } from "@/app/page";
-import { Search, Navigation, ArrowLeftRight, Compass, MapPin, LayoutGrid, List, WifiOff, Footprints, Waves, Landmark, Tag, Sparkles, X, RotateCcw, ChevronDown } from "lucide-react";
+import { Search, Navigation, ArrowLeftRight, Compass, MapPin, LayoutGrid, List, WifiOff, Footprints, Waves, Landmark, Tag, Sparkles, X, RotateCcw, ChevronDown, ChevronUp, History } from "lucide-react";
 import { matchesTurkishSearch } from "@/lib/utils/search-normalizer";
 import { AdalarHeritageModal } from "@/components/adalar/AdalarHeritageModal";
 import { SponsoredDealsModal } from "@/components/commercial/SponsoredDealsModal";
@@ -19,6 +19,7 @@ import { FavoritesWidget } from "@/components/schedule/FavoritesWidget";
 import { OperatorLogo } from "@/components/ui/OperatorLogo";
 import { useLanguageStore } from "@/store/useLanguageStore";
 import { useOfflineSync } from "@/hooks/useOfflineSync";
+import { useTransitClock } from "@/hooks/useTransitClock";
 import { MarineWeatherHUD } from "@/components/weather/MarineWeatherHUD";
 import { CatchFerryAssistant } from "@/components/planner/CatchFerryAssistant";
 import { LiveTripTrackerBar } from "@/components/schedule/LiveTripTrackerBar";
@@ -66,10 +67,11 @@ interface ScheduleListClientProps {
 
 export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, initialOrigin }: ScheduleListClientProps) {
   const { t, language } = useLanguageStore();
+  const { nowMs } = useTransitClock(1000);
+  const now = nowMs;
 
   const [selectedSchedule, setSelectedSchedule] = useState<ScheduleCardDto | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<"ADALAR" | "BOGAZ" | "ALL">("ADALAR");
-  const [now, setNow] = useState(Date.now());
   const [selectedRoute, setSelectedRoute] = useState<string>("ALL");
   const [selectedOrigin, setSelectedOrigin] = useState<string>(initialOrigin || "ALL");
   const [selectedDestination, setSelectedDestination] = useState<string>("ALL");
@@ -78,6 +80,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
   const [showPlanner, setShowPlanner] = useState<boolean>(false);
   const [onlyImminent, setOnlyImminent] = useState<boolean>(false);
   const [isCompactDensity, setIsCompactDensity] = useState<boolean>(false);
+  const [showPastTrips, setShowPastTrips] = useState<boolean>(false);
 
   useEffect(() => {
     try {
@@ -139,13 +142,6 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
   const [nearestPier, setNearestPier] = useState<{ name: string; distanceKm: number } | null>(null);
   const [geoStatus, setGeoStatus] = useState<"IDLE" | "LOCATING" | "ACTIVE" | "DENIED">("IDLE");
 
-  // Reactive tick every 1000ms
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setNow(Date.now());
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
 
   const requestLocation = () => {
     if (!navigator.geolocation) {
@@ -352,6 +348,20 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
       return a.dyn.currentDepartureTime.localeCompare(b.dyn.currentDepartureTime);
     });
   }, [activeSchedulesWithDyn, selectedOrigin, selectedDestination, selectedOperator, searchQuery, onlyImminent]);
+
+  // Partition filtered voyages into Active/Upcoming vs Departed/Past
+  const { upcomingTrips, pastTrips } = useMemo(() => {
+    const upcoming: typeof filteredList = [];
+    const past: typeof filteredList = [];
+    filteredList.forEach((item) => {
+      if (item.dyn.isDeparted) {
+        past.push(item);
+      } else {
+        upcoming.push(item);
+      }
+    });
+    return { upcomingTrips: upcoming, pastTrips: past };
+  }, [filteredList]);
 
   // İptal Seferler Algoritması (Kullanıcı Kuralı: Kayan bantta ve kartlarda gösterim)
   const cancelledTrips = useMemo(() => {
@@ -615,7 +625,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
       <div className="px-3 pt-2 pb-1 flex items-center justify-between text-xs font-bold text-slate-500 dark:text-slate-400">
         <div className="flex items-center gap-2">
           <span className="text-[11px]">
-            {t("activeTrips")}: <strong className="text-slate-900 dark:text-white text-xs">{filteredList.length}</strong>
+            {t("activeTrips")}: <strong className="text-slate-900 dark:text-white text-xs">{upcomingTrips.length}</strong>
           </span>
 
           <button
@@ -630,7 +640,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
 
         {searchQuery.trim().length > 0 ? (
           <span className="text-blue-700 dark:text-blue-300 font-extrabold bg-blue-100 dark:bg-blue-950/60 border border-blue-300 dark:border-blue-500/30 px-2 py-0.5 rounded text-[11px]">
-            🔍 {filteredList.length} Sefer Bulundu
+            🔍 {upcomingTrips.length} Sefer Bulundu
           </span>
         ) : selectedOrigin !== "ALL" || selectedDestination !== "ALL" ? (
           <span className="text-amber-700 dark:text-amber-300 font-extrabold bg-amber-100 dark:bg-amber-950/60 border border-amber-300 dark:border-amber-500/30 px-2 py-0.5 rounded text-[11px] flex items-center gap-1">
@@ -647,8 +657,8 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
 
       {/* Schedules List (Comfortable or Compact Rows) */}
       <div className={`px-3 flex flex-col ${isCompactDensity ? "gap-1.5" : "gap-2"} pb-36 sm:pb-28 mt-1`}>
-        {filteredList.length > 0 ? (
-          filteredList.map(({ schedule, dyn }) => (
+        {upcomingTrips.length > 0 ? (
+          upcomingTrips.map(({ schedule, dyn }) => (
             <ScheduleCard
               key={`${schedule.id}-${dyn.currentOrigin}`}
               id={schedule.id}
@@ -661,6 +671,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
               status={schedule.status}
               targetTimeIso={schedule.targetTimeIso}
               serverTimeIso={serverTimeIso}
+              nowMs={nowMs}
               delayText={schedule.delayText}
               vessel={schedule.vessel}
               platform={schedule.platform}
@@ -679,7 +690,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
             <div className="text-3xl">⚓</div>
             <div className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200">
               {searchQuery.trim().length > 0
-                ? `\"${searchQuery}\" aramasıyla eşleşen aktif vapur seferi bulunamadı.`
+                ? `"${searchQuery}" aramasıyla eşleşen aktif vapur seferi bulunamadı.`
                 : language === "en" ? "No scheduled trips found matching your filters." : "Seçtiğiniz kriterlere uygun aktif sefer bulunamadı."}
             </div>
             <p className="text-[11px] text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
@@ -698,6 +709,61 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
               <RotateCcw size={13} />
               <span>Filtreleri Sıfırla ve Tüm Seferleri Göster</span>
             </button>
+          </div>
+        )}
+
+        {/* Kalkmış / Geçmiş Seferler Bölümü (Past Departures Section) */}
+        {pastTrips.length > 0 && (
+          <div className="mt-4 pt-3 border-t border-slate-200 dark:border-slate-800/80">
+            <button
+              type="button"
+              onClick={() => setShowPastTrips(!showPastTrips)}
+              className="w-full flex items-center justify-between px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-900/80 hover:bg-slate-200/70 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 text-xs font-bold transition-all cursor-pointer"
+            >
+              <div className="flex items-center gap-2">
+                <History size={14} className="text-slate-400" />
+                <span>Kalkmış / Geçmiş Seferler</span>
+                <span className="px-1.5 py-0.5 rounded-full text-[10px] bg-slate-200 dark:bg-slate-800 font-bold">
+                  {pastTrips.length}
+                </span>
+              </div>
+              <div className="flex items-center gap-1 text-[11px]">
+                <span>{showPastTrips ? "Gizle" : "Göster"}</span>
+                {showPastTrips ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+              </div>
+            </button>
+
+            {showPastTrips && (
+              <div className={`mt-2 flex flex-col ${isCompactDensity ? "gap-1.5" : "gap-2"} animate-fadeIn`}>
+                {pastTrips.map(({ schedule, dyn }) => (
+                  <ScheduleCard
+                    key={`past-${schedule.id}-${dyn.currentOrigin}`}
+                    id={schedule.id}
+                    origin={schedule.origin}
+                    destination={schedule.destination}
+                    operator={schedule.operator}
+                    routeTitle={schedule.routeTitle}
+                    departureTime={schedule.departureTime}
+                    departureTime12={schedule.departureTime12}
+                    status={schedule.status}
+                    targetTimeIso={schedule.targetTimeIso}
+                    serverTimeIso={serverTimeIso}
+                    nowMs={nowMs}
+                    delayText={schedule.delayText}
+                    vessel={schedule.vessel}
+                    platform={schedule.platform}
+                    price={schedule.price}
+                    progress={schedule.progress}
+                    stops={schedule.stops}
+                    arrivalTime={schedule.arrivalTime}
+                    isCompact={isCompactDensity}
+                    highlightStopName={searchQuery}
+                    onClick={() => setSelectedSchedule(schedule)}
+                    onSelectHop={(s) => setSelectedHopSchedule(s)}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         )}
       </div>

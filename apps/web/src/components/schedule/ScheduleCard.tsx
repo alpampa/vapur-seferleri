@@ -31,6 +31,7 @@ export interface ScheduleCardProps {
   status: TripStatus;
   targetTimeIso?: string;
   serverTimeIso?: string;
+  nowMs?: number;
   delayText?: string;
   vessel?: string;
   platform: string;
@@ -100,18 +101,18 @@ export function ScheduleCard(props: ScheduleCardProps) {
 
   const occupancy = predictTripOccupancy(props.origin, props.destination, props.departureTime);
 
-  const [dynState, setDynState] = useState<DynamicTripResolution>(() => {
-    return resolveDynamicTrip(
-      props.origin,
-      props.destination,
-      props.departureTime,
-      props.targetTimeIso || new Date().toISOString(),
-      props.stops,
-      props.arrivalTime,
-      Date.now(),
-      props.serverTimeIso
-    );
-  });
+  const accurateNow = props.nowMs || Date.now();
+
+  const dynState: DynamicTripResolution = resolveDynamicTrip(
+    props.origin,
+    props.destination,
+    props.departureTime,
+    props.targetTimeIso || new Date().toISOString(),
+    props.stops,
+    props.arrivalTime,
+    accurateNow,
+    props.serverTimeIso
+  );
 
   const liveVessel = resolveLiveVesselName(
     props.origin,
@@ -128,28 +129,8 @@ export function ScheduleCard(props: ScheduleCardProps) {
     props.destination,
     props.departureTime,
     props.targetTimeIso,
-    Date.now()
+    accurateNow
   );
-
-  useEffect(() => {
-    const update = () => {
-      const resolved = resolveDynamicTrip(
-        props.origin,
-        props.destination,
-        props.departureTime,
-        props.targetTimeIso || new Date().toISOString(),
-        props.stops,
-        props.arrivalTime,
-        Date.now(),
-        props.serverTimeIso
-      );
-      setDynState(resolved);
-    };
-
-    update();
-    const interval = setInterval(update, 1000);
-    return () => clearInterval(interval);
-  }, [props.origin, props.destination, props.departureTime, props.targetTimeIso, props.stops, props.arrivalTime, props.serverTimeIso]);
 
   // If the trip has completely expired (30 seconds after its final departure leg), do not render
   if (dynState.isExpired) {
@@ -263,6 +244,8 @@ export function ScheduleCard(props: ScheduleCardProps) {
           className={`rounded-xl px-2.5 py-1.5 flex items-center justify-between gap-2 transition-all cursor-pointer border group shadow-2xs ${
             isCancelled
               ? "border-rose-500/70 bg-rose-50/50 dark:bg-rose-950/20 text-slate-800 dark:text-slate-200"
+              : dynState.isDeparted
+              ? "border-slate-200 dark:border-slate-800/80 bg-slate-50/60 dark:bg-slate-900/40 text-slate-500 dark:text-slate-400 opacity-65"
               : isNightTrip
               ? "border-indigo-500/70 bg-gradient-to-r from-[#090d1f] via-[#0d1430] to-[#090d1f] text-slate-100 shadow-indigo-950/40"
               : isLast3Minutes
@@ -278,6 +261,8 @@ export function ScheduleCard(props: ScheduleCardProps) {
               className={`font-mono font-black text-sm sm:text-base tabular-nums leading-none ${
                 isCancelled
                   ? "line-through text-rose-500"
+                  : dynState.isDeparted
+                  ? "text-slate-400 dark:text-slate-500"
                   : isLast3Minutes
                   ? "text-rose-600 dark:text-rose-400 animate-pulse font-extrabold"
                   : isNightTrip
@@ -288,11 +273,15 @@ export function ScheduleCard(props: ScheduleCardProps) {
               {dynState.currentDepartureTime}
             </span>
 
-            {dynState.countdown && !isCancelled && (
+            {dynState.isDeparted ? (
+              <span className="text-[9px] font-bold px-1 py-0.2 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
+                Kalktı
+              </span>
+            ) : dynState.countdown && !isCancelled ? (
               <span className="text-[9px] font-mono font-black px-1 py-0.2 rounded bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-300/60 dark:border-amber-500/30 tabular-nums">
                 {dynState.countdown}
               </span>
-            )}
+            ) : null}
           </div>
 
           {/* Orta: Güzergah + Operatör + Durak & Gece Rozetleri */}
@@ -377,6 +366,8 @@ export function ScheduleCard(props: ScheduleCardProps) {
       className={`theme-card rounded-xl px-3 py-2.5 flex flex-col gap-1.5 text-slate-900 dark:text-white shadow-xs dark:shadow-none transition-all duration-150 cursor-pointer group border active:scale-[0.99] touch-manipulation ${
         isCancelled
           ? "border-rose-500/90 bg-rose-50/50 dark:bg-rose-950/25 ring-1 ring-rose-500/40 shadow-xs shadow-rose-500/10"
+          : dynState.isDeparted
+          ? "border-slate-200 dark:border-slate-800/80 bg-slate-50/60 dark:bg-slate-900/40 text-slate-500 dark:text-slate-400 opacity-65"
           : isNightTrip
           ? "border-indigo-500/70 bg-gradient-to-r from-slate-950 via-[#0b1029] to-[#0f173a] text-slate-100 ring-1 ring-indigo-500/30 shadow-indigo-950/50 shadow-md"
           : isLast5Minutes
@@ -428,6 +419,8 @@ export function ScheduleCard(props: ScheduleCardProps) {
               className={`font-mono font-black text-xl sm:text-2xl leading-none tabular-nums tracking-tight transition-all ${
                 isCancelled
                   ? "line-through text-rose-500 dark:text-rose-400 font-bold opacity-80"
+                  : dynState.isDeparted
+                  ? "text-slate-400 dark:text-slate-500"
                   : isLast3Minutes
                   ? "text-rose-600 dark:text-rose-400 font-extrabold scale-105 animate-pulse"
                   : isLast5Minutes
@@ -443,7 +436,7 @@ export function ScheduleCard(props: ScheduleCardProps) {
                   <span>🚫 İPTAL</span>
                 </span>
               ) : dynState.isDeparted ? (
-                <span className="px-1.5 py-0.5 rounded text-[9px] font-black bg-rose-600 text-white animate-pulse inline-flex items-center gap-0.5">
+                <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 inline-flex items-center gap-0.5 border border-slate-300 dark:border-slate-700">
                   <Ship size={10} />
                   <span>{t("departed")}</span>
                 </span>
