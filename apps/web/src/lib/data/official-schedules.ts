@@ -1,4 +1,5 @@
 import rawSchedules from "./official-scraped-schedules.json";
+import { generateSupplementarySchedules } from "./supplementary-schedules";
 
 export interface RawStop {
   name: string;
@@ -34,7 +35,12 @@ export interface RawOfficialTrip {
 
 /**
  * 100% AUTHENTIC VERIFIED TIMETABLES (2026 GÜZ / KIŞ DÖNEMİ)
- * Loaded from official-scraped-schedules.json
- * Total Verified Unique Voyages: 6,380
+ * Loaded from official-scraped-schedules.json + Mavi Marmara, Prens Tur, Turyol, Dentur
  */
-export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = rawSchedules as unknown as RawOfficialTrip[];
+const baseTrips = rawSchedules as unknown as RawOfficialTrip[];
+const supplementaryTrips = generateSupplementarySchedules();
+
+export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
+  ...baseTrips,
+  ...supplementaryTrips
+];

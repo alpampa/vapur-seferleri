@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import { ScheduleCard } from "@/components/schedule/ScheduleCard";
 import { TripDetailsSheet } from "@/components/schedule/TripDetailsSheet";
 import type { ScheduleCardDto } from "@/app/page";
-import { Search, Navigation, ArrowLeftRight, Compass, MapPin, LayoutGrid, List, WifiOff, Footprints, Waves, Landmark, Tag, Sparkles, X, RotateCcw } from "lucide-react";
+import { Search, Navigation, ArrowLeftRight, Compass, MapPin, LayoutGrid, List, WifiOff, Footprints, Waves, Landmark, Tag, Sparkles, X, RotateCcw, ChevronDown } from "lucide-react";
 import { matchesTurkishSearch } from "@/lib/utils/search-normalizer";
 import { AdalarHeritageModal } from "@/components/adalar/AdalarHeritageModal";
 import { SponsoredDealsModal } from "@/components/commercial/SponsoredDealsModal";
@@ -72,6 +72,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
   const [now, setNow] = useState(Date.now());
   const [selectedRoute, setSelectedRoute] = useState<string>("ALL");
   const [selectedOrigin, setSelectedOrigin] = useState<string>(initialOrigin || "ALL");
+  const [selectedDestination, setSelectedDestination] = useState<string>("ALL");
   const [selectedOperator, setSelectedOperator] = useState<string>("ALL");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [showPlanner, setShowPlanner] = useState<boolean>(false);
@@ -268,19 +269,36 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
     return Array.from(ops);
   }, [activeSchedulesWithDyn]);
 
-  const swapDirection = () => {
-    if (selectedRoute === "ALL") return;
-    const parts = selectedRoute.split(" ➔ ");
-    if (parts.length === 2) {
-      const swapped = `${parts[1]} ➔ ${parts[0]}`;
-      const exists = uniqueRoutes.includes(swapped);
-      if (exists) {
-        setSelectedRoute(swapped);
-      } else {
-        setSelectedOrigin(parts[1]);
-        setSelectedRoute("ALL");
+  // Unique available origins (Nereden İskeleleri)
+  const availableOrigins = useMemo(() => {
+    const set = new Set<string>();
+    activeSchedulesWithDyn.forEach(({ schedule, dyn }) => {
+      set.add(dyn.currentOrigin || schedule.origin);
+      if (schedule.stops) {
+        schedule.stops.forEach((st) => set.add(st.name));
       }
-    }
+    });
+    return Array.from(set).sort((a, b) => a.localeCompare(b, "tr"));
+  }, [activeSchedulesWithDyn]);
+
+  // Unique available destinations (Nereye İskeleleri)
+  const availableDestinations = useMemo(() => {
+    const set = new Set<string>();
+    activeSchedulesWithDyn.forEach(({ schedule, dyn }) => {
+      set.add(dyn.destination || schedule.destination);
+      if (schedule.stops) {
+        schedule.stops.forEach((st) => set.add(st.name));
+      }
+    });
+    return Array.from(set).sort((a, b) => a.localeCompare(b, "tr"));
+  }, [activeSchedulesWithDyn]);
+
+  const swapOriginDestination = () => {
+    const prevO = selectedOrigin;
+    const prevD = selectedDestination;
+    setSelectedOrigin(prevD);
+    setSelectedDestination(prevO);
+    setSelectedRoute("ALL");
   };
 
   // Final filtered list - KULLANICI KURALI: En üstte yer alacak ilk sefer (kesin kronolojik sıralama)
@@ -292,21 +310,22 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
       // GLOBAL VE TÜRKÇE KARAKTERE DUYARLI ARAMA (İ/I/ı/i, ş/s, ç/c, ğ/g, ü/u, ö/o tam uyumlu)
       if (hasSearch) {
         const inOrigin = matchesTurkishSearch(schedule.origin, q) || matchesTurkishSearch(dyn.currentOrigin, q);
-        const inDest = matchesTurkishSearch(schedule.destination, q);
+        const inDest = matchesTurkishSearch(schedule.destination, q) || matchesTurkishSearch(dyn.destination, q);
         const inOperator = matchesTurkishSearch(schedule.operator, q);
         const inRoute = matchesTurkishSearch(schedule.routeTitle, q);
         const inStops = schedule.stops?.some((st) => matchesTurkishSearch(st.name, q));
         if (!inOrigin && !inDest && !inOperator && !inRoute && !inStops) return false;
       } else {
         if (selectedOrigin !== "ALL") {
-          const matchesOrigin = schedule.origin === selectedOrigin || dyn.currentOrigin === selectedOrigin;
-          if (!matchesOrigin) return false;
+          const isDirectOrigin = schedule.origin === selectedOrigin || dyn.currentOrigin === selectedOrigin;
+          const isStopOrigin = schedule.stops?.some((st) => st.name === selectedOrigin);
+          if (!isDirectOrigin && !isStopOrigin) return false;
         }
 
-        if (selectedRoute !== "ALL") {
-          const matchesOriginal = `${schedule.origin} ➔ ${schedule.destination}` === selectedRoute;
-          const matchesDynamic = `${dyn.currentOrigin} ➔ ${dyn.destination}` === selectedRoute;
-          if (!matchesOriginal && !matchesDynamic) return false;
+        if (selectedDestination !== "ALL") {
+          const isDirectDest = schedule.destination === selectedDestination || dyn.destination === selectedDestination;
+          const isStopDest = schedule.stops?.some((st) => st.name === selectedDestination);
+          if (!isDirectDest && !isStopDest) return false;
         }
 
         if (selectedOperator !== "ALL") {
@@ -332,7 +351,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
       }
       return a.dyn.currentDepartureTime.localeCompare(b.dyn.currentDepartureTime);
     });
-  }, [activeSchedulesWithDyn, selectedOrigin, selectedRoute, selectedOperator, searchQuery, onlyImminent]);
+  }, [activeSchedulesWithDyn, selectedOrigin, selectedDestination, selectedOperator, searchQuery, onlyImminent]);
 
   // İptal Seferler Algoritması (Kullanıcı Kuralı: Kayan bantta ve kartlarda gösterim)
   const cancelledTrips = useMemo(() => {
@@ -345,213 +364,187 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
     <>
       <AlarmManager schedules={effectiveSchedules} />
 
-      {/* 1. ÜST KONTROL BARI: Kategori Seçici (Tam Genişlik Segmented Control) */}
+      {/* 1. ÜST KONTROL BARI: Kategori Seçici + Kompakt Hızlı Araçlar */}
       <div className="px-3 pt-2">
-        <div className="grid grid-cols-3 p-1 bg-slate-200/90 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-800 rounded-xl shadow-xs">
-          <button
-            onClick={() => {
-              setSelectedCategory("ADALAR");
-              setSelectedRoute("ALL");
-              setSelectedOrigin("ALL");
-            }}
-            className={`py-1.5 text-xs font-black rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
-              selectedCategory === "ADALAR"
-                ? "bg-amber-400 text-slate-950 shadow-xs scale-[1.01]"
-                : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
-            }`}
-          >
-            <span>🏝️</span>
-            <span>{t("adalarLines")}</span>
-          </button>
+        <div className="flex items-center justify-between gap-1 p-1 bg-slate-200/90 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-800 rounded-xl shadow-xs">
+          {/* Sol: 3 Ana Kategori (Adalar, Boğaz, Tümü) */}
+          <div className="flex items-center gap-1">
+            <button
+              onClick={() => {
+                setSelectedCategory("ADALAR");
+                setSelectedOrigin("ALL");
+                setSelectedDestination("ALL");
+              }}
+              className={`py-1 px-2.5 rounded-lg text-xs font-black transition-all flex items-center gap-1 cursor-pointer ${
+                selectedCategory === "ADALAR"
+                  ? "bg-amber-400 text-slate-950 shadow-xs scale-[1.01]"
+                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+              }`}
+            >
+              <span>🏝️</span>
+              <span>{t("adalarLines")}</span>
+            </button>
 
-          <button
-            onClick={() => {
-              setSelectedCategory("BOGAZ");
-              setSelectedRoute("ALL");
-              setSelectedOrigin("ALL");
-            }}
-            className={`py-1.5 text-xs font-black rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
-              selectedCategory === "BOGAZ"
-                ? "bg-blue-600 text-white shadow-xs scale-[1.01]"
-                : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
-            }`}
-          >
-            <span>🌊</span>
-            <span>{t("bogazLines")}</span>
-          </button>
+            <button
+              onClick={() => {
+                setSelectedCategory("BOGAZ");
+                setSelectedOrigin("ALL");
+                setSelectedDestination("ALL");
+              }}
+              className={`py-1 px-2.5 rounded-lg text-xs font-black transition-all flex items-center gap-1 cursor-pointer ${
+                selectedCategory === "BOGAZ"
+                  ? "bg-blue-600 text-white shadow-xs scale-[1.01]"
+                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+              }`}
+            >
+              <span>🌊</span>
+              <span>{t("bogazLines")}</span>
+            </button>
 
-          <button
-            onClick={() => {
-              setSelectedCategory("ALL");
-              setSelectedRoute("ALL");
-              setSelectedOrigin("ALL");
-            }}
-            className={`py-1.5 text-xs font-black rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
-              selectedCategory === "ALL"
-                ? "bg-slate-800 dark:bg-slate-700 text-white shadow-xs scale-[1.01]"
-                : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
-            }`}
-          >
-            <span>⚓</span>
-            <span>{t("allLines")}</span>
-          </button>
-        </div>
+            <button
+              onClick={() => {
+                setSelectedCategory("ALL");
+                setSelectedOrigin("ALL");
+                setSelectedDestination("ALL");
+              }}
+              className={`py-1 px-2 rounded-lg text-xs font-black transition-all flex items-center gap-1 cursor-pointer ${
+                selectedCategory === "ALL"
+                  ? "bg-slate-800 dark:bg-slate-700 text-white shadow-xs scale-[1.01]"
+                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+              }`}
+            >
+              <span>⚓</span>
+              <span>{t("allLines")}</span>
+            </button>
+          </div>
 
-        {/* Hızlı Eylemler & Araçlar (Yatay Kaydırılabilir Şerit - Dokunma Ergonomisi) */}
-        <div className="flex items-center gap-1.5 overflow-x-auto hide-scrollbar pt-2 pb-0.5">
-          {/* Arama Aç/Kapat Butonu */}
-          <button
-            onClick={() => setIsSearchVisible(!isSearchVisible)}
-            className={`px-2.5 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 shrink-0 transition-all cursor-pointer border ${
-              isSearchVisible || searchQuery.trim().length > 0
-                ? "bg-blue-600 text-white border-blue-500 shadow-2xs"
-                : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:bg-slate-100"
-            }`}
-            title="İskele veya Hat Ara"
-          >
-            <Search size={13} />
-            <span>Ara</span>
-          </button>
+          {/* Sağ: Kompakt İkon Araçları */}
+          <div className="flex items-center gap-1">
+            <button
+              onClick={() => setIsSearchVisible(!isSearchVisible)}
+              className={`p-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer border ${
+                isSearchVisible || searchQuery.trim().length > 0
+                  ? "bg-blue-600 text-white border-blue-500 shadow-2xs"
+                  : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:bg-slate-100"
+              }`}
+              title="Arama Aç/Kapat"
+            >
+              <Search size={13} />
+            </button>
 
-          {/* Son 15 Dakika (Last Call) */}
-          <button
-            onClick={() => setOnlyImminent(!onlyImminent)}
-            className={`px-2.5 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 shrink-0 transition-all cursor-pointer border ${
-              onlyImminent
-                ? "bg-amber-400 text-slate-950 border-amber-400 shadow-2xs font-black"
-                : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:bg-slate-100"
-            }`}
-            title="Kalkışına 15 dk veya daha az kalanlar"
-          >
-            <span className="text-amber-500">⚡</span>
-            <span>≤15 dk</span>
-          </button>
+            <button
+              onClick={() => setOnlyImminent(!onlyImminent)}
+              className={`px-2 py-1 rounded-lg text-xs font-bold flex items-center gap-1 transition-all cursor-pointer border ${
+                onlyImminent
+                  ? "bg-amber-400 text-slate-950 border-amber-400 shadow-2xs font-black"
+                  : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:bg-slate-100"
+              }`}
+              title="Kalkışına 15 dk veya daha az kalanlar"
+            >
+              <span className="text-amber-500">⚡</span>
+              <span className="hidden xs:inline text-[11px]">≤15 dk</span>
+            </button>
 
-          {/* Harita / Nasıl Giderim Toggle */}
-          <button
-            onClick={() => setShowPlanner(!showPlanner)}
-            className={`px-2.5 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 shrink-0 transition-all cursor-pointer border ${
-              showPlanner
-                ? "bg-cyan-600 text-white border-cyan-500 shadow-2xs"
-                : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:bg-slate-100"
-            }`}
-            title="Harita ve Rota Planlayıcı"
-          >
-            <Compass size={13} />
-            <span>Harita</span>
-          </button>
+            <button
+              onClick={() => setShowPlanner(!showPlanner)}
+              className={`p-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer border ${
+                showPlanner
+                  ? "bg-cyan-600 text-white border-cyan-500 shadow-2xs"
+                  : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:bg-slate-100"
+              }`}
+              title="Harita ve Rota Planlayıcı"
+            >
+              <Compass size={13} />
+            </button>
 
-          {/* En Yakın İskele */}
-          <button
-            onClick={requestLocation}
-            disabled={geoStatus === "LOCATING"}
-            className={`px-2.5 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 shrink-0 transition-all cursor-pointer border ${
-              geoStatus === "ACTIVE"
-                ? "bg-emerald-600 text-white border-emerald-500"
-                : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:bg-slate-100"
-            }`}
-            title="Konumuma En Yakın İskele"
-          >
-            <Navigation size={13} className={geoStatus === "ACTIVE" ? "text-white" : "text-blue-500"} />
-            <span>
-              {geoStatus === "LOCATING" ? "..." : geoStatus === "ACTIVE" && nearestPier ? nearestPier.name : "Yakın"}
-            </span>
-          </button>
+            <button
+              onClick={() => setIsNightTransitOpen(true)}
+              className="p-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer border bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800/80 hover:bg-indigo-100"
+              title="Gece Seferleri Rehberi"
+            >
+              <span>🌙</span>
+            </button>
 
-          {/* Gece Seferleri & Dolmuş / Taksi Matrisi */}
-          <button
-            onClick={() => setIsNightTransitOpen(true)}
-            className="px-2.5 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 shrink-0 transition-all cursor-pointer border bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800/80 hover:bg-indigo-100 dark:hover:bg-indigo-900/60"
-            title="Gece Seferleri & Sabaha Karşı Taksi / Dolmuş Matrisi"
-          >
-            <span>🌙</span>
-            <span>Gece</span>
-          </button>
-
-          {/* Görünüm Yoğunluğu (Kompakt / Kart) */}
-          <button
-            onClick={handleToggleDensity}
-            className={`px-2.5 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 shrink-0 transition-all cursor-pointer border ${
-              isCompactDensity
-                ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900 border-slate-900 dark:border-white shadow-2xs font-black"
-                : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:bg-slate-100"
-            }`}
-            title={isCompactDensity ? "Geniş Kart Görünümüne Geç" : "Kompakt Liste Görünümüne Geç"}
-          >
-            {isCompactDensity ? <LayoutGrid size={13} /> : <List size={13} />}
-            <span>{isCompactDensity ? t("viewComfort") : t("viewCompact")}</span>
-          </button>
+            <button
+              onClick={handleToggleDensity}
+              className="p-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer border bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:bg-slate-100"
+              title={isCompactDensity ? "Geniş Kart Görünümü" : "Kompakt Liste Görünümü"}
+            >
+              {isCompactDensity ? <LayoutGrid size={13} /> : <List size={13} />}
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* 2. SATIR: KOMPAKT GÜZERGAH VE OPERATÖR FİLTRE ÇİPLERİ */}
+      {/* 2. SATIR: NEREDEN ➔ NEREYE İSKELE SEÇİCİ & YÖN DEĞİŞTİRME (2-Step Pier Picker) */}
       <div className="px-3 pt-1.5">
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 hide-scrollbar">
-          {/* Tümü Butonu */}
+        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 shadow-2xs">
+          {/* Kalkış İskelesi (Nereden) */}
+          <div className="relative flex-1 min-w-0">
+            <select
+              value={selectedOrigin}
+              onChange={(e) => setSelectedOrigin(e.target.value)}
+              className="w-full pl-5 pr-5 py-1 bg-transparent text-xs font-bold text-slate-800 dark:text-slate-100 appearance-none focus:outline-none cursor-pointer truncate"
+            >
+              <option value="ALL">Nereden (Tümü)</option>
+              {availableOrigins.map((pier) => (
+                <option key={pier} value={pier}>{pier}</option>
+              ))}
+            </select>
+            <span className="absolute left-1 top-1/2 -translate-y-1/2 text-emerald-500 text-[10px] pointer-events-none">🟢</span>
+            <ChevronDown size={11} className="absolute right-1 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+          </div>
+
+          {/* Swap ⇄ Butonu */}
           <button
-            onClick={() => {
-              setSelectedRoute("ALL");
-              setSelectedOrigin("ALL");
-              setOnlyImminent(false);
-            }}
-            className={`px-2.5 py-1 rounded-md text-[11px] font-black whitespace-nowrap transition-all shrink-0 ${
-              selectedRoute === "ALL" && selectedOrigin === "ALL" && !onlyImminent
-                ? "bg-blue-600 text-white shadow-2xs"
-                : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-300 dark:border-slate-800"
-            }`}
+            type="button"
+            onClick={swapOriginDestination}
+            title="Kalkış ve Varış İskelesini Değiştir"
+            className="p-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-amber-400 hover:text-slate-950 transition-all cursor-pointer active:scale-95 shrink-0"
           >
-            {t("allRoutes")} ({activeSchedulesWithDyn.length})
+            <ArrowLeftRight size={12} />
           </button>
 
-          {/* Gidiş-Dönüş Yön Değiştir */}
-          {selectedRoute !== "ALL" && (
-            <button
-              onClick={swapDirection}
-              title="Gidiş-Dönüş Değiştir"
-              className="px-2 py-1 bg-amber-500 text-slate-950 rounded-md text-[11px] font-black flex items-center gap-1 shrink-0 shadow-2xs cursor-pointer"
+          {/* Varış İskelesi (Nereye) */}
+          <div className="relative flex-1 min-w-0">
+            <select
+              value={selectedDestination}
+              onChange={(e) => setSelectedDestination(e.target.value)}
+              className="w-full pl-5 pr-5 py-1 bg-transparent text-xs font-bold text-slate-800 dark:text-slate-100 appearance-none focus:outline-none cursor-pointer truncate"
             >
-              <ArrowLeftRight size={12} />
-              <span>{t("swap")}</span>
-            </button>
-          )}
+              <option value="ALL">Nereye (Tümü)</option>
+              {availableDestinations.map((pier) => (
+                <option key={pier} value={pier}>{pier}</option>
+              ))}
+            </select>
+            <span className="absolute left-1 top-1/2 -translate-y-1/2 text-rose-500 text-[10px] pointer-events-none">🔴</span>
+            <ChevronDown size={11} className="absolute right-1 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+          </div>
+        </div>
+      </div>
 
-          {/* Dinamik Hat Hapları */}
-          {uniqueRoutes.slice(0, 10).map((routeKey) => {
-            const count = activeSchedulesWithDyn.filter(({ schedule }) => `${schedule.origin} ➔ ${schedule.destination}` === routeKey).length;
-            const isSelected = selectedRoute === routeKey;
-            return (
-              <button
-                key={routeKey}
-                onClick={() => {
-                  setSelectedRoute(isSelected ? "ALL" : routeKey);
-                  setSelectedOrigin("ALL");
-                }}
-                className={`px-2.5 py-1 rounded-md text-[11px] font-bold whitespace-nowrap transition-all shrink-0 flex items-center gap-1 border cursor-pointer ${
-                  isSelected
-                    ? "bg-amber-400 text-slate-950 font-black shadow-2xs border-amber-400"
-                    : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 border-slate-300 dark:border-slate-800"
-                }`}
-              >
-                <span>{routeKey}</span>
-                <span className={`text-[9px] px-1 rounded-full font-bold ${
-                  isSelected ? "bg-black/20 text-slate-950" : "bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
-                }`}>
-                  {count}
-                </span>
-              </button>
-            );
-          })}
+      {/* 3. SATIR: OPERATÖR FİLTRELERİ (Şehir Hatları, Mavi Marmara, Prens Tur, Turyol, Dentur) */}
+      <div className="px-3 pt-1.5">
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-0.5 hide-scrollbar">
+          <button
+            onClick={() => setSelectedOperator("ALL")}
+            className={`px-2.5 py-1 rounded-lg text-[10px] font-black shrink-0 transition-all border cursor-pointer ${
+              selectedOperator === "ALL"
+                ? "bg-blue-600 text-white border-blue-500 shadow-xs"
+                : "bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-300 dark:border-slate-800 hover:bg-slate-100"
+            }`}
+          >
+            Tüm Firmalar
+          </button>
 
-          {/* Operatörler */}
-          <span className="text-slate-400 dark:text-slate-700 font-bold px-0.5 shrink-0">|</span>
           {uniqueOperators.map((op) => (
             <button
               key={op}
               onClick={() => setSelectedOperator(selectedOperator === op ? "ALL" : op)}
               className={`px-2 py-1 rounded-lg text-[10px] font-bold whitespace-nowrap shrink-0 transition-all flex items-center gap-1 border cursor-pointer ${
                 selectedOperator === op
-                  ? "bg-slate-100 dark:bg-slate-800 border-blue-500 text-slate-950 dark:text-white shadow-2xs ring-1 ring-blue-400/40"
-                  : "bg-white dark:bg-slate-900/80 border-slate-300 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
+                  ? "bg-slate-100 dark:bg-slate-800 border-blue-500 text-slate-950 dark:text-white shadow-xs ring-1 ring-blue-400/40"
+                  : "bg-white dark:bg-slate-900/80 border-slate-300 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900"
               }`}
             >
               <OperatorLogo operator={op} size="sm" showName={true} />
@@ -560,9 +553,9 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
         </div>
       </div>
 
-      {/* 3. İSTEĞE BAĞLI SATIR: ARAMA ÇUBUĞU (Kullanıcı İstediğinde Açılır, Ekranı Boğmaz) */}
+      {/* 4. İSTEĞE BAĞLI SATIR: ARAMA ÇUBUĞU */}
       {isSearchVisible && (
-        <div className="px-3 pt-1.5 space-y-1 animate-fadeIn">
+        <div className="px-3 pt-1.5 animate-fadeIn">
           <div className="relative">
             <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-500" />
             <input
@@ -581,26 +574,6 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
                 ✕
               </button>
             )}
-          </div>
-
-          {/* Hızlı İskele Seçim Hapları */}
-          <div className="flex items-center gap-1 overflow-x-auto pb-0.5 hide-scrollbar">
-            <span className="text-[10px] font-bold text-slate-400 whitespace-nowrap pl-0.5">
-              Hızlı:
-            </span>
-            {["Kadıköy", "Bostancı", "Büyükada", "Heybeliada", "Eminönü", "Karaköy", "Beşiktaş", "Kabataş"].map((pier) => (
-              <button
-                key={pier}
-                onClick={() => setSearchQuery(searchQuery === pier ? "" : pier)}
-                className={`px-2 py-0.5 rounded text-[10px] font-bold whitespace-nowrap border transition-all cursor-pointer ${
-                  searchQuery.toLowerCase().includes(pier.toLowerCase())
-                    ? "bg-blue-600 text-white border-blue-600 shadow-2xs"
-                    : "bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:bg-slate-100"
-                }`}
-              >
-                {pier}
-              </button>
-            ))}
           </div>
         </div>
       )}
@@ -659,9 +632,11 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
           <span className="text-blue-700 dark:text-blue-300 font-extrabold bg-blue-100 dark:bg-blue-950/60 border border-blue-300 dark:border-blue-500/30 px-2 py-0.5 rounded text-[11px]">
             🔍 {filteredList.length} Sefer Bulundu
           </span>
-        ) : selectedRoute !== "ALL" ? (
-          <span className="text-amber-700 dark:text-amber-300 font-extrabold bg-amber-100 dark:bg-amber-950/60 border border-amber-300 dark:border-amber-500/30 px-2 py-0.5 rounded text-[11px]">
-            {selectedRoute}
+        ) : selectedOrigin !== "ALL" || selectedDestination !== "ALL" ? (
+          <span className="text-amber-700 dark:text-amber-300 font-extrabold bg-amber-100 dark:bg-amber-950/60 border border-amber-300 dark:border-amber-500/30 px-2 py-0.5 rounded text-[11px] flex items-center gap-1">
+            <span>{selectedOrigin !== "ALL" ? selectedOrigin : "Tümü"}</span>
+            <span>➔</span>
+            <span>{selectedDestination !== "ALL" ? selectedDestination : "Tümü"}</span>
           </span>
         ) : (
           <span className="text-[10px] text-slate-400 dark:text-slate-500 font-normal">

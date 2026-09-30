@@ -595,6 +595,42 @@ export function ScheduleCard(props: ScheduleCardProps) {
           <ChevronRight size={16} className="text-slate-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 group-hover:translate-x-0.5 transition-all shrink-0 ml-0.5" />
         </div>
       </div>
+
+      {/* 2. BÜTÜN DURAKLAR: Mobilde asla kesilmeyen, sarmalanan (flex-wrap) İstasyon Güzergahı */}
+      {!props.isCompact && dynState.activeChain && dynState.activeChain.length > 1 && (
+        <div className="w-full pt-1.5 mt-0.5 border-t border-slate-100 dark:border-slate-800/80">
+          <div className="flex flex-wrap items-center gap-1 text-[11px]">
+            <span className="text-[9.5px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider shrink-0 mr-0.5">
+              Duraklar:
+            </span>
+            {dynState.activeChain.map((wp, idx) => {
+              const isFirst = idx === 0;
+              const isLast = idx === dynState.activeChain.length - 1;
+              return (
+                <div key={`${wp.name}-${idx}`} className="inline-flex items-center gap-1">
+                  <span
+                    className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold border transition-colors ${
+                      isFirst
+                        ? "bg-emerald-50 dark:bg-emerald-950/70 text-emerald-800 dark:text-emerald-300 border-emerald-300 dark:border-emerald-600/50"
+                        : isLast
+                        ? "bg-blue-50 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300 border-blue-200 dark:border-blue-700/60 font-black"
+                        : "bg-slate-100 dark:bg-slate-800/90 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700"
+                    }`}
+                  >
+                    <span>{wp.name}</span>
+                    <span className="font-mono text-[9px] opacity-80 tabular-nums">({wp.time})</span>
+                  </span>
+                  {!isLast && (
+                    <span className="text-slate-300 dark:text-slate-600 font-extrabold text-[9px]">
+                      ➔
+                    </span>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
