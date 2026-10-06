@@ -41,6 +41,7 @@ export function MainAppShell({ schedules, serverTimeIso, marineWeather }: MainAp
         <ScheduleListClient
           schedules={schedules}
           serverTimeIso={serverTimeIso}
+          marineWeather={marineWeather}
           initialOrigin={forcedPierFilter || undefined}
         />
       )}

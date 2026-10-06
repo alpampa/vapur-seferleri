@@ -22,7 +22,12 @@ import {
   Anchor,
   ShieldCheck,
   Ticket,
-  Timer
+  Timer,
+  Sparkles,
+  Volume2,
+  Landmark,
+  Tag,
+  Gift
 } from "lucide-react";
 import { OperatorLogo } from "@/components/ui/OperatorLogo";
 import { TripStatusBadge } from "./ScheduleCard";
@@ -42,6 +47,8 @@ import { useActiveVoyageStore } from "@/store/useActiveVoyageStore";
 import { requestNotificationPermission } from "@/lib/utils/sound";
 import { correlateAisVessel } from "@/lib/services/ais-corridor-tracker";
 import { useTransitClock } from "@/hooks/useTransitClock";
+import { getIslandGuidePackage } from "@/lib/services/island-recommendation-engine";
+import { transitAnnouncer } from "@/lib/services/tts-announcer";
 
 import { PierLiveCameraModal } from "@/components/map/PierLiveCameraModal";
 import { MissedFerryAssistantModal } from "@/components/planner/MissedFerryAssistantModal";
@@ -87,7 +94,8 @@ export function TripDetailsSheet({
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [isMissedOpen, setIsMissedOpen] = useState(false);
   const [isSeaTaxiOpen, setIsSeaTaxiOpen] = useState(false);
-  const [activeDetailTab, setActiveDetailTab] = useState<"TICKET" | "RADAR" | "TRANSIT">("TICKET");
+  const [activeDetailTab, setActiveDetailTab] = useState<"TICKET" | "RADAR" | "TRANSIT" | "GUIDE">("TICKET");
+  const [isSpeaking, setIsSpeaking] = useState(false);
 
   // Escape tuşu ile kapatma (klavye erişilebilirliği)
   useEffect(() => {
@@ -133,6 +141,37 @@ export function TripDetailsSheet({
     schedule.departureTime
   );
   const isDirect = !schedule.stops || schedule.stops.length === 0;
+
+  // AI 4: ADA TURİZM, KÜLTÜR VE SPONSORLU FIRSATLAR
+  const islandGuide = useMemo(() => {
+    return getIslandGuidePackage(schedule.destination) || getIslandGuidePackage(schedule.origin);
+  }, [schedule.destination, schedule.origin]);
+
+  const handleSpeakAnnouncement = () => {
+    if (isSpeaking) {
+      transitAnnouncer.cancel();
+      setIsSpeaking(false);
+      return;
+    }
+
+    const currentOrigin = dynState?.currentOrigin || schedule.origin;
+    const dest = dynState?.destination || schedule.destination;
+    const depTime = dynState?.currentDepartureTime || schedule.departureTime;
+    const minutesLeft = dynState?.minutesUntilDeparture;
+
+    setIsSpeaking(true);
+    transitAnnouncer.announceFerryDeparture(
+      currentOrigin,
+      dest,
+      schedule.operator,
+      depTime,
+      minutesLeft
+    );
+
+    setTimeout(() => {
+      setIsSpeaking(false);
+    }, 6000);
+  };
 
   return (
     <AnimatePresence>
@@ -309,7 +348,21 @@ export function TripDetailsSheet({
                 }`}
               >
                 <Train size={14} aria-hidden="true" />
-                <span>İskele Aktarma</span>
+                <span>Aktarma</span>
+              </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={activeDetailTab === "GUIDE"}
+                onClick={() => setActiveDetailTab("GUIDE")}
+                className={`flex-1 py-2 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                  activeDetailTab === "GUIDE"
+                    ? "bg-amber-400 text-slate-950 shadow-xs scale-[1.01]"
+                    : "text-slate-600 dark:text-slate-400 hover:text-amber-500 dark:hover:text-amber-400"
+                }`}
+              >
+                <Sparkles size={14} aria-hidden="true" />
+                <span>Ada & Fırsat</span>
               </button>
             </div>
 
@@ -406,6 +459,22 @@ export function TripDetailsSheet({
                       </p>
                     </div>
                   )}
+                </div>
+
+                {/* AI 3: SESLİ İSKELE ANONSU (Neural Text-to-Speech / Accessibility) */}
+                <div className="pt-1">
+                  <button
+                    type="button"
+                    onClick={handleSpeakAnnouncement}
+                    className={`w-full py-2.5 px-3 rounded-xl border text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                      isSpeaking
+                        ? "bg-amber-400 text-slate-950 border-amber-300 animate-pulse font-black shadow-sm"
+                        : "bg-slate-100 hover:bg-slate-200 dark:bg-slate-900 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-800"
+                    }`}
+                  >
+                    <Volume2 size={15} className={isSpeaking ? "animate-bounce text-slate-950" : "text-blue-500"} />
+                    <span>{isSpeaking ? "İskele Anonsu Yapılıyor (Durdurmak için tıkla)..." : "🔊 Sesli İskele Anonsu Dinle (AI Sesli Asistan)"}</span>
+                  </button>
                 </div>
               </div>
             )}
@@ -591,6 +660,123 @@ export function TripDetailsSheet({
                     <span>➔</span>
                   </button>
                 </div>
+              </div>
+            )}
+
+            {/* SEKME 4: ADA REHBERİ, KÜLTÜR VE SPONSORLU FIRSATLAR */}
+            {activeDetailTab === "GUIDE" && (
+              <div className="space-y-4 animate-fadeIn">
+                {islandGuide ? (
+                  <>
+                    {/* Ada Hikayesi / Başlık Kartı */}
+                    <div className="p-3.5 rounded-2xl bg-linear-to-br from-amber-500/10 via-amber-400/5 to-transparent border border-amber-300 dark:border-amber-500/30">
+                      <div className="flex items-center gap-1.5 text-amber-600 dark:text-amber-400 font-black text-xs uppercase tracking-wider mb-1">
+                        <Sparkles size={14} />
+                        <span>{islandGuide.islandName}</span>
+                      </div>
+                      <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed font-medium">
+                        {islandGuide.heroStory}
+                      </p>
+                    </div>
+
+                    {/* Sponsorlu Fırsatlar & İndirim Kuponları (Ticari Altyapı) */}
+                    {islandGuide.deals.length > 0 && (
+                      <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800">
+                        <div className="text-[11px] font-black uppercase text-amber-600 dark:text-amber-400 mb-2 flex items-center justify-between">
+                          <span className="flex items-center gap-1.5">
+                            <Gift size={13} />
+                            <span>Özel Yolcu Fırsatları & Kuponlar</span>
+                          </span>
+                          <span className="text-[9px] bg-amber-400/20 text-amber-700 dark:text-amber-300 px-1.5 py-0.2 rounded font-bold">
+                            Sponsorlu
+                          </span>
+                        </div>
+                        <div className="space-y-2">
+                          {islandGuide.deals.map((deal) => (
+                            <div key={deal.id} className="p-2.5 rounded-xl bg-white dark:bg-slate-950 border border-amber-200 dark:border-amber-900/50 shadow-2xs">
+                              <div className="flex items-center justify-between">
+                                <span className="font-black text-xs text-slate-900 dark:text-white">{deal.businessName}</span>
+                                <span className="text-[10px] font-black px-1.5 py-0.5 rounded-md bg-rose-500 text-white">
+                                  {deal.discountBadge}
+                                </span>
+                              </div>
+                              <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-1 font-medium">{deal.dealTitle}</p>
+                              <p className="text-[10px] text-slate-400 mt-0.5">{deal.description}</p>
+                              <div className="mt-2 pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                                <div className="flex items-center gap-1 text-[11px] font-mono font-bold bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md text-blue-600 dark:text-blue-400 border border-slate-200 dark:border-slate-700">
+                                  <Tag size={11} />
+                                  <span>Kod: {deal.couponCode}</span>
+                                </div>
+                                {deal.whatsappBookingUrl && (
+                                  <a
+                                    href={deal.whatsappBookingUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-[10px] font-black text-emerald-600 hover:underline flex items-center gap-0.5"
+                                  >
+                                    <span>WhatsApp Rezervasyon ➔</span>
+                                  </a>
+                                )}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Gezilecek Tarihi & Kültürel Yerler */}
+                    <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800">
+                      <div className="text-[11px] font-black uppercase text-slate-500 dark:text-slate-400 mb-2 flex items-center gap-1.5">
+                        <Landmark size={13} className="text-blue-500" />
+                        <span>Kültür, Tarih ve Seyir Noktaları</span>
+                      </div>
+                      <div className="space-y-2">
+                        {islandGuide.attractions.map((att) => (
+                          <div key={att.id} className="p-2.5 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
+                            <div className="flex items-center justify-between">
+                              <span className="font-bold text-xs text-slate-900 dark:text-white">{att.title}</span>
+                              <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-300 border border-blue-200 dark:border-blue-900">
+                                🚶 ~{att.walkMinutesFromPier} dk
+                              </span>
+                            </div>
+                            <p className="text-[11px] text-slate-600 dark:text-slate-400 mt-1">{att.description}</p>
+                            <span className="inline-block mt-1 text-[9px] font-bold text-amber-600 dark:text-amber-400">
+                              ★ {att.highlightTag}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Ada Gastronomisi & Lezzet Durakları */}
+                    <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800">
+                      <div className="text-[11px] font-black uppercase text-slate-500 dark:text-slate-400 mb-2 flex items-center gap-1.5">
+                        <span>🍽️</span>
+                        <span>Ada Gastronomisi & Klasik Lezzetler</span>
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                        {islandGuide.gastronomy.map((g) => (
+                          <div key={g.id} className="p-2 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
+                            <div className="flex items-center justify-between">
+                              <strong className="text-slate-900 dark:text-white truncate">{g.name}</strong>
+                              <span className="text-[10px] font-mono text-emerald-600 font-bold">{g.priceLevel}</span>
+                            </div>
+                            <div className="text-[10px] text-slate-500 mt-0.5">{g.specialty}</div>
+                            <div className="text-[9px] text-amber-600 font-bold mt-1">📍 {g.badge}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 text-center">
+                    <Sparkles size={24} className="mx-auto text-amber-500 mb-2" />
+                    <h4 className="font-bold text-xs text-slate-900 dark:text-white">Şehir İçi Boğaz Hattı</h4>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
+                      Özel Ada Rehberi ve sponsorlu kuponlar Adalar (Büyükada, Heybeliada, Burgazada, Kınalıada) varışlı veya kalkışlı seferlerde otomatik olarak görüntülenir.
+                    </p>
+                  </div>
+                )}
               </div>
             )}
 

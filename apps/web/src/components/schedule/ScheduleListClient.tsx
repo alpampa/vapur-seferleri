@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import { ScheduleCard } from "@/components/schedule/ScheduleCard";
 import { TripDetailsSheet } from "@/components/schedule/TripDetailsSheet";
 import type { ScheduleCardDto } from "@/lib/types/schedule";
-import { Search, Navigation, ArrowLeftRight, Compass, LayoutGrid, List, RotateCcw, ChevronDown, ChevronUp, History } from "lucide-react";
+import { Search, Navigation, ArrowLeftRight, Compass, LayoutGrid, List, RotateCcw, ChevronDown, ChevronUp, History, Sparkles, Wind, Volume2 } from "lucide-react";
 import { matchesTurkishSearch } from "@/lib/utils/search-normalizer";
 import { LateNightTransitModal } from "@/components/night/LateNightTransitModal";
 import { resolveDynamicTrip, isTripCancelled, type DynamicTripResolution } from "@/lib/utils/dynamic-trip";
@@ -23,14 +23,19 @@ import { useAnnouncements } from "@/hooks/useAnnouncements";
 import { useAnnouncementStore } from "@/store/useAnnouncementStore";
 import { AnnouncementBanner } from "@/components/announcements/AnnouncementBanner";
 import { getOperatorRecord } from "@/lib/data/operator-registry";
+import type { MarineWeatherStatus } from "@/lib/services/marine-weather";
+import { parseNaturalTransitQuery } from "@/lib/services/ai-transit-assistant";
+import { predictFerryDisruption } from "@/lib/services/predictive-disruption-model";
+import { transitAnnouncer } from "@/lib/services/tts-announcer";
 
 interface ScheduleListClientProps {
   schedules: ScheduleCardDto[];
   serverTimeIso: string;
   initialOrigin?: string;
+  marineWeather?: MarineWeatherStatus | null;
 }
 
-export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin }: ScheduleListClientProps) {
+export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, marineWeather }: ScheduleListClientProps) {
   const { t, language } = useLanguageStore();
   // Y4 — İKİ KADEME TICK: canlı MM:SS penceresine giren görünür sefer varken 1 sn,
   // aksi halde 15 sn (dakika hassasiyeti yeterli). Kademe geçişi aşağıdaki effect ile yönetilir.
@@ -77,6 +82,16 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin }: 
   useAnnouncements();
   const announcements = useAnnouncementStore((s) => s.announcements);
   const disruptions = useAnnouncementStore((s) => s.disruptions);
+
+  // AI 1: DOĞAL DİL ARAMA & AKILLI ASİSTAN (Hugging Face / NLP Intent Parser)
+  const aiAnalysis = useMemo(() => {
+    return parseNaturalTransitQuery(searchQuery);
+  }, [searchQuery]);
+
+  // AI 2: LODOS & HAVA TAHMİNLİ İPTAL RİSK MODELİ (Meteoroloji & Rüzgar Tahmin Motoru)
+  const disruptionForecast = useMemo(() => {
+    return predictFerryDisruption(marineWeather);
+  }, [marineWeather]);
 
   // Duyuru → sefer eşleşmesi: iptal duyurusu ilgili kartı CANCELLED yapar
   const disruptionByTrip = useMemo(() => {
@@ -272,14 +287,35 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin }: 
     const q = searchQuery.toLowerCase().trim();
 
     return activeSchedulesWithDyn.filter(({ schedule, dyn }) => {
-      // GLOBAL VE TÜRKÇE KARAKTERE DUYARLI ARAMA (İ/I/ı/i, ş/s, ç/c, ğ/g, ü/u, ö/o tam uyumlu)
+      // AI ARAMA & GLOBAL TÜRKÇE KARAKTERE DUYARLI ARAMA
       if (hasSearch) {
-        const inOrigin = matchesTurkishSearch(schedule.origin, q) || matchesTurkishSearch(dyn.currentOrigin, q);
-        const inDest = matchesTurkishSearch(schedule.destination, q) || matchesTurkishSearch(dyn.destination, q);
-        const inOperator = matchesTurkishSearch(schedule.operator, q);
-        const inRoute = matchesTurkishSearch(schedule.routeTitle, q);
-        const inStops = schedule.stops?.some((st) => matchesTurkishSearch(st.name, q));
-        if (!inOrigin && !inDest && !inOperator && !inRoute && !inStops) return false;
+        // Eğer Doğal Dil AI Asistanı sorguyu yapılandırdıysa (örn. "Bostancı'dan Adalar'a")
+        if (aiAnalysis.isAiUnderstood) {
+          if (aiAnalysis.origin && !matchesTurkishSearch(schedule.origin, aiAnalysis.origin) && !matchesTurkishSearch(dyn.currentOrigin, aiAnalysis.origin)) {
+            return false;
+          }
+          if (aiAnalysis.destination && !matchesTurkishSearch(schedule.destination, aiAnalysis.destination) && !matchesTurkishSearch(dyn.destination, aiAnalysis.destination)) {
+            return false;
+          }
+          if (aiAnalysis.operator && schedule.operator !== aiAnalysis.operator) {
+            return false;
+          }
+          if (aiAnalysis.afterTime) {
+            if (dyn.currentDepartureTime < aiAnalysis.afterTime) return false;
+          }
+          if (aiAnalysis.onlyImminent) {
+            if (dyn.isDeparted) return false;
+            const remainingMs = new Date(dyn.currentTargetIso).getTime() - now;
+            if (remainingMs > IMMINENT_DEPARTURE_MS) return false;
+          }
+        } else {
+          const inOrigin = matchesTurkishSearch(schedule.origin, q) || matchesTurkishSearch(dyn.currentOrigin, q);
+          const inDest = matchesTurkishSearch(schedule.destination, q) || matchesTurkishSearch(dyn.destination, q);
+          const inOperator = matchesTurkishSearch(schedule.operator, q);
+          const inRoute = matchesTurkishSearch(schedule.routeTitle, q);
+          const inStops = schedule.stops?.some((st) => matchesTurkishSearch(st.name, q));
+          if (!inOrigin && !inDest && !inOperator && !inRoute && !inStops) return false;
+        }
       } else {
         if (selectedOrigin !== "ALL") {
           const isDirectOrigin = schedule.origin === selectedOrigin || dyn.currentOrigin === selectedOrigin;
@@ -567,7 +603,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin }: 
             <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-500" />
             <input
               type="text"
-              placeholder="İskele, hat veya vapur adı yazın (Örn: Kadıköy, Bostancı, Büyükada, Paşabahçe)..."
+              placeholder="İskele, hat veya doğal arama (Örn: 'Kadıköy'den Beşiktaş'a', 'Bostancı Adalar akşam')..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-8 pr-7 py-1.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white text-xs placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all shadow-xs"
@@ -582,6 +618,21 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin }: 
               </button>
             )}
           </div>
+
+          {/* AI 1: DOĞAL DİL ANLAMA ROZETİ (Hugging Face / LLM Transit Intent) */}
+          {searchQuery.trim().length > 0 && (
+            <div className="mt-1 flex items-center justify-between text-[11px] px-2 py-1 rounded-lg bg-blue-50 dark:bg-blue-950/40 text-blue-800 dark:text-blue-300 border border-blue-200 dark:border-blue-900">
+              <span className="flex items-center gap-1 font-medium truncate">
+                <Sparkles size={11} className="text-amber-500 shrink-0" />
+                <span>{aiAnalysis.interpretationMessage}</span>
+              </span>
+              {aiAnalysis.isAiUnderstood && (
+                <span className="text-[9px] uppercase tracking-wider font-mono font-bold opacity-75 shrink-0 ml-2">
+                  AI Çözüldü
+                </span>
+              )}
+            </div>
+          )}
         </div>
       )}
 
@@ -602,6 +653,26 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin }: 
                   <span className="text-amber-200">/ İPTAL ({schedule.delayText || "Lodos / Fırtına"})</span>
                 </span>
               ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* AI 2: LODOS & METEOROLOJİ ERKEN TAHMİN BİLDİRİMİ */}
+      {disruptionForecast.isPredictiveAlertActive && (
+        <div className="px-3 pt-1.5 animate-fadeIn">
+          <div className="p-2.5 rounded-xl bg-amber-500/10 dark:bg-amber-950/40 border border-amber-400/30 text-amber-900 dark:text-amber-200 text-xs flex items-start gap-2 shadow-xs">
+            <Wind size={16} className="text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center justify-between">
+                <span className="font-bold tracking-tight">AI Risk Modeli: {disruptionForecast.headline}</span>
+                <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-amber-200 dark:bg-amber-900/60 text-amber-900 dark:text-amber-200 font-bold">
+                  Risk: %{disruptionForecast.cancellationRiskPercent}
+                </span>
+              </div>
+              <p className="text-[11px] mt-0.5 opacity-90 leading-tight">
+                {disruptionForecast.recommendation}
+              </p>
             </div>
           </div>
         </div>
