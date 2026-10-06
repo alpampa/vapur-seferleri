@@ -4,7 +4,7 @@ import { useState, useMemo } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Ship, ArrowRight, Clock, MapPin, Ticket, Bell, Pin, CheckCircle2, RotateCw } from "lucide-react";
-import type { ScheduleCardDto } from "@/app/page";
+import type { ScheduleCardDto } from "@/lib/types/schedule";
 import { useAlarmStore } from "@/store/useAlarmStore";
 import { useActiveVoyageStore } from "@/store/useActiveVoyageStore";
 import { requestNotificationPermission } from "@/lib/utils/sound";

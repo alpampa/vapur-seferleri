@@ -4,9 +4,11 @@ import "./globals.css";
 import "leaflet/dist/leaflet.css";
 import { NotificationContainer } from "@/components/ui/NotificationToast";
 import { ServiceWorkerRegister } from "@/components/pwa/ServiceWorkerRegister";
+import { ReducedMotionProvider } from "@/components/providers/ReducedMotionProvider";
 
 const inter = Inter({
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
+  display: "swap",
   variable: "--font-inter",
 });
 
@@ -31,7 +33,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="tr" suppressHydrationWarning>
+    <html lang="tr" className={inter.variable} suppressHydrationWarning>
       <head>
         <script
           dangerouslySetInnerHTML={{
@@ -53,10 +55,12 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${inter.variable} font-sans antialiased bg-slate-100 dark:bg-[#070b14] text-slate-900 dark:text-white min-h-[100dvh] overflow-x-hidden touch-pan-y pb-[env(safe-area-inset-bottom)] transition-colors duration-150`}>
-        <ServiceWorkerRegister />
-        {children}
-        <NotificationContainer />
+      <body className="font-sans antialiased bg-slate-100 dark:bg-[#070b14] text-slate-900 dark:text-white min-h-[100dvh] overflow-x-hidden touch-pan-y pb-[env(safe-area-inset-bottom)] transition-colors duration-150">
+        <ReducedMotionProvider>
+          <ServiceWorkerRegister />
+          {children}
+          <NotificationContainer />
+        </ReducedMotionProvider>
       </body>
     </html>
   );

@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Navigation, ExternalLink, ShieldCheck, Compass, Anchor, MapPin, Gauge, Waves, Eye, Radio, Search, Ship } from "lucide-react";
-import { ISTANBUL_PIERS } from "@/lib/services/route-planner";
+import { ISTANBUL_PIERS } from "@/lib/data/piers";
 import { OperatorLogo } from "@/components/ui/OperatorLogo";
 import { getVesselVisualProfile } from "@/lib/data/vessel-visuals";
 import { VesselSilhouetteGraphic } from "@/components/vessel/VesselSilhouetteGraphic";
@@ -313,14 +313,14 @@ export function MarineAisRadarModal({
               <div className="min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
                   <h3 className="text-sm sm:text-base font-black text-white tracking-tight truncate">
-                    {vesselName} • CANLI AIS RADAR SAĞLAMASI
+                    {vesselName} • TAHMİNİ SEYİR HATTI
                   </h3>
-                  <span className="px-2 py-0.2 rounded-full text-[10px] font-mono font-bold bg-blue-500/20 text-cyan-300 border border-cyan-500/30">
-                    📡 RADAR AKTİF
+                  <span className="px-2 py-0.2 rounded-full text-[10px] font-mono font-bold bg-slate-700/60 text-slate-300 border border-slate-600">
+                    Tahmini
                   </span>
                 </div>
                 <p className="text-[11px] text-slate-400 font-medium truncate mt-0.5">
-                  {origin} ➔ {destination} Hattı • Canlı AIS Uydu & Telsiz Teyidi
+                  {origin} ➔ {destination} Hattı • Tarife bazlı tahmini rota çizimi
                 </p>
               </div>
             </div>
@@ -348,7 +348,7 @@ export function MarineAisRadarModal({
             </div>
           </div>
 
-          {/* TAB SEÇİMİ: Canlı Uydu AIS Radarı (Sağlama) vs. Seyir Koridoru */}
+          {/* TAB SEÇİMİ: Tahmini Seyir Hattı vs. Seyir Koridoru */}
           <div className="flex items-center gap-2 px-4 py-2 bg-slate-950 border-b border-slate-800 shrink-0">
             <button
               type="button"
@@ -359,8 +359,8 @@ export function MarineAisRadarModal({
                   : "bg-slate-800/90 text-slate-300 hover:bg-slate-800"
               }`}
             >
-              <Radio size={13} className={radarTab === "LIVE_AIS" ? "animate-pulse text-cyan-300" : ""} />
-              <span>🛰️ Canlı AIS Uydu Radarı (Sağlama)</span>
+              <Radio size={13} />
+              <span>Tahmini Seyir Hattı</span>
             </button>
 
             <button
@@ -377,7 +377,7 @@ export function MarineAisRadarModal({
             </button>
           </div>
 
-          {/* TAB 1: CANLI AIS UYDU RADARI & GERÇEK FİLO SAĞLAMASI */}
+          {/* TAB 1: TAHMİNİ SEYİR HATTI & GERÇEK FİLO SİCİLİ */}
           {radarTab === "LIVE_AIS" && (
             <div className="p-4 flex flex-col gap-3 flex-1 overflow-y-auto max-h-[500px]">
               {/* Resmi Denizcilik ve Liman Doğrulama Bildirimi */}
@@ -507,9 +507,9 @@ export function MarineAisRadarModal({
                   </div>
                   <div className="flex items-center justify-between gap-3 pt-1 border-t border-slate-800 text-[10px]">
                     <span className="text-cyan-400 flex items-center gap-1">
-                      <Waves size={11} className="animate-pulse" /> Dümen Suyu:
+                      <Waves size={11} /> Dümen Suyu:
                     </span>
-                    <span className="text-cyan-200">Canlı Rota İzi</span>
+                    <span className="text-cyan-200">Tahmini Rota İzi</span>
                   </div>
                 </div>
 

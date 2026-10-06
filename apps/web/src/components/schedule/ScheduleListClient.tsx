@@ -3,76 +3,43 @@
 import { useState, useEffect, useMemo } from "react";
 import { ScheduleCard } from "@/components/schedule/ScheduleCard";
 import { TripDetailsSheet } from "@/components/schedule/TripDetailsSheet";
-import type { ScheduleCardDto } from "@/app/page";
-import { Search, Navigation, ArrowLeftRight, Compass, MapPin, LayoutGrid, List, WifiOff, Footprints, Waves, Landmark, Tag, Sparkles, X, RotateCcw, ChevronDown, ChevronUp, History } from "lucide-react";
+import type { ScheduleCardDto } from "@/lib/types/schedule";
+import { Search, Navigation, ArrowLeftRight, Compass, LayoutGrid, List, RotateCcw, ChevronDown, ChevronUp, History } from "lucide-react";
 import { matchesTurkishSearch } from "@/lib/utils/search-normalizer";
-import { AdalarHeritageModal } from "@/components/adalar/AdalarHeritageModal";
-import { SponsoredDealsModal } from "@/components/commercial/SponsoredDealsModal";
 import { LateNightTransitModal } from "@/components/night/LateNightTransitModal";
-import { MarineWeatherBanner } from "@/components/weather/MarineWeatherBanner";
-import type { MarineWeatherStatus } from "@/lib/services/marine-weather";
-import { resolveDynamicTrip } from "@/lib/utils/dynamic-trip";
+import { resolveDynamicTrip, isTripCancelled, type DynamicTripResolution } from "@/lib/utils/dynamic-trip";
+import { NextDepartureHero } from "@/components/schedule/NextDepartureHero";
 import { AlarmManager } from "@/components/schedule/AlarmManager";
 import { TripPlannerWithMap } from "@/components/planner/TripPlannerWithMap";
-import { LastFerryAlert } from "@/components/schedule/LastFerryAlert";
-import { FavoritesWidget } from "@/components/schedule/FavoritesWidget";
 import { OperatorLogo } from "@/components/ui/OperatorLogo";
 import { useLanguageStore } from "@/store/useLanguageStore";
 import { useOfflineSync } from "@/hooks/useOfflineSync";
 import { useTransitClock } from "@/hooks/useTransitClock";
-import { MarineWeatherHUD } from "@/components/weather/MarineWeatherHUD";
-import { CatchFerryAssistant } from "@/components/planner/CatchFerryAssistant";
 import { LiveTripTrackerBar } from "@/components/schedule/LiveTripTrackerBar";
 import { IslandHopPickerModal } from "@/components/schedule/IslandHopPickerModal";
-
-// Istanbul Ferry Pier Coordinates (Latitude, Longitude)
-const PIER_COORDINATES: Record<string, { lat: number; lng: number; label: string }> = {
-  "Bostancı": { lat: 40.9525, lng: 29.0944, label: "Bostancı İskelesi" },
-  "Kabataş": { lat: 41.0347, lng: 28.9903, label: "Kabataş İskelesi" },
-  "Kadıköy": { lat: 40.9908, lng: 29.0225, label: "Kadıköy İskelesi" },
-  "Kartal": { lat: 40.8872, lng: 29.1864, label: "Kartal İskelesi" },
-  "Büyükada": { lat: 40.8744, lng: 29.1283, label: "Büyükada İskelesi" },
-  "Heybeliada": { lat: 40.8767, lng: 29.0992, label: "Heybeliada İskelesi" },
-  "Burgazada": { lat: 40.8817, lng: 29.0700, label: "Burgazada İskelesi" },
-  "Kınalıada": { lat: 40.9103, lng: 29.0522, label: "Kınalıada İskelesi" },
-  "Eminönü": { lat: 41.0186, lng: 28.9739, label: "Eminönü İskelesi" },
-  "Beşiktaş": { lat: 41.0422, lng: 29.0067, label: "Beşiktaş İskelesi" },
-  "Üsküdar": { lat: 41.0267, lng: 29.0152, label: "Üsküdar İskelesi" },
-  "Karaköy": { lat: 41.0222, lng: 28.9772, label: "Karaköy İskelesi" },
-  "Yenikapı": { lat: 41.0028, lng: 28.9567, label: "Yenikapı İDO Terminali" },
-  "Bakırköy": { lat: 40.9722, lng: 28.8753, label: "Bakırköy İDO İskelesi" },
-  "Maltepe": { lat: 40.9231, lng: 29.1306, label: "Maltepe İskelesi" }
-};
-
-function calculateDistanceKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
-  const R = 6371;
-  const dLat = ((lat2 - lat1) * Math.PI) / 180;
-  const dLon = ((lon2 - lon1) * Math.PI) / 180;
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos((lat1 * Math.PI) / 180) *
-      Math.cos((lat2 * Math.PI) / 180) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;
-}
+import { PIER_GEO_COORDINATES, calculateDistanceKm } from "@/lib/data/piers";
+import { IMMINENT_DEPARTURE_MS, FAST_TICK_THRESHOLD_MIN, SLOW_TICK_INTERVAL_MS } from "@/lib/constants";
+import { useAnnouncements } from "@/hooks/useAnnouncements";
+import { useAnnouncementStore } from "@/store/useAnnouncementStore";
+import { AnnouncementBanner } from "@/components/announcements/AnnouncementBanner";
+import { getOperatorRecord } from "@/lib/data/operator-registry";
 
 interface ScheduleListClientProps {
   schedules: ScheduleCardDto[];
   serverTimeIso: string;
-  marineWeather?: MarineWeatherStatus | null;
   initialOrigin?: string;
 }
 
-export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, initialOrigin }: ScheduleListClientProps) {
+export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin }: ScheduleListClientProps) {
   const { t, language } = useLanguageStore();
-  const { nowMs } = useTransitClock(1000);
+  // Y4 — İKİ KADEME TICK: canlı MM:SS penceresine giren görünür sefer varken 1 sn,
+  // aksi halde 15 sn (dakika hassasiyeti yeterli). Kademe geçişi aşağıdaki effect ile yönetilir.
+  const [tickMs, setTickMs] = useState(1000);
+  const { nowMs } = useTransitClock(tickMs);
   const now = nowMs;
 
   const [selectedSchedule, setSelectedSchedule] = useState<ScheduleCardDto | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<"ADALAR" | "BOGAZ" | "ALL">("ADALAR");
-  const [selectedRoute, setSelectedRoute] = useState<string>("ALL");
   const [selectedOrigin, setSelectedOrigin] = useState<string>(initialOrigin || "ALL");
   const [selectedDestination, setSelectedDestination] = useState<string>("ALL");
   const [selectedOperator, setSelectedOperator] = useState<string>("ALL");
@@ -88,7 +55,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
       if (saved !== null) {
         setIsCompactDensity(saved === "true");
       }
-    } catch (e) {}
+    } catch {}
   }, []);
 
   const handleToggleDensity = () => {
@@ -96,19 +63,31 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
       const next = !prev;
       try {
         localStorage.setItem("vapur_compact_view", String(next));
-      } catch (e) {}
+      } catch {}
       return next;
     });
   };
 
   const { isOnline } = useOfflineSync();
-  const [showMarineHUD, setShowMarineHUD] = useState<boolean>(false);
-  const [showCatchAssistant, setShowCatchAssistant] = useState<boolean>(false);
-  const [isAdalarModalOpen, setIsAdalarModalOpen] = useState<boolean>(false);
-  const [isSponsoredModalOpen, setIsSponsoredModalOpen] = useState<boolean>(false);
   const [isNightTransitOpen, setIsNightTransitOpen] = useState<boolean>(false);
   const [isSearchVisible, setIsSearchVisible] = useState<boolean>(false);
   const [selectedHopSchedule, setSelectedHopSchedule] = useState<ScheduleCardDto | null>(null);
+
+  // CANLI FIRMA DUYURULARI (iptal / düzenleme / ek sefer)
+  useAnnouncements();
+  const announcements = useAnnouncementStore((s) => s.announcements);
+  const disruptions = useAnnouncementStore((s) => s.disruptions);
+
+  // Duyuru → sefer eşleşmesi: iptal duyurusu ilgili kartı CANCELLED yapar
+  const disruptionByTrip = useMemo(() => {
+    const map = new Map<string, "CANCELLED" | "SCHEDULE_CHANGE" | "EXTRA">();
+    for (const d of disruptions) {
+      if (d.kind === "CANCELLED") map.set(d.tripId, "CANCELLED");
+      else if (d.kind === "SCHEDULE_CHANGE" && !map.has(d.tripId)) map.set(d.tripId, "SCHEDULE_CHANGE");
+      // EXTRA (ek sefer) uyarı değil; durum değiştirmez
+    }
+    return map;
+  }, [disruptions]);
 
   // Offline LocalStorage Caching
   const [effectiveSchedules, setEffectiveSchedules] = useState<ScheduleCardDto[]>(schedules);
@@ -118,7 +97,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
       setEffectiveSchedules(schedules);
       try {
         localStorage.setItem("vapur_schedules_cache_v1", JSON.stringify(schedules));
-      } catch (e) {}
+      } catch {}
     } else {
       try {
         const cached = localStorage.getItem("vapur_schedules_cache_v1");
@@ -128,17 +107,11 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
             setEffectiveSchedules(parsed);
           }
         }
-      } catch (e) {}
+      } catch {}
     }
   }, [schedules]);
 
-  // Clean initial search query
-  useEffect(() => {
-    setSearchQuery("");
-  }, []);
-
   // Geolocation states
-  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [nearestPier, setNearestPier] = useState<{ name: string; distanceKm: number } | null>(null);
   const [geoStatus, setGeoStatus] = useState<"IDLE" | "LOCATING" | "ACTIVE" | "DENIED">("IDLE");
 
@@ -154,12 +127,11 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
       (position) => {
         const uLat = position.coords.latitude;
         const uLng = position.coords.longitude;
-        setUserLocation({ lat: uLat, lng: uLng });
 
         let closest: { name: string; distanceKm: number } | null = null;
         let minDistance = Infinity;
 
-        for (const [pierName, coords] of Object.entries(PIER_COORDINATES)) {
+        for (const [pierName, coords] of Object.entries(PIER_GEO_COORDINATES)) {
           const dist = calculateDistanceKm(uLat, uLng, coords.lat, coords.lng);
           if (dist < minDistance) {
             minDistance = dist;
@@ -170,7 +142,6 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
         if (closest) {
           setNearestPier(closest);
           setSelectedOrigin(closest.name);
-          setSelectedRoute("ALL");
           setGeoStatus("ACTIVE");
         }
       },
@@ -200,18 +171,23 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
         return cat === selectedCategory;
       })
       .map((s) => {
+        const disruption = disruptionByTrip.get(s.id);
+        const overlaySchedule =
+          disruption === "CANCELLED"
+            ? { ...s, status: "CANCELLED" as const, delayText: s.delayText || "İptal (resmi duyuru)" }
+            : s;
         const dyn = resolveDynamicTrip(
-          s.origin,
-          s.destination,
-          s.departureTime,
-          s.targetTimeIso || new Date().toISOString(),
-          s.stops,
+          overlaySchedule.origin,
+          overlaySchedule.destination,
+          overlaySchedule.departureTime,
+          overlaySchedule.targetTimeIso || new Date().toISOString(),
+          overlaySchedule.stops,
           undefined,
           now,
           serverTimeIso
         );
         return {
-          schedule: s,
+          schedule: overlaySchedule,
           dyn
         };
       })
@@ -232,9 +208,12 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
     }) : rawList;
 
     // Aynı kalkış iskelesi, aynı varış iskelesi ve aynı kalkış saatine sahip tekrarlayan kartları tekilleştir
-    const dedupMap = new Map<string, { schedule: ScheduleCardDto; dyn: any }>();
+    const dedupMap = new Map<string, { schedule: ScheduleCardDto; dyn: DynamicTripResolution }>();
     for (const item of masterList) {
-      const key = `${item.dyn.currentOrigin}➔${item.dyn.destination}@${item.dyn.currentDepartureTime}`;
+      // Anahtar operatörü de içerir: aynı saatte aynı iskeleden kalkan FARKLI firmaların
+      // seferleri (örn. MM ile Şehir Hatları Kabataş 13:00) birbirini yutmamalı.
+      // Aynı firmanın aynı saat/rota mükerrer kaydı yine tekilleşir (regresyon yok).
+      const key = `${item.schedule.operator}:${item.dyn.currentOrigin}➔${item.dyn.destination}@${item.dyn.currentDepartureTime}`;
       if (!dedupMap.has(key)) {
         dedupMap.set(key, item);
       } else {
@@ -248,16 +227,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
     }
 
     return Array.from(dedupMap.values());
-  }, [effectiveSchedules, selectedCategory, selectedOrigin, now, serverTimeIso]);
-
-  // Compute unique routes
-  const uniqueRoutes = useMemo(() => {
-    const routesSet = new Set<string>();
-    activeSchedulesWithDyn.forEach(({ schedule }) => {
-      routesSet.add(`${schedule.origin} ➔ ${schedule.destination}`);
-    });
-    return Array.from(routesSet);
-  }, [activeSchedulesWithDyn]);
+  }, [effectiveSchedules, selectedCategory, selectedOrigin, searchQuery, now, serverTimeIso]);
 
   const uniqueOperators = useMemo(() => {
     const ops = new Set<string>();
@@ -294,7 +264,6 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
     const prevD = selectedDestination;
     setSelectedOrigin(prevD);
     setSelectedDestination(prevO);
-    setSelectedRoute("ALL");
   };
 
   // Final filtered list - KULLANICI KURALI: En üstte yer alacak ilk sefer (kesin kronolojik sıralama)
@@ -331,13 +300,9 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
 
       if (onlyImminent) {
         if (dyn.isDeparted) return false;
-        const isImminent = dyn.status === "BOARDING" || (
-          dyn.countdown ? (
-            dyn.countdown.startsWith("00:") || 
-            parseInt(dyn.countdown.split(":")[0], 10) <= 15
-          ) : false
-        );
-        if (!isImminent) return false;
+        // Kalan süre kalkış damgasından hesaplanır (string ayrıştırması yok)
+        const remainingMs = new Date(dyn.currentTargetIso).getTime() - now;
+        if (remainingMs > IMMINENT_DEPARTURE_MS) return false;
       }
 
       return true;
@@ -345,9 +310,11 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
       if (a.dyn.isDeparted !== b.dyn.isDeparted) {
         return a.dyn.isDeparted ? 1 : -1;
       }
-      return a.dyn.currentDepartureTime.localeCompare(b.dyn.currentDepartureTime);
+      // HH:mm dizgisel karşılaştırma güvenilmez; gece yarısı (23:50 → 00:20)
+      // geçişlerinde gün doğru taşındığı için ISO damgasına göre sırala.
+      return a.dyn.currentTargetIso.localeCompare(b.dyn.currentTargetIso);
     });
-  }, [activeSchedulesWithDyn, selectedOrigin, selectedDestination, selectedOperator, searchQuery, onlyImminent]);
+  }, [activeSchedulesWithDyn, selectedOrigin, selectedDestination, selectedOperator, searchQuery, onlyImminent, now]);
 
   // Partition filtered voyages into Active/Upcoming vs Departed/Past
   const { upcomingTrips, pastTrips } = useMemo(() => {
@@ -363,16 +330,34 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
     return { upcomingTrips: upcoming, pastTrips: past };
   }, [filteredList]);
 
+  // G3 — SONRAKİ SEFER: Kronolojik ilk yaklaşan sefer (iptaller atlanır, kartlarda görünür kalır)
+  const nextDeparture = useMemo(() => {
+    return upcomingTrips.find(({ schedule, dyn }) => !isTripCancelled(schedule, dyn)) ?? null;
+  }, [upcomingTrips]);
+
+  // Y4 — KADEME SEÇİMİ: canlı geri sayım penceresine (eşik: pencere + 1 dk tampon)
+  // giren görünür sefer varken saniyelik tick. Aynı değere setTickMs no-op'tur;
+  // upcomingTrips her tick'te yeniden üretilir ama efekt ucuzdur (.some taraması).
+  useEffect(() => {
+    const urgent = upcomingTrips.some(
+      ({ dyn }) =>
+        dyn.countdown != null ||
+        (dyn.minutesUntilDeparture != null && dyn.minutesUntilDeparture <= FAST_TICK_THRESHOLD_MIN)
+    );
+    setTickMs(urgent ? 1000 : SLOW_TICK_INTERVAL_MS);
+  }, [upcomingTrips]);
+
   // İptal Seferler Algoritması (Kullanıcı Kuralı: Kayan bantta ve kartlarda gösterim)
   const cancelledTrips = useMemo(() => {
-    return activeSchedulesWithDyn.filter(
-      ({ schedule, dyn }) => schedule.status === "CANCELLED" || dyn.status === "CANCELLED" || (Boolean(schedule.delayText) && schedule.delayText!.toLowerCase().includes("iptal"))
-    );
+    return activeSchedulesWithDyn.filter(({ schedule, dyn }) => isTripCancelled(schedule, dyn));
   }, [activeSchedulesWithDyn]);
 
   return (
     <>
       <AlarmManager schedules={effectiveSchedules} />
+
+      {/* CANLI FIRMA DUYURU BANDI (iptal / tarife / ek sefer) */}
+      <AnnouncementBanner announcements={announcements} />
 
       {/* 1. ÜST KONTROL BARI: Kategori Seçici + Kompakt Hızlı Araçlar */}
       <div className="px-3 pt-2">
@@ -385,7 +370,8 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
                 setSelectedOrigin("ALL");
                 setSelectedDestination("ALL");
               }}
-              className={`py-1 px-2.5 rounded-lg text-xs font-black transition-all flex items-center gap-1 cursor-pointer ${
+              aria-pressed={selectedCategory === "ADALAR"}
+              className={`py-2 px-2.5 min-h-11 rounded-lg text-xs font-black transition-all flex items-center gap-1 cursor-pointer ${
                 selectedCategory === "ADALAR"
                   ? "bg-amber-400 text-slate-950 shadow-xs scale-[1.01]"
                   : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
@@ -401,7 +387,8 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
                 setSelectedOrigin("ALL");
                 setSelectedDestination("ALL");
               }}
-              className={`py-1 px-2.5 rounded-lg text-xs font-black transition-all flex items-center gap-1 cursor-pointer ${
+              aria-pressed={selectedCategory === "BOGAZ"}
+              className={`py-2 px-2.5 min-h-11 rounded-lg text-xs font-black transition-all flex items-center gap-1 cursor-pointer ${
                 selectedCategory === "BOGAZ"
                   ? "bg-blue-600 text-white shadow-xs scale-[1.01]"
                   : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
@@ -417,7 +404,8 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
                 setSelectedOrigin("ALL");
                 setSelectedDestination("ALL");
               }}
-              className={`py-1 px-2 rounded-lg text-xs font-black transition-all flex items-center gap-1 cursor-pointer ${
+              aria-pressed={selectedCategory === "ALL"}
+              className={`py-2 px-2 min-h-11 rounded-lg text-xs font-black transition-all flex items-center gap-1 cursor-pointer ${
                 selectedCategory === "ALL"
                   ? "bg-slate-800 dark:bg-slate-700 text-white shadow-xs scale-[1.01]"
                   : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
@@ -428,11 +416,13 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
             </button>
           </div>
 
-          {/* Sağ: Kompakt İkon Araçları */}
-          <div className="flex items-center gap-1">
+          {/* Sağ: Kompakt İkon Araçları (G7: hit-area ile ~37px efektif hedef) */}
+          <div className="flex items-center gap-2">
             <button
               onClick={() => setIsSearchVisible(!isSearchVisible)}
-              className={`p-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer border ${
+              aria-pressed={isSearchVisible || searchQuery.trim().length > 0}
+              aria-label="Aramayı aç/kapat"
+              className={`hit-area p-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer border ${
                 isSearchVisible || searchQuery.trim().length > 0
                   ? "bg-blue-600 text-white border-blue-500 shadow-2xs"
                   : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:bg-slate-100"
@@ -444,7 +434,9 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
 
             <button
               onClick={() => setOnlyImminent(!onlyImminent)}
-              className={`px-2 py-1 rounded-lg text-xs font-bold flex items-center gap-1 transition-all cursor-pointer border ${
+              aria-pressed={onlyImminent}
+              aria-label="Kalkışına 15 dakika veya daha az kalan seferleri göster"
+              className={`hit-area px-2 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1 transition-all cursor-pointer border ${
                 onlyImminent
                   ? "bg-amber-400 text-slate-950 border-amber-400 shadow-2xs font-black"
                   : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:bg-slate-100"
@@ -457,7 +449,9 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
 
             <button
               onClick={() => setShowPlanner(!showPlanner)}
-              className={`p-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer border ${
+              aria-pressed={showPlanner}
+              aria-label="Harita ve rota planlayıcıyı aç/kapat"
+              className={`hit-area p-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer border ${
                 showPlanner
                   ? "bg-cyan-600 text-white border-cyan-500 shadow-2xs"
                   : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:bg-slate-100"
@@ -469,7 +463,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
 
             <button
               onClick={() => setIsNightTransitOpen(true)}
-              className="p-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer border bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800/80 hover:bg-indigo-100"
+              className="hit-area p-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer border bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800/80 hover:bg-indigo-100"
               title="Gece Seferleri Rehberi"
             >
               <span>🌙</span>
@@ -477,7 +471,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
 
             <button
               onClick={handleToggleDensity}
-              className="p-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer border bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:bg-slate-100"
+              className="hit-area p-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer border bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:bg-slate-100"
               title={isCompactDensity ? "Geniş Kart Görünümü" : "Kompakt Liste Görünümü"}
             >
               {isCompactDensity ? <LayoutGrid size={13} /> : <List size={13} />}
@@ -494,7 +488,8 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
             <select
               value={selectedOrigin}
               onChange={(e) => setSelectedOrigin(e.target.value)}
-              className="w-full pl-5 pr-5 py-1 bg-transparent text-xs font-bold text-slate-800 dark:text-slate-100 appearance-none focus:outline-none cursor-pointer truncate"
+              aria-label="Kalkış iskelesi seçin"
+              className="w-full pl-5 pr-5 py-2 min-h-11 bg-transparent text-xs font-bold text-slate-800 dark:text-slate-100 appearance-none rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 cursor-pointer truncate"
             >
               <option value="ALL">Nereden (Tümü)</option>
               {availableOrigins.map((pier) => (
@@ -510,7 +505,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
             type="button"
             onClick={swapOriginDestination}
             title="Kalkış ve Varış İskelesini Değiştir"
-            className="p-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-amber-400 hover:text-slate-950 transition-all cursor-pointer active:scale-95 shrink-0"
+            className="hit-area p-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-amber-400 hover:text-slate-950 transition-all cursor-pointer active:scale-95 shrink-0"
           >
             <ArrowLeftRight size={12} />
           </button>
@@ -520,7 +515,8 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
             <select
               value={selectedDestination}
               onChange={(e) => setSelectedDestination(e.target.value)}
-              className="w-full pl-5 pr-5 py-1 bg-transparent text-xs font-bold text-slate-800 dark:text-slate-100 appearance-none focus:outline-none cursor-pointer truncate"
+              aria-label="Varış iskelesi seçin"
+              className="w-full pl-5 pr-5 py-2 min-h-11 bg-transparent text-xs font-bold text-slate-800 dark:text-slate-100 appearance-none rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 cursor-pointer truncate"
             >
               <option value="ALL">Nereye (Tümü)</option>
               {availableDestinations.map((pier) => (
@@ -551,6 +547,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
             <button
               key={op}
               onClick={() => setSelectedOperator(selectedOperator === op ? "ALL" : op)}
+              aria-pressed={selectedOperator === op}
               className={`px-2 py-1 rounded-lg text-[10px] font-bold whitespace-nowrap shrink-0 transition-all flex items-center gap-1 border cursor-pointer ${
                 selectedOperator === op
                   ? "bg-slate-100 dark:bg-slate-800 border-blue-500 text-slate-950 dark:text-white shadow-xs ring-1 ring-blue-400/40"
@@ -591,7 +588,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
       {/* 4. KULLANICI KURALI: KAYAN İPTAL SEFERLER DUYURU BANTI (Marquee Ticker) */}
       {cancelledTrips.length > 0 && (
         <div className="px-3 pt-1.5 animate-fadeIn">
-          <div className="py-1.5 px-3 rounded-xl bg-gradient-to-r from-rose-600 via-rose-700 to-red-800 text-white shadow-sm flex items-center gap-2 overflow-hidden border border-rose-500">
+          <div className="py-1.5 px-3 rounded-xl bg-linear-to-r from-rose-600 via-rose-700 to-red-800 text-white shadow-sm flex items-center gap-2 overflow-hidden border border-rose-500">
             <div className="flex items-center gap-1.5 shrink-0 bg-black/40 px-2 py-0.5 rounded-lg font-black text-[10px] tracking-wider uppercase border border-rose-400/50">
               <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
               <span>İPTAL SEFERLER</span>
@@ -617,6 +614,17 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
             schedules={effectiveSchedules}
             serverTimeIso={serverTimeIso}
             onClose={() => setShowPlanner(false)}
+          />
+        </div>
+      )}
+
+      {/* G3 — SONRAKİ SEFER HERO: Ana ekranın temel yanıtı, sonuç başlığından önce */}
+      {nextDeparture && (
+        <div className="px-3 pt-2">
+          <NextDepartureHero
+            schedule={nextDeparture.schedule}
+            dyn={nextDeparture.dyn}
+            onClick={() => setSelectedSchedule(nextDeparture.schedule)}
           />
         </div>
       )}
@@ -658,7 +666,9 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
       {/* Schedules List (Comfortable or Compact Rows) */}
       <div className={`px-3 flex flex-col ${isCompactDensity ? "gap-1.5" : "gap-2"} pb-36 sm:pb-28 mt-1`}>
         {upcomingTrips.length > 0 ? (
-          upcomingTrips.map(({ schedule, dyn }) => (
+          upcomingTrips
+            .filter((item) => item !== nextDeparture)
+            .map(({ schedule, dyn }) => (
             <ScheduleCard
               key={`${schedule.id}-${dyn.currentOrigin}`}
               id={schedule.id}
@@ -679,6 +689,8 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
               progress={schedule.progress}
               stops={schedule.stops}
               arrivalTime={schedule.arrivalTime}
+              isContinuous={schedule.isContinuous}
+              continuousUntil={schedule.continuousUntil}
               isCompact={isCompactDensity}
               highlightStopName={searchQuery}
               onClick={() => setSelectedSchedule(schedule)}
@@ -689,18 +701,38 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
           <div className="p-8 text-center bg-white dark:bg-slate-900/60 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-3 shadow-xs">
             <div className="text-3xl">⚓</div>
             <div className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200">
-              {searchQuery.trim().length > 0
+              {!isOnline
+                ? "Sefer verileri şu anda alınamıyor — internet bağlantısı yok."
+                : searchQuery.trim().length > 0
                 ? `"${searchQuery}" aramasıyla eşleşen aktif vapur seferi bulunamadı.`
                 : language === "en" ? "No scheduled trips found matching your filters." : "Seçtiğiniz kriterlere uygun aktif sefer bulunamadı."}
             </div>
             <p className="text-[11px] text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
-              İskele adını kontrol edebilir veya filtreleri sıfırlayarak güncel tüm Boğaz ve Adalar seferlerini görebilirsiniz.
+              {isOnline
+                ? "İskele adını kontrol edebilir veya filtreleri sıfırlayarak güncel tüm Boğaz ve Adalar seferlerini görebilirsiniz."
+                : "Bağlantı geri geldiğinde seferler otomatik olarak yüklenecek."}
             </p>
+
+            {/* VERİ DURUMU NOTU: Tarifesi yayınlanmayan / görsel bazlı operatörler için dürüst açıklama */}
+            {isOnline && selectedOperator !== "ALL" && (() => {
+              const rec = getOperatorRecord(selectedOperator);
+              if (!rec || rec.dataStatus === "REAL") return null;
+              return (
+                <div className="mx-auto max-w-sm rounded-lg bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/50 px-3 py-2 text-left">
+                  <p className="text-[10px] font-black uppercase tracking-wide text-amber-700 dark:text-amber-400 mb-0.5">
+                    {selectedOperator} — veri kaynağı durumu
+                  </p>
+                  <p className="text-[11px] text-slate-600 dark:text-slate-300 leading-snug">
+                    {rec.statusNote}
+                  </p>
+                </div>
+              );
+            })()}
             <button
               onClick={() => {
                 setSearchQuery("");
-                setSelectedRoute("ALL");
                 setSelectedOrigin("ALL");
+                setSelectedDestination("ALL");
                 setSelectedCategory("ALL");
                 setSelectedOperator("ALL");
               }}
@@ -769,13 +801,13 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
       </div>
 
       {/* Mobilde Başparmak Hizası Hızlı Erişim Kayan Barı (Thumb Zone Sticky Quick Bar) */}
-      <div className="sm:hidden fixed bottom-[74px] left-0 right-0 z-30 px-3 pointer-events-none flex justify-center">
+      <div className="sm:hidden fixed bottom-18.5 left-0 right-0 z-30 px-3 pointer-events-none flex justify-center">
         <div className="pointer-events-auto flex items-center gap-1.5 p-1 bg-slate-900/95 dark:bg-[#070e1e]/95 backdrop-blur-xl border border-slate-700/80 dark:border-slate-800 rounded-2xl shadow-2xl text-white">
           <button
             type="button"
             onClick={requestLocation}
             disabled={geoStatus === "LOCATING"}
-            className="px-2.5 py-1.5 rounded-xl text-[11px] font-bold flex items-center gap-1 bg-slate-800 hover:bg-slate-700 active:scale-95 transition-all text-white border border-slate-700/60 cursor-pointer"
+            className="min-h-11 px-2.5 py-2 rounded-xl text-[11px] font-bold flex items-center gap-1 bg-slate-800 hover:bg-slate-700 active:scale-95 transition-all text-white border border-slate-700/60 cursor-pointer"
           >
             <Navigation size={12} className={geoStatus === "ACTIVE" ? "text-emerald-400" : "text-blue-400"} />
             <span>{geoStatus === "LOCATING" ? "..." : geoStatus === "ACTIVE" && nearestPier ? nearestPier.name : "En Yakın"}</span>
@@ -784,7 +816,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
           <button
             type="button"
             onClick={() => setOnlyImminent(!onlyImminent)}
-            className={`px-2.5 py-1.5 rounded-xl text-[11px] font-bold flex items-center gap-1 transition-all active:scale-95 border cursor-pointer ${
+            className={`min-h-11 px-2.5 py-2 rounded-xl text-[11px] font-bold flex items-center gap-1 transition-all active:scale-95 border cursor-pointer ${
               onlyImminent
                 ? "bg-amber-400 text-slate-950 border-amber-300 font-black shadow-xs"
                 : "bg-slate-800 text-slate-200 border-slate-700/60 hover:bg-slate-700"
@@ -797,7 +829,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
           <button
             type="button"
             onClick={() => setIsSearchVisible(!isSearchVisible)}
-            className={`px-2.5 py-1.5 rounded-xl text-[11px] font-bold flex items-center gap-1 transition-all active:scale-95 border cursor-pointer ${
+            className={`min-h-11 px-2.5 py-2 rounded-xl text-[11px] font-bold flex items-center gap-1 transition-all active:scale-95 border cursor-pointer ${
               isSearchVisible || searchQuery.trim().length > 0
                 ? "bg-blue-600 text-white border-blue-500 shadow-xs"
                 : "bg-slate-800 text-slate-200 border-slate-700/60 hover:bg-slate-700"
@@ -810,7 +842,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
           <button
             type="button"
             onClick={handleToggleDensity}
-            className="px-2.5 py-1.5 rounded-xl text-[11px] font-bold flex items-center gap-1 bg-slate-800 text-slate-300 border border-slate-700/60 hover:bg-slate-700 active:scale-95 transition-all cursor-pointer"
+            className="min-h-11 px-2.5 py-2 rounded-xl text-[11px] font-bold flex items-center gap-1 bg-slate-800 text-slate-300 border border-slate-700/60 hover:bg-slate-700 active:scale-95 transition-all cursor-pointer"
             title="Görünüm Değiştir"
           >
             {isCompactDensity ? <LayoutGrid size={12} /> : <List size={12} />}
@@ -828,22 +860,6 @@ export function ScheduleListClient({ schedules, serverTimeIso, marineWeather, in
         isOpen={!!selectedSchedule}
         onClose={() => setSelectedSchedule(null)}
         serverTimeIso={serverTimeIso}
-      />
-
-      {/* Adalar Tarihi Miras & Ulaşım Rehberi Modalı */}
-      <AdalarHeritageModal
-        isOpen={isAdalarModalOpen}
-        onClose={() => setIsAdalarModalOpen(false)}
-        onSelectIslandFilter={(islandName) => {
-          setSelectedCategory("ADALAR");
-          setSearchQuery(islandName);
-        }}
-      />
-
-      {/* İskele Ayrıcalıkları & Ticari Sponsorluk Modalı */}
-      <SponsoredDealsModal
-        isOpen={isSponsoredModalOpen}
-        onClose={() => setIsSponsoredModalOpen(false)}
       />
 
       {/* Gece Seferleri & Sabaha Karşı Dolmuş/Taksi Rehberi Modalı */}

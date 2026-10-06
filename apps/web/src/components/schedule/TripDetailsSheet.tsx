@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Ship,
@@ -13,8 +13,6 @@ import {
   Pin,
   Radar,
   Camera,
-  ChevronDown,
-  ChevronUp,
   Train,
   Bus,
   Phone,
@@ -24,25 +22,27 @@ import {
   Anchor,
   ShieldCheck,
   Ticket,
-  Users
+  Timer
 } from "lucide-react";
 import { OperatorLogo } from "@/components/ui/OperatorLogo";
 import { TripStatusBadge } from "./ScheduleCard";
-import type { ScheduleCardDto } from "@/app/page";
-import { predictTripOccupancy, getTripAmenities } from "@/lib/utils/occupancy";
+import type { ScheduleCardDto } from "@/lib/types/schedule";
+import { getTripAmenities } from "@/lib/utils/occupancy";
 import { calculateDeckRecommendation } from "@/lib/utils/deck-guide";
 import { getPierTransit } from "@/lib/data/pier-transit-connections";
 import { getPierGroundTransit } from "@/lib/data/pier-taxi-transit";
 import { getPierMobility } from "@/lib/data/pier-parking-bicycle";
 import { resolveDynamicTrip, DynamicTripResolution } from "@/lib/utils/dynamic-trip";
+import { DepartureTimeline } from "@/components/schedule/DepartureTimeline";
+import { SLOW_TICK_INTERVAL_MS } from "@/lib/constants";
 import { resolveLiveVesselName } from "@/lib/agents/fleet-registry";
 import { useAlarmStore } from "@/store/useAlarmStore";
 import { useFavoritesStore } from "@/store/useFavoritesStore";
 import { useActiveVoyageStore } from "@/store/useActiveVoyageStore";
 import { requestNotificationPermission } from "@/lib/utils/sound";
 import { correlateAisVessel } from "@/lib/services/ais-corridor-tracker";
+import { useTransitClock } from "@/hooks/useTransitClock";
 
-import { MarineAisRadarModal } from "@/components/map/MarineAisRadarModal";
 import { PierLiveCameraModal } from "@/components/map/PierLiveCameraModal";
 import { MissedFerryAssistantModal } from "@/components/planner/MissedFerryAssistantModal";
 import { SharedSeaTaxiModal } from "@/components/taxishare/SharedSeaTaxiModal";
@@ -64,38 +64,40 @@ export function TripDetailsSheet({
   const { isFavorite, toggleFavorite } = useFavoritesStore();
   const { setActiveVoyage } = useActiveVoyageStore();
 
-  const [dynState, setDynState] = useState<DynamicTripResolution | null>(null);
-  const [isRadarOpen, setIsRadarOpen] = useState(false);
+  // Tek saat kaynağı: useTransitClock (açıkken 1sn tick, kapalıyken yavaş kademe — Y4;
+  // sekme gizliyken durur)
+  const { nowMs } = useTransitClock(isOpen ? 1000 : SLOW_TICK_INTERVAL_MS);
+
+  // Dinamik sefer durumu türetilmiş değerdir: her tick'te nowMs ile yeniden hesaplanır.
+  // (state + setInterval + setState-in-effect deseninin yerine geçer)
+  const dynState = useMemo<DynamicTripResolution | null>(() => {
+    if (!schedule) return null;
+    return resolveDynamicTrip(
+      schedule.origin,
+      schedule.destination,
+      schedule.departureTime,
+      schedule.targetTimeIso || new Date(nowMs).toISOString(),
+      schedule.stops,
+      schedule.arrivalTime,
+      nowMs,
+      serverTimeIso
+    );
+  }, [schedule, nowMs, serverTimeIso]);
+
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [isMissedOpen, setIsMissedOpen] = useState(false);
   const [isSeaTaxiOpen, setIsSeaTaxiOpen] = useState(false);
-  const [showAdvancedDetails, setShowAdvancedDetails] = useState(false);
   const [activeDetailTab, setActiveDetailTab] = useState<"TICKET" | "RADAR" | "TRANSIT">("TICKET");
 
+  // Escape tuşu ile kapatma (klavye erişilebilirliği)
   useEffect(() => {
-    if (!schedule) {
-      setDynState(null);
-      return;
-    }
-
-    const update = () => {
-      const resolved = resolveDynamicTrip(
-        schedule.origin,
-        schedule.destination,
-        schedule.departureTime,
-        schedule.targetTimeIso || new Date().toISOString(),
-        schedule.stops,
-        schedule.arrivalTime,
-        Date.now(),
-        serverTimeIso
-      );
-      setDynState(resolved);
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
     };
-
-    update();
-    const interval = setInterval(update, 1000);
-    return () => clearInterval(interval);
-  }, [schedule, serverTimeIso]);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose]);
 
   if (!schedule) return null;
 
@@ -103,11 +105,6 @@ export function TripDetailsSheet({
   const isFav = isFavorite(routeKey);
   const hasAlarm = isAlarmSet(schedule.id);
 
-  const occupancy = predictTripOccupancy(
-    schedule.origin,
-    schedule.destination,
-    schedule.departureTime
-  );
   const amenities = getTripAmenities(schedule.operator);
   const liveVessel = resolveLiveVesselName(
     schedule.origin,
@@ -123,7 +120,7 @@ export function TripDetailsSheet({
     schedule.destination,
     schedule.departureTime,
     schedule.targetTimeIso,
-    Date.now()
+    nowMs
   );
 
   const originTransit = getPierTransit(schedule.origin);
@@ -156,6 +153,9 @@ export function TripDetailsSheet({
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
             transition={{ type: "spring", damping: 28, stiffness: 260 }}
+            role="dialog"
+            aria-modal="true"
+            aria-label={`Sefer detayı: ${schedule.origin}'den ${schedule.destination}'na ${schedule.departureTime}`}
             className="fixed bottom-0 left-0 right-0 bg-white dark:bg-[#0c1322] border-t border-slate-200 dark:border-slate-800 rounded-t-[28px] z-50 p-5 sm:p-7 text-slate-900 dark:text-white shadow-2xl flex flex-col max-h-[90vh] overflow-y-auto"
             style={{ paddingBottom: "max(24px, env(safe-area-inset-bottom))" }}
           >
@@ -174,8 +174,8 @@ export function TripDetailsSheet({
                   )}
                   <OperatorLogo operator={schedule.operator} size="md" showName={true} />
                   {dynState?.countdown && !dynState.isDeparted && (
-                    <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-black bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30 animate-pulse">
-                      ⏳ Kalkışa {dynState.countdown}
+                    <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-black bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30 animate-pulse inline-flex items-center gap-1">
+                      <Timer size={11} aria-hidden="true" /> Kalkışa {dynState.countdown}
                     </span>
                   )}
                 </div>
@@ -198,6 +198,8 @@ export function TripDetailsSheet({
                   type="button"
                   onClick={() => toggleFavorite(routeKey)}
                   title={isFav ? "Favorilerden Çıkar" : "Favorilere Ekle"}
+                  aria-label={isFav ? "Favorilerden çıkar" : "Favorilere ekle"}
+                  aria-pressed={isFav}
                   className={`p-2 rounded-xl border transition-all ${
                     isFav
                       ? "bg-amber-400 text-slate-950 border-amber-300 shadow-sm"
@@ -214,6 +216,8 @@ export function TripDetailsSheet({
                     toggleAlarm(schedule.id);
                   }}
                   title={hasAlarm ? "Hatırlatmayı Kaldır" : "5 Dk Kala Hatırlat"}
+                  aria-label={hasAlarm ? "Hatırlatmayı kaldır" : "5 dakika kala hatırlat"}
+                  aria-pressed={hasAlarm}
                   className={`p-2 rounded-xl border transition-all ${
                     hasAlarm
                       ? "bg-amber-500/20 border-amber-400 text-amber-500 dark:text-amber-300"
@@ -243,6 +247,7 @@ export function TripDetailsSheet({
                     });
                   }}
                   title="Canlı Takip Çubuğuna Sabitle"
+                  aria-label="Seferi canlı takip çubuğuna sabitle"
                   className="p-2 rounded-xl bg-blue-50 dark:bg-blue-950/40 hover:bg-blue-100 dark:hover:bg-blue-900/60 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-700/60 transition-all"
                 >
                   <Pin size={16} />
@@ -259,9 +264,15 @@ export function TripDetailsSheet({
             </div>
 
             {/* 2. ERGONOMİK 3 SEKME ÇUBUĞU (Apple Transit & Wallet Tarzı) */}
-            <div className="flex items-center gap-1 p-1 bg-slate-100 dark:bg-slate-900 rounded-2xl mb-4 border border-slate-200 dark:border-slate-800 shrink-0">
+            <div
+              role="tablist"
+              aria-label="Sefer detayı sekmeleri"
+              className="flex items-center gap-1 p-1 bg-slate-100 dark:bg-slate-900 rounded-2xl mb-4 border border-slate-200 dark:border-slate-800 shrink-0"
+            >
               <button
                 type="button"
+                role="tab"
+                aria-selected={activeDetailTab === "TICKET"}
                 onClick={() => setActiveDetailTab("TICKET")}
                 className={`flex-1 py-2 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                   activeDetailTab === "TICKET"
@@ -269,23 +280,27 @@ export function TripDetailsSheet({
                     : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                 }`}
               >
-                <span>🎫</span>
+                <Ticket size={14} aria-hidden="true" />
                 <span>Sefer & Bilet</span>
               </button>
               <button
                 type="button"
+                role="tab"
+                aria-selected={activeDetailTab === "RADAR"}
                 onClick={() => setActiveDetailTab("RADAR")}
                 className={`flex-1 py-2 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                   activeDetailTab === "RADAR"
-                    ? "bg-white dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 shadow-xs scale-[1.01]"
+                    ? "bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 shadow-xs scale-[1.01]"
                     : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                 }`}
               >
-                <span>🛰️</span>
-                <span>Gemi & Radar</span>
+                <Radar size={14} aria-hidden="true" />
+                <span>Gemi & Seyir</span>
               </button>
               <button
                 type="button"
+                role="tab"
+                aria-selected={activeDetailTab === "TRANSIT"}
                 onClick={() => setActiveDetailTab("TRANSIT")}
                 className={`flex-1 py-2 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                   activeDetailTab === "TRANSIT"
@@ -293,7 +308,7 @@ export function TripDetailsSheet({
                     : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                 }`}
               >
-                <span>🚇</span>
+                <Train size={14} aria-hidden="true" />
                 <span>İskele Aktarma</span>
               </button>
             </div>
@@ -355,36 +370,13 @@ export function TripDetailsSheet({
                     </span>
                   </div>
 
-                  {isDirect ? (
+                  {/* G4 — DİKEY YOLCULUK TIMELINE'I: direkt (2 düğüm) ve çok duraklı tüm seferlerde */}
+                  {dynState?.waypoints && dynState.waypoints.length > 1 ? (
+                    <DepartureTimeline waypoints={dynState.waypoints} />
+                  ) : isDirect ? (
                     <div className="flex items-center gap-2 p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 dark:text-emerald-300 text-xs font-bold">
                       <ShieldCheck size={16} className="shrink-0 text-emerald-500" />
                       <span>Bu sefer direkt seferdir; ara duraklara uğramadan doğrudan {schedule.destination} iskelesine ulaşır.</span>
-                    </div>
-                  ) : dynState?.waypoints && dynState.waypoints.length > 0 ? (
-                    <div className="flex items-center gap-1.5 overflow-x-auto pb-1 hide-scrollbar">
-                      {dynState.waypoints.map((wp, wIdx) => {
-                        const isCompleted = wp.state === "COMPLETED";
-                        const isCurrent = wp.state === "CURRENT";
-                        const isLast = wIdx === (dynState.waypoints?.length ?? 1) - 1;
-
-                        return (
-                          <div key={wIdx} className="flex items-center shrink-0">
-                            <div
-                              className={`flex items-center gap-1 px-2.5 py-1 rounded-xl text-xs font-bold transition-all ${
-                                isCompleted
-                                  ? "bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400"
-                                  : isCurrent
-                                  ? "bg-amber-400 text-slate-950 font-black shadow-md ring-2 ring-amber-300"
-                                  : "bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200"
-                              }`}
-                            >
-                              <span>{wp.name}</span>
-                              <span className="font-mono text-[9px] opacity-80">({wp.time})</span>
-                            </div>
-                            {!isLast && <div className="w-3 h-0.5 bg-slate-300 dark:bg-slate-700 mx-0.5 shrink-0" />}
-                          </div>
-                        );
-                      })}
                     </div>
                   ) : null}
                 </div>
@@ -405,12 +397,12 @@ export function TripDetailsSheet({
 
                   {deckAdvice && (
                     <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 flex flex-col justify-center">
-                      <span className="text-[10px] font-black uppercase text-amber-500 block mb-1 flex items-center gap-1">
+                      <span className="text-[10px] font-black uppercase text-amber-500 mb-1 flex items-center gap-1">
                         <Compass size={11} />
                         <span>Güverte & Manzara Tavsiyesi</span>
                       </span>
                       <p className="text-[11px] text-slate-700 dark:text-slate-300 font-medium">
-                        🌟 <strong>{deckAdvice.recommendedSideLabel}:</strong> {deckAdvice.summary}
+                        <strong>{deckAdvice.recommendedSideLabel}:</strong> {deckAdvice.summary}
                       </p>
                     </div>
                   )}
@@ -418,33 +410,23 @@ export function TripDetailsSheet({
               </div>
             )}
 
-            {/* SEKME 2: GEMİ & RADAR (AIS Telemetrisi & Harita) */}
+            {/* SEKME 2: GEMİ & SEYİR (Tahmini Seyir Durumu & Harita) */}
             {activeDetailTab === "RADAR" && (
               <div className="space-y-4 animate-fadeIn">
-                {/* AIS Canlı Gemi Kartı */}
+                {/* Tahmini Gemi Durumu Kartı */}
                 <div className="bg-slate-50 dark:bg-slate-900/90 p-4 rounded-2xl border border-slate-200 dark:border-slate-800">
                   <div className="flex items-center gap-3 mb-3">
-                    <div className={`w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 border transition-all ${
-                      aisData.isVerified
-                        ? "bg-emerald-500/20 text-emerald-500 border-emerald-500/40 shadow-xs"
-                        : "bg-blue-500/10 text-blue-500 border-blue-500/20"
-                    }`}>
-                      <Ship size={22} className={aisData.isVerified ? "animate-pulse" : ""} />
+                    <div className="w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 border transition-all bg-blue-500/10 text-blue-500 border-blue-500/20">
+                      <Ship size={22} />
                     </div>
                     <div>
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className="text-base font-black text-slate-900 dark:text-white">
-                          🚢 {aisData.isVerified ? aisData.vesselName : liveVessel.vesselName}
+                          {liveVessel.vesselName}
                         </span>
-                        {aisData.isVerified ? (
-                          <span className="inline-flex items-center gap-1 text-[10px] font-black px-2 py-0.5 rounded-full bg-emerald-500 text-slate-950">
-                            ✓ AIS DOĞRULANDI
-                          </span>
-                        ) : (
-                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
-                            Kalkışta Eşleşecek
-                          </span>
-                        )}
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                          {aisData.statusLabel}
+                        </span>
                       </div>
                       <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                         {aisData.explanation}
@@ -452,28 +434,28 @@ export function TripDetailsSheet({
                     </div>
                   </div>
 
-                  {/* AIS Koridor Telemetrisi */}
+                  {/* Tahmini Seyir Bilgileri */}
                   <div className="pt-2 border-t border-slate-200 dark:border-slate-800 grid grid-cols-4 gap-2 text-center">
                     <div className="p-2 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
-                      <span className="text-[9px] text-slate-400 font-bold block uppercase">Hız (SOG)</span>
+                      <span className="text-[9px] text-slate-400 font-bold block uppercase">Hız (tahmini)</span>
                       <span className="text-xs font-mono font-black text-emerald-600 dark:text-emerald-400">
                         {aisData.speedKnots} Kn
                       </span>
                     </div>
                     <div className="p-2 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
-                      <span className="text-[9px] text-slate-400 font-bold block uppercase">Rota (COG)</span>
+                      <span className="text-[9px] text-slate-400 font-bold block uppercase">Rota (tahmini)</span>
                       <span className="text-xs font-mono font-black text-blue-600 dark:text-blue-400">
                         {aisData.headingDeg}°
                       </span>
                     </div>
                     <div className="p-2 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
-                      <span className="text-[9px] text-slate-400 font-bold block uppercase">Uyum</span>
+                      <span className="text-[9px] text-slate-400 font-bold block uppercase">İlerleme</span>
                       <span className="text-xs font-mono font-black text-amber-500">
-                        %{aisData.corridorMatchScore}
+                        %{aisData.progressPercent}
                       </span>
                     </div>
                     <div className="p-2 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
-                      <span className="text-[9px] text-slate-400 font-bold block uppercase">Varış</span>
+                      <span className="text-[9px] text-slate-400 font-bold block uppercase">Tahmini varış</span>
                       <span className="text-xs font-mono font-black text-slate-900 dark:text-white">
                         ~{aisData.etaMinutes} dk
                       </span>
@@ -481,29 +463,30 @@ export function TripDetailsSheet({
                   </div>
                 </div>
 
-                {/* 2 Canlı Aksiyon Butonu */}
+                {/* 2 Seyir Aksiyon Butonu */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                  <button
-                    type="button"
-                    onClick={() => setIsRadarOpen(true)}
-                    className="p-3.5 rounded-2xl bg-gradient-to-r from-emerald-600/15 via-teal-600/10 to-transparent hover:from-emerald-600/25 border border-emerald-500/40 text-left flex items-center justify-between transition-all cursor-pointer shadow-sm group"
+                  <a
+                    href="https://www.marinetraffic.com/en/ais/home/centerx:29.02/centery:41.01/zoom:13"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-3.5 rounded-2xl bg-linear-to-r from-emerald-600/15 via-teal-600/10 to-transparent hover:from-emerald-600/25 border border-emerald-500/40 text-left flex items-center justify-between transition-all shadow-sm group"
                   >
                     <div className="flex items-center gap-2.5">
                       <div className="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                        <Radar size={18} className="animate-spin" style={{ animationDuration: "6s" }} />
+                        <Radar size={18} />
                       </div>
                       <div>
-                        <span className="text-xs font-black text-slate-900 dark:text-white block">CANLI AIS UYDU RADARI</span>
-                        <span className="text-[10px] text-slate-500 dark:text-slate-400">Boğazdaki gerçek zamanlı gemi haritası</span>
+                        <span className="text-xs font-black text-slate-900 dark:text-white flex items-center gap-1">CANLI GEMİ HARİTASI</span>
+                        <span className="text-[10px] text-slate-500 dark:text-slate-400">Boğaz&apos;ı MarineTraffic haritasında canlı izleyin</span>
                       </div>
                     </div>
-                    <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 shrink-0">Aç ➔</span>
-                  </button>
+                    <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 shrink-0">Dış site ➔</span>
+                  </a>
 
                   <button
                     type="button"
                     onClick={() => setIsCameraOpen(true)}
-                    className="p-3.5 rounded-2xl bg-gradient-to-r from-blue-600/15 via-indigo-600/10 to-transparent hover:from-blue-600/25 border border-blue-500/40 text-left flex items-center justify-between transition-all cursor-pointer shadow-sm group"
+                    className="p-3.5 rounded-2xl bg-linear-to-r from-blue-600/15 via-indigo-600/10 to-transparent hover:from-blue-600/25 border border-blue-500/40 text-left flex items-center justify-between transition-all cursor-pointer shadow-sm group"
                   >
                     <div className="flex items-center gap-2.5">
                       <div className="w-9 h-9 rounded-xl bg-blue-500/20 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
@@ -625,21 +608,6 @@ export function TripDetailsSheet({
       )}
 
       {/* MODALLAR */}
-      <MarineAisRadarModal
-        isOpen={isRadarOpen}
-        onClose={() => setIsRadarOpen(false)}
-        origin={dynState?.currentOrigin || schedule?.origin}
-        destination={dynState?.destination || schedule?.destination}
-        vesselName={liveVessel.vesselName}
-        mmsi={liveVessel.mmsi}
-        operator={schedule?.operator}
-        isConfirmedUnderway={liveVessel.isConfirmedUnderway}
-        statusText={liveVessel.statusText}
-        capacityPax={liveVessel.capacityPax}
-        builtYear={liveVessel.builtYear}
-        callSign={liveVessel.callSign}
-      />
-
       <PierLiveCameraModal
         isOpen={isCameraOpen}
         onClose={() => setIsCameraOpen(false)}

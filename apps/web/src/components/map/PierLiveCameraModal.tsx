@@ -3,6 +3,8 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Camera, X, ExternalLink, Video, ShieldCheck, Eye, Wind, Waves, CheckCircle2 } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useTransitClock } from "@/hooks/useTransitClock";
+import { SLOW_TICK_INTERVAL_MS } from "@/lib/constants";
 
 interface PierLiveCameraModalProps {
   isOpen: boolean;
@@ -107,7 +109,10 @@ export function PierLiveCameraModal({
   const destCam = getMatchingCamera(destination);
 
   const [selectedCam, setSelectedCam] = useState<CameraLocation>(originCam);
-  const [currentTime, setCurrentTime] = useState<string>("");
+
+  // Tek saat kaynağı: İstanbul saatine göre canlı yayın saati (cihaz saati değil).
+  // Modal kapalıyken yavaş kademe — açılınca anlık senkron (Y4).
+  const { timeStr: currentTime } = useTransitClock(isOpen ? 1000 : SLOW_TICK_INTERVAL_MS);
 
   // KULLANICI KURALI: Modal açıldığında direkt hangi sefere gidiyorsa o iskelenin kamerası otomatik açılmalı!
   useEffect(() => {
@@ -116,16 +121,6 @@ export function PierLiveCameraModal({
       setSelectedCam(match);
     }
   }, [isOpen, origin]);
-
-  useEffect(() => {
-    const updateTime = () => {
-      const now = new Date();
-      setCurrentTime(now.toLocaleTimeString("tr-TR", { hour12: false }));
-    };
-    updateTime();
-    const interval = setInterval(updateTime, 1000);
-    return () => clearInterval(interval);
-  }, []);
 
   return (
     <AnimatePresence>

@@ -1,0 +1,4754 @@
+{
+  "operator": "Dentur Avrasya",
+  "sourceBase": "https://www.denturavrasya.com/tr-TR/hatlarimiz/*",
+  "generatedAt": "2026-10-04T19:34:55.626Z",
+  "scrapedAtUserAgent": "Vapur-Sync-Agent/3.0 (resmi denturavrasya.com sayfalarından birebir)",
+  "note": "Sayfalarda birebir yazılı saatler kaydedildi; 'Sürekli Sefer' pencereleri isContinuous ile işaretlidir, sahte dakika üretilmedi.",
+  "failures": [],
+  "lines": [
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "07:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "08:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "08:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "09:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "09:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "10:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "10:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "11:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "11:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "12:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "12:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "13:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "13:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "14:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "14:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "15:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "15:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "16:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "16:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "17:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "17:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "18:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "18:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "19:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "19:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "20:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "20:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "21:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "07:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "08:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "08:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "09:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "09:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "10:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "10:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "11:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "11:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "12:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "12:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "13:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "13:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "14:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "14:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "15:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "15:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "16:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "16:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "17:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "17:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "18:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "18:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "19:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "19:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "20:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "20:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "21:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "SUNDAY",
+      "departureTime": "08:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "SUNDAY",
+      "departureTime": "09:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "SUNDAY",
+      "departureTime": "09:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "SUNDAY",
+      "departureTime": "10:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "SUNDAY",
+      "departureTime": "10:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "SUNDAY",
+      "departureTime": "11:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "SUNDAY",
+      "departureTime": "11:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "SUNDAY",
+      "departureTime": "12:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "SUNDAY",
+      "departureTime": "12:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "SUNDAY",
+      "departureTime": "13:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "SUNDAY",
+      "departureTime": "13:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "SUNDAY",
+      "departureTime": "14:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "SUNDAY",
+      "departureTime": "14:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "SUNDAY",
+      "departureTime": "15:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "SUNDAY",
+      "departureTime": "15:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "SUNDAY",
+      "departureTime": "16:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "SUNDAY",
+      "departureTime": "16:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "SUNDAY",
+      "departureTime": "17:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "SUNDAY",
+      "departureTime": "17:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "SUNDAY",
+      "departureTime": "18:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "SUNDAY",
+      "departureTime": "18:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "SUNDAY",
+      "departureTime": "19:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "SUNDAY",
+      "departureTime": "19:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "SUNDAY",
+      "departureTime": "20:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "SUNDAY",
+      "departureTime": "20:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Beşiktaş",
+      "destination": "Kadıköy",
+      "directionLabel": "Beşiktaş → Kadıköy",
+      "dayType": "SUNDAY",
+      "departureTime": "21:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "SUNDAY",
+      "departureTime": "08:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "SUNDAY",
+      "departureTime": "09:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "SUNDAY",
+      "departureTime": "09:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "SUNDAY",
+      "departureTime": "10:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "SUNDAY",
+      "departureTime": "10:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "SUNDAY",
+      "departureTime": "11:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "SUNDAY",
+      "departureTime": "11:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "SUNDAY",
+      "departureTime": "12:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "SUNDAY",
+      "departureTime": "12:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "SUNDAY",
+      "departureTime": "13:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "SUNDAY",
+      "departureTime": "13:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "SUNDAY",
+      "departureTime": "14:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "SUNDAY",
+      "departureTime": "14:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "SUNDAY",
+      "departureTime": "15:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "SUNDAY",
+      "departureTime": "15:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "SUNDAY",
+      "departureTime": "16:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "SUNDAY",
+      "departureTime": "16:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "SUNDAY",
+      "departureTime": "17:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "SUNDAY",
+      "departureTime": "17:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "SUNDAY",
+      "departureTime": "18:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "SUNDAY",
+      "departureTime": "18:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "SUNDAY",
+      "departureTime": "19:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "SUNDAY",
+      "departureTime": "19:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "SUNDAY",
+      "departureTime": "20:00"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "SUNDAY",
+      "departureTime": "20:30"
+    },
+    {
+      "line": "Beşiktaş-Kadıköy",
+      "origin": "Kadıköy",
+      "destination": "Beşiktaş",
+      "directionLabel": "Kadıköy → Beşiktaş",
+      "dayType": "SUNDAY",
+      "departureTime": "21:00"
+    },
+    {
+      "line": "Adalar",
+      "origin": "Beşiktaş",
+      "destination": "Büyükada",
+      "directionLabel": "Gidiş",
+      "dayType": "WEEKDAY",
+      "departureTime": "09:30",
+      "arrivalTime": "11:15",
+      "stops": [
+        {
+          "name": "KABATAŞ",
+          "time": "09:45"
+        },
+        {
+          "name": "SİRKECİ",
+          "time": "10:00"
+        },
+        {
+          "name": "HEYBELİADA",
+          "time": "11:00"
+        }
+      ]
+    },
+    {
+      "line": "Adalar",
+      "origin": "Beşiktaş",
+      "destination": "Büyükada",
+      "directionLabel": "Gidiş",
+      "dayType": "WEEKDAY",
+      "departureTime": "11:30",
+      "arrivalTime": "13:15",
+      "stops": [
+        {
+          "name": "KABATAŞ",
+          "time": "11:45"
+        },
+        {
+          "name": "SİRKECİ",
+          "time": "12:00"
+        },
+        {
+          "name": "HEYBELİADA",
+          "time": "13:00"
+        }
+      ]
+    },
+    {
+      "line": "Adalar",
+      "origin": "Büyükada",
+      "destination": "Beşiktaş",
+      "directionLabel": "Gidiş",
+      "dayType": "WEEKDAY",
+      "departureTime": "14:30",
+      "arrivalTime": "16:15",
+      "stops": [
+        {
+          "name": "HEYBELİADA",
+          "time": "14:45"
+        },
+        {
+          "name": "SİRKECİ",
+          "time": "15:45"
+        },
+        {
+          "name": "KABATAŞ",
+          "time": "16:00"
+        }
+      ]
+    },
+    {
+      "line": "Adalar",
+      "origin": "Büyükada",
+      "destination": "Beşiktaş",
+      "directionLabel": "Gidiş",
+      "dayType": "WEEKDAY",
+      "departureTime": "15:30",
+      "arrivalTime": "17:15",
+      "stops": [
+        {
+          "name": "HEYBELİADA",
+          "time": "15:45"
+        },
+        {
+          "name": "SİRKECİ",
+          "time": "16:45"
+        },
+        {
+          "name": "KABATAŞ",
+          "time": "17:00"
+        }
+      ]
+    },
+    {
+      "line": "Adalar",
+      "origin": "Beşiktaş",
+      "destination": "Büyükada",
+      "directionLabel": "Gidiş",
+      "dayType": "WEEKEND",
+      "departureTime": "09:30",
+      "arrivalTime": "11:15",
+      "stops": [
+        {
+          "name": "KABATAŞ",
+          "time": "09:45"
+        },
+        {
+          "name": "SİRKECİ",
+          "time": "10:00"
+        },
+        {
+          "name": "HEYBELİADA",
+          "time": "11:00"
+        }
+      ]
+    },
+    {
+      "line": "Adalar",
+      "origin": "Beşiktaş",
+      "destination": "Büyükada",
+      "directionLabel": "Gidiş",
+      "dayType": "WEEKEND",
+      "departureTime": "10:30",
+      "arrivalTime": "12:15",
+      "stops": [
+        {
+          "name": "KABATAŞ",
+          "time": "10:45"
+        },
+        {
+          "name": "SİRKECİ",
+          "time": "11:00"
+        },
+        {
+          "name": "HEYBELİADA",
+          "time": "12:00"
+        }
+      ]
+    },
+    {
+      "line": "Adalar",
+      "origin": "Beşiktaş",
+      "destination": "Büyükada",
+      "directionLabel": "Gidiş",
+      "dayType": "WEEKEND",
+      "departureTime": "11:30",
+      "arrivalTime": "13:15",
+      "stops": [
+        {
+          "name": "KABATAŞ",
+          "time": "11:45"
+        },
+        {
+          "name": "SİRKECİ",
+          "time": "12:00"
+        },
+        {
+          "name": "HEYBELİADA",
+          "time": "13:00"
+        }
+      ]
+    },
+    {
+      "line": "Adalar",
+      "origin": "Beşiktaş",
+      "destination": "Büyükada",
+      "directionLabel": "Gidiş",
+      "dayType": "WEEKEND",
+      "departureTime": "12:45",
+      "arrivalTime": "14:30",
+      "stops": [
+        {
+          "name": "KABATAŞ",
+          "time": "13:00"
+        },
+        {
+          "name": "SİRKECİ",
+          "time": "13:15"
+        },
+        {
+          "name": "HEYBELİADA",
+          "time": "14:15"
+        }
+      ]
+    },
+    {
+      "line": "Adalar",
+      "origin": "Büyükada",
+      "destination": "Beşiktaş",
+      "directionLabel": "Dönüş",
+      "dayType": "WEEKEND",
+      "departureTime": "14:30",
+      "arrivalTime": "16:15",
+      "stops": [
+        {
+          "name": "HEYBELİADA",
+          "time": "14:45"
+        },
+        {
+          "name": "SİRKECİ",
+          "time": "15:45"
+        },
+        {
+          "name": "KABATAŞ",
+          "time": "16:00"
+        }
+      ]
+    },
+    {
+      "line": "Adalar",
+      "origin": "Büyükada",
+      "destination": "Beşiktaş",
+      "directionLabel": "Dönüş",
+      "dayType": "WEEKEND",
+      "departureTime": "15:30",
+      "arrivalTime": "17:15",
+      "stops": [
+        {
+          "name": "HEYBELİADA",
+          "time": "15:45"
+        },
+        {
+          "name": "SİRKECİ",
+          "time": "16:45"
+        },
+        {
+          "name": "KABATAŞ",
+          "time": "17:00"
+        }
+      ]
+    },
+    {
+      "line": "Adalar",
+      "origin": "Büyükada",
+      "destination": "Beşiktaş",
+      "directionLabel": "Dönüş",
+      "dayType": "WEEKEND",
+      "departureTime": "17:00",
+      "arrivalTime": "18:45",
+      "stops": [
+        {
+          "name": "HEYBELİADA",
+          "time": "17:15"
+        },
+        {
+          "name": "SİRKECİ",
+          "time": "18:15"
+        },
+        {
+          "name": "KABATAŞ",
+          "time": "18:30"
+        }
+      ]
+    },
+    {
+      "line": "Adalar",
+      "origin": "Büyükada",
+      "destination": "Beşiktaş",
+      "directionLabel": "Dönüş",
+      "dayType": "WEEKEND",
+      "departureTime": "18:00",
+      "arrivalTime": "19:45",
+      "stops": [
+        {
+          "name": "HEYBELİADA",
+          "time": "18:15"
+        },
+        {
+          "name": "SİRKECİ",
+          "time": "19:15"
+        },
+        {
+          "name": "KABATAŞ",
+          "time": "19:30"
+        }
+      ]
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "06:45"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "08:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "09:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "07:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "08:15"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "09:15"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "07:15"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "08:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "09:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "07:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "08:45"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "09:45"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "07:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "09:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "10:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "07:50"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "09:15"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "10:15"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "08:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "09:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "10:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "08:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "09:45"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "10:45"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "08:20"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "10:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "11:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "08:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "10:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "11:15"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "08:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "10:20"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "11:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "08:50"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "10:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "11:45"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "09:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "10:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "12:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "09:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "10:50"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "12:15"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "09:20"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "11:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "12:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "09:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "11:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "12:45"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "09:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "11:20"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "13:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "09:50"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "11:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "13:15"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "10:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "11:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "13:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "10:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "11:50"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "13:45"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "10:20"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "12:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "14:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "10:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "12:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "14:15"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "10:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "12:20"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "14:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "10:50"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "12:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "14:45"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "11:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "12:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "15:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "11:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "12:50"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "15:15"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "11:20"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "13:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "15:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "11:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "13:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "15:45"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "11:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "13:20"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "16:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "11:50"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "13:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "16:15"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "12:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "13:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "16:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "12:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "13:50"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "16:45"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "12:20"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "14:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "17:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "12:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "14:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "17:15"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "12:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "14:20"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "17:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "12:50"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "14:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "17:45"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "13:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "14:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "18:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "13:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "14:50"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "18:15"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "13:20"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "15:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "18:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "13:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "15:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "18:45"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "13:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "15:20"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "19:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "13:50"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "15:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "19:15"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "14:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "15:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "19:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "14:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "15:50"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "19:45"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "14:20"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "16:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "20:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "14:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "16:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "20:15"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "14:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "16:20"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "20:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "14:50"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "16:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "20:45"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "15:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "16:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "21:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "15:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "16:50"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "21:20"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "15:20"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "17:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "21:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "15:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "17:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "22:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "15:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "17:20"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "22:20"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "15:50"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "17:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "22:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "16:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "17:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "23:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "16:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "17:50"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "23:20"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "16:20"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "18:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "23:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "16:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "18:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SUNDAY",
+      "departureTime": "00:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "16:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "18:20"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "16:50"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "18:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "17:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "18:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "17:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "18:50"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "17:20"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "19:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "17:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "19:15"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "16:00",
+      "isContinuous": true,
+      "continuousUntil": "18:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "19:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "18:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "19:45"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "18:50"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "20:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "19:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "20:15"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "19:15"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "20:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "19:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "20:45"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "19:45"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "21:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "20:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "21:20"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "20:15"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "21:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "20:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "22:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "20:45"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "22:20"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "21:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "22:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "21:20"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "23:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "21:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "23:20"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "22:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "23:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "22:20"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "SATURDAY",
+      "departureTime": "00:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "22:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "23:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "23:20"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "23:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Üsküdar",
+      "destination": "Kabataş",
+      "directionLabel": "Üsküdar → Kabataş",
+      "dayType": "WEEKDAY",
+      "departureTime": "00:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "06:55"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "08:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "09:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "07:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "08:25"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "09:25"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "07:25"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "08:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "09:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "07:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "08:55"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "09:55"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "07:50"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "09:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "10:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "08:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "09:25"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "10:25"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "08:10",
+      "isContinuous": true,
+      "continuousUntil": "09:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "09:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "10:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "09:20"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "09:55"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "10:55"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "09:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "10:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "11:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "09:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "10:20"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "11:25"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "09:50"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "10:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "11:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "10:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "10:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "11:55"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "10:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "10:50"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "12:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "10:20"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "11:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "12:25"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "10:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "11:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "12:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "10:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "11:20"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "12:55"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "10:50"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "11:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "13:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "11:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "11:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "13:25"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "11:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "11:50"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "13:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "11:20"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "12:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "13:55"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "11:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "12:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "14:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "11:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "12:20"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "14:25"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "11:50"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "12:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "14:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "12:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "12:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "14:55"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "12:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "12:50"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "15:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "12:20"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "13:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "15:25"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "12:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "13:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "15:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "12:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "13:20"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "15:55"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "12:50"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "13:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "16:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "13:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "13:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "16:25"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "13:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "13:50"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "16:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "13:20"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "14:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "16:55"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "13:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "14:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "17:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "13:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "14:20"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "17:25"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "13:50"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "14:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "17:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "14:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "14:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "17:55"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "14:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "14:50"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "18:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "14:20"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "15:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "18:25"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "14:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "15:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "18:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "14:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "15:20"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "18:55"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "14:50"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "15:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "19:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "15:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "15:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "19:25"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "15:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "15:50"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "19:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "15:20"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "16:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "19:55"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "15:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "16:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "20:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "15:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "16:20"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "20:25"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "15:50"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "16:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "20:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "16:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "16:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "20:55"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "16:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "16:50"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "21:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "16:20"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "17:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "21:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "16:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "17:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "21:50"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "16:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "17:20"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "22:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "16:50"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "17:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "22:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "17:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "17:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "22:50"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "17:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "17:50"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "23:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "17:20"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "18:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "23:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "17:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "18:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "23:50"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "17:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "18:20"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "00:15"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "17:50"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "18:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "18:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "18:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "18:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "18:50"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "18:20"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "19:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "18:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "19:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "18:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "19:25"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "18:50"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "19:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "19:00"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "19:55"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "19:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "20:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "19:25"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "20:25"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "19:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "20:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "19:55"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "20:55"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "20:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "21:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "20:25"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "21:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "20:40"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "21:50"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "20:55"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "22:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "21:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "22:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "21:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "22:50"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "21:50"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "23:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "22:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "23:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "22:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "23:50"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "22:50"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "SATURDAY",
+      "departureTime": "00:15"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "23:10"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "23:30"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "23:50"
+    },
+    {
+      "line": "Üsküdar-Kabataş",
+      "origin": "Kabataş",
+      "destination": "Üsküdar",
+      "directionLabel": "Kabataş → Üsküdar",
+      "dayType": "WEEKDAY",
+      "departureTime": "00:15"
+    },
+    {
+      "line": "Üsküdar-Beşiktaş",
+      "origin": "Üsküdar",
+      "destination": "Beşiktaş",
+      "directionLabel": "Üsküdar → Beşiktaş",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "06:10",
+      "isContinuous": true,
+      "continuousUntil": "00:45"
+    },
+    {
+      "line": "Üsküdar-Beşiktaş",
+      "origin": "Üsküdar",
+      "destination": "Beşiktaş",
+      "directionLabel": "Üsküdar → Beşiktaş",
+      "dayType": "SUNDAY",
+      "departureTime": "06:20",
+      "isContinuous": true,
+      "continuousUntil": "00:45"
+    },
+    {
+      "line": "Üsküdar-Beşiktaş",
+      "origin": "Beşiktaş",
+      "destination": "Üsküdar",
+      "directionLabel": "Beşiktaş → Üsküdar",
+      "dayType": "WEEKDAY_SAT",
+      "departureTime": "06:20",
+      "isContinuous": true,
+      "continuousUntil": "01:00"
+    },
+    {
+      "line": "Üsküdar-Beşiktaş",
+      "origin": "Beşiktaş",
+      "destination": "Üsküdar",
+      "directionLabel": "Beşiktaş → Üsküdar",
+      "dayType": "SUNDAY",
+      "departureTime": "06:30",
+      "isContinuous": true,
+      "continuousUntil": "01:00"
+    }
+  ]
+}

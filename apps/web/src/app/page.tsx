@@ -1,56 +1,26 @@
 import { TopBar } from "@/components/navigation/TopBar";
 import { MainAppShell } from "@/components/views/MainAppShell";
-import { TripStatus } from "@/components/schedule/ScheduleCard";
-import { NearbyRoutes } from "@/components/schedule/NearbyRoutes";
-import { ScheduleListClient } from "@/components/schedule/ScheduleListClient";
-
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
-
-export interface ScheduleCardDto {
-  id: string;
-  origin: string;
-  destination: string;
-  operator: string;
-  routeTitle: string;
-  departureTime: string;
-  departureTime12: string;
-  status: TripStatus;
-  targetTimeIso?: string;
-  delayText?: string;
-  vessel?: string;
-  platform: string;
-  price: string;
-  progress: number;
-  category?: 'ADALAR' | 'BOGAZ';
-  stops?: { name: string; time: string }[];
-  arrivalTime?: string;
-}
-
-export interface SchedulesResponse {
-  serverTimeIso: string;
-  serverDateFormatted?: string;
-  schedules: ScheduleCardDto[];
-}
-
+import type { SchedulesResponse } from "@/lib/types/schedule";
 import { getLiveOrOfficialSchedules } from "@/lib/agents/timetable-engine";
 import { fetchLiveMarineWeather, type MarineWeatherStatus } from "@/lib/services/marine-weather";
 
-async function getSchedules(): Promise<SchedulesResponse> {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-  if (apiUrl && !apiUrl.includes('localhost')) {
-    try {
-      const res = await fetch(`${apiUrl}/schedules`, { next: { revalidate: 60 } });
-      if (res.ok) {
-        const json = await res.json();
-        if (json?.schedules?.length > 0) return json;
-      }
-    } catch (e) {
-      console.warn("API URL failed, falling back to built-in timetable engine:", e);
-    }
-  }
+// Canlı sefer panosu: sayfa her istekte yeniden render edilir (önbelleğe alınmaz).
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
-  // 100% Reliable Official Timetable Engine with Istanbul Time & Live Updates
+/**
+ * SEFER VERİSİ TEK KAYNAĞI (KULLANICI KURALI: asla uydurma veri).
+ *
+ * Dış API (`NEXT_PUBLIC_API_URL`) /schedules uç noktası demo veya basitleştirilmiş
+ * (tek düz liste) sefer verisi döndürebildiği için buradan KASITLI OLARAK alınmaz.
+ * Örnek: API, Bostancı 23:00 kısa (Kınalıada-Burgazada) ve uzun (Heybeliada-Büyükada)
+ * hatlarını ayrı kayıtlar olarak temsil edemediği için tarife hatalı görünür.
+ *
+ * Kaynak olarak YALNIZCA doğrulanmış gömülü motor kullanılır:
+ * official-scraped-schedules.json (Şehir Hatları) + mavi-marmara-schedules.ts +
+ * dentur-schedules.ts — hepsi resmi kurumsal sitelerden birebir doğrulanmıştır.
+ */
+async function getSchedules(): Promise<SchedulesResponse> {
   return await getLiveOrOfficialSchedules();
 }
 

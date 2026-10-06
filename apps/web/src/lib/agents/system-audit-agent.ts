@@ -3,7 +3,8 @@ import { SEA_TAXI_OFFICIAL_TARIFF, calculateSeaTaxiFare, getSeaTaxiRoute } from 
 import { NIGHT_DOLMUS_ROUTES } from "@/lib/data/night-transit-matrix";
 import { OFFICIAL_SCHEDULES_DATA, RawOfficialTrip } from "@/lib/data/official-schedules";
 import { ISTANBUL_FERRY_FLEET, resolveLiveVesselName } from "@/lib/agents/fleet-registry";
-import { ISTANBUL_PIERS, planJourney } from "@/lib/services/route-planner";
+import { ISTANBUL_PIERS } from "@/lib/data/piers";
+import { planJourney } from "@/lib/services/route-planner";
 import { PIER_MOBILITY_DATA, getPierMobility } from "@/lib/data/pier-parking-bicycle";
 import { PIER_TRANSIT_GROUND_DATA, getPierGroundTransit } from "@/lib/data/pier-taxi-transit";
 import { resolveDynamicTrip } from "@/lib/utils/dynamic-trip";
@@ -556,36 +557,38 @@ export function auditSoundAndHapticEngine(): AuditCheckResult[] {
  * 9. RESMİ OPERATÖR CANLI WEB SİTELERİ (5 Test)
  */
 export function auditOfficialOperatorWebsites(): AuditCheckResult[] {
+  // Dürüstlük notu: Yalnızca Şehir Hatları tarifesi uygulamada kazınıp saklanmıştır (gerçek veri).
+  // Diğer operatörlerin sefer verisi uygulamada tutulmadığından burada doğrulama iddiası edilemez.
   return [
     {
-      category: "RESMİ_OPERATÖR_CANLI_WEB_TARAMASI",
+      category: "RESMİ_OPERATÖR_WEB_KAYNAĞI",
       testName: "Şehir Hatları Resmi Web Sitesi (sehirhatlari.istanbul)",
       status: "PASSED",
-      details: "HTTP 200 - Günlük resmi tarama ve iç hatlar sefer çizelgesi doğrulandı."
+      details: "Tarife verisi bu uygulamada saklanır ve kazınmış kaynaktan doğrulanmıştır."
     },
     {
-      category: "RESMİ_OPERATÖR_CANLI_WEB_TARAMASI",
+      category: "RESMİ_OPERATÖR_WEB_KAYNAĞI",
       testName: "Turyol Resmi Web Sitesi (turyol.com)",
-      status: "PASSED",
-      details: "HTTP 200 - Kadıköy, Karaköy, Eminönü ve Adalar hatları doğrulandı."
+      status: "WARNING",
+      details: "Dış kaynaktır; tarife verisi uygulamada saklanmıyor, canlı doğrulama iddiası yoktur."
     },
     {
-      category: "RESMİ_OPERATÖR_CANLI_WEB_TARAMASI",
+      category: "RESMİ_OPERATÖR_WEB_KAYNAĞI",
       testName: "Mavi Marmara Resmi Web Sitesi (mavimarmara.net)",
-      status: "PASSED",
-      details: "HTTP 200 - Bostancı ve Adalar motor seferleri tarifesi doğrulandı."
+      status: "WARNING",
+      details: "Dış kaynaktır; tarife verisi uygulamada saklanmıyor, canlı doğrulama iddiası yoktur."
     },
     {
-      category: "RESMİ_OPERATÖR_CANLI_WEB_TARAMASI",
+      category: "RESMİ_OPERATÖR_WEB_KAYNAĞI",
       testName: "Dentur Avrasya Resmi Web Sitesi (denturavrasya.com)",
-      status: "PASSED",
-      details: "HTTP 200 - Beşiktaş, Üsküdar ve Boğaz turu seferleri doğrulandı."
+      status: "WARNING",
+      details: "Dış kaynaktır; tarife verisi uygulamada saklanmıyor, canlı doğrulama iddiası yoktur."
     },
     {
-      category: "RESMİ_OPERATÖR_CANLI_WEB_TARAMASI",
+      category: "RESMİ_OPERATÖR_WEB_KAYNAĞI",
       testName: "Prens Tur Resmi Web Sitesi (prenstur.net)",
-      status: "PASSED",
-      details: "HTTP 200 - Kartal - Adalar motor hattı tarifesi doğrulandı."
+      status: "WARNING",
+      details: "Dış kaynaktır; tarife verisi uygulamada saklanmıyor, canlı doğrulama iddiası yoktur."
     }
   ];
 }
@@ -594,30 +597,32 @@ export function auditOfficialOperatorWebsites(): AuditCheckResult[] {
  * 10. CANLI SUNUCU VE APILER (4 Test)
  */
 export function auditLiveProductionEndpoints(): AuditCheckResult[] {
+  // Dürüstlük notu: Bu denetim canlı HTTP isteği atmaz; yalnızca hedef URL'lerin tanımını doğrular.
+  // Gerçek canlı durum için operatör sitelerine ayrıca ağ denetimi gerekir.
   return [
     {
       category: "CANLI_SUNUCU_VE_APILER",
       testName: "Ana Port Canlı Üretim Sunucusu (vapur-seferleri.vercel.app)",
-      status: "PASSED",
-      details: "HTTP 200 OK - Edge CDN üzerinden anlık yanıt veriyor."
+      status: "WARNING",
+      details: "Canlı URL tanımlı; canlı HTTP denetimi bu döngüde gerçekleştirilmedi."
     },
     {
       category: "CANLI_SUNUCU_VE_APILER",
       testName: "Adalar Port Canlı Üretim Sunucusu (adalar-sefer-asistani.vercel.app)",
-      status: "PASSED",
-      details: "HTTP 200 OK - Adalar portalı canlı ve aktif."
+      status: "WARNING",
+      details: "Canlı URL tanımlı; canlı HTTP denetimi bu döngüde gerçekleştirilmedi."
     },
     {
       category: "CANLI_SUNUCU_VE_APILER",
       testName: "Otomatik Eşzamanlama API Uç Noktası (/api/sync)",
-      status: "PASSED",
-      details: "HTTP 200 OK - Günlük veri doğrulama denetim rotası yanıt veriyor."
+      status: "WARNING",
+      details: "Yol tanımlı; canlı HTTP denetimi bu döngüde gerçekleştirilmedi."
     },
     {
       category: "CANLI_SUNUCU_VE_APILER",
       testName: "Sistem Denetim & Sağlık API Uç Noktası (/api/audit)",
-      status: "PASSED",
-      details: "HTTP 200 OK - 900+ maddelik otonom denetim raporunu JSON olarak sunuyor."
+      status: "WARNING",
+      details: "Yol tanımlı; canlı HTTP denetimi bu döngüde gerçekleştirilmedi."
     }
   ];
 }

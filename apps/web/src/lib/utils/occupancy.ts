@@ -1,3 +1,5 @@
+import { getIstanbulParts } from "@/lib/utils/istanbul-time";
+
 export type OccupancyLevel = "LOW" | "MEDIUM" | "HIGH" | "RUSH";
 
 export interface OccupancyInfo {
@@ -59,7 +61,7 @@ export function predictTripOccupancy(
     return {
       level: "RUSH",
       percentage: 92,
-      label: "Pik Saat • %92 Doluluk",
+      label: "Pik Saat • ~%92 Tahmini Doluluk",
       badgeClass: "bg-rose-950/90 border border-rose-500/60 text-rose-300 font-black ring-1 ring-rose-500/40",
       glowClass: "shadow-sm shadow-rose-500/30",
       description: "Sabah iş/okul giriş saatleri sebebiyle rıhtım turnikelerinde ve ana salonda yüksek yoğunluk beklenmektedir."
@@ -71,7 +73,7 @@ export function predictTripOccupancy(
     return {
       level: "RUSH",
       percentage: 95,
-      label: "Pik Saat • %95 Doluluk",
+      label: "Pik Saat • ~%95 Tahmini Doluluk",
       badgeClass: "bg-rose-950/90 border border-rose-500/60 text-rose-300 font-black ring-1 ring-rose-500/40",
       glowClass: "shadow-sm shadow-rose-500/30",
       description: "Akşam mesai çıkışı sebebiyle iskele rıhtımında kuyruk ve üst güvertelerde yoğun doluluk beklenmektedir."
@@ -83,7 +85,7 @@ export function predictTripOccupancy(
     return {
       level: "HIGH",
       percentage: 88,
-      label: "Yoğun • %88 Ada Akını",
+      label: "Yoğun • ~%88 Tahmini Ada Akını",
       badgeClass: "bg-rose-950/90 border border-rose-500/50 text-rose-300 font-black",
       glowClass: "shadow-sm shadow-rose-500/20",
       description: "Hafta sonu ada ziyaretçileri sebebiyle açık güverte oturma alanları erken dolabilir."
@@ -95,7 +97,7 @@ export function predictTripOccupancy(
     return {
       level: "RUSH",
       percentage: 98,
-      label: "Aşırı Yoğun • %98 Dönüş",
+      label: "Aşırı Yoğun • ~%98 Tahmini Dönüş",
       badgeClass: "bg-rose-950/90 border border-rose-500/60 text-rose-300 font-black ring-1 ring-rose-500/40 animate-pulse",
       glowClass: "shadow-md shadow-rose-500/40",
       description: "Adalardan şehre dönüş dalgası sebebiyle turnikelerde ve rıhtımda yoğun bekleme yaşanabilir."
@@ -107,7 +109,7 @@ export function predictTripOccupancy(
     return {
       level: "MEDIUM",
       percentage: 52,
-      label: "Normal • %52 Doluluk",
+      label: "Normal • ~%52 Tahmini Doluluk",
       badgeClass: "bg-amber-950/80 border border-amber-500/40 text-amber-300 font-bold",
       glowClass: "shadow-xs",
       description: "Dengeli yolcu akışı. Rahatça oturma yeri bulabilirsiniz."
@@ -118,7 +120,7 @@ export function predictTripOccupancy(
   return {
     level: "LOW",
     percentage: 25,
-    label: "Sakin • %25 Doluluk",
+    label: "Sakin • ~%25 Tahmini Doluluk",
     badgeClass: "bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 font-bold",
     glowClass: "shadow-xs",
     description: "Sakin sefer. Vapurda geniş boş yer ve ferah oturma alanı mevcuttur."
@@ -133,10 +135,9 @@ export function calculatePierCrowdDensity(pierName: string, isWeekend: boolean =
   statusLabel: string;
   glowColor: string;
 } {
-  const now = new Date();
-  const currentHour = now.getHours();
-  const currentMin = now.getMinutes();
-  const timeMin = currentHour * 60 + currentMin;
+  // İstanbul saat dilimine göre (cihaz yerel saati değil) anlık saati hesapla
+  const now = getIstanbulParts();
+  const timeMin = now.hour * 60 + now.minute;
 
   const isAda = pierName.includes("Büyükada") || pierName.includes("Heybeliada") || pierName.includes("Kınalıada") || pierName.includes("Burgazada");
 

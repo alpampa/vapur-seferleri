@@ -9,10 +9,6 @@ export interface MarineWeatherStatus {
   alertTitle: string;
   alertDescription: string;
   isFerryDisruptionRisk: boolean;
-  seaWaterTemperatureC?: number;
-  mucilageBiologyStatus?: string;
-  salinityUpperPsu?: number;
-  salinityDeepPsu?: number;
 }
 
 export function getIstanbulWindName(degrees: number): string {
@@ -85,11 +81,7 @@ export async function fetchLiveMarineWeather(): Promise<MarineWeatherStatus> {
       alertType,
       alertTitle,
       alertDescription,
-      isFerryDisruptionRisk,
-      seaWaterTemperatureC: 22.4, // Eylül ayı Boğaziçi ve Marmara gerçek deniz yüzeyi sıcaklığı (MGM & ODTÜ DBE)
-      mucilageBiologyStatus: "Deniz Yüzeyi Temiz & Berrak • Müsilaj/Yosun Riski Yok",
-      salinityUpperPsu: 18, // Karadeniz üst akıntısı %18 tuzluluk
-      salinityDeepPsu: 38  // Akdeniz dip ters akıntısı %38 tuzluluk
+      isFerryDisruptionRisk
     };
   } catch (err) {
     console.warn('Live marine weather fetch failed, returning default normal status:', err);
@@ -166,8 +158,8 @@ export function calculateMaritimeLinesRisk(weather: MarineWeatherStatus | null |
   }
 
   // 2. Kabataş / Kadıköy - Adalar Hattı
-  let kabatasAdaRisk = Math.max(5, adalarRisk - 5);
-  let kabatasAdaLevel = adalarLevel;
+  const kabatasAdaRisk = Math.max(5, adalarRisk - 5);
+  const kabatasAdaLevel = adalarLevel;
 
   // 3. Kandilli - Aşiyan - Bebek Hattı (Şeytan Akıntısı & Akıntıburnu Koridoru)
   // Boğaz'ın en dar yerinde akıntı 4.5 knot üzerine çıkar. Poyraz fırtınasında çatışma dalgası oluşur.
@@ -229,8 +221,8 @@ export function calculateMaritimeLinesRisk(weather: MarineWeatherStatus | null |
 
   // 6. Haliç Hattı (Üsküdar - Karaköy - Kasımpaşa - Eyüpsultan)
   // Haliç korunaklı iç körfezdir, en sert fırtınada bile neredeyse asla iptal olmaz!
-  let halicRisk = 0;
-  let halicNote = "Haliç kapalı iç su yolu olduğundan fırtınadan etkilenmez, güvenli liman seferleri devam eder.";
+  const halicRisk = 0;
+  const halicNote = "Haliç kapalı iç su yolu olduğundan fırtınadan etkilenmez, güvenli liman seferleri devam eder.";
 
   return [
     {

@@ -1,0 +1,63 @@
+name: Gecelik Tarife ve Duyuru Senkronu (23:00 İstanbul)
+
+# 23:00 İstanbul = 20:00 UTC
+on:
+  schedule:
+    - cron: "0 20 * * *"
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: "Tetikleme nedeni (isteğe bağlı)"
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  nightly-sync:
+    name: Resmi tarife + duyuru senkronu
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/web
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: .
+
+      # 1. CANLI DENTUR TARİFESİNİ ÇEK ve dentur-schedules.json'i birebir yeniden üret
+      - name: Dentur tarifesini canlı çek (resmi site)
+        run: GENERATE_DENTUR=1 npx vitest run src/lib/agents/__tests__/generate-dentur-data.test.ts
+
+      # 2. CANLI DUYURULARI ÇEK (Şehir Hatları iptal-seferler + Dentur duyurular)
+      - name: Duyuruları canlı çek (resmi siteler)
+        run: GENERATE_ANNOUNCEMENTS=1 npx vitest run src/lib/agents/__tests__/generate-announcements.test.ts
+
+      # 3. Değişiklik olup olmadığını git diff üzerinden kontrol et
+      - name: Değişiklik var mı kontrol et
+        id: diff
+        run: |
+          echo "changed=$(git status --porcelain -- src/lib/data/dentur-schedules.json src/lib/agents/data-snapshots/announcements.json src/lib/agents/data-snapshots/fingerprints.json | wc -l)" >> "$GITHUB_OUTPUT"
+
+      # 4. Değişiklik varsa commit + push (20:00 UTC → 23:00 İstanbul günlük senkron)
+      - name: Değişiklikleri işle (gerçek veri güncellemesi)
+        if: steps.diff.outputs.changed != '0'
+        run: |
+          git config user.name "vapur-sync-agent[bot]"
+          git config user.email "vapur-sync-agent[bot]@users.noreply.github.com"
+          git add src/lib/data/dentur-schedules.json src/lib/agents/data-snapshots/announcements.json src/lib/agents/data-snapshots/fingerprints.json
+          git commit -m "Gecelik 23:00 tarife/duyuru senkronu: resmi kaynaklardan güncel veri"
+          git push origin main
+
+      - name: Özet raporla
+        if: always()
+        run: echo "Senkron tamamlandı. Değişiklik: ${{ steps.diff.outputs.changed }} dosya."

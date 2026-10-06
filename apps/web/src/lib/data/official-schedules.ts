@@ -1,5 +1,9 @@
 import rawSchedules from "./official-scraped-schedules.json";
 import { generateSupplementarySchedules } from "./supplementary-schedules";
+import { getMaviMarmaraSchedules } from "./mavi-marmara-schedules";
+import { getDenturSchedules } from "./dentur-schedules";
+import { getPrensTurSchedules } from "./prens-tur-schedules";
+import { getTuryolSchedules } from "./turyol-schedules";
 
 export interface RawStop {
   name: string;
@@ -31,16 +35,35 @@ export interface RawOfficialTrip {
   runsWeekday?: boolean;
   runsSaturday?: boolean;
   runsSunday?: boolean;
+
+  /** Sadece 'Sürekli Sefer' pencereleri için (uydurma saat üretilmez) */
+  isContinuous?: boolean;
+  /** Sürekli sefer penceresinin bitiş saati (HH:mm) */
+  continuousUntil?: string;
+  /** Hat tanımlayıcı (örn. Beşiktaş-Kadıköy) */
+  lineName?: string;
 }
 
 /**
- * 100% AUTHENTIC VERIFIED TIMETABLES (2026 GÜZ / KIŞ DÖNEMİ)
- * Loaded from official-scraped-schedules.json + Mavi Marmara, Prens Tur, Turyol, Dentur
+ * LİMAN BAŞKANLIĞI VE UKOME İZİNLİ TÜM OPERATÖRLER DOĞRULANMIŞ VERİ SETİ:
+ * - Şehir Hatları : official-scraped-schedules.json (resmi portal dökümü).
+ * - Mavi Marmara  : mavimarmara.net resmi tarife sayfalarından doğrulanmış GERÇEK veri.
+ * - Dentur Avrasya: denturavrasya.com hat sayfalarından canlı parse edilmiş veri.
+ * - Prens Tur     : prenstur.net resmi 2026-2027 kış tarifesi afişinden çıkarılmış doğrulanmış veri.
+ * - Turyol        : turyol.com iç arama motorundan canlı çekilmiş doğrulanmış veri.
  */
 const baseTrips = rawSchedules as unknown as RawOfficialTrip[];
 const supplementaryTrips = generateSupplementarySchedules();
+const maviMarmaraTrips = getMaviMarmaraSchedules();
+const denturTrips = getDenturSchedules();
+const prensTurTrips = getPrensTurSchedules();
+const turyolTrips = getTuryolSchedules();
 
 export const OFFICIAL_SCHEDULES_DATA: RawOfficialTrip[] = [
   ...baseTrips,
-  ...supplementaryTrips
+  ...supplementaryTrips,
+  ...maviMarmaraTrips,
+  ...denturTrips,
+  ...prensTurTrips,
+  ...turyolTrips
 ];

@@ -1,9 +1,9 @@
 import { OFFICIAL_SCHEDULES_DATA, RawOfficialTrip } from '../data/official-schedules';
-import type { ScheduleCardDto, SchedulesResponse } from '@/app/page';
-import type { TripStatus } from '@/components/schedule/ScheduleCard';
+import type { ScheduleCardDto, SchedulesResponse, TripStatus } from '@/lib/types/schedule';
 import { getOfficialRouteFare, resolveRealisticPlatform } from '@/lib/data/official-fares';
 import { selfHealTripRecord } from '@/lib/agents/self-healing-engine';
 import { checkTurkishHoliday } from '@/lib/utils/holiday-calendar';
+import { istanbulIsoFor, compareHhmm, nightRolloverDayOffset } from '@/lib/utils/istanbul-time';
 
 /**
  * Returns current Istanbul time components (UTC+3)
@@ -91,19 +91,45 @@ export async function getLiveOrOfficialSchedules(): Promise<SchedulesResponse> {
     }
   });
 
+  // 1b. Sanitize: veri kaynağındaki bozuk kayıtları temizle
+  //   - departureTime "HH:mm" formatında değilse kayıt atlanır
+  //   - origin/destination placeholder metin taşıyorsa atlanır (örn: "Sadece Hafta İçi...")
+  //   - varış < kalkış ve kalkış 17:00'den önceyse veri hatasıdır: varış temizlenir,
+  //     selfHealTripRecord gerçekçi seyir süresine göre yeniden hesaplar.
+  //     17:00 sonrası kalkışta bu gece yarısını aşan gerçek seferdir, korunur.
+  const sanitizedTrips: RawOfficialTrip[] = todayOfficial
+    .filter(trip => /^\d{2}:\d{2}$/.test(trip.departureTime))
+    .filter(trip =>
+      !trip.origin.includes('...') && !trip.destination.includes('...')
+      && !trip.origin.includes('Sadece') && !trip.destination.includes('Sadece')
+    )
+    .map(trip => {
+      const depHour = parseInt(trip.departureTime.slice(0, 2), 10);
+      const hasBadArrival =
+        !!trip.arrivalTime &&
+        /^\d{2}:\d{2}$/.test(trip.arrivalTime) &&
+        compareHhmm(trip.arrivalTime, trip.departureTime) < 0 &&
+        depHour < 17;
+      return hasBadArrival ? { ...trip, arrivalTime: undefined } : trip;
+    });
+
   // 2. Map raw official trips to full ScheduleCardDto
-  const schedules: ScheduleCardDto[] = todayOfficial.map((rawTrip) => {
+  const schedules: ScheduleCardDto[] = sanitizedTrips.map((rawTrip) => {
     const trip = selfHealTripRecord(rawTrip);
     const [hh, mm] = trip.departureTime.split(':');
-    
-    // Construct ISO string explicitly with +03:00 Istanbul offset
-    const targetIso = `${yearStr}-${monthStr}-${dayStr}T${hh}:${mm}:00+03:00`;
+
+    // Gece seferi (00:00-04:59 kalkış) akşam saatlerinde (20:00+) görüntülenirken
+    // kalkış yarına taşınır: 23:50'de 00:15 seferi "GİTTİ" değil "yaklaşan" olur.
+    // Kural tek kaynaktır: nightRolloverDayOffset (istanbul-time).
+    const targetIso =
+      istanbulIsoFor(trip.departureTime, nowMs, nightRolloverDayOffset(trip.departureTime, nowMs) === 1) ??
+      `${yearStr}-${monthStr}-${dayStr}T${hh}:${mm}:00+03:00`;
     const targetTimeMs = new Date(targetIso).getTime();
     const diff = targetTimeMs - nowMs;
 
     let status: TripStatus = 'ON_TIME';
     let progress = 0;
-    let delayText: string | undefined = undefined;
+    const delayText: string | undefined = undefined;
 
     if (diff < -15 * 60000) {
       status = 'COMPLETED';
@@ -144,12 +170,19 @@ export async function getLiveOrOfficialSchedules(): Promise<SchedulesResponse> {
       price: getOfficialRouteFare(trip.origin, trip.destination).fullFare,
       progress,
       category: trip.category || (trip.destination.includes('ada') || trip.origin.includes('ada') || trip.destination === 'Büyükada' || trip.origin === 'Büyükada' ? 'ADALAR' : 'BOGAZ'),
-      stops: trip.stops && trip.stops.length > 0 ? trip.stops : undefined
+      stops: trip.stops && trip.stops.length > 0 ? trip.stops : undefined,
+      arrivalTime: trip.arrivalTime,
+      isContinuous: trip.isContinuous || undefined,
+      continuousUntil: trip.continuousUntil,
+      lineName: trip.lineName
     };
   });
 
-  // 3. Sort chronologically by departure time
-  schedules.sort((a, b) => a.departureTime.localeCompare(b.departureTime));
+  // 3. Sort chronologically by resolved target time
+  // (gece yarısı yarına taşınan seferler 23:xx'den sonra sıralanır)
+  schedules.sort((a, b) =>
+    (a.targetTimeIso ?? a.departureTime).localeCompare(b.targetTimeIso ?? b.departureTime)
+  );
 
   return {
     serverTimeIso: ist.serverTimeIso,

@@ -1,19 +1,26 @@
 import { NextResponse } from "next/server";
-import { runDailyVerificationAudit, OFFICIAL_OPERATOR_CRAWLERS } from "@/lib/agents/daily-sync-job";
+import { runDailyVerificationAudit, runNightlyTariffSync } from "@/lib/agents/daily-sync-job";
+import { OFFICIAL_SCHEDULES_DATA } from "@/lib/data/official-schedules";
 
 export const dynamic = "force-dynamic";
 
+/**
+ * SENKRON ENDPOINTİ (el ile / otomasyon tetiklemeli)
+ * Tarife + duyuru senkronunu çalıştırır; ayrıca erişim denetim raporu üretir.
+ */
 export async function GET() {
   try {
+    const syncResult = await runNightlyTariffSync();
     const auditLogs = await runDailyVerificationAudit();
-    const allCompliant = auditLogs.every(log => log.isCompliant);
 
     return NextResponse.json({
-      status: allCompliant ? "OK" : "WARNING",
+      status: syncResult.success ? "OK" : "PARTIAL",
       auditTimestamp: new Date().toISOString(),
-      policy: "STRICT_AUTHENTIC_ZERO_FABRICATED_DATA",
-      operatorsMonitoredCount: OFFICIAL_OPERATOR_CRAWLERS.length,
-      auditLogs
+      policy: "SADECE_RESMI_KAYNAKTAN_DOGRULANMIS_VERI",
+      storedTripCount: OFFICIAL_SCHEDULES_DATA.length,
+      changedAny: syncResult.reports.some((r) => r.changed),
+      syncResult,
+      auditLogs,
     });
   } catch (error: any) {
     return NextResponse.json(

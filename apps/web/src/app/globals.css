@@ -37,9 +37,36 @@
   --radius-xl: 24px;
   --radius-card: 18px;
   --radius-pill: 999px;
-  
+
+  /* Spacing Scale (4px taban — tasarım sistemi)
+     1=4 2=8 3=12 4=16 5=20 6=24 8=32 10=40 12=48 16=64 */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* Semantik Durum Renkleri — renk yalnızca bilgi taşır:
+     aktif=yeşil, yaklaşan=amber, iptal=kırmızı, geçmiş=nötr */
+  --status-active: #27c56b;
+  --status-approaching: #f6b73c;
+  --status-cancelled: #ff4d5d;
+  --status-completed: #72849b;
+
   /* Safe Area for Mobile */
   --sab: env(safe-area-inset-bottom);
+
+  /* Brief §29 — jenerik semantik tokenlar (mevcut değerlere alias, sıfır görsel değişim).
+     Not: Bileşen katmanında fiili tasarım dili Tailwind utility sınıflarıdır (slate/amber/rose);
+     bu tokenlar semantik referans noktası ve yeni bileşenler için geçiş katmanıdır. */
+  --surface: var(--surface-navy);
+  --border: var(--divider);
+  --muted: var(--text-muted);
 }
 
 @theme {
@@ -68,6 +95,15 @@
   
   --color-divider: var(--divider);
   --color-overlay: var(--overlay);
+
+  --color-status-active: var(--status-active);
+  --color-status-approaching: var(--status-approaching);
+  --color-status-cancelled: var(--status-cancelled);
+  --color-status-completed: var(--status-completed);
+
+  --color-surface: var(--surface);
+  --color-border: var(--border);
+  --color-muted: var(--muted);
   
   --radius-xs: var(--radius-xs);
   --radius-sm: var(--radius-sm);
@@ -77,7 +113,7 @@
   --radius-card: var(--radius-card);
   --radius-pill: var(--radius-pill);
   
-  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
@@ -115,6 +151,34 @@ button, a, input, select {
 /* Number display for countdowns */
 .tabular-nums {
   font-variant-numeric: tabular-nums;
+}
+
+/*
+ * G7 — Dokunma alanı genişletici (ikincil kompakt ikon butonlar için).
+ * Görsel boyutu değiştirmeden efektif hedefi ~12px büyütür.
+ * Kullanım kuralı: komşu butonlarla arada en az `gap-2` (8px) olmalı ki
+ * genişletilmiş alanlar çakışmasın (her buton ±6px genişler).
+ */
+.hit-area {
+  position: relative;
+}
+.hit-area::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: inherit;
+}
+
+/* Reduced motion: süsleyici animasyonları kapat (brief §23) */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */
@@ -247,4 +311,22 @@ button, a, input, select {
   background-color: var(--app-surface) !important;
   border-color: var(--app-border) !important;
   color: var(--app-text) !important;
+}
+
+/* ==========================================================================
+   ERİŞİLEBİLİK: prefers-reduced-motion
+   Kullanıcı hareketi azaltmayı tercih ettiyse tüm CSS animasyon/geçişleri
+   anında tamamlanır (WCAG 2.3.3). framer-motion tarafı için
+   ReducedMotionProvider (MotionConfig reducedMotion="user") kullanılır.
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
 }

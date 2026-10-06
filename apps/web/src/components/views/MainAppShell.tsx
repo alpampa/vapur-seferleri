@@ -6,7 +6,7 @@ import { PiersDirectoryView } from "@/components/views/PiersDirectoryView";
 import { MarineWeatherSafetyCenter } from "@/components/views/MarineWeatherSafetyCenter";
 import { FavoritesAlarmsView } from "@/components/views/FavoritesAlarmsView";
 import { BottomNav } from "@/components/navigation/BottomNav";
-import type { ScheduleCardDto } from "@/app/page";
+import type { ScheduleCardDto } from "@/lib/types/schedule";
 import type { MarineWeatherStatus } from "@/lib/services/marine-weather";
 
 interface MainAppShellProps {
@@ -41,7 +41,6 @@ export function MainAppShell({ schedules, serverTimeIso, marineWeather }: MainAp
         <ScheduleListClient
           schedules={schedules}
           serverTimeIso={serverTimeIso}
-          marineWeather={marineWeather}
           initialOrigin={forcedPierFilter || undefined}
         />
       )}

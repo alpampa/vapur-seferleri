@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Radar, ExternalLink, ShieldCheck, Compass, Anchor, MapPin, Radio, Waves, Info } from "lucide-react";
-import { ISTANBUL_PIERS } from "@/lib/services/route-planner";
+import { ISTANBUL_PIERS } from "@/lib/data/piers";
 
 interface PierLiveAisRadarModalProps {
   isOpen: boolean;

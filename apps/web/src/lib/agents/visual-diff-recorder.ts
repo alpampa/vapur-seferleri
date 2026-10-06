@@ -40,13 +40,13 @@ const DIFF_SNAPSHOT_HISTORY: DiffSnapshot[] = [
     id: "diff-2026-09-06-03",
     timestamp: new Date().toISOString(),
     operator: "Mavi Marmara",
-    sourceUrl: "https://www.mavimarmara.net/sefer-saatleri",
+    sourceUrl: "https://www.mavimarmara.net/tarifeler/bostanci-buyukada/",
     category: "SEFER_SAATI",
     title: "Bostancı - Adalar Ring Seferleri",
-    previousSnippet: "Bostancı - Adalar ring seferleri 08:20, 15:10, 21:45 saatlerinde icra edilmektedir.",
-    currentSnippet: "Bostancı - Adalar ring seferleri 08:20, 15:10, 21:45 saatlerinde icra edilmektedir.",
+    previousSnippet: "2026 GÜZ tarifesine göre Bostancı kalkışlı Adalar seferleri günlük olarak icra edilmektedir.",
+    currentSnippet: "2026 GÜZ tarifesine göre Bostancı kalkışlı Adalar seferleri günlük olarak icra edilmektedir.",
     changesDetected: false,
-    shaHash: "4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce"
+    shaHash: "b8459a6d76f61e7c16b0fc6121290f0ab61b2587649cbd55f3780d55144e3864"
   }
 ];
 

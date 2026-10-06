@@ -3,7 +3,7 @@
 import { useFavoritesStore } from "@/store/useFavoritesStore";
 import { useAlarmStore } from "@/store/useAlarmStore";
 import { Star, Bell, BellRing, Ship, Clock, ArrowRight, Trash2 } from "lucide-react";
-import type { ScheduleCardDto } from "@/app/page";
+import type { ScheduleCardDto } from "@/lib/types/schedule";
 import { ScheduleCard } from "@/components/schedule/ScheduleCard";
 import { useState } from "react";
 import { TripDetailsSheet } from "@/components/schedule/TripDetailsSheet";

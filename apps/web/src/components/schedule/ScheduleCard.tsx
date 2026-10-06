@@ -1,24 +1,17 @@
 "use client";
 
-import { Ship, Bell, BellRing, Star, ChevronRight, Radio, Footprints } from "lucide-react";
+import { Ship, Bell, BellRing, Star, ChevronRight, Footprints, Moon, Ban, Siren, Timer, AlertTriangle } from "lucide-react";
 import { OperatorLogo } from "@/components/ui/OperatorLogo";
 import { resolveLiveVesselName } from "@/lib/agents/fleet-registry";
-import { useEffect, useState } from "react";
-import { resolveDynamicTrip, DynamicTripResolution } from "@/lib/utils/dynamic-trip";
+import { resolveDynamicTrip, isTripCancelled, DynamicTripResolution } from "@/lib/utils/dynamic-trip";
+import { formatRemainingShort } from "@/lib/utils/istanbul-time";
 import { useAlarmStore } from "@/store/useAlarmStore";
 import { useFavoritesStore } from "@/store/useFavoritesStore";
 import { useLanguageStore } from "@/store/useLanguageStore";
 import { requestNotificationPermission } from "@/lib/utils/sound";
-import { predictTripOccupancy, getTripAmenities } from "@/lib/utils/occupancy";
-import { useWalkingCatchStore } from "@/store/useWalkingCatchStore";
+import { predictTripOccupancy } from "@/lib/utils/occupancy";
 import { useActiveVoyageStore } from "@/store/useActiveVoyageStore";
-import { ISTANBUL_PIERS } from "@/lib/services/route-planner";
-
-import { matchesTurkishSearch } from "@/lib/utils/search-normalizer";
-import { correlateAisVessel } from "@/lib/services/ais-corridor-tracker";
-import type { ScheduleCardDto } from "@/app/page";
-
-export type TripStatus = "ON_TIME" | "DEPARTING_SOON" | "BOARDING" | "DELAYED" | "CANCELLED" | "IN_TRANSIT" | "ARRIVING" | "COMPLETED";
+import type { ScheduleCardDto, TripStatus } from "@/lib/types/schedule";
 
 export interface ScheduleCardProps {
   id: string;
@@ -39,6 +32,8 @@ export interface ScheduleCardProps {
   progress: number;
   stops?: { name: string; time: string }[];
   arrivalTime?: string;
+  isContinuous?: boolean;
+  continuousUntil?: string;
   onClick?: () => void;
   isCompact?: boolean;
   highlightStopName?: string;
@@ -75,7 +70,7 @@ export function TripStatusBadge({ status, delayText }: { status: TripStatus; del
       break;
     case "CANCELLED": 
       bgColor = "bg-rose-100 dark:bg-rose-950/90 text-rose-700 dark:text-rose-300 font-black border border-rose-400 dark:border-rose-500/60 animate-pulse"; 
-      label = "❌ İPTAL EDİLDİ"; 
+      label = "İPTAL EDİLDİ"; 
       break;
     case "COMPLETED": 
       bgColor = "bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400"; 
@@ -93,7 +88,9 @@ export function TripStatusBadge({ status, delayText }: { status: TripStatus; del
 export function ScheduleCard(props: ScheduleCardProps) {
   const { isAlarmSet, toggleAlarm } = useAlarmStore();
   const { isFavorite, toggleFavorite } = useFavoritesStore();
-  const { t, language } = useLanguageStore();
+  const { t } = useLanguageStore();
+  // Hook'lar erken return'den ÖNCE çağrılmalı (React hook sırası kuralı)
+  const { setActiveVoyage } = useActiveVoyageStore();
 
   const hasAlarm = isAlarmSet(props.id);
   const routeKey = `${props.origin} ➔ ${props.destination}`;
@@ -124,14 +121,6 @@ export function ScheduleCard(props: ScheduleCardProps) {
     props.departureTime
   );
 
-  const aisCorrelation = correlateAisVessel(
-    props.origin,
-    props.destination,
-    props.departureTime,
-    props.targetTimeIso,
-    accurateNow
-  );
-
   // If the trip has completely expired (30 seconds after its final departure leg), do not render
   if (dynState.isExpired) {
     return null;
@@ -142,8 +131,8 @@ export function ScheduleCard(props: ScheduleCardProps) {
   // KULLANICI KURALI: Son 5 dakikada sefer saati de yanıp sönsün
   const isLast5Minutes = !!dynState.countdown && !dynState.isDeparted;
 
-  // KULLANICI KURALI: İptal Sefer Tespiti (/ İPTAL Kırmızı Yanıp Sönen Rozet)
-  const isCancelled = props.status === "CANCELLED" || dynState.status === "CANCELLED" || (Boolean(props.delayText) && props.delayText!.toLowerCase().includes("iptal"));
+  // KULLANICI KURALI: İptal Sefer Tespiti (/ İPTAL Kırmızı Yanıp Sönen Rozet) — ortak tek doğruluk kaynağı
+  const isCancelled = isTripCancelled({ status: props.status, delayText: props.delayText }, dynState);
 
   // Kalan Saniyeyi Hesapla
   let remainingSec = 0;
@@ -162,13 +151,6 @@ export function ScheduleCard(props: ScheduleCardProps) {
   let ringColor = "#f59e0b";
   if (remainingSec <= 60) ringColor = "#ef4444";
   else if (remainingSec <= 120) ringColor = "#f97316";
-
-  // Profesyonel Yetişme Asistanı Entegrasyonu
-  const { isEnabled: isCatchEnabled, getWalkingMinutesToPier } = useWalkingCatchStore();
-  const { setActiveVoyage } = useActiveVoyageStore();
-
-  const pierEntry = Object.entries(ISTANBUL_PIERS).find(([key]) => dynState.currentOrigin.toLowerCase().includes(key.toLowerCase()));
-  const walkingMinutes = isCatchEnabled ? getWalkingMinutesToPier(pierEntry?.[1].lat, pierEntry?.[1].lng) : 0;
 
   // Gece Seferi Tespiti (00:00 - 05:59 arası seferler UKOME Çift Tarife)
   const departureHour = parseInt(dynState.currentDepartureTime.split(":")[0], 10);
@@ -192,33 +174,13 @@ export function ScheduleCard(props: ScheduleCardProps) {
     status: props.status,
     targetTimeIso: props.targetTimeIso,
     delayText: props.delayText,
-    vessel: aisCorrelation.isVerified ? aisCorrelation.vesselName : liveVessel.vesselName,
+    vessel: liveVessel.vesselName,
     platform: props.platform,
     price: props.price,
     progress: props.progress,
     stops: props.stops,
     arrivalTime: props.arrivalTime,
   };
-
-  let catchStatus: "CAN_CATCH" | "HURRY" | "MISS" | null = null;
-  let catchStatusText = "";
-  if (isCatchEnabled && !dynState.isDeparted) {
-    let remainingMins = 999;
-    if (dynState.countdown) {
-      const parts = dynState.countdown.split(':').map(Number);
-      if (parts.length === 2) remainingMins = parts[0] + parts[1] / 60;
-    }
-    if (remainingMins >= walkingMinutes + 2) {
-      catchStatus = "CAN_CATCH";
-      catchStatusText = `Yetişirsiniz (~${walkingMinutes} dk)`;
-    } else if (remainingMins >= walkingMinutes - 1) {
-      catchStatus = "HURRY";
-      catchStatusText = `Hızlı yürüyün! (~${walkingMinutes} dk)`;
-    } else {
-      catchStatus = "MISS";
-      catchStatusText = `Kaçırabilirsiniz`;
-    }
-  }
 
   const handleCardClick = () => {
     setActiveVoyage({
@@ -241,13 +203,22 @@ export function ScheduleCard(props: ScheduleCardProps) {
       <>
         <div
           onClick={handleCardClick}
+          role="button"
+          tabIndex={0}
+          aria-label={`${dynState.currentOrigin}'den ${dynState.destination}'na ${dynState.currentDepartureTime} seferi, detay için açın`}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              handleCardClick();
+            }
+          }}
           className={`rounded-xl px-2.5 py-1.5 flex items-center justify-between gap-2 transition-all cursor-pointer border group shadow-2xs ${
             isCancelled
               ? "border-rose-500/70 bg-rose-50/50 dark:bg-rose-950/20 text-slate-800 dark:text-slate-200"
               : dynState.isDeparted
               ? "border-slate-200 dark:border-slate-800/80 bg-slate-50/60 dark:bg-slate-900/40 text-slate-500 dark:text-slate-400 opacity-65"
               : isNightTrip
-              ? "border-indigo-500/70 bg-gradient-to-r from-[#090d1f] via-[#0d1430] to-[#090d1f] text-slate-100 shadow-indigo-950/40"
+              ? "border-indigo-400/70 dark:border-indigo-500/50 bg-white dark:bg-[#111726] text-slate-900 dark:text-white"
               : isLast3Minutes
               ? "border-rose-400 bg-rose-50/30 dark:bg-rose-950/20 text-slate-900 dark:text-white"
               : isLast5Minutes
@@ -256,7 +227,7 @@ export function ScheduleCard(props: ScheduleCardProps) {
           }`}
         >
           {/* Sol: Saat + Kalan Süre */}
-          <div className="flex items-center gap-1.5 shrink-0 min-w-[72px]">
+          <div className="flex items-center gap-1.5 shrink-0 min-w-18">
             <span
               className={`font-mono font-black text-sm sm:text-base tabular-nums leading-none ${
                 isCancelled
@@ -266,7 +237,7 @@ export function ScheduleCard(props: ScheduleCardProps) {
                   : isLast3Minutes
                   ? "text-rose-600 dark:text-rose-400 animate-pulse font-extrabold"
                   : isNightTrip
-                  ? "text-amber-400 font-extrabold"
+                  ? "text-indigo-600 dark:text-indigo-300 font-extrabold"
                   : "text-blue-600 dark:text-blue-400"
               }`}
             >
@@ -281,6 +252,10 @@ export function ScheduleCard(props: ScheduleCardProps) {
               <span className="text-[9px] font-mono font-black px-1 py-0.2 rounded bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-300/60 dark:border-amber-500/30 tabular-nums">
                 {dynState.countdown}
               </span>
+            ) : dynState.minutesUntilDeparture != null && dynState.status === "ON_TIME" && !isCancelled ? (
+              <span className="text-[9px] font-mono font-black px-1 py-0.2 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 tabular-nums whitespace-nowrap">
+                {formatRemainingShort(dynState.minutesUntilDeparture)}
+              </span>
             ) : null}
           </div>
 
@@ -291,13 +266,13 @@ export function ScheduleCard(props: ScheduleCardProps) {
               {dynState.currentOrigin}
             </span>
             <span className="text-blue-500 dark:text-blue-400 font-black text-[10px] shrink-0">➔</span>
-            <span className={`font-bold truncate ${isCancelled ? "line-through text-slate-400" : "text-blue-700 dark:text-amber-300"}`}>
+            <span className={`font-bold truncate ${isCancelled ? "line-through text-slate-400" : "text-blue-700 dark:text-blue-300"}`}>
               {dynState.destination}
             </span>
 
             {isNightTrip && (
-              <span className="px-1.5 py-0.2 rounded text-[8px] font-black bg-indigo-500/30 text-indigo-200 border border-indigo-500/40 shrink-0">
-                🌙 GECE
+              <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[9px] font-black bg-indigo-500/30 text-indigo-200 border border-indigo-500/40 shrink-0">
+                <Moon size={9} aria-hidden="true" /> GECE
               </span>
             )}
 
@@ -309,9 +284,10 @@ export function ScheduleCard(props: ScheduleCardProps) {
                   props.onSelectHop?.(scheduleDto);
                 }}
                 title="Ada İskeleleri Arası Biniş Seç"
+                aria-label="Ada iskeleleri arası biniş iniş seç"
                 className="px-1.5 py-0.5 rounded text-[9px] font-extrabold bg-blue-50 dark:bg-blue-950/70 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700 hover:bg-blue-100 shrink-0 cursor-pointer active:scale-95"
               >
-                🔄 Seç
+                Seç
               </button>
             )}
           </div>
@@ -326,6 +302,8 @@ export function ScheduleCard(props: ScheduleCardProps) {
                 toggleFavorite(routeKey);
               }}
               title={isFav ? "Favorilerden Çıkar" : "Favorilere Ekle"}
+              aria-label={isFav ? "Favorilerden çıkar" : "Favorilere ekle"}
+              aria-pressed={isFav}
               className={`w-7 h-7 flex items-center justify-center rounded-lg transition-all active:scale-95 ${
                 isFav
                   ? "text-amber-500 bg-amber-100 dark:bg-amber-400/20"
@@ -344,6 +322,8 @@ export function ScheduleCard(props: ScheduleCardProps) {
                 toggleAlarm(props.id);
               }}
               title={hasAlarm ? "Hatırlatıcıyı Kaldır" : "15 Dk Önce Hatırlat"}
+              aria-label={hasAlarm ? "Hatırlatıcıyı kaldır" : "15 dakika önce hatırlat"}
+              aria-pressed={hasAlarm}
               className={`w-7 h-7 flex items-center justify-center rounded-lg transition-all active:scale-95 ${
                 hasAlarm
                   ? "text-blue-600 bg-blue-100 dark:bg-blue-500/20"
@@ -363,13 +343,22 @@ export function ScheduleCard(props: ScheduleCardProps) {
   return (
     <div
       onClick={handleCardClick}
+      role="button"
+      tabIndex={0}
+      aria-label={`${dynState.currentOrigin}'den ${dynState.destination}'na ${dynState.currentDepartureTime} seferi, detay için açın`}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          handleCardClick();
+        }
+      }}
       className={`theme-card rounded-xl px-3 py-2.5 flex flex-col gap-1.5 text-slate-900 dark:text-white shadow-xs dark:shadow-none transition-all duration-150 cursor-pointer group border active:scale-[0.99] touch-manipulation ${
         isCancelled
           ? "border-rose-500/90 bg-rose-50/50 dark:bg-rose-950/25 ring-1 ring-rose-500/40 shadow-xs shadow-rose-500/10"
           : dynState.isDeparted
           ? "border-slate-200 dark:border-slate-800/80 bg-slate-50/60 dark:bg-slate-900/40 text-slate-500 dark:text-slate-400 opacity-65"
           : isNightTrip
-          ? "border-indigo-500/70 bg-gradient-to-r from-slate-950 via-[#0b1029] to-[#0f173a] text-slate-100 ring-1 ring-indigo-500/30 shadow-indigo-950/50 shadow-md"
+          ? "border-indigo-400/70 dark:border-indigo-500/50 bg-white dark:bg-[#141d2e]"
           : isLast5Minutes
           ? "border-amber-400 dark:border-amber-500/60 shadow-sm shadow-amber-400/20 ring-1 ring-amber-400/30 bg-white dark:bg-[#141d2e]"
           : "border-slate-200 dark:border-slate-700/60 hover:border-blue-400 dark:hover:border-blue-500/40 bg-white dark:bg-[#141d2e]"
@@ -409,12 +398,12 @@ export function ScheduleCard(props: ScheduleCardProps) {
                 <span className={`text-[10px] font-mono font-black tabular-nums ${remainingSec <= 60 ? "text-rose-600 dark:text-rose-400 animate-pulse font-extrabold" : "text-amber-600 dark:text-amber-400"}`}>
                   {remainingSec}s
                 </span>
-                <span className="text-[7px] font-bold text-slate-400">KALDI</span>
+                <span className="text-[8px] font-bold text-slate-400">KALDI</span>
               </div>
             </div>
           )}
 
-          <div className="flex flex-col items-start justify-center shrink-0 min-w-[62px]">
+          <div className="flex flex-col items-start justify-center shrink-0 min-w-16">
             <span
               className={`font-mono font-black text-xl sm:text-2xl leading-none tabular-nums tracking-tight transition-all ${
                 isCancelled
@@ -430,10 +419,15 @@ export function ScheduleCard(props: ScheduleCardProps) {
             >
               {dynState.currentDepartureTime}
             </span>
+            {props.isContinuous && !isCancelled && (
+              <span className="mt-1 inline-flex items-center gap-0.5 text-[9px] font-black px-1.5 py-0.5 rounded bg-cyan-100 dark:bg-cyan-500/20 text-cyan-700 dark:text-cyan-300 border border-cyan-300/60 dark:border-cyan-500/30 shrink-0 whitespace-nowrap">
+                <Timer size={9} aria-hidden="true" /> SÜREKLİ{props.continuousUntil ? ` ${props.continuousUntil}` : ""}
+              </span>
+            )}
             <div className="mt-1">
               {isCancelled ? (
                 <span className="px-1.5 py-0.5 rounded text-[9px] font-black bg-rose-600 text-white animate-pulse inline-flex items-center gap-0.5 shadow-xs">
-                  <span>🚫 İPTAL</span>
+                  <Ban size={10} aria-hidden="true" /> İPTAL
                 </span>
               ) : dynState.isDeparted ? (
                 <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 inline-flex items-center gap-0.5 border border-slate-300 dark:border-slate-700">
@@ -444,11 +438,19 @@ export function ScheduleCard(props: ScheduleCardProps) {
                 <span className={`px-1.5 py-0.5 rounded text-[9px] font-black uppercase tracking-wider inline-flex items-center gap-0.5 shadow-xs animate-pulse ${
                   remainingSec <= 60 ? "bg-rose-600 text-white" : "bg-amber-500 text-slate-950 font-extrabold"
                 }`}>
-                  <span>{remainingSec <= 60 ? "🚨 SON ÇAĞRI" : "🏃 KAPI KAPANIYOR"}</span>
+                  {remainingSec <= 60 ? (
+                    <><Siren size={10} aria-hidden="true" /> SON ÇAĞRI</>
+                  ) : (
+                    <><Footprints size={10} aria-hidden="true" /> KAPI KAPANIYOR</>
+                  )}
                 </span>
               ) : dynState.countdown ? (
-                <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-black bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-500/40 animate-pulse whitespace-nowrap">
-                  ⏳ {dynState.countdown}
+                <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-black bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-500/40 animate-pulse whitespace-nowrap inline-flex items-center gap-0.5">
+                  <Timer size={10} aria-hidden="true" /> {dynState.countdown}
+                </span>
+              ) : dynState.minutesUntilDeparture != null && dynState.status === "ON_TIME" ? (
+                <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-black bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 tabular-nums whitespace-nowrap inline-flex items-center gap-0.5">
+                  {formatRemainingShort(dynState.minutesUntilDeparture)}
                 </span>
               ) : (
                 <TripStatusBadge status={dynState.status} delayText={props.delayText} />
@@ -465,21 +467,21 @@ export function ScheduleCard(props: ScheduleCardProps) {
               {dynState.currentOrigin}
             </span>
             <span className="text-blue-600 dark:text-blue-400 font-extrabold text-xs sm:text-sm shrink-0">➔</span>
-            <span className={`truncate ${isCancelled ? "line-through opacity-70 text-slate-500 dark:text-slate-400" : "text-blue-700 dark:text-amber-300 font-bold"}`}>
+            <span className={`truncate ${isCancelled ? "line-through opacity-70 text-slate-500 dark:text-slate-400" : "text-blue-700 dark:text-blue-300 font-bold"}`}>
               {dynState.destination}
             </span>
 
             {/* Gece Seferi Rozeti */}
             {isNightTrip && !isCancelled && (
-              <span className="inline-flex items-center gap-0.5 px-1 py-0.2 rounded bg-indigo-500/25 text-amber-300 text-[9px] font-black uppercase tracking-wider border border-indigo-500/50 shrink-0">
-                🌙 GECE
+              <span className="inline-flex items-center gap-0.5 px-1 py-0.5 rounded bg-indigo-500/15 dark:bg-indigo-500/25 text-indigo-700 dark:text-indigo-300 text-[9px] font-black uppercase tracking-wider border border-indigo-500/50 shrink-0">
+                <Moon size={9} aria-hidden="true" /> GECE
               </span>
             )}
 
             {/* İptal Rozeti */}
             {isCancelled && (
-              <span className="inline-flex items-center gap-0.5 px-1 py-0.2 rounded bg-rose-600 text-white text-[9px] font-black uppercase tracking-wider animate-pulse shrink-0">
-                ⚠️ İPTAL
+              <span className="inline-flex items-center gap-0.5 px-1 py-0.5 rounded bg-rose-600 text-white text-[9px] font-black uppercase tracking-wider animate-pulse shrink-0">
+                <AlertTriangle size={9} aria-hidden="true" /> İPTAL
               </span>
             )}
           </div>
@@ -487,7 +489,7 @@ export function ScheduleCard(props: ScheduleCardProps) {
           {/* İptal Nedeni Varsa */}
           {isCancelled && props.delayText && (
             <div className="text-[10px] font-bold text-rose-600 dark:text-rose-400 mt-0.5 truncate">
-              ⚠️ {props.delayText}
+              <AlertTriangle size={10} className="inline mr-0.5" aria-hidden="true" /> {props.delayText}
             </div>
           )}
 
@@ -501,17 +503,6 @@ export function ScheduleCard(props: ScheduleCardProps) {
             <span className="text-slate-600 dark:text-slate-300 text-[10px] font-semibold shrink-0">
               {isDirect ? t("direct") : `${props.stops?.length} ara durak`}
             </span>
-
-            {/* Doğrulanmış Gemi Adı Rozeti */}
-            {aisCorrelation.isVerified && (
-              <>
-                <span className="text-slate-300 dark:text-slate-600 font-bold">•</span>
-                <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 dark:text-emerald-300 truncate">
-                  <Ship size={10} className="shrink-0 text-emerald-600 dark:text-emerald-400" />
-                  <span className="truncate">{aisCorrelation.vesselName}</span>
-                </span>
-              </>
-            )}
 
             {/* Doluluk Durumu */}
             <span className="text-slate-300 dark:text-slate-600 font-bold hidden xs:inline">•</span>
@@ -540,6 +531,8 @@ export function ScheduleCard(props: ScheduleCardProps) {
               toggleFavorite(routeKey);
             }}
             title={isFav ? "Favorilerden Çıkar" : "Favorilere Ekle"}
+            aria-label={isFav ? "Favorilerden çıkar" : "Favorilere ekle"}
+            aria-pressed={isFav}
             className={`w-8 h-8 flex items-center justify-center rounded-lg transition-all active:scale-90 touch-manipulation cursor-pointer ${
               isFav
                 ? "text-amber-500 dark:text-amber-400 bg-amber-100 dark:bg-amber-400/20 ring-1 ring-amber-400/30"
@@ -558,6 +551,8 @@ export function ScheduleCard(props: ScheduleCardProps) {
               toggleAlarm(props.id);
             }}
             title={hasAlarm ? "Hatırlatıcıyı Kaldır" : "15 Dk Önce Hatırlat"}
+            aria-label={hasAlarm ? "Hatırlatıcıyı kaldır" : "15 dakika önce hatırlat"}
+            aria-pressed={hasAlarm}
             className={`w-8 h-8 flex items-center justify-center rounded-lg transition-all active:scale-90 touch-manipulation cursor-pointer ${
               hasAlarm
                 ? "text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-500/20 ring-1 ring-blue-500/30"

@@ -1,27 +1,20 @@
-import type { ScheduleCardDto } from "@/app/page";
-import { resolveDynamicTrip } from "@/lib/utils/dynamic-trip";
+import type { ScheduleCardDto } from "@/lib/types/schedule";
+import { toAbsoluteDayMinutes } from "@/lib/utils/istanbul-time";
+import {
+  ESTIMATED_TRAVEL_MIN_PER_HOP,
+  TRANSFER_HUB_TRAVEL_MIN,
+  TRANSFER_MIN_WAIT_MIN,
+  TRANSFER_MAX_WAIT_MIN,
+  PAST_DEPARTURE_TOLERANCE_MIN,
+  MAX_ROUTE_RESULTS,
+  MINUTES_PER_DAY,
+} from "@/lib/constants";
 
-export interface PierLocation {
-  name: string;
-  lat: number;
-  lng: number;
-  region: "Anadolu" | "Avrupa" | "Adalar";
-}
+/** Sefer verisinde fiyat yoksa gösterilen varsayılan bilet ücreti */
+const DEFAULT_TICKET_PRICE = "₺45.00";
 
-export const ISTANBUL_PIERS: Record<string, PierLocation> = {
-  "Kabataş": { name: "Kabataş", lat: 41.0347, lng: 28.9903, region: "Avrupa" },
-  "Kadıköy": { name: "Kadıköy", lat: 40.9908, lng: 29.0225, region: "Anadolu" },
-  "Eminönü": { name: "Eminönü", lat: 41.0186, lng: 28.9739, region: "Avrupa" },
-  "Beşiktaş": { name: "Beşiktaş", lat: 41.0422, lng: 29.0067, region: "Avrupa" },
-  "Üsküdar": { name: "Üsküdar", lat: 41.0267, lng: 29.0156, region: "Anadolu" },
-  "Bostancı": { name: "Bostancı", lat: 40.9525, lng: 29.0944, region: "Anadolu" },
-  "Kartal": { name: "Kartal", lat: 40.8872, lng: 29.1864, region: "Anadolu" },
-  "Maltepe": { name: "Maltepe", lat: 40.9231, lng: 29.1306, region: "Anadolu" },
-  "Kınalıada": { name: "Kınalıada", lat: 40.9103, lng: 29.0522, region: "Adalar" },
-  "Burgazada": { name: "Burgazada", lat: 40.8817, lng: 29.0700, region: "Adalar" },
-  "Heybeliada": { name: "Heybeliada", lat: 40.8767, lng: 29.0992, region: "Adalar" },
-  "Büyükada": { name: "Büyükada", lat: 40.8744, lng: 29.1283, region: "Adalar" }
-};
+/** Sefer verisinde platform yoksa gösterilen varsayılan rıhtım adı */
+const DEFAULT_PLATFORM = "Ana Rıhtım";
 
 export interface RouteOption {
   type: "DIRECT" | "TRANSFER";
@@ -51,7 +44,7 @@ function timeToMinutes(hhmm: string): number {
 }
 
 function minutesToTime(mins: number): string {
-  const normalized = ((mins % 1440) + 1440) % 1440;
+  const normalized = ((mins % MINUTES_PER_DAY) + MINUTES_PER_DAY) % MINUTES_PER_DAY;
   const h = Math.floor(normalized / 60);
   const m = normalized % 60;
   return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
@@ -77,7 +70,8 @@ export function planJourney(
 
     // Check intermediate stops as origin or destination
     let depTime = s.departureTime;
-    let arrTime = "12:00"; // fallback
+    // Varış: ara duraksa durak saati, seferin son durağıysa seferin varış saati
+    let arrTime: string | null = null;
 
     // If origin is intermediate stop
     if (!originMatches && s.stops) {
@@ -91,44 +85,53 @@ export function planJourney(
       if (st) arrTime = st.time;
     }
 
+    // If destination is the trip's final stop, use the trip's own arrival time
+    if (!arrTime && destMatches && s.arrivalTime) {
+      arrTime = s.arrivalTime;
+    }
+
     // Verify valid direction: origin must be visited before destination
     const allStops = [s.origin, ...(s.stops?.map(x => x.name) || []), s.destination];
     const origIdx = allStops.indexOf(origin);
     const destIdx = allStops.indexOf(destination);
 
     if (origIdx !== -1 && destIdx !== -1 && origIdx < destIdx) {
-      const depM = timeToMinutes(depTime);
-      if (currentMinutes > 0 && depM < currentMinutes - 5) {
+      const absDepM = toAbsoluteDayMinutes(depTime, currentMinutes);
+      if (currentMinutes > 0 && absDepM < currentMinutes - PAST_DEPARTURE_TOLERANCE_MIN) {
         // Already departed in the past
         continue;
       }
 
-      // Calculate arrival time if not explicit
-      let arrM = timeToMinutes(arrTime);
-      if (arrM <= depM) {
-        // Estimate approx 25-45 mins depending on stop distance
-        const hopCount = destIdx - origIdx;
-        arrM = depM + hopCount * 20;
-        arrTime = minutesToTime(arrM);
+      // Varış hesabı: süre = kalkış gününe göre mutlak dakika farkı
+      let durationMin: number;
+      if (arrTime) {
+        let arrM = timeToMinutes(arrTime);
+        // Gece yarısını aşan sefer: varış kalkıştan önceki saatte görünüyorsa ertesi güne aittir
+        if (arrM < timeToMinutes(depTime)) arrM += MINUTES_PER_DAY;
+        durationMin = arrM - timeToMinutes(depTime);
+      } else {
+        // Estimate approx travel time per hop
+        durationMin = (destIdx - origIdx) * ESTIMATED_TRAVEL_MIN_PER_HOP;
       }
+      const absArrM = absDepM + durationMin;
 
       results.push({
         type: "DIRECT",
         origin,
         destination,
         departureTime: depTime,
-        arrivalTime: arrTime,
-        durationMinutes: arrM - depM,
-        totalPrice: s.price || "₺45.00",
+        arrivalTime: minutesToTime(absArrM),
+        durationMinutes: durationMin,
+        totalPrice: s.price || DEFAULT_TICKET_PRICE,
         legs: [
           {
             origin,
             destination,
             operator: s.operator,
             departureTime: depTime,
-            arrivalTime: arrTime,
-            platform: s.platform || "Ana Rıhtım",
-            price: s.price || "₺45.00",
+            arrivalTime: minutesToTime(absArrM),
+            platform: s.platform || DEFAULT_PLATFORM,
+            price: s.price || DEFAULT_TICKET_PRICE,
             tripId: s.id
           }
         ]
@@ -160,19 +163,19 @@ export function planJourney(
     });
 
     for (const l1 of leg1Options) {
-      const l1DepM = timeToMinutes(l1.departureTime);
-      if (currentMinutes > 0 && l1DepM < currentMinutes - 5) continue;
+      const l1DepM = toAbsoluteDayMinutes(l1.departureTime, currentMinutes);
+      if (currentMinutes > 0 && l1DepM < currentMinutes - PAST_DEPARTURE_TOLERANCE_MIN) continue;
 
-      const l1ArrM = l1DepM + 35; // approx 35 mins to hub
+      const l1ArrM = l1DepM + TRANSFER_HUB_TRAVEL_MIN; // approx travel to hub
       const l1ArrTime = minutesToTime(l1ArrM);
 
-      // Find compatible leg2 where departure is between (l1ArrM + 10 mins) and (l1ArrM + 90 mins)
+      // Find compatible leg2 within the transfer wait window
       for (const l2 of leg2Options) {
-        const l2DepM = timeToMinutes(l2.departureTime);
+        const l2DepM = toAbsoluteDayMinutes(l2.departureTime, currentMinutes);
         const waitMinutes = l2DepM - l1ArrM;
 
-        if (waitMinutes >= 10 && waitMinutes <= 120) {
-          const l2ArrM = l2DepM + 35;
+        if (waitMinutes >= TRANSFER_MIN_WAIT_MIN && waitMinutes <= TRANSFER_MAX_WAIT_MIN) {
+          const l2ArrM = l2DepM + TRANSFER_HUB_TRAVEL_MIN;
           const l2ArrTime = minutesToTime(l2ArrM);
 
           results.push({
@@ -192,8 +195,8 @@ export function planJourney(
                 operator: l1.operator,
                 departureTime: l1.departureTime,
                 arrivalTime: l1ArrTime,
-                platform: l1.platform || "Ana Rıhtım",
-                price: l1.price || "₺45.00",
+                platform: l1.platform || DEFAULT_PLATFORM,
+                price: l1.price || DEFAULT_TICKET_PRICE,
                 tripId: l1.id
               },
               {
@@ -203,7 +206,7 @@ export function planJourney(
                 departureTime: l2.departureTime,
                 arrivalTime: l2ArrTime,
                 platform: l2.platform || "Aktarma Rıhtımı",
-                price: l2.price || "₺45.00",
+                price: l2.price || DEFAULT_TICKET_PRICE,
                 tripId: l2.id
               }
             ]
@@ -213,13 +216,14 @@ export function planJourney(
     }
   }
 
-  // Sort: Direct routes first, then by earliest departure time
+  // Sort: Direct routes first, then by earliest effective departure time
+  // (gece yarısını aşan seferler akşam planlamasında en sona sıralanır)
   results.sort((a, b) => {
     if (a.type !== b.type) {
       return a.type === "DIRECT" ? -1 : 1;
     }
-    return a.departureTime.localeCompare(b.departureTime);
+    return toAbsoluteDayMinutes(a.departureTime, currentMinutes) - toAbsoluteDayMinutes(b.departureTime, currentMinutes);
   });
 
-  return results.slice(0, 10);
+  return results.slice(0, MAX_ROUTE_RESULTS);
 }

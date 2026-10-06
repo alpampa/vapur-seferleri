@@ -9,9 +9,9 @@ import { useTrackingStore } from "@/store/useTrackingStore";
 export function LiveMap() {
   const { positions, connected, reconnecting, connect, disconnect } = useTrackingStore();
   const [viewState, setViewState] = useState({
-    longitude: -74.009,
-    latitude: 40.703,
-    zoom: 13,
+    longitude: 29.03,
+    latitude: 41.0,
+    zoom: 12,
     pitch: 45,
   });
 

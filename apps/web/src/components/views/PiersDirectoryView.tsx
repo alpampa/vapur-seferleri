@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { Search, MapPin, Camera, Train, Navigation, Ship, ChevronRight } from "lucide-react";
-import { ISTANBUL_PIERS, PierLocation } from "@/lib/services/route-planner";
+import { ISTANBUL_PIERS } from "@/lib/data/piers";
 import { getPierTransit } from "@/lib/data/pier-transit-connections";
 import { calculatePierCrowdDensity } from "@/lib/utils/occupancy";
 import { getPierMobility } from "@/lib/data/pier-parking-bicycle";
@@ -12,7 +12,7 @@ import { PierLiveCameraModal } from "@/components/map/PierLiveCameraModal";
 import { Landmark, Tag, Sparkles, BookOpen, Compass } from "lucide-react";
 import { AdalarHeritageModal } from "@/components/adalar/AdalarHeritageModal";
 import { SponsoredDealsModal } from "@/components/commercial/SponsoredDealsModal";
-import type { ScheduleCardDto } from "@/app/page";
+import type { ScheduleCardDto } from "@/lib/types/schedule";
 
 interface PiersDirectoryViewProps {
   schedules: ScheduleCardDto[];

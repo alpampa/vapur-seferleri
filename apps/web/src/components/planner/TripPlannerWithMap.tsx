@@ -3,8 +3,9 @@
 import { useState, useMemo } from "react";
 import dynamic from "next/dynamic";
 import { ArrowLeftRight, Clock, MapPin, Navigation, Compass, Ticket, ArrowRight, ShieldCheck, Sparkles, X } from "lucide-react";
-import type { ScheduleCardDto } from "@/app/page";
-import { ISTANBUL_PIERS, planJourney, type RouteOption } from "@/lib/services/route-planner";
+import type { ScheduleCardDto } from "@/lib/types/schedule";
+import { ISTANBUL_PIERS } from "@/lib/data/piers";
+import { planJourney, type RouteOption } from "@/lib/services/route-planner";
 
 // Dynamically import InteractiveMarineMap (No SSR for Leaflet)
 const InteractiveMarineMap = dynamic(

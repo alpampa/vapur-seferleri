@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useMemo, useRef } from "react";
 import { Footprints, Navigation, Clock, AlertTriangle, CheckCircle2, Volume2, VolumeX, ShieldAlert } from "lucide-react";
-import { ISTANBUL_PIERS } from "@/lib/services/route-planner";
+import { ISTANBUL_PIERS } from "@/lib/data/piers";
+import { useTransitClock } from "@/hooks/useTransitClock";
 
 interface CatchFerryWalkingTimerProps {
   departureTime: string; // e.g. "19:45"
@@ -15,13 +16,9 @@ export function CatchFerryWalkingTimer({ departureTime, originPier }: CatchFerry
   const [isLocating, setIsLocating] = useState<boolean>(false);
   const [isChimeEnabled, setIsChimeEnabled] = useState<boolean>(false);
   const [hasPlayedChime, setHasPlayedChime] = useState<boolean>(false);
-  const [currentTime, setCurrentTime] = useState<Date>(new Date());
 
-  // Update current time every second
-  useEffect(() => {
-    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
-    return () => clearInterval(timer);
-  }, []);
+  // Tek saat kaynağı: useTransitClock (1sn tick, sekme gizliyken durur)
+  const { nowMs } = useTransitClock();
 
   // Find origin pier coordinates
   const pierCoords = useMemo(() => {
@@ -103,17 +100,17 @@ export function CatchFerryWalkingTimer({ departureTime, originPier }: CatchFerry
   const { minutesUntilDeparture, leaveThresholdMinutes, departureDate } = useMemo(() => {
     const [depH, depM] = departureTime.split(":").map(Number);
     if (isNaN(depH) || isNaN(depM)) {
-      return { minutesUntilDeparture: 0, leaveThresholdMinutes: 0, departureDate: new Date() };
+      return { minutesUntilDeparture: 0, leaveThresholdMinutes: 0, departureDate: new Date(nowMs) };
     }
 
-    const dep = new Date(currentTime);
+    const dep = new Date(nowMs);
     dep.setHours(depH, depM, 0, 0);
 
     // If departure time is earlier than current time by more than 2 hours, it could be past or tomorrow
-    let diffMs = dep.getTime() - currentTime.getTime();
+    let diffMs = dep.getTime() - nowMs;
     if (diffMs < -2 * 60 * 60 * 1000) {
       dep.setDate(dep.getDate() + 1);
-      diffMs = dep.getTime() - currentTime.getTime();
+      diffMs = dep.getTime() - nowMs;
     }
 
     const diffMin = Math.round(diffMs / 60000);
@@ -124,7 +121,7 @@ export function CatchFerryWalkingTimer({ departureTime, originPier }: CatchFerry
       leaveThresholdMinutes: threshold,
       departureDate: dep
     };
-  }, [departureTime, currentTime, totalTravelNeededMinutes]);
+  }, [departureTime, nowMs, totalTravelNeededMinutes]);
 
   // Audio trigger
   useEffect(() => {

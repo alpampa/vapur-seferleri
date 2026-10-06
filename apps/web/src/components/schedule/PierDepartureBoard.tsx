@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { Ship, Clock, MapPin, Navigation, ChevronRight, Bell, BellRing, Sparkles } from "lucide-react";
-import type { ScheduleCardDto } from "@/app/page";
+import type { ScheduleCardDto } from "@/lib/types/schedule";
 import { resolveDynamicTrip } from "@/lib/utils/dynamic-trip";
 import { useAlarmStore } from "@/store/useAlarmStore";
 import { requestNotificationPermission } from "@/lib/utils/sound";
