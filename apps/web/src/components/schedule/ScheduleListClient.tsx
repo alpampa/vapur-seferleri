@@ -395,10 +395,11 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
       {/* CANLI FIRMA DUYURU BANDI (iptal / tarife / ek sefer) */}
       <AnnouncementBanner announcements={announcements} />
 
-      {/* 1. ÜST KONTROL BARI: Kategori Seçici + Kompakt Hızlı Araçlar */}
-      <div className="px-3 pt-2">
+      {/* KOMPAKT ÜST KONTROL BARI (Mobil Öncelikli & Yer Kazandıran Modern Tasarım) */}
+      <div className="px-3 pt-2 space-y-1.5">
+        {/* 1. SATIR: Kategori Seçici + GPS Konum + Araç Butonları */}
         <div className="flex items-center justify-between gap-1 p-1 bg-slate-200/90 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-800 rounded-xl shadow-xs">
-          {/* Sol: 3 Ana Kategori (Adalar, Boğaz, Tümü) */}
+          {/* Sol: 3 Ana Hat Kategorisi */}
           <div className="flex items-center gap-1">
             <button
               onClick={() => {
@@ -407,9 +408,9 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
                 setSelectedDestination("ALL");
               }}
               aria-pressed={selectedCategory === "ADALAR"}
-              className={`py-2 px-2.5 min-h-11 rounded-lg text-xs font-black transition-all flex items-center gap-1 cursor-pointer ${
+              className={`py-1.5 px-2.5 rounded-lg text-xs font-black transition-all flex items-center gap-1 cursor-pointer ${
                 selectedCategory === "ADALAR"
-                  ? "bg-amber-400 text-slate-950 shadow-xs scale-[1.01]"
+                  ? "bg-amber-400 text-slate-950 shadow-xs"
                   : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
               }`}
             >
@@ -424,9 +425,9 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
                 setSelectedDestination("ALL");
               }}
               aria-pressed={selectedCategory === "BOGAZ"}
-              className={`py-2 px-2.5 min-h-11 rounded-lg text-xs font-black transition-all flex items-center gap-1 cursor-pointer ${
+              className={`py-1.5 px-2 rounded-lg text-xs font-black transition-all flex items-center gap-1 cursor-pointer ${
                 selectedCategory === "BOGAZ"
-                  ? "bg-blue-600 text-white shadow-xs scale-[1.01]"
+                  ? "bg-blue-600 text-white shadow-xs"
                   : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
               }`}
             >
@@ -441,9 +442,9 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
                 setSelectedDestination("ALL");
               }}
               aria-pressed={selectedCategory === "ALL"}
-              className={`py-2 px-2 min-h-11 rounded-lg text-xs font-black transition-all flex items-center gap-1 cursor-pointer ${
+              className={`py-1.5 px-2 rounded-lg text-xs font-black transition-all flex items-center gap-1 cursor-pointer ${
                 selectedCategory === "ALL"
-                  ? "bg-slate-800 dark:bg-slate-700 text-white shadow-xs scale-[1.01]"
+                  ? "bg-slate-800 dark:bg-slate-700 text-white shadow-xs"
                   : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
               }`}
             >
@@ -452,13 +453,37 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
             </button>
           </div>
 
-          {/* Sağ: Kompakt İkon Araçları (G7: hit-area ile ~37px efektif hedef) */}
-          <div className="flex items-center gap-2">
+          {/* Sağ: GPS Konum Bulucu + Kompakt Araçlar */}
+          <div className="flex items-center gap-1">
+            {/* GPS Konuma Göre İskele Bulucu */}
+            <button
+              onClick={requestLocation}
+              disabled={geoStatus === "LOCATING"}
+              aria-label="Konumuma göre en yakın iskeleyi bul"
+              className={`p-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer border flex items-center gap-1 ${
+                geoStatus === "ACTIVE"
+                  ? "bg-emerald-500 text-white border-emerald-400 shadow-2xs font-black"
+                  : geoStatus === "LOCATING"
+                  ? "bg-blue-500 text-white border-blue-400 animate-pulse"
+                  : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:bg-slate-100"
+              }`}
+              title={
+                nearestPier
+                  ? `En Yakın: ${nearestPier.name} (~${nearestPier.distanceKm.toFixed(1)} km)`
+                  : "Konumuma göre en yakın iskeleyi getir"
+              }
+            >
+              <Navigation size={13} className={geoStatus === "LOCATING" ? "animate-spin" : geoStatus === "ACTIVE" ? "fill-white" : ""} />
+              {nearestPier && geoStatus === "ACTIVE" && (
+                <span className="text-[10px] hidden sm:inline max-w-20 truncate">{nearestPier.name}</span>
+              )}
+            </button>
+
             <button
               onClick={() => setIsSearchVisible(!isSearchVisible)}
               aria-pressed={isSearchVisible || searchQuery.trim().length > 0}
               aria-label="Aramayı aç/kapat"
-              className={`hit-area p-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer border ${
+              className={`p-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer border ${
                 isSearchVisible || searchQuery.trim().length > 0
                   ? "bg-blue-600 text-white border-blue-500 shadow-2xs"
                   : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:bg-slate-100"
@@ -472,12 +497,12 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
               onClick={() => setOnlyImminent(!onlyImminent)}
               aria-pressed={onlyImminent}
               aria-label="Kalkışına 15 dakika veya daha az kalan seferleri göster"
-              className={`hit-area px-2 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1 transition-all cursor-pointer border ${
+              className={`px-2 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1 transition-all cursor-pointer border ${
                 onlyImminent
                   ? "bg-amber-400 text-slate-950 border-amber-400 shadow-2xs font-black"
                   : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:bg-slate-100"
               }`}
-              title="Kalkışına 15 dk veya daha az kalanlar"
+              title="Kalkışına ≤15 dk kalanlar"
             >
               <span className="text-amber-500">⚡</span>
               <span className="hidden xs:inline text-[11px]">≤15 dk</span>
@@ -487,7 +512,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
               onClick={() => setShowPlanner(!showPlanner)}
               aria-pressed={showPlanner}
               aria-label="Harita ve rota planlayıcıyı aç/kapat"
-              className={`hit-area p-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer border ${
+              className={`p-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer border ${
                 showPlanner
                   ? "bg-cyan-600 text-white border-cyan-500 shadow-2xs"
                   : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:bg-slate-100"
@@ -499,101 +524,118 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
 
             <button
               onClick={() => setIsNightTransitOpen(true)}
-              className="hit-area p-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer border bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800/80 hover:bg-indigo-100"
-              title="Gece Seferleri Rehberi"
+              className="p-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer border bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800/80 hover:bg-indigo-100"
+              title="Gece Seferleri"
             >
               <span>🌙</span>
             </button>
 
             <button
               onClick={handleToggleDensity}
-              className="hit-area p-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer border bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:bg-slate-100"
+              className="p-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer border bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:bg-slate-100"
               title={isCompactDensity ? "Geniş Kart Görünümü" : "Kompakt Liste Görünümü"}
             >
               {isCompactDensity ? <LayoutGrid size={13} /> : <List size={13} />}
             </button>
           </div>
         </div>
-      </div>
 
-      {/* 2. SATIR: NEREDEN ➔ NEREYE İSKELE SEÇİCİ & YÖN DEĞİŞTİRME (2-Step Pier Picker) */}
-      <div className="px-3 pt-1.5">
-        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 shadow-2xs">
-          {/* Kalkış İskelesi (Nereden) */}
-          <div className="relative flex-1 min-w-0">
-            <select
-              value={selectedOrigin}
-              onChange={(e) => setSelectedOrigin(e.target.value)}
-              aria-label="Kalkış iskelesi seçin"
-              className="w-full pl-5 pr-5 py-2 min-h-11 bg-transparent text-xs font-bold text-slate-800 dark:text-slate-100 appearance-none rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 cursor-pointer truncate"
-            >
-              <option value="ALL">Nereden (Tümü)</option>
-              {availableOrigins.map((pier) => (
-                <option key={pier} value={pier}>{pier}</option>
-              ))}
-            </select>
-            <span className="absolute left-1 top-1/2 -translate-y-1/2 text-emerald-500 text-[10px] pointer-events-none">🟢</span>
-            <ChevronDown size={11} className="absolute right-1 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
-          </div>
+        {/* 2. SATIR: KOMPAKT NEREDEN ➔ NEREYE İSKELE SEÇİCİ + FİRMA LOGOLARI (BİRLEŞTİRİLMİŞ SATIR) */}
+        <div className="flex items-center gap-1.5">
+          {/* İskele Seçici Kapsayıcı */}
+          <div className="flex-1 min-w-0 flex items-center gap-1 p-0.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 shadow-2xs">
+            <div className="relative flex-1 min-w-0">
+              <select
+                value={selectedOrigin}
+                onChange={(e) => setSelectedOrigin(e.target.value)}
+                aria-label="Kalkış iskelesi seçin"
+                className="w-full pl-4 pr-4 py-1.5 bg-transparent text-[11px] font-bold text-slate-800 dark:text-slate-100 appearance-none rounded-lg focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-500 cursor-pointer truncate"
+              >
+                <option value="ALL">Nereden (Tümü)</option>
+                {availableOrigins.map((pier) => (
+                  <option key={pier} value={pier}>{pier}</option>
+                ))}
+              </select>
+              <span className="absolute left-1 top-1/2 -translate-y-1/2 text-[9px] pointer-events-none">🟢</span>
+              <ChevronDown size={10} className="absolute right-1 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+            </div>
 
-          {/* Swap ⇄ Butonu */}
-          <button
-            type="button"
-            onClick={swapOriginDestination}
-            title="Kalkış ve Varış İskelesini Değiştir"
-            className="hit-area p-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-amber-400 hover:text-slate-950 transition-all cursor-pointer active:scale-95 shrink-0"
-          >
-            <ArrowLeftRight size={12} />
-          </button>
-
-          {/* Varış İskelesi (Nereye) */}
-          <div className="relative flex-1 min-w-0">
-            <select
-              value={selectedDestination}
-              onChange={(e) => setSelectedDestination(e.target.value)}
-              aria-label="Varış iskelesi seçin"
-              className="w-full pl-5 pr-5 py-2 min-h-11 bg-transparent text-xs font-bold text-slate-800 dark:text-slate-100 appearance-none rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 cursor-pointer truncate"
-            >
-              <option value="ALL">Nereye (Tümü)</option>
-              {availableDestinations.map((pier) => (
-                <option key={pier} value={pier}>{pier}</option>
-              ))}
-            </select>
-            <span className="absolute left-1 top-1/2 -translate-y-1/2 text-rose-500 text-[10px] pointer-events-none">🔴</span>
-            <ChevronDown size={11} className="absolute right-1 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
-          </div>
-        </div>
-      </div>
-
-      {/* 3. SATIR: OPERATÖR FİLTRELERİ (Şehir Hatları, Mavi Marmara, Prens Tur, Turyol, Dentur) */}
-      <div className="px-3 pt-1.5">
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-0.5 hide-scrollbar">
-          <button
-            onClick={() => setSelectedOperator("ALL")}
-            className={`px-2.5 py-1 rounded-lg text-[10px] font-black shrink-0 transition-all border cursor-pointer ${
-              selectedOperator === "ALL"
-                ? "bg-blue-600 text-white border-blue-500 shadow-xs"
-                : "bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-300 dark:border-slate-800 hover:bg-slate-100"
-            }`}
-          >
-            Tüm Firmalar
-          </button>
-
-          {uniqueOperators.map((op) => (
             <button
-              key={op}
-              onClick={() => setSelectedOperator(selectedOperator === op ? "ALL" : op)}
-              aria-pressed={selectedOperator === op}
-              className={`px-2 py-1 rounded-lg text-[10px] font-bold whitespace-nowrap shrink-0 transition-all flex items-center gap-1 border cursor-pointer ${
-                selectedOperator === op
-                  ? "bg-slate-100 dark:bg-slate-800 border-blue-500 text-slate-950 dark:text-white shadow-xs ring-1 ring-blue-400/40"
-                  : "bg-white dark:bg-slate-900/80 border-slate-300 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900"
-              }`}
+              type="button"
+              onClick={swapOriginDestination}
+              title="Yön Değiştir"
+              className="p-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-amber-400 hover:text-slate-950 transition-all cursor-pointer active:scale-95 shrink-0"
             >
-              <OperatorLogo operator={op} size="sm" showName={true} />
+              <ArrowLeftRight size={11} />
             </button>
-          ))}
+
+            <div className="relative flex-1 min-w-0">
+              <select
+                value={selectedDestination}
+                onChange={(e) => setSelectedDestination(e.target.value)}
+                aria-label="Varış iskelesi seçin"
+                className="w-full pl-4 pr-4 py-1.5 bg-transparent text-[11px] font-bold text-slate-800 dark:text-slate-100 appearance-none rounded-lg focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-500 cursor-pointer truncate"
+              >
+                <option value="ALL">Nereye (Tümü)</option>
+                {availableDestinations.map((pier) => (
+                  <option key={pier} value={pier}>{pier}</option>
+                ))}
+              </select>
+              <span className="absolute left-1 top-1/2 -translate-y-1/2 text-[9px] pointer-events-none">🔴</span>
+              <ChevronDown size={10} className="absolute right-1 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+            </div>
+          </div>
+
+          {/* SADECE LOGO FİRMA SEÇİCİ (Metinsiz, Maksimum Yer Tasarrufu) */}
+          <div className="flex items-center gap-1 shrink-0 overflow-x-auto hide-scrollbar py-0.5">
+            <button
+              onClick={() => setSelectedOperator("ALL")}
+              className={`px-2 py-1 rounded-xl text-[10px] font-black shrink-0 transition-all border cursor-pointer ${
+                selectedOperator === "ALL"
+                  ? "bg-blue-600 text-white border-blue-500 shadow-2xs"
+                  : "bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-300 dark:border-slate-800 hover:bg-slate-100"
+              }`}
+              title="Tüm Firmalar"
+            >
+              Tümü
+            </button>
+
+            {uniqueOperators.map((op) => (
+              <button
+                key={op}
+                onClick={() => setSelectedOperator(selectedOperator === op ? "ALL" : op)}
+                aria-pressed={selectedOperator === op}
+                className={`p-1 rounded-xl shrink-0 transition-all border cursor-pointer flex items-center justify-center ${
+                  selectedOperator === op
+                    ? "bg-slate-100 dark:bg-slate-800 border-blue-500 shadow-2xs ring-1 ring-blue-400/40"
+                    : "bg-white dark:bg-slate-900/90 border-slate-300 dark:border-slate-800 hover:bg-slate-100"
+                }`}
+                title={op}
+              >
+                <OperatorLogo operator={op} size="sm" showName={false} />
+              </button>
+            ))}
+          </div>
         </div>
+
+        {/* GPS Konumu Bildirim Rozeti (En Yakın İskele Seçildiğinde) */}
+        {nearestPier && geoStatus === "ACTIVE" && selectedOrigin === nearestPier.name && (
+          <div className="flex items-center justify-between px-2.5 py-1 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200 text-[11px] animate-fadeIn">
+            <span className="flex items-center gap-1.5 font-bold">
+              <Navigation size={11} className="fill-emerald-600 text-emerald-600 shrink-0" />
+              <span>Konumunuza en yakın iskele: <strong>{nearestPier.name}</strong> (~{nearestPier.distanceKm.toFixed(1)} km)</span>
+            </span>
+            <button
+              onClick={() => {
+                setSelectedOrigin("ALL");
+                setGeoStatus("IDLE");
+              }}
+              className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold hover:underline shrink-0 ml-2"
+            >
+              Tümünü Göster
+            </button>
+          </div>
+        )}
       </div>
 
       {/* 4. İSTEĞE BAĞLI SATIR: ARAMA ÇUBUĞU */}

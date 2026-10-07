@@ -495,7 +495,7 @@ export function ScheduleCard(props: ScheduleCardProps) {
 
           {/* Sadeleştirilmiş Temel Bilgi Satırı */}
           <div className="flex items-center gap-1.5 mt-1 text-[11px] text-slate-500 dark:text-slate-400 truncate">
-            <OperatorLogo operator={props.operator} size="sm" showName={true} />
+            <OperatorLogo operator={props.operator} size="sm" showName={false} />
 
             <span className="text-slate-300 dark:text-slate-600 font-bold">•</span>
 

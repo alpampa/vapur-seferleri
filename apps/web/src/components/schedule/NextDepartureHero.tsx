@@ -91,7 +91,7 @@ export function NextDepartureHero({ schedule, dyn, onClick }: NextDepartureHeroP
             <span className="text-blue-700 dark:text-blue-300">{dyn.destination}</span>
           </div>
           <div className="mt-1 text-[11px] text-slate-500 dark:text-slate-400 truncate">
-            <OperatorLogo operator={schedule.operator} size="sm" showName={true} />
+            <OperatorLogo operator={schedule.operator} size="sm" showName={false} />
           </div>
         </div>
         <ChevronRight
