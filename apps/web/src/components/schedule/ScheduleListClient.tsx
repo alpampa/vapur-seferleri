@@ -383,9 +383,11 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
     setTickMs(urgent ? 1000 : SLOW_TICK_INTERVAL_MS);
   }, [upcomingTrips]);
 
-  // İptal Seferler Algoritması (Kullanıcı Kuralı: Kayan bantta ve kartlarda gösterim)
+  // İptal Seferler Algoritması (Kullanıcı Kuralı: Kayan bantta yalnızca güncel/gelecek iptaller gösterilir, eski/geçmiş iptaller elenir)
   const cancelledTrips = useMemo(() => {
-    return activeSchedulesWithDyn.filter(({ schedule, dyn }) => isTripCancelled(schedule, dyn));
+    return activeSchedulesWithDyn.filter(
+      ({ schedule, dyn }) => isTripCancelled(schedule, dyn) && !dyn.isDeparted && !dyn.isExpired
+    );
   }, [activeSchedulesWithDyn]);
 
   return (

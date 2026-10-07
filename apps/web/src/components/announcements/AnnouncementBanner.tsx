@@ -4,6 +4,7 @@ import { useState } from "react";
 import { AlertTriangle, Megaphone, X, ExternalLink } from "lucide-react";
 import { OperatorLogo } from "@/components/ui/OperatorLogo";
 import type { OperatorAnnouncement } from "@/lib/types/announcement";
+import { isAnnouncementCurrent } from "@/lib/utils/announcement-filter";
 
 interface AnnouncementBannerProps {
   announcements: OperatorAnnouncement[];
@@ -29,7 +30,8 @@ const TYPE_META: Record<
 export function AnnouncementBanner({ announcements, className = "" }: AnnouncementBannerProps) {
   const [dismissedIds, setDismissedIds] = useState<Set<string>>(new Set());
 
-  const verified = announcements.filter((a) => a.sourceVerified);
+  // Yalnızca doğrulanmış ve süresi dolmamış/güncel duyuruları filtrele
+  const verified = announcements.filter((a) => a.sourceVerified && isAnnouncementCurrent(a));
   const cancellations = verified.filter(
     (a) => a.type === "CANCELLATION" || a.type === "CANCELLED_TRIPS"
   );
