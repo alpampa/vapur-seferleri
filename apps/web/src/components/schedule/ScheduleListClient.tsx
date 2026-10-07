@@ -250,8 +250,8 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
     return Array.from(ops);
   }, [activeSchedulesWithDyn]);
 
-  // Unique available origins (Nereden İskeleleri)
-  const availableOrigins = useMemo(() => {
+  // 1. Tüm geçerli seferlerden toplanan ana kalkış ve varış iskeleleri
+  const allOrigins = useMemo(() => {
     const set = new Set<string>();
     activeSchedulesWithDyn.forEach(({ schedule, dyn }) => {
       set.add(dyn.currentOrigin || schedule.origin);
@@ -262,8 +262,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
     return Array.from(set).sort((a, b) => a.localeCompare(b, "tr"));
   }, [activeSchedulesWithDyn]);
 
-  // Unique available destinations (Nereye İskeleleri)
-  const availableDestinations = useMemo(() => {
+  const allDestinations = useMemo(() => {
     const set = new Set<string>();
     activeSchedulesWithDyn.forEach(({ schedule, dyn }) => {
       set.add(dyn.destination || schedule.destination);
@@ -273,6 +272,75 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
     });
     return Array.from(set).sort((a, b) => a.localeCompare(b, "tr"));
   }, [activeSchedulesWithDyn]);
+
+  // 2. Akıllı Bağlantılı İskele Filtrelemesi (Cascading Piers):
+  // Eğer kullanıcı bir kalkış (Nereden) seçtiyse, Nereye menüsünde YALNIZCA o iskeleden seferi olan iskeleler listelenir.
+  // Örnek: Bostancı seçilince Beykoz menüde görünmez!
+  const availableDestinations = useMemo(() => {
+    if (selectedOrigin === "ALL") {
+      return allDestinations;
+    }
+    const set = new Set<string>();
+    activeSchedulesWithDyn.forEach(({ schedule, dyn }) => {
+      const isDirectOrigin = schedule.origin === selectedOrigin || dyn.currentOrigin === selectedOrigin;
+      const stopIndex = schedule.stops ? schedule.stops.findIndex((st) => st.name === selectedOrigin) : -1;
+      
+      if (isDirectOrigin) {
+        // Doğrudan kalkış: Varış ve tüm ara duraklar varış adayıdır
+        set.add(dyn.destination || schedule.destination);
+        if (schedule.stops) {
+          schedule.stops.forEach((st) => set.add(st.name));
+        }
+      } else if (stopIndex >= 0 && schedule.stops) {
+        // Ara duraktan biniş: Bu duraktan sonraki duraklar ve nihai varış varış adayıdır
+        set.add(dyn.destination || schedule.destination);
+        for (let i = stopIndex + 1; i < schedule.stops.length; i++) {
+          set.add(schedule.stops[i].name);
+        }
+      }
+    });
+    set.delete(selectedOrigin); // Kendisine sefer açılamaz
+    return Array.from(set).sort((a, b) => a.localeCompare(b, "tr"));
+  }, [activeSchedulesWithDyn, selectedOrigin, allDestinations]);
+
+  // Eğer kullanıcı bir varış (Nereye) seçtiyse, Nereden menüsünde YALNIZCA o varışa giden iskeleler listelenir.
+  const availableOrigins = useMemo(() => {
+    if (selectedDestination === "ALL") {
+      return allOrigins;
+    }
+    const set = new Set<string>();
+    activeSchedulesWithDyn.forEach(({ schedule, dyn }) => {
+      const isDirectDest = schedule.destination === selectedDestination || dyn.destination === selectedDestination;
+      const stopIndex = schedule.stops ? schedule.stops.findIndex((st) => st.name === selectedDestination) : -1;
+
+      if (isDirectDest) {
+        set.add(dyn.currentOrigin || schedule.origin);
+        if (schedule.stops) {
+          schedule.stops.forEach((st) => set.add(st.name));
+        }
+      } else if (stopIndex >= 0 && schedule.stops) {
+        set.add(dyn.currentOrigin || schedule.origin);
+        for (let i = 0; i < stopIndex; i++) {
+          set.add(schedule.stops[i].name);
+        }
+      }
+    });
+    set.delete(selectedDestination);
+    return Array.from(set).sort((a, b) => a.localeCompare(b, "tr"));
+  }, [activeSchedulesWithDyn, selectedDestination, allOrigins]);
+
+  // Seçilen iskele artık geçerli değilse otomatik olarak "ALL" (Tümü) durumuna getir
+  useEffect(() => {
+    if (selectedDestination !== "ALL" && !availableDestinations.includes(selectedDestination)) {
+      setSelectedDestination("ALL");
+    }
+  }, [availableDestinations, selectedDestination]);
+
+  useEffect(() => {
+    if (selectedOrigin !== "ALL" && !availableOrigins.includes(selectedOrigin)) {
+      setSelectedOrigin("ALL");
+    }
+  }, [availableOrigins, selectedOrigin]);
 
   const swapOriginDestination = () => {
     const prevO = selectedOrigin;
@@ -544,47 +612,47 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
 
         {/* 2. SATIR: KOMPAKT NEREDEN ➔ NEREYE İSKELE SEÇİCİ + FİRMA LOGOLARI (BİRLEŞTİRİLMİŞ SATIR) */}
         <div className="flex items-center gap-1.5">
-          {/* İskele Seçici Kapsayıcı */}
-          <div className="flex-1 min-w-0 flex items-center gap-1 p-0.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 shadow-2xs">
-            <div className="relative flex-1 min-w-0">
+          {/* İskele Seçici Kapsayıcı — Daraltılmış, Şık ve Kompakt */}
+          <div className="max-w-[240px] sm:max-w-[270px] flex-initial flex items-center gap-0.5 p-0.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 shadow-2xs">
+            <div className="relative w-[100px] sm:w-[115px] shrink-0">
               <select
                 value={selectedOrigin}
                 onChange={(e) => setSelectedOrigin(e.target.value)}
                 aria-label="Kalkış iskelesi seçin"
-                className="w-full pl-4 pr-4 py-1.5 bg-transparent text-[11px] font-bold text-slate-800 dark:text-slate-100 appearance-none rounded-lg focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-500 cursor-pointer truncate"
+                className="w-full pl-3.5 pr-3.5 py-1 bg-transparent text-[10.5px] font-bold text-slate-800 dark:text-slate-100 appearance-none rounded-md focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-500 cursor-pointer truncate"
               >
-                <option value="ALL">Nereden (Tümü)</option>
+                <option value="ALL">Nereden</option>
                 {availableOrigins.map((pier) => (
                   <option key={pier} value={pier}>{pier}</option>
                 ))}
               </select>
-              <span className="absolute left-1 top-1/2 -translate-y-1/2 text-[9px] pointer-events-none">🟢</span>
-              <ChevronDown size={10} className="absolute right-1 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+              <span className="absolute left-1 top-1/2 -translate-y-1/2 text-[8px] pointer-events-none">🟢</span>
+              <ChevronDown size={9} className="absolute right-0.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
             </div>
 
             <button
               type="button"
               onClick={swapOriginDestination}
               title="Yön Değiştir"
-              className="p-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-amber-400 hover:text-slate-950 transition-all cursor-pointer active:scale-95 shrink-0"
+              className="p-1 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-amber-400 hover:text-slate-950 transition-all cursor-pointer active:scale-95 shrink-0"
             >
-              <ArrowLeftRight size={11} />
+              <ArrowLeftRight size={10} />
             </button>
 
-            <div className="relative flex-1 min-w-0">
+            <div className="relative w-[100px] sm:w-[115px] shrink-0">
               <select
                 value={selectedDestination}
                 onChange={(e) => setSelectedDestination(e.target.value)}
                 aria-label="Varış iskelesi seçin"
-                className="w-full pl-4 pr-4 py-1.5 bg-transparent text-[11px] font-bold text-slate-800 dark:text-slate-100 appearance-none rounded-lg focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-500 cursor-pointer truncate"
+                className="w-full pl-3.5 pr-3.5 py-1 bg-transparent text-[10.5px] font-bold text-slate-800 dark:text-slate-100 appearance-none rounded-md focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-500 cursor-pointer truncate"
               >
-                <option value="ALL">Nereye (Tümü)</option>
+                <option value="ALL">Nereye</option>
                 {availableDestinations.map((pier) => (
                   <option key={pier} value={pier}>{pier}</option>
                 ))}
               </select>
-              <span className="absolute left-1 top-1/2 -translate-y-1/2 text-[9px] pointer-events-none">🔴</span>
-              <ChevronDown size={10} className="absolute right-1 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+              <span className="absolute left-1 top-1/2 -translate-y-1/2 text-[8px] pointer-events-none">🔴</span>
+              <ChevronDown size={9} className="absolute right-0.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
             </div>
           </div>
 
