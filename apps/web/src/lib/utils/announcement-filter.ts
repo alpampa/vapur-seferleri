@@ -111,5 +111,18 @@ export function isAnnouncementCurrent(
     }
   }
 
+  // 5. İçinde bulunulan ayın çok gerisinde kalmış eski aylık duyurular (Ocak-Eylül arası duyurular)
+  if (
+    text.includes("haziran") ||
+    text.includes("temmuz") ||
+    text.includes("ağustos") ||
+    text.includes("agustos") ||
+    text.includes("eylül") ||
+    text.includes("eylul") ||
+    text.includes("yaz tarifesine")
+  ) {
+    return false;
+  }
+
   return true;
 }

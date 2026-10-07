@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { AlertTriangle, Megaphone, X, ExternalLink } from "lucide-react";
+import { useState, useEffect } from "react";
+import { AlertTriangle, Megaphone, X, ExternalLink, ChevronRight, ChevronLeft } from "lucide-react";
 import { OperatorLogo } from "@/components/ui/OperatorLogo";
 import type { OperatorAnnouncement } from "@/lib/types/announcement";
 import { isAnnouncementCurrent } from "@/lib/utils/announcement-filter";
@@ -24,105 +24,145 @@ const TYPE_META: Record<
 };
 
 /**
- * Ana ekran duyuru bandı — yalnızca kaynaktan doğrulanmış ("sourceVerified")
- * duyuruları gösterir. İptal varsa kırmızı ton, yoksa sade bilgi şeridi.
+ * Ana ekran duyuru bandı — TEK SATIRDA DÖNERLİ (Rotasyonlu) ve kompakt tasarım.
+ * Tarihi geçmiş tüm duyurular elenir, kalan güncel duyurular 4.5 saniyede bir sırayla akar.
  */
 export function AnnouncementBanner({ announcements, className = "" }: AnnouncementBannerProps) {
   const [dismissedIds, setDismissedIds] = useState<Set<string>>(new Set());
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   // Yalnızca doğrulanmış ve süresi dolmamış/güncel duyuruları filtrele
   const verified = announcements.filter((a) => a.sourceVerified && isAnnouncementCurrent(a));
   const cancellations = verified.filter(
     (a) => a.type === "CANCELLATION" || a.type === "CANCELLED_TRIPS"
   );
-  const others = verified.filter(
-    (a) => a.type !== "CANCELLATION" && a.type !== "CANCELLED_TRIPS"
-  );
 
   const all = verified.filter((a) => !dismissedIds.has(a.id));
   if (all.length === 0) return null;
 
   const hasCancellation = cancellations.length > 0;
-  const showItems = hasCancellation
-    ? all.filter((a) => a.type === "CANCELLATION" || a.type === "CANCELLED_TRIPS").slice(0, 3)
-    : all.slice(0, 3);
+  // İptal varsa iptallere öncelik ver, yoksa tüm güncelleri göster
+  const activeList = hasCancellation
+    ? all.filter((a) => a.type === "CANCELLATION" || a.type === "CANCELLED_TRIPS")
+    : all;
 
-  if (showItems.length === 0) return null;
+  if (activeList.length === 0) return null;
 
-  const dismiss = (id: string) => {
-    setDismissedIds((prev) => new Set(prev).add(id));
+  // Otomatik Rotasyon: Her 4.5 saniyede bir sonraki duyuruya geç
+  useEffect(() => {
+    if (activeList.length <= 1) return;
+    const timer = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % activeList.length);
+    }, 4500);
+    return () => clearInterval(timer);
+  }, [activeList.length]);
+
+  const currentItem = activeList[currentIndex % activeList.length] || activeList[0];
+  const tone = TYPE_META[currentItem.type]?.tone ?? "info";
+
+  const dismissCurrent = () => {
+    setDismissedIds((prev) => new Set(prev).add(currentItem.id));
+    setCurrentIndex(0);
+  };
+
+  const handlePrev = () => {
+    setCurrentIndex((prev) => (prev - 1 + activeList.length) % activeList.length);
+  };
+
+  const handleNext = () => {
+    setCurrentIndex((prev) => (prev + 1) % activeList.length);
   };
 
   return (
-    <div className={`px-3 pt-2 animate-fadeIn ${className}`} role="region" aria-label="Firma duyuruları">
+    <div className={`px-3 pt-1.5 animate-fadeIn ${className}`} role="region" aria-label="Firma duyuruları">
       <div
-        className={`rounded-xl border px-3 py-2 shadow-sm ${
+        className={`rounded-xl border px-2.5 py-1.5 shadow-2xs flex items-center justify-between gap-2 transition-all ${
           hasCancellation
             ? "bg-rose-50 dark:bg-rose-950/40 border-rose-200 dark:border-rose-900/60"
-            : "bg-sky-50 dark:bg-slate-900/60 border-sky-200 dark:border-slate-800"
+            : "bg-sky-50 dark:bg-slate-900/80 border-sky-200 dark:border-slate-800"
         }`}
       >
-        <div className="flex items-start gap-2">
+        {/* Sol İkon + Başlık Rozeti */}
+        <div className="flex items-center gap-1.5 shrink-0">
           <span
-            className={`mt-0.5 shrink-0 ${
-              hasCancellation ? "text-rose-500" : "text-sky-500 dark:text-sky-400"
+            className={`${
+              hasCancellation ? "text-rose-500 animate-pulse" : "text-sky-500 dark:text-sky-400"
             }`}
           >
-            {hasCancellation ? <AlertTriangle size={15} aria-hidden /> : <Megaphone size={15} aria-hidden />}
+            {hasCancellation ? <AlertTriangle size={13} aria-hidden /> : <Megaphone size={13} aria-hidden />}
           </span>
+          <span
+            className={`text-[9.5px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-md ${
+              hasCancellation
+                ? "bg-rose-100 dark:bg-rose-900/60 text-rose-700 dark:text-rose-300"
+                : "bg-sky-100 dark:bg-sky-950/80 text-sky-700 dark:text-sky-300"
+            }`}
+          >
+            {TYPE_META[currentItem.type]?.label || (hasCancellation ? "İPTAL" : "DUYURU")}
+          </span>
+        </div>
 
-          <div className="min-w-0 flex-1">
-            <p
-              className={`text-[10px] font-black uppercase tracking-wide ${
-                hasCancellation
-                  ? "text-rose-600 dark:text-rose-400"
-                  : "text-sky-600 dark:text-sky-400"
-              }`}
-            >
-              {hasCancellation ? "İptal sefer bildirimi" : "Firma duyuruları"}
-            </p>
+        {/* Orta: Tek Satır Dönen Duyuru Metni */}
+        <div className="min-w-0 flex-1 flex items-center gap-1.5 text-xs truncate">
+          <OperatorLogo operator={currentItem.operator} size="sm" showName={false} />
+          <a
+            href={currentItem.sourceUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`font-semibold text-[11px] leading-tight hover:underline truncate inline-flex items-center gap-1 ${
+              tone === "danger"
+                ? "text-rose-700 dark:text-rose-300 font-bold"
+                : "text-slate-800 dark:text-slate-200"
+            }`}
+            title={`${currentItem.title} ${currentItem.body ? `- ${currentItem.body}` : ""}`}
+          >
+            <span className="truncate">{currentItem.title}</span>
+            {currentItem.body && (
+              <span className="opacity-75 text-[10px] hidden sm:inline truncate">
+                — {currentItem.body}
+              </span>
+            )}
+            <ExternalLink size={9} className="shrink-0 opacity-50 ml-0.5" />
+          </a>
+        </div>
 
-            <ul className="mt-1 space-y-1">
-              {showItems.map((a) => {
-                const tone = TYPE_META[a.type]?.tone ?? "info";
-                return (
-                  <li key={a.id} className="flex items-start gap-1.5 text-xs">
-                    <OperatorLogo operator={a.operator} size="sm" showName={false} />
-                    <a
-                      href={a.sourceUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={`font-semibold leading-snug hover:underline inline-flex items-center gap-1 ${
-                        tone === "danger"
-                          ? "text-rose-700 dark:text-rose-300"
-                          : "text-slate-700 dark:text-slate-200"
-                      }`}
-                    >
-                      {a.title}
-                      <ExternalLink size={10} className="shrink-0 opacity-50" />
-                    </a>
-                    {a.body && (
-                      <span className="text-slate-500 dark:text-slate-400 leading-snug">{a.body}</span>
-                    )}
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
+        {/* Sağ: İlerleme Sayacı, Oklar ve Kapat Butonu */}
+        <div className="flex items-center gap-1 shrink-0 text-slate-400">
+          {activeList.length > 1 && (
+            <div className="flex items-center gap-0.5 text-[9px] font-mono mr-1">
+              <span className="text-slate-700 dark:text-slate-300 font-bold">
+                {(currentIndex % activeList.length) + 1}
+              </span>
+              <span>/</span>
+              <span>{activeList.length}</span>
+              <button
+                type="button"
+                onClick={handlePrev}
+                aria-label="Önceki duyuru"
+                className="p-0.5 hover:text-slate-700 dark:hover:text-slate-200 cursor-pointer ml-1"
+              >
+                <ChevronLeft size={11} />
+              </button>
+              <button
+                type="button"
+                onClick={handleNext}
+                aria-label="Sonraki duyuru"
+                className="p-0.5 hover:text-slate-700 dark:hover:text-slate-200 cursor-pointer"
+              >
+                <ChevronRight size={11} />
+              </button>
+            </div>
+          )}
 
           <button
             type="button"
-            onClick={() => dismiss(showItems[0].id)}
-            aria-label="Duyuru bandını kapat"
-            className="shrink-0 p-1 rounded-md text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
+            onClick={dismissCurrent}
+            aria-label="Duyuruyu kapat"
+            className="p-1 rounded-md hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-slate-800 cursor-pointer transition-colors"
           >
-            <X size={13} />
+            <X size={12} />
           </button>
         </div>
-
-        <p className="mt-1 pl-6 text-[10px] text-slate-400 dark:text-slate-500">
-          Kaynak: resmi firma duyuru sayfaları — canlı senkron
-        </p>
       </div>
     </div>
   );

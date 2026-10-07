@@ -16889,23 +16889,6 @@
     "routeTitle": "Rumelikavağı - Sarıyer - Büyükdere - Eminönü Hattı"
   },
   {
-    "id": "sh-2026-4664",
-    "origin": "Sadece Hafta İçi Cumartesi Pazar ve Resmi Tatil günleri yapılmaz.",
-    "destination": "Kadıköy",
-    "operator": "Şehir Hatları",
-    "category": "BOGAZ",
-    "departureTime": "19:10",
-    "arrivalTime": "",
-    "platform": "Sadece Hafta İçi Cumartesi Pazar ve Resmi Tatil günleri yapılmaz. İskelesi",
-    "price": "₺27.00",
-    "isWeekdayOnly": false,
-    "isWeekendOnly": false,
-    "runsWeekday": true,
-    "runsSaturday": true,
-    "runsSunday": true,
-    "stops": []
-  },
-  {
     "id": "sh-2026-4665",
     "origin": "Sarıyer",
     "destination": "Beykoz",
