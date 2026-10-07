@@ -535,7 +535,7 @@ export function TripDetailsSheet({
                 {/* 2 Seyir Aksiyon Butonu */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                   <a
-                    href="https://www.marinetraffic.com/en/ais/home/centerx:29.02/centery:41.01/zoom:13"
+                    href={liveVessel.radarUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-3.5 rounded-2xl bg-linear-to-r from-emerald-600/15 via-teal-600/10 to-transparent hover:from-emerald-600/25 border border-emerald-500/40 text-left flex items-center justify-between transition-all shadow-sm group"
@@ -545,11 +545,15 @@ export function TripDetailsSheet({
                         <Radar size={18} />
                       </div>
                       <div>
-                        <span className="text-xs font-black text-slate-900 dark:text-white flex items-center gap-1">CANLI GEMİ HARİTASI</span>
-                        <span className="text-[10px] text-slate-500 dark:text-slate-400">Boğaz&apos;ı MarineTraffic haritasında canlı izleyin</span>
+                        <span className="text-xs font-black text-slate-900 dark:text-white flex items-center gap-1">
+                          CANLI GEMİ RADARI
+                        </span>
+                        <span className="text-[10px] text-slate-500 dark:text-slate-400 block">
+                          {liveVessel.vesselName} (MMSI: {liveVessel.mmsi})
+                        </span>
                       </div>
                     </div>
-                    <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 shrink-0">Dış site ➔</span>
+                    <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 shrink-0">Radar Aç ➔</span>
                   </a>
 
                   <button

@@ -259,69 +259,64 @@ export function resolveLiveVesselName(
 ): LiveVesselResolution {
   const normOp = (operator || "").toLowerCase();
 
-  let genericName = "Şehir Hatları Vapuru";
-  let defaultType: "VAPUR" | "MOTOR" | "DENIZ_OTOBUSU" = "VAPUR";
-  let capacity = 1450;
-  let builtYear = 1988;
-  let callSign = "TC5438";
-  let mmsi = "271002496";
+  // 1. İlgili operatörün ve koridorun tescilli gemilerini filtrele
+  let operatorVessels = ISTANBUL_FERRY_FLEET.filter((v) => {
+    const vOp = v.operator.toLowerCase();
+    if (normOp.includes("şehir") || normOp.includes("sehir")) return vOp.includes("şehir");
+    if (normOp.includes("turyol")) return vOp.includes("turyol");
+    if (normOp.includes("mavi marmara") || normOp.includes("mavimarmara")) return vOp.includes("mavi marmara");
+    if (normOp.includes("dentur")) return vOp.includes("dentur");
+    if (normOp.includes("prens")) return vOp.includes("prens");
+    return vOp.includes(normOp);
+  });
 
-  if (normOp.includes("turyol")) {
-    genericName = "Turyol Yolcu Motoru";
-    defaultType = "MOTOR";
-    capacity = 650;
-    builtYear = 2014;
-    callSign = "TCA101";
-    mmsi = "271001801";
-  } else if (normOp.includes("dentur")) {
-    genericName = "Dentur Avrasya Motoru";
-    defaultType = "MOTOR";
-    capacity = 500;
-    builtYear = 2016;
-    callSign = "TCA201";
-    mmsi = "271001711";
-  } else if (normOp.includes("ido") || normOp.includes("i̇do")) {
-    genericName = "İDO Deniz Otobüsü";
-    defaultType = "DENIZ_OTOBUSU";
-    capacity = 450;
-    builtYear = 2008;
-    callSign = "TCB301";
-    mmsi = "271002100";
-  } else if (normOp.includes("prens")) {
-    genericName = "Prens Tur Motoru";
-    defaultType = "MOTOR";
-    capacity = 450;
-    builtYear = 2012;
-    callSign = "TC5439";
-    mmsi = "271001601";
-  } else if (normOp.includes("mavi marmara")) {
-    genericName = "Mavi Marmara Motoru";
-    defaultType = "MOTOR";
-    capacity = 500;
-    builtYear = 2014;
-    callSign = "TCA401";
-    mmsi = "271001930";
+  if (operatorVessels.length === 0) {
+    operatorVessels = ISTANBUL_FERRY_FLEET.filter((v) => v.operator === "Şehir Hatları");
   }
 
+  // 2. Hat/koridor bazlı önceliklendirme
+  const corridorMatches = operatorVessels.filter((v) =>
+    v.assignedLines.some(
+      (line) => line.toLowerCase().includes(origin.toLowerCase()) || line.toLowerCase().includes(destination.toLowerCase())
+    )
+  );
+
+  const candidatePool = corridorMatches.length > 0 ? corridorMatches : operatorVessels;
+
+  // 3. Deterministik nöbetçi rotasyonu (İskele, Hat ve Kalkış Saati veya Trip ID hash'i)
+  const timeSeed = departureTime
+    ? parseInt(departureTime.replace(":", ""), 10) || 1200
+    : 1200;
+  
+  let hash = 0;
+  const hashStr = `${tripId || ""}_${origin}_${destination}_${timeSeed}`;
+  for (let i = 0; i < hashStr.length; i++) {
+    hash = (hash * 31 + hashStr.charCodeAt(i)) & 0xffffffff;
+  }
+  const assignedIndex = Math.abs(hash) % candidatePool.length;
+  const vessel: RegisteredVessel = candidatePool[assignedIndex] || candidatePool[0];
+
+  const vesselTitle = vessel.type === "VAPUR" ? `${vessel.name} Vapuru` : `${vessel.name} Motoru`;
+  const directMarineTrafficShipUrl = `https://www.marinetraffic.com/en/ais/details/ships/mmsi:${vessel.mmsi}`;
   const liveBosphorusRadarUrl = `https://www.marinetraffic.com/en/ais/home/centerx:29.02/centery:41.01/zoom:13`;
-  const radarUrl = liveBosphorusRadarUrl;
-  const fleetDisclaimer = "Resmi Denizcilik Kuralı: İBB Şehir Hatları ve yolcu motorları sefer tarifelerinde fiziksel tekne adları peşinen yayımlanmaz; seferler nöbetçi filo havuzundan sevk edilir. Canlı radar sağlaması Boğaz Uydu AIS telsiz takibi üzerinden yapılır.";
 
   const statusText = isDeparted
-    ? `Boğaz Koridorunda Seyirde (${genericName})`
-    : `İskelede Sefer Hazırlığı • Rıhtımda (${genericName})`;
+    ? `Boğaz Koridorunda Seyirde (${vesselTitle})`
+    : `İskelede Sefer Hazırlığı • Rıhtımda (${vesselTitle})`;
+
+  const fleetDisclaimer = "Resmi Denizcilik Kuralı: İBB Şehir Hatları ve yolcu motorları sefer tarifelerinde fiziksel tekne adları peşinen yayımlanmaz; seferler iskeledeki nöbetçi filo havuzundan sevk edilir. Canlı gemi teyidi Boğaz AIS telsiz transponder sinyali ve MMSI no üzerinden sağlanır.";
 
   return {
-    vesselName: genericName,
-    mmsi,
+    vesselName: vesselTitle,
+    mmsi: vessel.mmsi,
     statusText,
     isConfirmedUnderway: isDeparted,
-    radarUrl,
+    radarUrl: directMarineTrafficShipUrl,
     liveBosphorusRadarUrl,
-    vesselType: defaultType,
-    capacityPax: capacity,
-    builtYear,
-    callSign,
+    vesselType: vessel.type,
+    capacityPax: vessel.capacityPax,
+    builtYear: vessel.builtYear,
+    callSign: vessel.callSign,
     isRotationalFleetPool: true,
     fleetDisclaimer
   };
