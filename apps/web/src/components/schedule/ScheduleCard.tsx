@@ -504,6 +504,13 @@ export function ScheduleCard(props: ScheduleCardProps) {
               {isDirect ? t("direct") : `${props.stops?.length} ara durak`}
             </span>
 
+            {/* Gerçek Vapur / Motor Adı */}
+            <span className="text-slate-300 dark:text-slate-600 font-bold">•</span>
+            <span className="text-slate-700 dark:text-slate-200 text-[10px] font-bold truncate max-w-32 flex items-center gap-1">
+              <Ship size={11} className="text-blue-500 shrink-0" />
+              <span className="truncate">{liveVessel.vesselName}</span>
+            </span>
+
             {/* Doluluk Durumu */}
             <span className="text-slate-300 dark:text-slate-600 font-bold hidden xs:inline">•</span>
             <span className="items-center gap-1 text-[10px] text-slate-500 dark:text-slate-400 hidden xs:inline-flex">
