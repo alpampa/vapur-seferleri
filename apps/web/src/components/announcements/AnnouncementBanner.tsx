@@ -38,17 +38,13 @@ export function AnnouncementBanner({ announcements, className = "" }: Announceme
   );
 
   const all = verified.filter((a) => !dismissedIds.has(a.id));
-  if (all.length === 0) return null;
-
   const hasCancellation = cancellations.length > 0;
   // İptal varsa iptallere öncelik ver, yoksa tüm güncelleri göster
   const activeList = hasCancellation
     ? all.filter((a) => a.type === "CANCELLATION" || a.type === "CANCELLED_TRIPS")
     : all;
 
-  if (activeList.length === 0) return null;
-
-  // Otomatik Rotasyon: Her 4.5 saniyede bir sonraki duyuruya geç
+  // Otomatik Rotasyon: Her 4.5 saniyede bir sonraki duyuruya geç (Hook kuralı: Erken return'den ÖNCE çağrılmalı)
   useEffect(() => {
     if (activeList.length <= 1) return;
     const timer = setInterval(() => {
@@ -56,6 +52,8 @@ export function AnnouncementBanner({ announcements, className = "" }: Announceme
     }, 4500);
     return () => clearInterval(timer);
   }, [activeList.length]);
+
+  if (activeList.length === 0) return null;
 
   const currentItem = activeList[currentIndex % activeList.length] || activeList[0];
   const tone = TYPE_META[currentItem.type]?.tone ?? "info";

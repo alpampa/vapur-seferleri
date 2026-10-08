@@ -107,6 +107,12 @@ export function TripDetailsSheet({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose]);
 
+  // AI 4: ADA TURİZM, KÜLTÜR VE SPONSORLU FIRSATLAR (Hook kuralı: Erken return'den ÖNCE çağrılmalı)
+  const islandGuide = useMemo(() => {
+    if (!schedule) return null;
+    return getIslandGuidePackage(schedule.destination) || getIslandGuidePackage(schedule.origin);
+  }, [schedule?.destination, schedule?.origin]);
+
   if (!schedule) return null;
 
   const routeKey = `${schedule.origin} ➔ ${schedule.destination}`;
@@ -141,11 +147,6 @@ export function TripDetailsSheet({
     schedule.departureTime
   );
   const isDirect = !schedule.stops || schedule.stops.length === 0;
-
-  // AI 4: ADA TURİZM, KÜLTÜR VE SPONSORLU FIRSATLAR
-  const islandGuide = useMemo(() => {
-    return getIslandGuidePackage(schedule.destination) || getIslandGuidePackage(schedule.origin);
-  }, [schedule.destination, schedule.origin]);
 
   const handleSpeakAnnouncement = () => {
     if (isSpeaking) {
