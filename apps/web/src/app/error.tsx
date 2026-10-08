@@ -24,12 +24,21 @@ export default function Error({
           <AlertTriangle size={28} />
         </div>
         <h2 className="text-xl font-black mb-2 text-white">Tarife Yenileniyor</h2>
-        <p className="text-slate-400 mb-6 text-xs leading-relaxed">
+        <p className="text-slate-400 mb-4 text-xs leading-relaxed">
           Canlı vapur sefer tarifesi ve radar verileri senkronize edilirken anlık bir gecikme oluştu. Sayfayı yenileyerek resmi tarifeye bağlanabilirsiniz.
         </p>
+        {error?.message && (
+          <div className="mb-4 p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 text-[11px] text-amber-300 font-mono text-left max-w-full overflow-x-auto">
+            {error.message}
+          </div>
+        )}
         <button
           onClick={() => {
             if (typeof window !== "undefined") {
+              try {
+                // Hatalı veya şişmiş istemci önbelleğini temizleyip taze veriyle başlat
+                localStorage.removeItem("vapur_schedules_cache_v1");
+              } catch {}
               window.location.reload();
             } else {
               reset();

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ScheduleListClient } from "@/components/schedule/ScheduleListClient";
 import { PiersDirectoryView } from "@/components/views/PiersDirectoryView";
 import { MarineWeatherSafetyCenter } from "@/components/views/MarineWeatherSafetyCenter";
@@ -20,7 +20,7 @@ export function MainAppShell({ schedules, serverTimeIso, marineWeather }: MainAp
   const [forcedPierFilter, setForcedPierFilter] = useState<string | null>(null);
 
   // PWA App Shortcuts (Hızlı Kısayollar) Entegrasyonu (?view=piers, ?view=weather, vb.)
-  useState(() => {
+  useEffect(() => {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
       const view = params.get("view");
@@ -28,7 +28,7 @@ export function MainAppShell({ schedules, serverTimeIso, marineWeather }: MainAp
         setActiveTab(view);
       }
     }
-  });
+  }, []);
 
   const handleSelectPierForSchedules = (pierName: string) => {
     setForcedPierFilter(pierName);
