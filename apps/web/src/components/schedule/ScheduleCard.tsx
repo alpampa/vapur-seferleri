@@ -10,6 +10,7 @@ import { useFavoritesStore } from "@/store/useFavoritesStore";
 import { useLanguageStore } from "@/store/useLanguageStore";
 import { requestNotificationPermission } from "@/lib/utils/sound";
 import { predictTripOccupancy } from "@/lib/utils/occupancy";
+import { getPierTransit } from "@/lib/data/pier-transit-connections";
 import { useActiveVoyageStore } from "@/store/useActiveVoyageStore";
 import type { ScheduleCardDto, TripStatus } from "@/lib/types/schedule";
 
@@ -125,6 +126,9 @@ export function ScheduleCard(props: ScheduleCardProps) {
   if (dynState.isExpired) {
     return null;
   }
+
+  const destTransit = getPierTransit(dynState.destination);
+  const primaryTransit = destTransit[0];
 
   const isDirect = !props.stops || props.stops.length === 0;
 
@@ -289,6 +293,43 @@ export function ScheduleCard(props: ScheduleCardProps) {
               >
                 Seç
               </button>
+            )}
+
+            {/* Hızlı Aktarma (Metro / Marmaray / Tramvay) */}
+            {primaryTransit && !isCancelled && (
+              <span
+                className="hidden sm:inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-black bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700/80 shrink-0"
+                title={`${dynState.destination} aktarma: ${primaryTransit.name} (${primaryTransit.walkMinutes} dk yürüme)`}
+              >
+                <span className={`w-1.5 h-1.5 rounded-full ${primaryTransit.badgeBg}`} />
+                <span>{primaryTransit.line}</span>
+                <span className="text-[8px] opacity-75 font-mono">{primaryTransit.walkMinutes}dk</span>
+              </span>
+            )}
+
+            {/* İskele / Sefer Yoğunluk Rozeti */}
+            {!isCancelled && !dynState.isDeparted && (
+              <span
+                className={`hidden md:inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold border shrink-0 ${
+                  occupancy.level === "RUSH" || occupancy.level === "HIGH"
+                    ? "bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-800/60"
+                    : occupancy.level === "MEDIUM"
+                    ? "bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800/60"
+                    : "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800/60"
+                }`}
+                title={`İskele & Sefer Yoğunluk Tahmini: %${occupancy.percentage} (${occupancy.label})`}
+              >
+                <span
+                  className={`w-1.5 h-1.5 rounded-full shrink-0 ${
+                    occupancy.level === "RUSH" || occupancy.level === "HIGH"
+                      ? "bg-rose-500 animate-pulse"
+                      : occupancy.level === "MEDIUM"
+                      ? "bg-amber-500"
+                      : "bg-emerald-500"
+                  }`}
+                />
+                <span>{occupancy.label}</span>
+              </span>
             )}
           </div>
 
@@ -511,13 +552,42 @@ export function ScheduleCard(props: ScheduleCardProps) {
               <span className="truncate">{liveVessel.vesselName}</span>
             </span>
 
-            {/* Doluluk Durumu */}
+            {/* Raylı Sistem & İETT Aktarma Rozetleri (Metro / Marmaray / Tramvay) */}
+            {destTransit.length > 0 && !isCancelled && (
+              <>
+                <span className="text-slate-300 dark:text-slate-600 font-bold hidden sm:inline">•</span>
+                <div className="hidden sm:inline-flex items-center gap-1 shrink-0">
+                  {destTransit.slice(0, 2).map((tr) => (
+                    <span
+                      key={tr.line}
+                      className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9.5px] font-extrabold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700/80"
+                      title={`${dynState.destination} varışında aktarma: ${tr.name} (${tr.walkMinutes} dk yürüme)`}
+                    >
+                      <span className={`w-1.5 h-1.5 rounded-full ${tr.badgeBg}`} />
+                      <span>{tr.line}</span>
+                      <span className="text-[8px] opacity-70 font-mono tabular-nums">{tr.walkMinutes}dk</span>
+                    </span>
+                  ))}
+                </div>
+              </>
+            )}
+
+            {/* Doluluk Durumu & Turnike Yoğunluğu */}
             <span className="text-slate-300 dark:text-slate-600 font-bold hidden xs:inline">•</span>
-            <span className="items-center gap-1 text-[10px] text-slate-500 dark:text-slate-400 hidden xs:inline-flex">
+            <span
+              className={`items-center gap-1 text-[9.5px] font-bold px-1.5 py-0.5 rounded border hidden xs:inline-flex shrink-0 ${
+                occupancy.level === "RUSH" || occupancy.level === "HIGH"
+                  ? "bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-800/60"
+                  : occupancy.level === "MEDIUM"
+                  ? "bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800/60"
+                  : "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800/60"
+              }`}
+              title={`İskele ve Sefer Yoğunluk Tahmini: %${occupancy.percentage} (${occupancy.label})`}
+            >
               <span
                 className={`w-1.5 h-1.5 rounded-full shrink-0 ${
                   occupancy.level === "RUSH" || occupancy.level === "HIGH"
-                    ? "bg-rose-500"
+                    ? "bg-rose-500 animate-pulse"
                     : occupancy.level === "MEDIUM"
                     ? "bg-amber-500"
                     : "bg-emerald-500"
