@@ -124,5 +124,20 @@ export function isAnnouncementCurrent(
     return false;
   }
 
+  // 6. KULLANICI KURALI: Sadece İPTAL SEFERLER ve doğrudan operasyonel sefer duyuruları gösterilir.
+  // Pazarlama, tur tanıtımı, proje ve genel idari PR haberleri duyuru bandından ayıklanır.
+  if (
+    text.includes("projesi") ||
+    text.includes("sunset tur") ||
+    text.includes("türk gecesi") ||
+    text.includes("turk gecesi") ||
+    text.includes("mehtap turu") ||
+    text.includes("ücretsiz geçiş hakkı") ||
+    text.includes("kart kullanıcılarının") ||
+    text.includes("otonom elektrikli")
+  ) {
+    return false;
+  }
+
   return true;
 }

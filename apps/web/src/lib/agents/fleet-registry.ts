@@ -258,65 +258,29 @@ export function resolveLiveVesselName(
   departureTime?: string
 ): LiveVesselResolution {
   const normOp = (operator || "").toLowerCase();
+  const isVapur = normOp.includes("şehir") || normOp.includes("sehir");
+  const fleetType: "VAPUR" | "MOTOR" = isVapur ? "VAPUR" : "MOTOR";
+  const opLabel = operator || "Resmi İşletmeci";
 
-  // 1. İlgili operatörün ve koridorun tescilli gemilerini filtrele
-  let operatorVessels = ISTANBUL_FERRY_FLEET.filter((v) => {
-    const vOp = v.operator.toLowerCase();
-    if (normOp.includes("şehir") || normOp.includes("sehir")) return vOp.includes("şehir");
-    if (normOp.includes("turyol")) return vOp.includes("turyol");
-    if (normOp.includes("mavi marmara") || normOp.includes("mavimarmara")) return vOp.includes("mavi marmara");
-    if (normOp.includes("dentur")) return vOp.includes("dentur");
-    if (normOp.includes("prens")) return vOp.includes("prens");
-    return vOp.includes(normOp);
-  });
-
-  if (operatorVessels.length === 0) {
-    operatorVessels = ISTANBUL_FERRY_FLEET.filter((v) => v.operator === "Şehir Hatları");
-  }
-
-  // 2. Hat/koridor bazlı önceliklendirme
-  const corridorMatches = operatorVessels.filter((v) =>
-    v.assignedLines.some(
-      (line) => line.toLowerCase().includes(origin.toLowerCase()) || line.toLowerCase().includes(destination.toLowerCase())
-    )
-  );
-
-  const candidatePool = corridorMatches.length > 0 ? corridorMatches : operatorVessels;
-
-  // 3. Deterministik nöbetçi rotasyonu (İskele, Hat ve Kalkış Saati veya Trip ID hash'i)
-  const timeSeed = departureTime
-    ? parseInt(departureTime.replace(":", ""), 10) || 1200
-    : 1200;
-  
-  let hash = 0;
-  const hashStr = `${tripId || ""}_${origin}_${destination}_${timeSeed}`;
-  for (let i = 0; i < hashStr.length; i++) {
-    hash = (hash * 31 + hashStr.charCodeAt(i)) & 0xffffffff;
-  }
-  const assignedIndex = Math.abs(hash) % candidatePool.length;
-  const vessel: RegisteredVessel = candidatePool[assignedIndex] || candidatePool[0];
-
-  const vesselTitle = vessel.type === "VAPUR" ? `${vessel.name} Vapuru` : `${vessel.name} Motoru`;
-  const directMarineTrafficShipUrl = `https://www.marinetraffic.com/en/ais/details/ships/mmsi:${vessel.mmsi}`;
   const liveBosphorusRadarUrl = `https://www.marinetraffic.com/en/ais/home/centerx:29.02/centery:41.01/zoom:13`;
 
   const statusText = isDeparted
-    ? `Boğaz Koridorunda Seyirde (${vesselTitle})`
-    : `İskelede Sefer Hazırlığı • Rıhtımda (${vesselTitle})`;
+    ? `${opLabel} Seferi • Seyirde`
+    : `${opLabel} Seferi • Rıhtımda`;
 
-  const fleetDisclaimer = "Resmi Denizcilik Kuralı: İBB Şehir Hatları ve yolcu motorları sefer tarifelerinde fiziksel tekne adları peşinen yayımlanmaz; seferler iskeledeki nöbetçi filo havuzundan sevk edilir. Canlı gemi teyidi Boğaz AIS telsiz transponder sinyali ve MMSI no üzerinden sağlanır.";
+  const fleetDisclaimer = "Resmi Denizcilik Bilgilendirmesi: İBB Şehir Hatları ve yolcu motorları sefer tarifelerinde fiziksel gemi adları peşinen yayımlanmaz; seferler iskeledeki rıhtım amirliği nöbetçi filosundan sevk edilir. Doğrulanmamış hiçbir hayali tekne adı yayınlanmaz.";
 
   return {
-    vesselName: vesselTitle,
-    mmsi: vessel.mmsi,
+    vesselName: `${opLabel} Filosu`,
+    mmsi: "",
     statusText,
     isConfirmedUnderway: isDeparted,
-    radarUrl: directMarineTrafficShipUrl,
+    radarUrl: liveBosphorusRadarUrl,
     liveBosphorusRadarUrl,
-    vesselType: vessel.type,
-    capacityPax: vessel.capacityPax,
-    builtYear: vessel.builtYear,
-    callSign: vessel.callSign,
+    vesselType: fleetType,
+    capacityPax: isVapur ? 1450 : 450,
+    builtYear: 0,
+    callSign: undefined,
     isRotationalFleetPool: true,
     fleetDisclaimer
   };

@@ -181,7 +181,6 @@ export function ScheduleCard(props: ScheduleCardProps) {
     status: props.status,
     targetTimeIso: props.targetTimeIso,
     delayText: props.delayText,
-    vessel: liveVessel.vesselName,
     platform: props.platform,
     price: props.price,
     progress: props.progress,
@@ -195,8 +194,6 @@ export function ScheduleCard(props: ScheduleCardProps) {
       origin: dynState.currentOrigin,
       destination: dynState.destination,
       operator: props.operator,
-      vesselName: liveVessel.vesselName,
-      mmsi: liveVessel.mmsi,
       departureTime: dynState.currentDepartureTime,
       arrivalTime: props.arrivalTime || "",
       price: props.price
@@ -564,33 +561,6 @@ export function ScheduleCard(props: ScheduleCardProps) {
             <span className="text-slate-600 dark:text-slate-300 text-[10px] font-semibold shrink-0">
               {isDirect ? t("direct") : `${props.stops?.length} ara durak`}
             </span>
-
-            {/* Gerçek Vapur / Motor Adı (Masaüstü ve tablette görünür, mobilde detay sheetinde) */}
-            <span className="text-slate-300 dark:text-slate-600 font-bold hidden sm:inline">•</span>
-            <span className="text-slate-700 dark:text-slate-200 text-[10px] font-bold truncate max-w-28 hidden sm:inline-flex items-center gap-1">
-              <Ship size={11} className="text-blue-500 shrink-0" />
-              <span className="truncate">{liveVessel.vesselName}</span>
-            </span>
-
-            {/* Raylı Sistem & İETT Aktarma Rozetleri (Metro / Marmaray / Tramvay) */}
-            {destTransit.length > 0 && !isCancelled && (
-              <>
-                <span className="text-slate-300 dark:text-slate-600 font-bold hidden sm:inline">•</span>
-                <div className="hidden sm:inline-flex items-center gap-1 shrink-0">
-                  {destTransit.slice(0, 2).map((tr) => (
-                    <span
-                      key={tr.line}
-                      className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9.5px] font-extrabold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700/80"
-                      title={`${dynState.destination} varışında aktarma: ${tr.name} (${tr.walkMinutes} dk yürüme)`}
-                    >
-                      <span className={`w-1.5 h-1.5 rounded-full ${tr.badgeBg}`} />
-                      <span>{tr.line}</span>
-                      <span className="text-[8px] opacity-70 font-mono tabular-nums">{tr.walkMinutes}dk</span>
-                    </span>
-                  ))}
-                </div>
-              </>
-            )}
 
             {/* Doluluk Durumu & Turnike Yoğunluğu */}
             <span className="text-slate-300 dark:text-slate-600 font-bold hidden xs:inline">•</span>

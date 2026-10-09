@@ -480,10 +480,10 @@ export function TripDetailsSheet({
               </div>
             )}
 
-            {/* SEKME 2: GEMİ & SEYİR (Tahmini Seyir Durumu & Harita) */}
+            {/* SEKME 2: GEMİ & SEYİR (Resmi Bilgi & Canlı Radar) */}
             {activeDetailTab === "RADAR" && (
               <div className="space-y-4 animate-fadeIn">
-                {/* Tahmini Gemi Durumu Kartı */}
+                {/* Resmi Filo Bilgilendirme Kartı */}
                 <div className="bg-slate-50 dark:bg-slate-900/90 p-4 rounded-2xl border border-slate-200 dark:border-slate-800">
                   <div className="flex items-center gap-3 mb-3">
                     <div className="w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 border transition-all bg-blue-500/10 text-blue-500 border-blue-500/20">
@@ -492,9 +492,9 @@ export function TripDetailsSheet({
                     <div>
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className="text-base font-black text-slate-900 dark:text-white">
-                          {liveVessel.vesselName}
+                          {schedule.operator} Seferi
                         </span>
-                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-950/80 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-900/60">
                           {aisData.statusLabel}
                         </span>
                       </div>
@@ -504,28 +504,27 @@ export function TripDetailsSheet({
                     </div>
                   </div>
 
-                  {/* Tahmini Seyir Bilgileri */}
-                  <div className="pt-2 border-t border-slate-200 dark:border-slate-800 grid grid-cols-4 gap-2 text-center">
+                  {/* Sıfır Halüsinasyon Bilgilendirmesi */}
+                  <div className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-[11px] text-amber-800 dark:text-amber-300 font-medium mb-3">
+                    <strong>Resmi Denizcilik Bilgilendirmesi:</strong> İBB Şehir Hatları ve yolcu motorları sefer tarifelerinde fiziksel gemi adları peşinen yayımlanmaz; seferler iskele amirliği nöbetçi filosu tarafından sevk edilir. Doğrulanmamış hiçbir tahminî vapur adı gösterilmez.
+                  </div>
+
+                  {/* Seyir Bilgileri */}
+                  <div className="pt-2 border-t border-slate-200 dark:border-slate-800 grid grid-cols-2 sm:grid-cols-3 gap-2 text-center">
                     <div className="p-2 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
-                      <span className="text-[9px] text-slate-400 font-bold block uppercase">Hız (tahmini)</span>
-                      <span className="text-xs font-mono font-black text-emerald-600 dark:text-emerald-400">
-                        {aisData.speedKnots} Kn
+                      <span className="text-[9px] text-slate-400 font-bold block uppercase">Kalkış İskelesi</span>
+                      <span className="text-xs font-bold text-slate-900 dark:text-white truncate block">
+                        {dynState?.currentOrigin || schedule.origin}
                       </span>
                     </div>
                     <div className="p-2 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
-                      <span className="text-[9px] text-slate-400 font-bold block uppercase">Rota (tahmini)</span>
-                      <span className="text-xs font-mono font-black text-blue-600 dark:text-blue-400">
-                        {aisData.headingDeg}°
+                      <span className="text-[9px] text-slate-400 font-bold block uppercase">Varış İskelesi</span>
+                      <span className="text-xs font-bold text-blue-600 dark:text-blue-400 truncate block">
+                        {dynState?.destination || schedule.destination}
                       </span>
                     </div>
-                    <div className="p-2 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
-                      <span className="text-[9px] text-slate-400 font-bold block uppercase">İlerleme</span>
-                      <span className="text-xs font-mono font-black text-amber-500">
-                        %{aisData.progressPercent}
-                      </span>
-                    </div>
-                    <div className="p-2 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
-                      <span className="text-[9px] text-slate-400 font-bold block uppercase">Tahmini varış</span>
+                    <div className="p-2 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 col-span-2 sm:col-span-1">
+                      <span className="text-[9px] text-slate-400 font-bold block uppercase">Tahmini Varış Süresi</span>
                       <span className="text-xs font-mono font-black text-slate-900 dark:text-white">
                         ~{aisData.etaMinutes} dk
                       </span>
@@ -536,7 +535,7 @@ export function TripDetailsSheet({
                 {/* 2 Seyir Aksiyon Butonu */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                   <a
-                    href={liveVessel.radarUrl}
+                    href="https://www.marinetraffic.com/en/ais/home/centerx:29.02/centery:41.01/zoom:13"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-3.5 rounded-2xl bg-linear-to-r from-emerald-600/15 via-teal-600/10 to-transparent hover:from-emerald-600/25 border border-emerald-500/40 text-left flex items-center justify-between transition-all shadow-sm group"
@@ -547,14 +546,14 @@ export function TripDetailsSheet({
                       </div>
                       <div>
                         <span className="text-xs font-black text-slate-900 dark:text-white flex items-center gap-1">
-                          CANLI GEMİ RADARI
+                          CANLI BOĞAZ GEMİ RADARI
                         </span>
                         <span className="text-[10px] text-slate-500 dark:text-slate-400 block">
-                          {liveVessel.vesselName} (MMSI: {liveVessel.mmsi})
+                          Tüm Boğaz ve Marmara gemi trafiği (MarineTraffic)
                         </span>
                       </div>
                     </div>
-                    <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 shrink-0">Radar Aç ➔</span>
+                    <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 shrink-0">Radarı Aç ➔</span>
                   </a>
 
                   <button
@@ -580,12 +579,34 @@ export function TripDetailsSheet({
             {/* SEKME 3: İSKELE AKTARMA & ULAŞIM */}
             {activeDetailTab === "TRANSIT" && (
               <div className="space-y-3.5 animate-fadeIn text-xs">
-                {/* Metro & Raylı Sistem Aktarmaları */}
-                {(originTransit.length > 0 || destTransit.length > 0) && (
+                {/* 1. Varış Noktasında Aktarma & Ulaşım (Kabataş, Kadıköy, Bostancı, Adalar) */}
+                {destTransit.length > 0 && (
+                  <div className="p-3.5 rounded-2xl bg-blue-50/70 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800/60">
+                    <div className="text-[11px] font-black uppercase text-blue-700 dark:text-blue-300 mb-2 flex items-center justify-between">
+                      <span className="flex items-center gap-1.5">
+                        <Train size={13} className="text-blue-600 dark:text-blue-400" />
+                        <span>{schedule.destination} Varışında Ulaşım & Aktarmalar</span>
+                      </span>
+                      <span className="text-[9.5px] font-bold px-1.5 py-0.5 rounded bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300">Varış Noktası</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      {destTransit.map((t, idx) => (
+                        <div key={idx} className="flex items-center gap-1 bg-white dark:bg-slate-950 px-2.5 py-1 rounded-xl border border-slate-200 dark:border-slate-800 shadow-2xs">
+                          <span className={`text-[10px] font-black text-white px-1.5 py-0.2 rounded ${t.badgeBg}`}>{t.line}</span>
+                          <span className="font-semibold text-slate-800 dark:text-slate-200">{t.name}</span>
+                          <span className="text-blue-600 dark:text-blue-400 font-bold">({t.walkMinutes} dk yürüme)</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* 2. Kalkış İskelesine Raylı Sistem Ulaşımı */}
+                {originTransit.length > 0 && (
                   <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800">
                     <div className="text-[11px] font-black uppercase text-slate-500 dark:text-slate-400 mb-2 flex items-center gap-1.5">
-                      <Train size={13} className="text-blue-500" />
-                      <span>Raylı Sistem & Metro Aktarmaları</span>
+                      <Train size={13} className="text-slate-500" />
+                      <span>{schedule.origin} Kalkış İskelesine Ulaşım</span>
                     </div>
                     <div className="flex items-center gap-1.5 flex-wrap">
                       {originTransit.map((t, idx) => (

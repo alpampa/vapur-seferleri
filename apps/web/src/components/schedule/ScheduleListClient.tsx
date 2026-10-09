@@ -24,8 +24,8 @@ import { useAnnouncementStore } from "@/store/useAnnouncementStore";
 import { AnnouncementBanner } from "@/components/announcements/AnnouncementBanner";
 import { SmartCommutePills } from "@/components/schedule/SmartCommutePills";
 import { LastFerrySafeguardBanner } from "@/components/schedule/LastFerrySafeguardBanner";
+import { getOperatorRecord, OPERATOR_REGISTRY } from "@/lib/data/operator-registry";
 import { triggerHaptic } from "@/lib/utils/haptics";
-import { getOperatorRecord } from "@/lib/data/operator-registry";
 import type { MarineWeatherStatus } from "@/lib/services/marine-weather";
 import { parseNaturalTransitQuery } from "@/lib/services/ai-transit-assistant";
 import { predictFerryDisruption } from "@/lib/services/predictive-disruption-model";
@@ -252,10 +252,13 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
   }, [effectiveSchedules, selectedCategory, selectedOrigin, searchQuery, now, serverTimeIso]);
 
   const uniqueOperators = useMemo(() => {
-    const ops = new Set<string>();
-    activeSchedulesWithDyn.forEach(({ schedule }) => ops.add(schedule.operator));
-    return Array.from(ops);
-  }, [activeSchedulesWithDyn]);
+    return OPERATOR_REGISTRY
+      .filter((op) => {
+        if (selectedCategory === "ALL") return true;
+        return op.category === "HEPSI" || op.category === selectedCategory;
+      })
+      .map((op) => op.name);
+  }, [selectedCategory]);
 
   // 1. Tüm geçerli seferlerden toplanan ana kalkış ve varış iskeleleri
   const allOrigins = useMemo(() => {
@@ -936,6 +939,16 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
                 >
                   <AlertOctagon size={13} />
                   <span>Alternatif Rota & Kurtarma Planı (Marmaray / Metro)</span>
+                </button>
+              )}
+              {pastTrips.length > 0 && !showPastTrips && (
+                <button
+                  type="button"
+                  onClick={() => setShowPastTrips(true)}
+                  className="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold text-xs border border-slate-300 dark:border-slate-700 transition-all cursor-pointer inline-flex items-center gap-1.5"
+                >
+                  <History size={13} />
+                  <span>Bugünkü Tamamlanmış Seferleri Gör ({pastTrips.length})</span>
                 </button>
               )}
               <button

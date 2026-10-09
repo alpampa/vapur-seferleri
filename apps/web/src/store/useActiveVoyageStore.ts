@@ -5,8 +5,8 @@ export interface ActiveVoyage {
   origin: string;
   destination: string;
   operator: string;
-  vesselName: string;
-  mmsi: string;
+  vesselName?: string;
+  mmsi?: string;
   departureTime: string;
   arrivalTime: string;
   price: string;

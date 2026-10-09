@@ -100,27 +100,36 @@ export function AnnouncementBanner({ announcements, className = "" }: Announceme
           </span>
         </div>
 
-        {/* Orta: Tek Satır Dönen Duyuru Metni */}
+        {/* Orta: Tek Satır Dönen Duyuru Metni (İptal açıklaması harfiyen gösterilir) */}
         <div className="min-w-0 flex-1 flex items-center gap-1.5 text-xs truncate">
           <OperatorLogo operator={currentItem.operator} size="sm" showName={false} />
           <a
             href={currentItem.sourceUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className={`font-semibold text-[11px] leading-tight hover:underline truncate inline-flex items-center gap-1 ${
+            className={`font-semibold text-[11px] leading-tight hover:underline truncate inline-flex items-center gap-1 min-w-0 flex-1 ${
               tone === "danger"
                 ? "text-rose-700 dark:text-rose-300 font-bold"
                 : "text-slate-800 dark:text-slate-200"
             }`}
             title={`${currentItem.title} ${currentItem.body ? `- ${currentItem.body}` : ""}`}
           >
-            <span className="truncate">{currentItem.title}</span>
-            {currentItem.body && (
-              <span className="opacity-75 text-[10px] hidden sm:inline truncate">
-                — {currentItem.body}
+            {/* İptal durumunda doğrudan resmi açıklama cümlesini yaz */}
+            {hasCancellation && currentItem.body ? (
+              <span className="truncate text-rose-700 dark:text-rose-200 font-extrabold">
+                {currentItem.body}
               </span>
+            ) : (
+              <>
+                <span className="truncate">{currentItem.title}</span>
+                {currentItem.body && (
+                  <span className="opacity-80 text-[10.5px] truncate">
+                    — {currentItem.body}
+                  </span>
+                )}
+              </>
             )}
-            <ExternalLink size={9} className="shrink-0 opacity-50 ml-0.5" />
+            <ExternalLink size={9} className="shrink-0 opacity-60 ml-0.5" />
           </a>
         </div>
 
