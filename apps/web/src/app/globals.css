@@ -117,11 +117,16 @@
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 html {
-  overflow-x: hidden;
   width: 100%;
-  max-width: 100vw;
   -webkit-text-size-adjust: 100%;
+  overflow-x: hidden;
 }
 
 body {
@@ -130,10 +135,19 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
   width: 100%;
-  max-width: 100vw;
+  overflow-x: hidden;
+  position: relative;
   -webkit-tap-highlight-color: transparent;
+}
+
+/* Dokunmatik hedefler için WCAG 2.2 AA (en az 44x44px) */
+.touch-target {
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 button, a, input, select {

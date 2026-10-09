@@ -196,16 +196,16 @@ export function TripDetailsSheet({
             role="dialog"
             aria-modal="true"
             aria-label={`Sefer detayı: ${schedule.origin}'den ${schedule.destination}'na ${schedule.departureTime}`}
-            className="fixed bottom-0 left-0 right-0 bg-white dark:bg-[#0c1322] border-t border-slate-200 dark:border-slate-800 rounded-t-[28px] z-50 p-5 sm:p-7 text-slate-900 dark:text-white shadow-2xl flex flex-col max-h-[90vh] overflow-y-auto"
+            className="fixed bottom-0 left-0 right-0 max-w-lg mx-auto bg-white dark:bg-[#0c1322] border-t border-slate-200 dark:border-slate-800 rounded-t-[28px] z-50 p-4 sm:p-6 text-slate-900 dark:text-white shadow-2xl flex flex-col max-h-[90vh] overflow-y-auto"
             style={{ paddingBottom: "max(24px, env(safe-area-inset-bottom))" }}
           >
             {/* Grab Handle */}
             <div className="w-12 h-1.5 bg-slate-300 dark:bg-slate-700 rounded-full mx-auto mb-4 shrink-0" />
 
             {/* 1. ÜST BAŞLIK VE HIZLI EYLEMLER */}
-            <div className="flex justify-between items-start gap-3 mb-4">
+            <div className="flex justify-between items-start gap-2 mb-4">
               <div className="min-w-0 flex-1">
-                <div className="flex items-center gap-2 mb-2 flex-wrap">
+                <div className="flex items-center gap-1.5 mb-2 flex-wrap">
                   {dynState && (
                     <TripStatusBadge
                       status={dynState.status}
@@ -214,39 +214,39 @@ export function TripDetailsSheet({
                   )}
                   <OperatorLogo operator={schedule.operator} size="md" showName={true} />
                   {dynState?.countdown && !dynState.isDeparted && (
-                    <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-black bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30 animate-pulse inline-flex items-center gap-1">
+                    <span className="px-2 py-0.5 rounded-full text-[11px] font-mono font-black bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30 animate-pulse inline-flex items-center gap-1">
                       <Timer size={11} aria-hidden="true" /> Kalkışa {dynState.countdown}
                     </span>
                   )}
                 </div>
 
-                <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
-                  <span>{dynState?.currentOrigin || schedule.origin}</span>
-                  <span className="text-blue-500 font-extrabold">➔</span>
-                  <span className="text-amber-500 dark:text-amber-400">
+                <h2 className="text-lg sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-1.5 truncate">
+                  <span className="truncate">{dynState?.currentOrigin || schedule.origin}</span>
+                  <span className="text-blue-500 font-extrabold shrink-0">➔</span>
+                  <span className="text-amber-500 dark:text-amber-400 truncate">
                     {dynState?.destination || schedule.destination}
                   </span>
                 </h2>
-                <p className="text-slate-500 dark:text-slate-400 text-xs font-semibold mt-0.5">
+                <p className="text-slate-500 dark:text-slate-400 text-xs font-semibold mt-0.5 truncate">
                   {schedule.routeTitle || `${schedule.origin} - ${schedule.destination} Seferi`}
                 </p>
               </div>
 
               {/* Action Buttons: Star, Bell, Pin, Close */}
-              <div className="flex items-center gap-1.5 shrink-0">
+              <div className="flex items-center gap-1 shrink-0">
                 <button
                   type="button"
                   onClick={() => toggleFavorite(routeKey)}
                   title={isFav ? "Favorilerden Çıkar" : "Favorilere Ekle"}
                   aria-label={isFav ? "Favorilerden çıkar" : "Favorilere ekle"}
                   aria-pressed={isFav}
-                  className={`p-2 rounded-xl border transition-all ${
+                  className={`p-2 rounded-xl border transition-all touch-manipulation cursor-pointer ${
                     isFav
                       ? "bg-amber-400 text-slate-950 border-amber-300 shadow-sm"
                       : "bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:text-amber-400"
                   }`}
                 >
-                  <Star size={16} className={isFav ? "fill-slate-950 text-slate-950" : ""} />
+                  <Star size={15} className={isFav ? "fill-slate-950 text-slate-950" : ""} />
                 </button>
 
                 <button
@@ -258,16 +258,16 @@ export function TripDetailsSheet({
                   title={hasAlarm ? "Hatırlatmayı Kaldır" : "5 Dk Kala Hatırlat"}
                   aria-label={hasAlarm ? "Hatırlatmayı kaldır" : "5 dakika kala hatırlat"}
                   aria-pressed={hasAlarm}
-                  className={`p-2 rounded-xl border transition-all ${
+                  className={`p-2 rounded-xl border transition-all touch-manipulation cursor-pointer ${
                     hasAlarm
                       ? "bg-amber-500/20 border-amber-400 text-amber-500 dark:text-amber-300"
                       : "bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                   }`}
                 >
                   {hasAlarm ? (
-                    <BellRing size={16} className="text-amber-500 animate-bounce" />
+                    <BellRing size={15} className="text-amber-500 animate-bounce" />
                   ) : (
-                    <Bell size={16} />
+                    <Bell size={15} />
                   )}
                 </button>
 
@@ -288,82 +288,82 @@ export function TripDetailsSheet({
                   }}
                   title="Canlı Takip Çubuğuna Sabitle"
                   aria-label="Seferi canlı takip çubuğuna sabitle"
-                  className="p-2 rounded-xl bg-blue-50 dark:bg-blue-950/40 hover:bg-blue-100 dark:hover:bg-blue-900/60 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-700/60 transition-all"
+                  className="p-2 rounded-xl bg-blue-50 dark:bg-blue-950/40 hover:bg-blue-100 dark:hover:bg-blue-900/60 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-700/60 transition-all touch-manipulation cursor-pointer"
                 >
-                  <Pin size={16} />
+                  <Pin size={15} />
                 </button>
 
                 <button
                   onClick={onClose}
                   aria-label="Kapat"
-                  className="w-8 h-8 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 rounded-full flex items-center justify-center text-slate-600 dark:text-slate-300 transition-colors border border-slate-200 dark:border-slate-700 cursor-pointer"
+                  className="w-8 h-8 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 rounded-xl flex items-center justify-center text-slate-600 dark:text-slate-300 transition-colors border border-slate-200 dark:border-slate-700 cursor-pointer touch-manipulation"
                 >
-                  <X size={16} />
+                  <X size={15} />
                 </button>
               </div>
             </div>
 
-            {/* 2. ERGONOMİK 3 SEKME ÇUBUĞU (Apple Transit & Wallet Tarzı) */}
+            {/* 2. ERGONOMİK 4 SEKME ÇUBUĞU (Apple Transit & Wallet Tarzı) */}
             <div
               role="tablist"
               aria-label="Sefer detayı sekmeleri"
-              className="flex items-center gap-1 p-1 bg-slate-100 dark:bg-slate-900 rounded-2xl mb-4 border border-slate-200 dark:border-slate-800 shrink-0"
+              className="flex items-center gap-1 p-1 bg-slate-100 dark:bg-slate-900 rounded-2xl mb-4 border border-slate-200 dark:border-slate-800 shrink-0 w-full overflow-x-auto hide-scrollbar"
             >
               <button
                 type="button"
                 role="tab"
                 aria-selected={activeDetailTab === "TICKET"}
                 onClick={() => setActiveDetailTab("TICKET")}
-                className={`flex-1 py-2 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                className={`flex-1 min-w-0 py-2 px-1 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-1 cursor-pointer touch-manipulation ${
                   activeDetailTab === "TICKET"
-                    ? "bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 shadow-xs scale-[1.01]"
+                    ? "bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 shadow-xs"
                     : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                 }`}
               >
-                <Ticket size={14} aria-hidden="true" />
-                <span>Sefer & Bilet</span>
+                <Ticket size={13} aria-hidden="true" className="shrink-0" />
+                <span className="truncate">Tarife</span>
               </button>
               <button
                 type="button"
                 role="tab"
                 aria-selected={activeDetailTab === "RADAR"}
                 onClick={() => setActiveDetailTab("RADAR")}
-                className={`flex-1 py-2 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                className={`flex-1 min-w-0 py-2 px-1 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-1 cursor-pointer touch-manipulation ${
                   activeDetailTab === "RADAR"
-                    ? "bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 shadow-xs scale-[1.01]"
+                    ? "bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 shadow-xs"
                     : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                 }`}
               >
-                <Radar size={14} aria-hidden="true" />
-                <span>Gemi & Seyir</span>
+                <Radar size={13} aria-hidden="true" className="shrink-0" />
+                <span className="truncate">Radar</span>
               </button>
               <button
                 type="button"
                 role="tab"
                 aria-selected={activeDetailTab === "TRANSIT"}
                 onClick={() => setActiveDetailTab("TRANSIT")}
-                className={`flex-1 py-2 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                className={`flex-1 min-w-0 py-2 px-1 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-1 cursor-pointer touch-manipulation ${
                   activeDetailTab === "TRANSIT"
-                    ? "bg-white dark:bg-slate-800 text-purple-600 dark:text-purple-400 shadow-xs scale-[1.01]"
+                    ? "bg-white dark:bg-slate-800 text-purple-600 dark:text-purple-400 shadow-xs"
                     : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                 }`}
               >
-                <Train size={14} aria-hidden="true" />
-                <span>Aktarma</span>
+                <Train size={13} aria-hidden="true" className="shrink-0" />
+                <span className="truncate">Aktarma</span>
               </button>
               <button
                 type="button"
                 role="tab"
                 aria-selected={activeDetailTab === "GUIDE"}
                 onClick={() => setActiveDetailTab("GUIDE")}
-                className={`flex-1 py-2 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                className={`flex-1 min-w-0 py-2 px-1 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-1 cursor-pointer touch-manipulation ${
                   activeDetailTab === "GUIDE"
-                    ? "bg-amber-400 text-slate-950 shadow-xs scale-[1.01]"
+                    ? "bg-amber-400 text-slate-950 shadow-xs font-black"
                     : "text-slate-600 dark:text-slate-400 hover:text-amber-500 dark:hover:text-amber-400"
                 }`}
               >
-                <Sparkles size={14} aria-hidden="true" />
-                <span>Ada & Fırsat</span>
+                <Sparkles size={13} aria-hidden="true" className="shrink-0" />
+                <span className="truncate">Ada</span>
               </button>
             </div>
 

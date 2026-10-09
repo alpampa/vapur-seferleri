@@ -270,13 +270,13 @@ export function ScheduleCard(props: ScheduleCardProps) {
           </div>
 
           {/* Orta: Güzergah + Operatör + Durak & Gece Rozetleri */}
-          <div className="flex items-center gap-1.5 min-w-0 flex-1 truncate text-xs">
+          <div className="flex items-center gap-1.5 min-w-0 flex-1 text-xs">
             <OperatorLogo operator={props.operator} size="sm" showName={false} />
-            <span className={`font-bold truncate ${isCancelled ? "line-through text-slate-400" : ""}`}>
+            <span className={`font-bold truncate min-w-0 ${isCancelled ? "line-through text-slate-400" : ""}`}>
               {dynState.currentOrigin}
             </span>
             <span className="text-blue-500 dark:text-blue-400 font-black text-[10px] shrink-0">➔</span>
-            <span className={`font-bold truncate ${isCancelled ? "line-through text-slate-400" : "text-blue-700 dark:text-blue-300"}`}>
+            <span className={`font-bold truncate min-w-0 ${isCancelled ? "line-through text-slate-400" : "text-blue-700 dark:text-blue-300"}`}>
               {dynState.destination}
             </span>
 
@@ -509,12 +509,12 @@ export function ScheduleCard(props: ScheduleCardProps) {
         {/* 2. Orta: Dinamik Güzergah & Hafif Temel Bilgiler */}
         <div className="flex flex-col min-w-0 flex-1 pr-1">
           {/* Güzergah */}
-          <div className="flex items-center gap-1.5 font-black text-sm sm:text-base leading-tight truncate">
-            <span className={`truncate ${isCancelled ? "line-through opacity-70 text-slate-500 dark:text-slate-400" : "text-slate-900 dark:text-white"}`}>
+          <div className="flex items-center gap-1.5 font-black text-sm sm:text-base leading-tight min-w-0">
+            <span className={`truncate min-w-0 ${isCancelled ? "line-through opacity-70 text-slate-500 dark:text-slate-400" : "text-slate-900 dark:text-white"}`}>
               {dynState.currentOrigin}
             </span>
             <span className="text-blue-600 dark:text-blue-400 font-extrabold text-xs sm:text-sm shrink-0">➔</span>
-            <span className={`truncate ${isCancelled ? "line-through opacity-70 text-slate-500 dark:text-slate-400" : "text-blue-700 dark:text-blue-300 font-bold"}`}>
+            <span className={`truncate min-w-0 ${isCancelled ? "line-through opacity-70 text-slate-500 dark:text-slate-400" : "text-blue-700 dark:text-blue-300 font-bold"}`}>
               {dynState.destination}
             </span>
 
@@ -551,9 +551,9 @@ export function ScheduleCard(props: ScheduleCardProps) {
               {isDirect ? t("direct") : `${props.stops?.length} ara durak`}
             </span>
 
-            {/* Gerçek Vapur / Motor Adı */}
-            <span className="text-slate-300 dark:text-slate-600 font-bold">•</span>
-            <span className="text-slate-700 dark:text-slate-200 text-[10px] font-bold truncate max-w-32 flex items-center gap-1">
+            {/* Gerçek Vapur / Motor Adı (Masaüstü ve tablette görünür, mobilde detay sheetinde) */}
+            <span className="text-slate-300 dark:text-slate-600 font-bold hidden sm:inline">•</span>
+            <span className="text-slate-700 dark:text-slate-200 text-[10px] font-bold truncate max-w-28 hidden sm:inline-flex items-center gap-1">
               <Ship size={11} className="text-blue-500 shrink-0" />
               <span className="truncate">{liveVessel.vesselName}</span>
             </span>
@@ -667,7 +667,7 @@ export function ScheduleCard(props: ScheduleCardProps) {
               return (
                 <div key={`${wp.name}-${idx}`} className="inline-flex items-center gap-1">
                   <span
-                    className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold border transition-colors ${
+                    className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold border transition-colors max-w-full min-w-0 ${
                       isFirst
                         ? "bg-emerald-50 dark:bg-emerald-950/70 text-emerald-800 dark:text-emerald-300 border-emerald-300 dark:border-emerald-600/50"
                         : isLast
@@ -675,8 +675,8 @@ export function ScheduleCard(props: ScheduleCardProps) {
                         : "bg-slate-100 dark:bg-slate-800/90 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700"
                     }`}
                   >
-                    <span>{wp.name}</span>
-                    <span className="font-mono text-[9px] opacity-80 tabular-nums">({wp.time})</span>
+                    <span className="truncate">{wp.name}</span>
+                    <span className="font-mono text-[9px] opacity-80 tabular-nums shrink-0">({wp.time})</span>
                   </span>
                   {!isLast && (
                     <span className="text-slate-300 dark:text-slate-600 font-extrabold text-[9px]">

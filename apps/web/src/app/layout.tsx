@@ -35,6 +35,7 @@ export default function RootLayout({
   return (
     <html lang="tr" className={inter.variable} suppressHydrationWarning>
       <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -55,7 +56,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="font-sans antialiased bg-slate-100 dark:bg-[#070b14] text-slate-900 dark:text-white min-h-[100dvh] overflow-x-hidden touch-pan-y pb-[env(safe-area-inset-bottom)] transition-colors duration-150">
+      <body className="font-sans antialiased bg-slate-100 dark:bg-[#070b14] text-slate-900 dark:text-white min-h-[100dvh] touch-pan-y pb-[env(safe-area-inset-bottom)] transition-colors duration-150">
         <ReducedMotionProvider>
           <ServiceWorkerRegister />
           {children}

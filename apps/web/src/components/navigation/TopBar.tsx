@@ -35,13 +35,13 @@ export function TopBar() {
   return (
     <header className="px-3 sm:px-4 py-2 pt-[max(8px,env(safe-area-inset-top))] bg-white/95 dark:bg-[#070e1e]/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 sticky top-0 z-40 shadow-xs flex items-center justify-between transition-colors duration-150">
       {/* SOL KISIM: ANA SAAT (TR SAATİ) + VAPUR SEFERLERİ BAŞLIĞI */}
-      <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+      <div className="flex items-center gap-1.5 sm:gap-3 min-w-0 flex-1">
         {/* Canlı Saat Göstergesi */}
-        <div className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 shadow-2xs shrink-0">
-          <Clock size={14} className="text-blue-600 dark:text-blue-400 shrink-0" />
+        <div className="flex items-center gap-1 sm:gap-2 px-1.5 sm:px-2.5 py-1 sm:py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 shadow-2xs shrink-0">
+          <Clock size={13} className="text-blue-600 dark:text-blue-400 shrink-0" />
           <div className="flex flex-col items-start leading-none">
             {/* suppressHydrationWarning: SSR anındaki sunucu saati ile istemci hidrasyon saati saniye bazında farklıdır */}
-            <span suppressHydrationWarning className="text-[10px] sm:text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+            <span suppressHydrationWarning className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
               {dateStr}
             </span>
             <span suppressHydrationWarning className="font-mono font-black text-[11px] sm:text-sm tracking-tight text-slate-900 dark:text-white tabular-nums mt-0.5">

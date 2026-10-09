@@ -29,16 +29,16 @@ export function BottomNav({ activeTab = "schedules", onTabChange }: BottomNavPro
               onClick={() => onTabChange?.(id)}
               aria-current={isActive ? "page" : undefined}
               aria-label={label}
-              className={`flex flex-col items-center gap-1 transition-all touch-manipulation cursor-pointer active:scale-95 min-w-16 ${
+              className={`flex-1 min-w-0 min-h-[44px] flex flex-col items-center justify-center gap-1 transition-all touch-manipulation cursor-pointer active:scale-95 ${
                 isActive
                   ? "text-blue-400 scale-105 font-black"
                   : "text-slate-400 hover:text-slate-200 font-semibold"
               }`}
             >
-              <div className={`p-1.5 rounded-xl ${isActive ? "bg-blue-500/20" : ""}`}>
-                <Icon size={20} />
+              <div className={`p-1 rounded-xl ${isActive ? "bg-blue-500/20" : ""}`}>
+                <Icon size={19} />
               </div>
-              <span className="text-[10px] tracking-tight">{label}</span>
+              <span className="text-[10px] tracking-tight truncate max-w-full px-0.5">{label}</span>
             </button>
           );
         })}
