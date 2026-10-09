@@ -159,11 +159,24 @@ async function runTest() {
           const elements = Array.from(document.querySelectorAll('*'));
           const overflows = [];
           
+          function isInsideClippedContainer(el) {
+            let parent = el.parentElement;
+            while (parent && parent !== document.body && parent !== document.documentElement) {
+              const style = window.getComputedStyle(parent);
+              const ox = style.overflowX;
+              if (ox === 'auto' || ox === 'scroll' || ox === 'hidden') {
+                return true;
+              }
+              parent = parent.parentElement;
+            }
+            return false;
+          }
+
           const effectiveW = docW;
           for (const el of elements) {
             const r = el.getBoundingClientRect();
-            // Ekran sağ kenarından taşan görünür elemanlar
-            if (r.right > effectiveW + 1 && r.width > 0 && r.height > 0) {
+            // Ekran sağ kenarından taşan ve kırpılmamış (uncontained) elemanlar
+            if (r.right > effectiveW + 1 && r.width > 0 && r.height > 0 && !isInsideClippedContainer(el)) {
               overflows.push({
                 tag: el.tagName.toLowerCase(),
                 id: el.id || '',

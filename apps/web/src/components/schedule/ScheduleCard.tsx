@@ -37,6 +37,7 @@ export interface ScheduleCardProps {
   continuousUntil?: string;
   onClick?: () => void;
   isCompact?: boolean;
+  isFeaturedHero?: boolean;
   highlightStopName?: string;
   onSelectHop?: (schedule: ScheduleCardDto) => void;
 }
@@ -400,7 +401,9 @@ export function ScheduleCard(props: ScheduleCardProps) {
         }
       }}
       className={`theme-card rounded-xl px-3 py-2.5 flex flex-col gap-1.5 text-slate-900 dark:text-white shadow-xs dark:shadow-none transition-all duration-150 cursor-pointer group border active:scale-[0.99] touch-manipulation ${
-        isCancelled
+        props.isFeaturedHero
+          ? "border-blue-500/90 dark:border-blue-400 ring-2 ring-blue-500/25 bg-linear-to-b from-blue-50/60 via-white to-white dark:from-blue-950/40 dark:via-[#141d2e] dark:to-[#141d2e] shadow-sm"
+          : isCancelled
           ? "border-rose-500/90 bg-rose-50/50 dark:bg-rose-950/25 ring-1 ring-rose-500/40 shadow-xs shadow-rose-500/10"
           : dynState.isDeparted
           ? "border-slate-200 dark:border-slate-800/80 bg-slate-50/60 dark:bg-slate-900/40 text-slate-500 dark:text-slate-400 opacity-65"
@@ -517,6 +520,13 @@ export function ScheduleCard(props: ScheduleCardProps) {
             <span className={`truncate min-w-0 ${isCancelled ? "line-through opacity-70 text-slate-500 dark:text-slate-400" : "text-blue-700 dark:text-blue-300 font-bold"}`}>
               {dynState.destination}
             </span>
+
+            {/* Sıradaki Kalkış / En Yakın Sefer Rozeti */}
+            {props.isFeaturedHero && !isCancelled && !dynState.isDeparted && (
+              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-blue-600 text-white text-[9px] font-black uppercase tracking-wider shadow-2xs shrink-0">
+                <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" /> EN YAKIN
+              </span>
+            )}
 
             {/* Gece Seferi Rozeti */}
             {isNightTrip && !isCancelled && (

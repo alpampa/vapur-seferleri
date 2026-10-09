@@ -9,7 +9,6 @@ import { matchesTurkishSearch } from "@/lib/utils/search-normalizer";
 import { LateNightTransitModal } from "@/components/night/LateNightTransitModal";
 import { MissedFerryAssistantModal } from "@/components/planner/MissedFerryAssistantModal";
 import { resolveDynamicTrip, isTripCancelled, type DynamicTripResolution } from "@/lib/utils/dynamic-trip";
-import { NextDepartureHero } from "@/components/schedule/NextDepartureHero";
 import { AlarmManager } from "@/components/schedule/AlarmManager";
 import { TripPlannerWithMap } from "@/components/planner/TripPlannerWithMap";
 import { OperatorLogo } from "@/components/ui/OperatorLogo";
@@ -485,90 +484,34 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
         </div>
       )}
 
-      {/* MOBİL ÖNCELİKLİ MODERN KONTROL ALANI (Zero Overflow, Full Responsive) */}
-      <div className="px-3 pt-2 space-y-2">
-        {/* 1. HAT KATEGORİSİ SEÇİCİ (Adalar / Boğaz / Tümü) */}
-        <div className="grid grid-cols-3 gap-1 p-1 bg-slate-200/90 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-800 rounded-xl shadow-xs">
-          <button
-            onClick={() => {
-              setSelectedCategory("ADALAR");
-              setSelectedOrigin("ALL");
-              setSelectedDestination("ALL");
-            }}
-            aria-pressed={selectedCategory === "ADALAR"}
-            className={`py-2 px-2 rounded-lg text-xs font-black transition-all flex items-center justify-center gap-1.5 cursor-pointer touch-target ${
-              selectedCategory === "ADALAR"
-                ? "bg-amber-400 text-slate-950 shadow-xs"
-                : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
-            }`}
-          >
-            <span className="text-sm">🏝️</span>
-            <span className="truncate">{t("adalarLines")}</span>
-          </button>
-
-          <button
-            onClick={() => {
-              setSelectedCategory("BOGAZ");
-              setSelectedOrigin("ALL");
-              setSelectedDestination("ALL");
-            }}
-            aria-pressed={selectedCategory === "BOGAZ"}
-            className={`py-2 px-2 rounded-lg text-xs font-black transition-all flex items-center justify-center gap-1.5 cursor-pointer touch-target ${
-              selectedCategory === "BOGAZ"
-                ? "bg-blue-600 text-white shadow-xs"
-                : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
-            }`}
-          >
-            <span className="text-sm">🌊</span>
-            <span className="truncate">{t("bogazLines")}</span>
-          </button>
-
-          <button
-            onClick={() => {
-              setSelectedCategory("ALL");
-              setSelectedOrigin("ALL");
-              setSelectedDestination("ALL");
-            }}
-            aria-pressed={selectedCategory === "ALL"}
-            className={`py-2 px-2 rounded-lg text-xs font-black transition-all flex items-center justify-center gap-1.5 cursor-pointer touch-target ${
-              selectedCategory === "ALL"
-                ? "bg-slate-800 dark:bg-slate-700 text-white shadow-xs"
-                : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
-            }`}
-          >
-            <span className="text-sm">⚓</span>
-            <span className="truncate">{t("allLines")}</span>
-          </button>
-        </div>
-
-        {/* 2. NEREDEN ➔ NEREYE İSKELE SEÇİCİ (Full Width, Zero Overflow) */}
-        <div className="w-full flex items-center gap-1 p-1 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-2xl shadow-2xs">
+      {/* 1. TEK KART BİRLEŞİK İSKELE SEÇİCİ (Origin ➔ Destination) */}
+      <div className="px-3 pt-2">
+        <div className="w-full flex items-center gap-1 p-1 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl shadow-2xs">
           {/* Kalkış İskelesi */}
           <div className="relative flex-1 min-w-0">
             <select
               value={selectedOrigin}
               onChange={(e) => setSelectedOrigin(e.target.value)}
               aria-label="Kalkış iskelesi seçin"
-              className="w-full pl-5 pr-5 py-2 bg-transparent text-xs font-bold text-slate-800 dark:text-slate-100 appearance-none rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 cursor-pointer truncate"
+              className="w-full pl-5 pr-5 py-1.5 bg-transparent text-xs font-bold text-slate-800 dark:text-slate-100 appearance-none rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 cursor-pointer truncate"
             >
-              <option value="ALL">Nereden (Tümü)</option>
+              <option value="ALL">🟢 Nereden (Tümü)</option>
               {availableOrigins.map((pier) => (
                 <option key={pier} value={pier}>{pier}</option>
               ))}
             </select>
-            <span className="absolute left-1.5 top-1/2 -translate-y-1/2 text-[9px] pointer-events-none">🟢</span>
             <ChevronDown size={11} className="absolute right-1.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
           </div>
 
-          {/* Yön Değiştir */}
+          {/* Yön Değiştir Butonu */}
           <button
             type="button"
             onClick={swapOriginDestination}
             title="Kalkış ve Varış İskelesini Değiştir"
             aria-label="Kalkış ve varış iskelesini değiştir"
-            className="w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-amber-400 hover:text-slate-950 transition-all cursor-pointer active:scale-95 shrink-0 flex items-center justify-center touch-manipulation"
+            className="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-amber-400 hover:text-slate-950 transition-all cursor-pointer active:scale-95 shrink-0 flex items-center justify-center touch-manipulation"
           >
-            <ArrowLeftRight size={13} />
+            <ArrowLeftRight size={12} />
           </button>
 
           {/* Varış İskelesi */}
@@ -577,14 +520,13 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
               value={selectedDestination}
               onChange={(e) => setSelectedDestination(e.target.value)}
               aria-label="Varış iskelesi seçin"
-              className="w-full pl-5 pr-5 py-2 bg-transparent text-xs font-bold text-slate-800 dark:text-slate-100 appearance-none rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 cursor-pointer truncate"
+              className="w-full pl-5 pr-5 py-1.5 bg-transparent text-xs font-bold text-slate-800 dark:text-slate-100 appearance-none rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 cursor-pointer truncate"
             >
-              <option value="ALL">Nereye (Tümü)</option>
+              <option value="ALL">🔴 Nereye (Tümü)</option>
               {availableDestinations.map((pier) => (
                 <option key={pier} value={pier}>{pier}</option>
               ))}
             </select>
-            <span className="absolute left-1.5 top-1/2 -translate-y-1/2 text-[9px] pointer-events-none">🔴</span>
             <ChevronDown size={11} className="absolute right-1.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
           </div>
 
@@ -598,158 +540,159 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
               }}
               title="İskele seçimini temizle"
               aria-label="İskele seçimini temizle"
-              className="w-8 h-8 rounded-xl bg-rose-50 dark:bg-rose-950/60 hover:bg-rose-100 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-800 transition-all cursor-pointer flex items-center justify-center shrink-0 active:scale-95"
+              className="w-7 h-7 rounded-lg bg-rose-50 dark:bg-rose-950/60 hover:bg-rose-100 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-800 transition-all cursor-pointer flex items-center justify-center shrink-0 active:scale-95"
             >
-              <X size={13} />
+              <X size={12} />
             </button>
           )}
         </div>
+      </div>
 
-        {/* 3. OPERATÖR SEÇİCİ & HIZLI EYLEMLER BARI */}
-        <div className="flex items-center justify-between gap-1.5 w-full">
-          {/* Operatör Filtresi: Mobilde (<sm) Temiz Select Dropdown, Masaüstünde (>=sm) Logo Rozetleri */}
-          <div className="relative sm:hidden flex-1 min-w-0">
+      {/* 2. TEK SATIR YATAY KAYDIRILABİLİR MİKRO FİLTRE VE EYLEM HAPLARI */}
+      <div className="px-3 pt-1.5">
+        <div className="w-full overflow-x-auto hide-scrollbar flex items-center gap-1.5 py-0.5">
+          {/* Adalar */}
+          <button
+            type="button"
+            onClick={() => {
+              setSelectedCategory(selectedCategory === "ADALAR" ? "ALL" : "ADALAR");
+              setSelectedOrigin("ALL");
+              setSelectedDestination("ALL");
+            }}
+            aria-pressed={selectedCategory === "ADALAR"}
+            className={`px-2.5 py-1 rounded-xl text-[11px] font-black shrink-0 transition-all border flex items-center gap-1 cursor-pointer active:scale-95 ${
+              selectedCategory === "ADALAR"
+                ? "bg-amber-400 text-slate-950 border-amber-400 shadow-2xs font-black"
+                : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-800 hover:bg-slate-100"
+            }`}
+          >
+            <span>🏝️</span>
+            <span>Adalar</span>
+          </button>
+
+          {/* Boğaz */}
+          <button
+            type="button"
+            onClick={() => {
+              setSelectedCategory(selectedCategory === "BOGAZ" ? "ALL" : "BOGAZ");
+              setSelectedOrigin("ALL");
+              setSelectedDestination("ALL");
+            }}
+            aria-pressed={selectedCategory === "BOGAZ"}
+            className={`px-2.5 py-1 rounded-xl text-[11px] font-black shrink-0 transition-all border flex items-center gap-1 cursor-pointer active:scale-95 ${
+              selectedCategory === "BOGAZ"
+                ? "bg-blue-600 text-white border-blue-500 shadow-2xs"
+                : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-800 hover:bg-slate-100"
+            }`}
+          >
+            <span>🌊</span>
+            <span>Boğaz</span>
+          </button>
+
+          {/* Acil ≤15 dk */}
+          <button
+            type="button"
+            onClick={() => setOnlyImminent(!onlyImminent)}
+            aria-pressed={onlyImminent}
+            className={`px-2.5 py-1 rounded-xl text-[11px] font-black shrink-0 transition-all border flex items-center gap-1 cursor-pointer active:scale-95 ${
+              onlyImminent
+                ? "bg-amber-400 text-slate-950 border-amber-400 shadow-2xs font-black"
+                : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-800 hover:bg-slate-100"
+            }`}
+          >
+            <span>⚡</span>
+            <span>≤15 dk</span>
+          </button>
+
+          {/* Operatör Seçici Dropdown Hapı */}
+          <div className="relative shrink-0">
             <select
               value={selectedOperator}
               onChange={(e) => setSelectedOperator(e.target.value)}
               aria-label="Firma / Operatör Filtresi"
-              className="w-full pl-2.5 pr-6 py-1.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 text-[11px] font-bold text-slate-800 dark:text-slate-100 appearance-none rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 cursor-pointer truncate"
+              className={`pl-2 pr-5 py-1 rounded-xl text-[11px] font-bold border appearance-none cursor-pointer ${
+                selectedOperator !== "ALL"
+                  ? "bg-blue-600 text-white border-blue-500 font-black shadow-2xs"
+                  : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-800 hover:bg-slate-100"
+              }`}
             >
-              <option value="ALL">🏢 Tüm Firmalar</option>
-              {uniqueOperators.map((op) => (
-                <option key={op} value={op}>{op}</option>
-              ))}
+              <option value="ALL">🏢 Firmalar</option>
+              {uniqueOperators.map(op => <option key={op} value={op}>{op}</option>)}
             </select>
-            <ChevronDown size={11} className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+            <ChevronDown size={10} className={`absolute right-1.5 top-1/2 -translate-y-1/2 pointer-events-none ${selectedOperator !== "ALL" ? "text-white" : "text-slate-400"}`} />
           </div>
 
-          <div className="hidden sm:flex flex-1 min-w-0 overflow-x-auto hide-scrollbar items-center gap-1 py-0.5">
-            <button
-              onClick={() => setSelectedOperator("ALL")}
-              className={`px-2.5 py-1.5 rounded-xl text-[11px] font-black shrink-0 transition-all border cursor-pointer ${
-                selectedOperator === "ALL"
-                  ? "bg-blue-600 text-white border-blue-500 shadow-2xs"
-                  : "bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-300 dark:border-slate-800 hover:bg-slate-100"
-              }`}
-              title="Tüm Firmalar"
-            >
-              Tüm Firmalar
-            </button>
+          {/* GPS En Yakın İskele */}
+          <button
+            type="button"
+            onClick={requestLocation}
+            disabled={geoStatus === "LOCATING"}
+            className={`px-2 py-1 rounded-xl text-[11px] font-bold shrink-0 transition-all border flex items-center gap-1 cursor-pointer active:scale-95 ${
+              geoStatus === "ACTIVE"
+                ? "bg-emerald-500 text-white border-emerald-400 font-black shadow-2xs"
+                : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-800 hover:bg-slate-100"
+            }`}
+            title="Konumuma en yakın iskeleyi bul"
+          >
+            <Navigation size={11} className={geoStatus === "LOCATING" ? "animate-spin" : geoStatus === "ACTIVE" ? "fill-white" : ""} />
+            <span>En Yakın</span>
+          </button>
 
-            {uniqueOperators.map((op) => (
-              <button
-                key={op}
-                onClick={() => setSelectedOperator(selectedOperator === op ? "ALL" : op)}
-                aria-pressed={selectedOperator === op}
-                className={`p-1.5 rounded-xl shrink-0 transition-all border cursor-pointer flex items-center justify-center ${
-                  selectedOperator === op
-                    ? "bg-slate-100 dark:bg-slate-800 border-blue-500 shadow-2xs ring-1 ring-blue-400/40"
-                    : "bg-white dark:bg-slate-900/90 border-slate-300 dark:border-slate-800 hover:bg-slate-100"
-                }`}
-                title={op}
-              >
-                <OperatorLogo operator={op} size="sm" showName={false} />
-              </button>
-            ))}
-          </div>
+          {/* Arama Aç/Kapa */}
+          <button
+            type="button"
+            onClick={() => setIsSearchVisible(!isSearchVisible)}
+            aria-pressed={isSearchVisible || searchQuery.trim().length > 0}
+            className={`px-2 py-1 rounded-xl text-[11px] font-bold shrink-0 transition-all border flex items-center gap-1 cursor-pointer active:scale-95 ${
+              isSearchVisible || searchQuery.trim().length > 0
+                ? "bg-blue-600 text-white border-blue-500 shadow-2xs"
+                : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-800 hover:bg-slate-100"
+            }`}
+          >
+            <Search size={11} />
+            <span>Ara</span>
+          </button>
 
-          {/* Sağ: Yardımcı Eylem Butonları */}
-          <div className="flex items-center gap-1 shrink-0">
-            {/* GPS Konuma Göre İskele Bulucu */}
-            <button
-              type="button"
-              onClick={requestLocation}
-              disabled={geoStatus === "LOCATING"}
-              aria-label="Konumuma göre en yakın iskeleyi bul"
-              className={`p-2 rounded-xl text-xs font-bold transition-all cursor-pointer border flex items-center justify-center ${
-                geoStatus === "ACTIVE"
-                  ? "bg-emerald-500 text-white border-emerald-400 shadow-2xs font-black"
-                  : geoStatus === "LOCATING"
-                  ? "bg-blue-500 text-white border-blue-400 animate-pulse"
-                  : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:bg-slate-100"
-              }`}
-              title={
-                nearestPier
-                  ? `En Yakın: ${nearestPier.name} (~${nearestPier.distanceKm.toFixed(1)} km)`
-                  : "Konumuma göre en yakın iskeleyi getir"
-              }
-            >
-              <Navigation size={13} className={geoStatus === "LOCATING" ? "animate-spin" : geoStatus === "ACTIVE" ? "fill-white" : ""} />
-            </button>
+          {/* Gece Seferleri */}
+          <button
+            type="button"
+            onClick={() => setIsNightTransitOpen(true)}
+            className="px-2 py-1 rounded-xl text-[11px] font-bold shrink-0 transition-all border bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800/80 hover:bg-indigo-100 flex items-center gap-1 cursor-pointer active:scale-95"
+          >
+            <span>🌙</span>
+            <span>Gece</span>
+          </button>
 
-            {/* Arama Aç/Kapa */}
-            <button
-              type="button"
-              onClick={() => setIsSearchVisible(!isSearchVisible)}
-              aria-pressed={isSearchVisible || searchQuery.trim().length > 0}
-              aria-label="Aramayı aç/kapat"
-              className={`p-2 rounded-xl text-xs font-bold transition-all cursor-pointer border flex items-center justify-center ${
-                isSearchVisible || searchQuery.trim().length > 0
-                  ? "bg-blue-600 text-white border-blue-500 shadow-2xs"
-                  : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:bg-slate-100"
-              }`}
-              title="Arama Aç/Kapat"
-            >
-              <Search size={13} />
-            </button>
+          {/* Harita */}
+          <button
+            type="button"
+            onClick={() => setShowPlanner(!showPlanner)}
+            aria-pressed={showPlanner}
+            className={`px-2 py-1 rounded-xl text-[11px] font-bold shrink-0 transition-all border flex items-center gap-1 cursor-pointer active:scale-95 ${
+              showPlanner
+                ? "bg-cyan-600 text-white border-cyan-500 shadow-2xs"
+                : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-800 hover:bg-slate-100"
+            }`}
+          >
+            <Compass size={11} />
+            <span>Harita</span>
+          </button>
 
-            {/* Acil ≤15 dk */}
-            <button
-              type="button"
-              onClick={() => setOnlyImminent(!onlyImminent)}
-              aria-pressed={onlyImminent}
-              aria-label="Kalkışına 15 dakika veya daha az kalan seferleri göster"
-              className={`p-2 rounded-xl text-xs font-bold flex items-center justify-center transition-all cursor-pointer border ${
-                onlyImminent
-                  ? "bg-amber-400 text-slate-950 border-amber-400 shadow-2xs font-black"
-                  : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:bg-slate-100"
-              }`}
-              title="Kalkışına ≤15 dk kalanlar"
-            >
-              <span className="text-amber-500 font-black">⚡</span>
-            </button>
-
-            {/* Harita Planlayıcı */}
-            <button
-              type="button"
-              onClick={() => setShowPlanner(!showPlanner)}
-              aria-pressed={showPlanner}
-              aria-label="Harita ve rota planlayıcıyı aç/kapat"
-              className={`p-2 rounded-xl text-xs font-bold transition-all cursor-pointer border flex items-center justify-center ${
-                showPlanner
-                  ? "bg-cyan-600 text-white border-cyan-500 shadow-2xs"
-                  : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:bg-slate-100"
-              }`}
-              title="Harita ve Rota Planlayıcı"
-            >
-              <Compass size={13} />
-            </button>
-
-            {/* Gece Seferleri */}
-            <button
-              type="button"
-              onClick={() => setIsNightTransitOpen(true)}
-              className="p-2 rounded-xl text-xs font-bold transition-all cursor-pointer border bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800/80 hover:bg-indigo-100 flex items-center justify-center"
-              title="Gece Seferleri"
-            >
-              <span>🌙</span>
-            </button>
-
-            {/* Görünüm Değiştirici */}
-            <button
-              type="button"
-              onClick={handleToggleDensity}
-              className="p-2 rounded-xl text-xs font-bold transition-all cursor-pointer border bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:bg-slate-100 flex items-center justify-center"
-              title={isCompactDensity ? "Geniş Kart Görünümü" : "Kompakt Liste Görünümü"}
-            >
-              {isCompactDensity ? <LayoutGrid size={13} /> : <List size={13} />}
-            </button>
-          </div>
+          {/* Görünüm Yoğunluğu */}
+          <button
+            type="button"
+            onClick={handleToggleDensity}
+            className="px-2 py-1 rounded-xl text-[11px] font-bold shrink-0 transition-all border bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-800 hover:bg-slate-100 flex items-center gap-1 cursor-pointer active:scale-95"
+            title={isCompactDensity ? "Geniş Kart Görünümü" : "Kompakt Liste Görünümü"}
+          >
+            {isCompactDensity ? <LayoutGrid size={11} /> : <List size={11} />}
+            <span>{isCompactDensity ? "Geniş" : "Kompakt"}</span>
+          </button>
         </div>
 
         {/* GPS Konumu Bildirim Rozeti (En Yakın İskele Seçildiğinde) */}
         {nearestPier && geoStatus === "ACTIVE" && selectedOrigin === nearestPier.name && (
-          <div className="flex items-center justify-between px-2.5 py-1 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200 text-[11px] animate-fadeIn">
+          <div className="flex items-center justify-between px-2.5 py-1 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200 text-[11px] mt-1.5 animate-fadeIn">
             <span className="flex items-center gap-1.5 font-bold">
               <Navigation size={11} className="fill-emerald-600 text-emerald-600 shrink-0" />
               <span>Konumunuza en yakın iskele: <strong>{nearestPier.name}</strong> (~{nearestPier.distanceKm.toFixed(1)} km)</span>
@@ -759,7 +702,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
                 setSelectedOrigin("ALL");
                 setGeoStatus("IDLE");
               }}
-              className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold hover:underline shrink-0 ml-2"
+              className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold hover:underline shrink-0 ml-2 cursor-pointer"
             >
               Tümünü Göster
             </button>
@@ -860,17 +803,6 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
         </div>
       )}
 
-      {/* G3 — SONRAKİ SEFER HERO: Ana ekranın temel yanıtı, sonuç başlığından önce */}
-      {nextDeparture && (
-        <div className="px-3 pt-2">
-          <NextDepartureHero
-            schedule={nextDeparture.schedule}
-            dyn={nextDeparture.dyn}
-            onClick={() => setSelectedSchedule(nextDeparture.schedule)}
-          />
-        </div>
-      )}
-
       {/* Sonuç Başlığı & Yoğunluk Seçici */}
       <div className="px-3 pt-2 pb-1 flex items-center justify-between text-xs font-bold text-slate-500 dark:text-slate-400">
         <div className="flex items-center gap-2">
@@ -908,9 +840,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
       {/* Schedules List (Comfortable or Compact Rows) */}
       <div className={`px-3 flex flex-col ${isCompactDensity ? "gap-1.5" : "gap-2"} pb-36 sm:pb-28 mt-1`}>
         {upcomingTrips.length > 0 ? (
-          upcomingTrips
-            .filter((item) => item !== nextDeparture)
-            .map(({ schedule, dyn }) => (
+          upcomingTrips.map(({ schedule, dyn }, idx) => (
             <ScheduleCard
               key={`${schedule.id}-${dyn.currentOrigin}`}
               id={schedule.id}
@@ -934,6 +864,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
               isContinuous={schedule.isContinuous}
               continuousUntil={schedule.continuousUntil}
               isCompact={isCompactDensity}
+              isFeaturedHero={idx === 0}
               highlightStopName={searchQuery}
               onClick={() => setSelectedSchedule(schedule)}
               onSelectHop={(s) => setSelectedHopSchedule(s)}
