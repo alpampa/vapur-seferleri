@@ -1,7 +1,8 @@
 "use client";
 
-import { Ship, CreditCard, Headphones, Palette, Clock } from "lucide-react";
+import { Ship, CreditCard, Headphones, Palette, Clock, RotateCcw } from "lucide-react";
 import { ThemeSelectorModal } from "@/components/theme/ThemeSelectorModal";
+import { purgeAllCachesAndReload } from "@/components/pwa/ServiceWorkerRegister";
 import { SUPPORTED_LANGUAGES } from "@/store/useLanguageStore";
 import { IstanbulkartWalletModal } from "@/components/wallet/IstanbulkartWalletModal";
 import { BosphorusAudioGuideModal } from "@/components/guide/BosphorusAudioGuideModal";
@@ -59,9 +60,16 @@ export function TopBar() {
           <div className="truncate">
             <h1 className="font-black text-xs sm:text-sm tracking-tight text-slate-900 dark:text-white flex items-center gap-1 leading-none truncate">
               <span className="truncate">VAPUR</span>
-              <span className="bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 text-[9px] font-black px-1.5 py-0.5 rounded border border-emerald-500/30 shrink-0">
-                CANLI
-              </span>
+              <button
+                type="button"
+                onClick={purgeAllCachesAndReload}
+                title="Tıkla: Önbelleği temizle ve en son sürümü anında çek"
+                aria-label="Önbelleği temizle ve son sürümü yükle"
+                className="bg-emerald-500/15 hover:bg-emerald-500/30 text-emerald-700 dark:text-emerald-400 text-[9px] font-black px-1.5 py-0.5 rounded border border-emerald-500/30 shrink-0 cursor-pointer transition-all active:scale-95 flex items-center gap-0.5"
+              >
+                <span>CANLI</span>
+                <span className="text-[8px]">⚡</span>
+              </button>
             </h1>
             <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium leading-none mt-0.5 hidden sm:block">
               İstanbul Deniz Ulaşımı — Resmi Tarife
@@ -131,6 +139,17 @@ export function TopBar() {
                 <Headphones size={14} className="text-indigo-500" />
                 <span>Boğaz Sesli Rehberi</span>
               </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsToolsMenuOpen(false);
+                  purgeAllCachesAndReload();
+                }}
+                className="w-full px-3 py-2 text-left text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 flex items-center gap-2 cursor-pointer border-t border-slate-100 dark:border-slate-800/80"
+              >
+                <RotateCcw size={14} className="text-emerald-500" />
+                <span>Önbelleği Temizle & Güncelle</span>
+              </button>
             </div>
           )}
         </div>
@@ -171,6 +190,18 @@ export function TopBar() {
           >
             <Headphones size={13} className="text-indigo-600 dark:text-indigo-400 shrink-0" />
             <span>Rehber</span>
+          </button>
+
+          {/* Önbelleği Temizle & Son Sürümü Yükle */}
+          <button
+            type="button"
+            onClick={purgeAllCachesAndReload}
+            title="Önbelleği Temizle ve Son Sürümü Yükle"
+            aria-label="Önbelleği temizle ve sayfayı yenile"
+            className="h-8 px-2 rounded-lg text-xs font-black transition-all border flex items-center justify-center gap-1 bg-slate-100 hover:bg-slate-200 dark:bg-slate-900 dark:hover:bg-slate-800 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 shadow-2xs cursor-pointer active:scale-95"
+          >
+            <RotateCcw size={12} className="text-emerald-600 dark:text-emerald-400" />
+            <span className="text-[10px] hidden md:inline">Yenile</span>
           </button>
         </div>
       </div>
