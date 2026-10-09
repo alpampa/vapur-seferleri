@@ -249,15 +249,21 @@ export function ScheduleCard(props: ScheduleCardProps) {
             </span>
 
             {dynState.isDeparted ? (
-              <span className="text-[9px] font-bold px-1 py-0.2 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
+              <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
                 Kalktı
               </span>
             ) : dynState.countdown && !isCancelled ? (
-              <span className="text-[9px] font-mono font-black px-1 py-0.2 rounded bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-300/60 dark:border-amber-500/30 tabular-nums">
+              <span className={`text-[9px] font-mono font-black px-1.5 py-0.5 rounded tabular-nums border ${
+                remainingSec > 0 && remainingSec <= 60
+                  ? "bg-rose-600 text-white border-rose-500 animate-pulse font-extrabold shadow-2xs"
+                  : remainingSec > 0 && remainingSec <= 180
+                  ? "bg-amber-500 text-slate-950 border-amber-400 font-extrabold shadow-2xs"
+                  : "bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 border-amber-300/60 dark:border-amber-500/30"
+              }`}>
                 {dynState.countdown}
               </span>
             ) : dynState.minutesUntilDeparture != null && dynState.status === "ON_TIME" && !isCancelled ? (
-              <span className="text-[9px] font-mono font-black px-1 py-0.2 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 tabular-nums whitespace-nowrap">
+              <span className="text-[9px] font-mono font-black px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 tabular-nums whitespace-nowrap">
                 {formatRemainingShort(dynState.minutesUntilDeparture)}
               </span>
             ) : null}
@@ -345,13 +351,13 @@ export function ScheduleCard(props: ScheduleCardProps) {
               title={isFav ? "Favorilerden Çıkar" : "Favorilere Ekle"}
               aria-label={isFav ? "Favorilerden çıkar" : "Favorilere ekle"}
               aria-pressed={isFav}
-              className={`w-7 h-7 flex items-center justify-center rounded-lg transition-all active:scale-95 ${
+              className={`w-8 h-8 flex items-center justify-center rounded-lg transition-all active:scale-95 touch-manipulation cursor-pointer ${
                 isFav
-                  ? "text-amber-500 bg-amber-100 dark:bg-amber-400/20"
+                  ? "text-amber-500 bg-amber-100 dark:bg-amber-400/20 ring-1 ring-amber-400/30"
                   : "text-slate-400 hover:text-amber-500 hover:bg-slate-100 dark:hover:bg-slate-800"
               }`}
             >
-              <Star size={13} className={isFav ? "fill-amber-500 text-amber-500" : ""} />
+              <Star size={14} className={isFav ? "fill-amber-500 text-amber-500" : ""} />
             </button>
 
             {/* Alarm Butonu */}
@@ -365,16 +371,16 @@ export function ScheduleCard(props: ScheduleCardProps) {
               title={hasAlarm ? "Hatırlatıcıyı Kaldır" : "15 Dk Önce Hatırlat"}
               aria-label={hasAlarm ? "Hatırlatıcıyı kaldır" : "15 dakika önce hatırlat"}
               aria-pressed={hasAlarm}
-              className={`w-7 h-7 flex items-center justify-center rounded-lg transition-all active:scale-95 ${
+              className={`w-8 h-8 flex items-center justify-center rounded-lg transition-all active:scale-95 touch-manipulation cursor-pointer ${
                 hasAlarm
-                  ? "text-blue-600 bg-blue-100 dark:bg-blue-500/20"
+                  ? "text-blue-600 bg-blue-100 dark:bg-blue-500/20 ring-1 ring-blue-500/30"
                   : "text-slate-400 hover:text-blue-600 hover:bg-slate-100 dark:hover:bg-slate-800"
               }`}
             >
-              {hasAlarm ? <BellRing size={13} className="text-blue-600 animate-bounce" /> : <Bell size={13} />}
+              {hasAlarm ? <BellRing size={14} className="text-blue-600 animate-bounce" /> : <Bell size={14} />}
             </button>
 
-            <ChevronRight size={14} className="text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200 transition-all shrink-0" />
+            <ChevronRight size={15} className="text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200 transition-all shrink-0 ml-0.5" />
           </div>
         </div>
       </>
