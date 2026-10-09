@@ -28,6 +28,7 @@ import type { MarineWeatherStatus } from "@/lib/services/marine-weather";
 import { parseNaturalTransitQuery } from "@/lib/services/ai-transit-assistant";
 import { predictFerryDisruption } from "@/lib/services/predictive-disruption-model";
 import { transitAnnouncer } from "@/lib/services/tts-announcer";
+import { saveSchedulesOffline, loadSchedulesOffline } from "@/lib/services/offline-db";
 
 interface ScheduleListClientProps {
   schedules: ScheduleCardDto[];
@@ -106,26 +107,28 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
     return map;
   }, [disruptions]);
 
-  // Offline LocalStorage Caching
+  // Native IndexedDB Non-blocking Caching
   const [effectiveSchedules, setEffectiveSchedules] = useState<ScheduleCardDto[]>(schedules);
 
   useEffect(() => {
+    let isCancelled = false;
+
     if (schedules && schedules.length > 0) {
       setEffectiveSchedules(schedules);
-      try {
-        localStorage.setItem("vapur_schedules_cache_v1", JSON.stringify(schedules));
-      } catch {}
+      // Non-blocking background persistence to IndexedDB
+      saveSchedulesOffline(schedules).catch(() => {});
     } else {
-      try {
-        const cached = localStorage.getItem("vapur_schedules_cache_v1");
-        if (cached) {
-          const parsed = JSON.parse(cached);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            setEffectiveSchedules(parsed);
-          }
+      // Async load from IndexedDB without freezing UI thread
+      loadSchedulesOffline().then((cached) => {
+        if (!isCancelled && cached && cached.length > 0) {
+          setEffectiveSchedules(cached);
         }
-      } catch {}
+      }).catch(() => {});
     }
+
+    return () => {
+      isCancelled = true;
+    };
   }, [schedules]);
 
   // Geolocation states

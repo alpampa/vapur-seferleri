@@ -1,9 +1,14 @@
-const CACHE_NAME = 'vapur-cache-v2';
+const CACHE_NAME = 'vapur-cache-v3';
 const STATIC_ASSETS = [
   '/',
   '/manifest.json',
   '/favicon.ico',
-  '/api/audit'
+  '/api/audit',
+  '/logos/operator-dentur.png',
+  '/logos/operator-mavimarmara.png',
+  '/logos/operator-prenstur.png',
+  '/logos/operator-sehirhatlari.png',
+  '/logos/operator-turyol.png'
 ];
 
 self.addEventListener('install', (event) => {
