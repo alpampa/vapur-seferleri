@@ -4,9 +4,10 @@ import { useState, useEffect, useMemo } from "react";
 import { ScheduleCard } from "@/components/schedule/ScheduleCard";
 import { TripDetailsSheet } from "@/components/schedule/TripDetailsSheet";
 import type { ScheduleCardDto } from "@/lib/types/schedule";
-import { Search, Navigation, ArrowLeftRight, Compass, LayoutGrid, List, RotateCcw, ChevronDown, ChevronUp, History, Sparkles, Wind, Volume2 } from "lucide-react";
+import { Search, Navigation, ArrowLeftRight, Compass, LayoutGrid, List, RotateCcw, ChevronDown, ChevronUp, History, Sparkles, Wind, Volume2, X, AlertOctagon } from "lucide-react";
 import { matchesTurkishSearch } from "@/lib/utils/search-normalizer";
 import { LateNightTransitModal } from "@/components/night/LateNightTransitModal";
+import { MissedFerryAssistantModal } from "@/components/planner/MissedFerryAssistantModal";
 import { resolveDynamicTrip, isTripCancelled, type DynamicTripResolution } from "@/lib/utils/dynamic-trip";
 import { NextDepartureHero } from "@/components/schedule/NextDepartureHero";
 import { AlarmManager } from "@/components/schedule/AlarmManager";
@@ -75,6 +76,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
 
   const { isOnline } = useOfflineSync();
   const [isNightTransitOpen, setIsNightTransitOpen] = useState<boolean>(false);
+  const [isMissedFerryOpen, setIsMissedFerryOpen] = useState<boolean>(false);
   const [isSearchVisible, setIsSearchVisible] = useState<boolean>(false);
   const [selectedHopSchedule, setSelectedHopSchedule] = useState<ScheduleCardDto | null>(null);
 
@@ -656,6 +658,22 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
             </div>
           </div>
 
+          {/* İskele Filtre Temizleme Butonu */}
+          {(selectedOrigin !== "ALL" || selectedDestination !== "ALL") && (
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedOrigin("ALL");
+                setSelectedDestination("ALL");
+              }}
+              title="İskele seçimini temizle"
+              className="p-1.5 rounded-lg text-[10px] font-bold bg-slate-100 dark:bg-slate-800 hover:bg-rose-100 hover:text-rose-600 dark:hover:bg-rose-950/60 dark:hover:text-rose-400 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 transition-all cursor-pointer flex items-center gap-0.5 shrink-0"
+            >
+              <X size={12} />
+              <span className="hidden xs:inline">Temizle</span>
+            </button>
+          )}
+
           {/* SADECE LOGO FİRMA SEÇİCİ (Metinsiz, Maksimum Yer Tasarrufu) */}
           <div className="flex items-center gap-1 shrink-0 overflow-x-auto hide-scrollbar py-0.5">
             <button
@@ -911,19 +929,32 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
                 </div>
               );
             })()}
-            <button
-              onClick={() => {
-                setSearchQuery("");
-                setSelectedOrigin("ALL");
-                setSelectedDestination("ALL");
-                setSelectedCategory("ALL");
-                setSelectedOperator("ALL");
-              }}
-              className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-black text-xs shadow-md transition-all cursor-pointer inline-flex items-center gap-1.5"
-            >
-              <RotateCcw size={13} />
-              <span>Filtreleri Sıfırla ve Tüm Seferleri Göster</span>
-            </button>
+            <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
+              {selectedOrigin !== "ALL" && selectedDestination !== "ALL" && (
+                <button
+                  type="button"
+                  onClick={() => setIsMissedFerryOpen(true)}
+                  className="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs shadow-md transition-all cursor-pointer inline-flex items-center gap-1.5"
+                >
+                  <AlertOctagon size={13} />
+                  <span>Alternatif Rota & Kurtarma Planı (Marmaray / Metro)</span>
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={() => {
+                  setSearchQuery("");
+                  setSelectedOrigin("ALL");
+                  setSelectedDestination("ALL");
+                  setSelectedCategory("ALL");
+                  setSelectedOperator("ALL");
+                }}
+                className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-black text-xs shadow-md transition-all cursor-pointer inline-flex items-center gap-1.5"
+              >
+                <RotateCcw size={13} />
+                <span>Filtreleri Sıfırla ve Tüm Seferleri Göster</span>
+              </button>
+            </div>
           </div>
         )}
 
@@ -1056,6 +1087,15 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
         isOpen={!!selectedHopSchedule}
         onClose={() => setSelectedHopSchedule(null)}
         schedule={selectedHopSchedule}
+      />
+
+      {/* Vapuru Kaçırdım / Alternatif Marmaray & Metro Planlayıcı Modalı */}
+      <MissedFerryAssistantModal
+        isOpen={isMissedFerryOpen}
+        onClose={() => setIsMissedFerryOpen(false)}
+        origin={selectedOrigin !== "ALL" ? selectedOrigin : "Kadıköy"}
+        destination={selectedDestination !== "ALL" ? selectedDestination : "Eminönü"}
+        missedDepartureTime={new Date().toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" })}
       />
     </>
   );
