@@ -42,7 +42,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
   // Y4 — İKİ KADEME TICK: canlı MM:SS penceresine giren görünür sefer varken 1 sn,
   // aksi halde 15 sn (dakika hassasiyeti yeterli). Kademe geçişi aşağıdaki effect ile yönetilir.
   const [tickMs, setTickMs] = useState(1000);
-  const { nowMs } = useTransitClock(tickMs);
+  const { nowMs } = useTransitClock(tickMs, { serverTimeIso });
   const now = nowMs;
 
   const [selectedSchedule, setSelectedSchedule] = useState<ScheduleCardDto | null>(null);
@@ -776,7 +776,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
               </span>
               {aiAnalysis.isAiUnderstood && (
                 <span className="text-[9px] uppercase tracking-wider font-mono font-bold opacity-75 shrink-0 ml-2">
-                  AI Çözüldü
+                  Akıllı Eşleşme
                 </span>
               )}
             </div>

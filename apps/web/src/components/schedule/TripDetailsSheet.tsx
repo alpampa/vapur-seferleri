@@ -73,7 +73,7 @@ export function TripDetailsSheet({
 
   // Tek saat kaynağı: useTransitClock (açıkken 1sn tick, kapalıyken yavaş kademe — Y4;
   // sekme gizliyken durur)
-  const { nowMs } = useTransitClock(isOpen ? 1000 : SLOW_TICK_INTERVAL_MS);
+  const { nowMs } = useTransitClock(isOpen ? 1000 : SLOW_TICK_INTERVAL_MS, { serverTimeIso });
 
   // Dinamik sefer durumu türetilmiş değerdir: her tick'te nowMs ile yeniden hesaplanır.
   // (state + setInterval + setState-in-effect deseninin yerine geçer)
@@ -474,7 +474,7 @@ export function TripDetailsSheet({
                     }`}
                   >
                     <Volume2 size={15} className={isSpeaking ? "animate-bounce text-slate-950" : "text-blue-500"} />
-                    <span>{isSpeaking ? "İskele Anonsu Yapılıyor (Durdurmak için tıkla)..." : "🔊 Sesli İskele Anonsu Dinle (AI Sesli Asistan)"}</span>
+                    <span>{isSpeaking ? "İskele Anonsu Yapılıyor (Durdurmak için tıkla)..." : "🔊 Resmi İskele Anonsunu Dinle (Sesli Bilgilendirme)"}</span>
                   </button>
                 </div>
               </div>

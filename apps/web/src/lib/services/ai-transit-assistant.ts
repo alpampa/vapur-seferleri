@@ -155,9 +155,9 @@ export function parseNaturalTransitQuery(query: string): AiParsedQuery {
     if (afterTime) parts.push(`⏰ ${afterTime} sonrası`);
     if (onlyImminent) parts.push(`⚡ En yakın kalkışlar`);
 
-    message = `Yapay Zeka Analizi: ${parts.join(" • ")}`;
+    message = `Akıllı Hat Filtresi: ${parts.join(" • ")}`;
   } else {
-    message = `Arama terimi: "${query}"`;
+    message = `Arama filtresi: "${query}"`;
   }
 
   return {

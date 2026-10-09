@@ -16,6 +16,10 @@ export interface TransitClockOptions {
    * kullanılır (tarayıcı arka plan zamanlayıcı kısıtlamaları yine geçerlidir).
    */
   keepTickingWhenHidden?: boolean;
+  /**
+   * Sunucu zamanı referansı (ISO string). Cihaz saati kaymalarını telafi eder.
+   */
+  serverTimeIso?: string;
 }
 
 /**
@@ -25,7 +29,16 @@ export interface TransitClockOptions {
  */
 export function useTransitClock(intervalMs: number = 1000, options: TransitClockOptions = {}): TransitClockState {
   const [clock, setClock] = useState<TransitClockState>(() => {
-    const now = new Date();
+    let offsetMs = 0;
+    if (options.serverTimeIso) {
+      try {
+        const parsed = new Date(options.serverTimeIso).getTime();
+        if (!isNaN(parsed)) {
+          offsetMs = parsed - Date.now();
+        }
+      } catch {}
+    }
+    const now = new Date(Date.now() + offsetMs);
     return {
       nowMs: now.getTime(),
       timeStr: now.toLocaleTimeString("tr-TR", { timeZone: "Europe/Istanbul", hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false }),
@@ -36,9 +49,18 @@ export function useTransitClock(intervalMs: number = 1000, options: TransitClock
 
   useEffect(() => {
     let timerId: NodeJS.Timeout | null = null;
+    let offsetMs = 0;
+    if (options.serverTimeIso) {
+      try {
+        const parsed = new Date(options.serverTimeIso).getTime();
+        if (!isNaN(parsed)) {
+          offsetMs = parsed - Date.now();
+        }
+      } catch {}
+    }
 
     const tick = () => {
-      const now = new Date();
+      const now = new Date(Date.now() + offsetMs);
       setClock({
         nowMs: now.getTime(),
         timeStr: now.toLocaleTimeString("tr-TR", { timeZone: "Europe/Istanbul", hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false }),
