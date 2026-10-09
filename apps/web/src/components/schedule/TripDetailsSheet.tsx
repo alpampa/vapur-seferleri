@@ -27,7 +27,12 @@ import {
   Volume2,
   Landmark,
   Tag,
-  Gift
+  Gift,
+  CheckCircle2,
+  Radio,
+  Navigation,
+  Loader2,
+  ExternalLink
 } from "lucide-react";
 import { OperatorLogo } from "@/components/ui/OperatorLogo";
 import { TripStatusBadge } from "./ScheduleCard";
@@ -38,6 +43,8 @@ import { getPierTransit } from "@/lib/data/pier-transit-connections";
 import { getPierGroundTransit } from "@/lib/data/pier-taxi-transit";
 import { getPierMobility } from "@/lib/data/pier-parking-bicycle";
 import { resolveDynamicTrip, DynamicTripResolution } from "@/lib/utils/dynamic-trip";
+import { getDynamicMarineTrafficUrl, getDynamicVesselFinderUrl } from "@/lib/radar-links";
+import { verifyOnboardTelemetry, type OnboardVerificationResult } from "@/lib/agents/passenger-telemetry-agent";
 import { DepartureTimeline } from "@/components/schedule/DepartureTimeline";
 import { SLOW_TICK_INTERVAL_MS } from "@/lib/constants";
 import { resolveLiveVesselName } from "@/lib/agents/fleet-registry";
@@ -96,6 +103,81 @@ export function TripDetailsSheet({
   const [isSeaTaxiOpen, setIsSeaTaxiOpen] = useState(false);
   const [activeDetailTab, setActiveDetailTab] = useState<"TICKET" | "RADAR" | "TRANSIT" | "GUIDE">("TICKET");
   const [isSpeaking, setIsSpeaking] = useState(false);
+
+  const [isVerifyingGps, setIsVerifyingGps] = useState(false);
+  const [telemetryResult, setTelemetryResult] = useState<OnboardVerificationResult | null>(null);
+  const [telemetryError, setTelemetryError] = useState<string | null>(null);
+
+  // Load existing onboard verification from localStorage if available
+  useEffect(() => {
+    if (!isOpen || !schedule) return;
+    try {
+      const stored = localStorage.getItem("vapur_active_verified_trip");
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (parsed.tripId === schedule.id && Date.now() - parsed.verifiedAt < 75 * 60 * 1000) {
+          setTelemetryResult(parsed.result);
+        }
+      }
+    } catch (e) {}
+  }, [isOpen, schedule]);
+
+  const originPierName = dynState?.currentOrigin || schedule?.origin || "";
+  const destPierName = dynState?.destination || schedule?.destination || "";
+
+  const marineTrafficPierUrl = getDynamicMarineTrafficUrl({ origin: originPierName, zoom: 15 });
+  const marineTrafficRouteUrl = getDynamicMarineTrafficUrl({ origin: originPierName, destination: destPierName, zoom: 13 });
+  const vesselFinderPierUrl = getDynamicVesselFinderUrl({ origin: originPierName, zoom: 15 });
+
+  const handleVerifyOnboard = () => {
+    if (typeof window === "undefined" || !navigator.geolocation) {
+      setTelemetryError("Cihazınızda GPS/Konum desteği bulunamadı.");
+      return;
+    }
+    setIsVerifyingGps(true);
+    setTelemetryError(null);
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setIsVerifyingGps(false);
+        const res = verifyOnboardTelemetry(
+          {
+            latitude: pos.coords.latitude,
+            longitude: pos.coords.longitude,
+            speedMps: pos.coords.speed,
+            headingDeg: pos.coords.heading,
+            accuracyMeters: pos.coords.accuracy,
+            timestamp: pos.timestamp
+          },
+          {
+            origin: originPierName,
+            destination: destPierName,
+            operator: schedule?.operator,
+            departureTime: dynState?.currentDepartureTime || schedule?.departureTime
+          }
+        );
+        setTelemetryResult(res);
+        try {
+          localStorage.setItem("vapur_active_verified_trip", JSON.stringify({
+            tripId: schedule?.id,
+            origin: originPierName,
+            destination: destPierName,
+            result: res,
+            verifiedAt: Date.now()
+          }));
+        } catch (e) {}
+      },
+      (err) => {
+        setIsVerifyingGps(false);
+        if (err.code === 1) {
+          setTelemetryError("Konum erişim izni reddedildi. Tarayıcı ayarlarından konuma izin vermelisiniz.");
+        } else {
+          setTelemetryError("GPS uydusu veya hücresel konum sinyali alınamadı.");
+        }
+      },
+      { enableHighAccuracy: true, timeout: 12000, maximumAge: 0 }
+    );
+  };
 
   // Escape tuşu ile kapatma (klavye erişilebilirliği)
   useEffect(() => {
@@ -532,46 +614,181 @@ export function TripDetailsSheet({
                   </div>
                 </div>
 
-                {/* 2 Seyir Aksiyon Butonu */}
+                {/* Canlı Radar ve Kamera Butonları */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                   <a
-                    href="https://www.marinetraffic.com/en/ais/home/centerx:29.02/centery:41.01/zoom:13"
+                    href={marineTrafficPierUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-3.5 rounded-2xl bg-linear-to-r from-emerald-600/15 via-teal-600/10 to-transparent hover:from-emerald-600/25 border border-emerald-500/40 text-left flex items-center justify-between transition-all shadow-sm group"
                   >
-                    <div className="flex items-center gap-2.5">
+                    <div className="flex items-center gap-2.5 min-w-0">
                       <div className="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
                         <Radar size={18} />
                       </div>
-                      <div>
-                        <span className="text-xs font-black text-slate-900 dark:text-white flex items-center gap-1">
-                          CANLI BOĞAZ GEMİ RADARI
+                      <div className="min-w-0">
+                        <span className="text-xs font-black text-slate-900 dark:text-white flex items-center gap-1 truncate">
+                          CANLI {originPierName.toUpperCase()} RADARI
                         </span>
-                        <span className="text-[10px] text-slate-500 dark:text-slate-400 block">
-                          Tüm Boğaz ve Marmara gemi trafiği (MarineTraffic)
+                        <span className="text-[10px] text-slate-500 dark:text-slate-400 block truncate">
+                          {originPierName} rıhtımındaki tüm canlı gemiler (MarineTraffic)
                         </span>
                       </div>
                     </div>
-                    <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 shrink-0">Radarı Aç ➔</span>
+                    <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 shrink-0 ml-1">Rıhtımı Aç ➔</span>
                   </a>
 
+                  <a
+                    href={marineTrafficRouteUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-3.5 rounded-2xl bg-linear-to-r from-cyan-600/15 via-blue-600/10 to-transparent hover:from-cyan-600/25 border border-cyan-500/40 text-left flex items-center justify-between transition-all shadow-sm group"
+                  >
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="w-9 h-9 rounded-xl bg-cyan-500/20 text-cyan-600 dark:text-cyan-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                        <Navigation size={18} />
+                      </div>
+                      <div className="min-w-0">
+                        <span className="text-xs font-black text-slate-900 dark:text-white flex items-center gap-1 truncate">
+                          TÜM ROTA DENİZ RADARI
+                        </span>
+                        <span className="text-[10px] text-slate-500 dark:text-slate-400 block truncate">
+                          {originPierName} ➔ {destPierName} seyir koridoru canlı trafiği
+                        </span>
+                      </div>
+                    </div>
+                    <span className="text-xs font-bold text-cyan-600 dark:text-cyan-400 shrink-0 ml-1">Rotayı Aç ➔</span>
+                  </a>
+                </div>
+
+                {/* İskele Canlı Kamera Butonu */}
+                <div>
                   <button
                     type="button"
                     onClick={() => setIsCameraOpen(true)}
-                    className="p-3.5 rounded-2xl bg-linear-to-r from-blue-600/15 via-indigo-600/10 to-transparent hover:from-blue-600/25 border border-blue-500/40 text-left flex items-center justify-between transition-all cursor-pointer shadow-sm group"
+                    className="w-full p-3 rounded-2xl bg-linear-to-r from-blue-600/10 via-indigo-600/10 to-transparent hover:from-blue-600/20 border border-blue-500/30 text-left flex items-center justify-between transition-all cursor-pointer shadow-sm group"
                   >
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-9 h-9 rounded-xl bg-blue-500/20 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                        <Camera size={18} className="animate-pulse" />
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="w-8 h-8 rounded-xl bg-blue-500/20 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                        <Camera size={16} className="animate-pulse" />
                       </div>
-                      <div>
-                        <span className="text-xs font-black text-slate-900 dark:text-white block">İSKELE CANLI KAMERA</span>
-                        <span className="text-[10px] text-slate-500 dark:text-slate-400">Rıhtım ve yolcu yoğunluğu canlı yayını</span>
+                      <div className="min-w-0">
+                        <span className="text-xs font-black text-slate-900 dark:text-white block truncate">
+                          {originPierName} İSKELESİ CANLI KAMERA
+                        </span>
+                        <span className="text-[10px] text-slate-500 dark:text-slate-400 truncate block">
+                          Rıhtım ve yolcu yoğunluğu canlı yayını
+                        </span>
                       </div>
                     </div>
                     <span className="text-xs font-bold text-blue-600 dark:text-blue-400 shrink-0">İzle ➔</span>
                   </button>
+                </div>
+
+                {/* İkinci Doğrulama: Yolcu GPS Telemetri ve Çapraz Sağlama Paneli */}
+                <div className="p-3.5 rounded-2xl bg-linear-to-b from-slate-900 to-slate-950 border border-slate-800 text-white space-y-3">
+                  <div className="flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="w-9 h-9 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center shrink-0">
+                        <Navigation size={17} className={isVerifyingGps ? "animate-spin" : ""} />
+                      </div>
+                      <div className="min-w-0">
+                        <span className="text-xs font-black block text-white truncate">
+                          📍 İKİNCİ DOĞRULAMA: YOLCU GPS TELEMETRİSİ
+                        </span>
+                        <span className="text-[10px] text-slate-400 block truncate">
+                          Fiziksel konum, hız ve rota ile gemi eşleştirmesi
+                        </span>
+                      </div>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={handleVerifyOnboard}
+                      disabled={isVerifyingGps}
+                      className="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-[11px] flex items-center gap-1.5 transition-all cursor-pointer shadow-sm active:scale-95 disabled:opacity-50 shrink-0"
+                    >
+                      {isVerifyingGps ? (
+                        <>
+                          <Loader2 size={13} className="animate-spin" />
+                          <span>Taranıyor...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Radio size={13} className="text-cyan-300 animate-pulse" />
+                          <span>Vapurdayım Doğrula</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+
+                  {telemetryError && (
+                    <div className="p-2.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-[11px] font-medium">
+                      ⚠️ {telemetryError}
+                    </div>
+                  )}
+
+                  {telemetryResult && (
+                    <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800 space-y-2.5">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className={`text-xs font-black flex items-center gap-1.5 ${
+                          telemetryResult.status === "CONFIRMED_ONBOARD"
+                            ? "text-emerald-400"
+                            : telemetryResult.status === "AT_PIER"
+                            ? "text-amber-400"
+                            : "text-slate-300"
+                        }`}>
+                          {telemetryResult.status === "CONFIRMED_ONBOARD" && <CheckCircle2 size={15} className="text-emerald-400 shrink-0" />}
+                          {telemetryResult.summaryText}
+                        </span>
+                        <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 shrink-0">
+                          %{telemetryResult.confidenceScore} Güven
+                        </span>
+                      </div>
+
+                      {/* Kanıt Verileri */}
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 text-[10px] font-mono">
+                        <div className="p-1.5 rounded bg-slate-900 border border-slate-800">
+                          <span className="text-slate-500 block uppercase text-[9px]">Anlık Hız</span>
+                          <strong className="text-emerald-400">{telemetryResult.proofDetails.speedProof}</strong>
+                        </div>
+                        <div className="p-1.5 rounded bg-slate-900 border border-slate-800">
+                          <span className="text-slate-500 block uppercase text-[9px]">Pruva Yönü</span>
+                          <strong className="text-cyan-300">{telemetryResult.proofDetails.headingProof}</strong>
+                        </div>
+                        <div className="p-1.5 rounded bg-slate-900 border border-slate-800">
+                          <span className="text-slate-500 block uppercase text-[9px]">Hat Sapması</span>
+                          <strong className="text-slate-200">{telemetryResult.proofDetails.corridorProof}</strong>
+                        </div>
+                        <div className="p-1.5 rounded bg-slate-900 border border-slate-800">
+                          <span className="text-slate-500 block uppercase text-[9px]">Kalan Süre</span>
+                          <strong className="text-amber-300">~{telemetryResult.etaMinutes} dk</strong>
+                        </div>
+                      </div>
+
+                      {/* Eşleşen Gemi */}
+                      {telemetryResult.matchedVessel && (
+                        <div className="p-2.5 rounded-lg bg-emerald-950/40 border border-emerald-500/30 flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
+                          <div className="text-[11px] min-w-0">
+                            <span className="text-emerald-300 font-bold">🚢 Çapraz Eşleşen Filo Gemisi: </span>
+                            <strong className="text-white">{telemetryResult.matchedVessel.name}</strong>
+                            <span className="text-slate-400 text-[10px] ml-1.5">
+                              (MMSI: {telemetryResult.matchedVessel.mmsi} • {telemetryResult.matchedVessel.operator})
+                            </span>
+                          </div>
+                          <a
+                            href={telemetryResult.matchedVessel.marineTrafficAisUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-black text-[10px] inline-flex items-center gap-1 shrink-0"
+                          >
+                            <span>AIS Görüntüle</span>
+                            <ExternalLink size={10} />
+                          </a>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
             )}

@@ -10,6 +10,7 @@ import { getVesselVisualProfile } from "@/lib/data/vessel-visuals";
 import { VesselSilhouetteGraphic } from "@/components/vessel/VesselSilhouetteGraphic";
 import { ISTANBUL_FERRY_FLEET } from "@/lib/agents/fleet-registry";
 import { matchesTurkishSearch } from "@/lib/utils/search-normalizer";
+import { getDynamicMarineTrafficUrl, getDynamicVesselFinderUrl } from "@/lib/radar-links";
 
 interface MarineAisRadarModalProps {
   isOpen: boolean;
@@ -391,21 +392,30 @@ export function MarineAisRadarModal({
                 </p>
                 <div className="flex items-center gap-2 pt-1 flex-wrap">
                   <a
-                    href={`https://www.marinetraffic.com/en/ais/home/centerx:${centerLng.toFixed(2)}/centery:${centerLat.toFixed(2)}/zoom:13`}
+                    href={getDynamicMarineTrafficUrl({ origin, zoom: 15 })}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-black text-xs inline-flex items-center gap-1.5 shadow-sm transition-all cursor-pointer"
                   >
-                    <span>🛰️ MarineTraffic Canlı Boğaz Radarı</span>
+                    <span>🛰️ {origin} İskelesi Canlı Radarı</span>
                     <ExternalLink size={12} />
                   </a>
                   <a
-                    href={`https://www.vesselfinder.com/?ll=${centerLat.toFixed(2)},${centerLng.toFixed(2)}&zoom=13`}
+                    href={getDynamicMarineTrafficUrl({ origin, destination, zoom: 13 })}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs inline-flex items-center gap-1.5 shadow-sm transition-all cursor-pointer"
+                  >
+                    <span>🧭 Tüm Rota Radarı</span>
+                    <ExternalLink size={12} />
+                  </a>
+                  <a
+                    href={getDynamicVesselFinderUrl({ origin, destination, zoom: 14 })}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 font-bold text-xs inline-flex items-center gap-1.5 transition-all cursor-pointer"
                   >
-                    <span>🗺️ VesselFinder Canlı Haritası</span>
+                    <span>🗺️ VesselFinder Haritası</span>
                     <ExternalLink size={12} />
                   </a>
                 </div>
@@ -561,12 +571,12 @@ export function MarineAisRadarModal({
                   </div>
                   <div className="flex items-center gap-1.5 flex-wrap">
                     <a
-                      href={`https://www.marinetraffic.com/en/ais/home/centerx:${centerLng.toFixed(2)}/centery:${centerLat.toFixed(2)}/zoom:13`}
+                      href={getDynamicMarineTrafficUrl({ origin, zoom: 15 })}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="px-2.5 py-1 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 font-bold text-xs border border-cyan-500/40 transition-all flex items-center gap-1 cursor-pointer"
                     >
-                      <span>Boğaz Canlı Radarı</span>
+                      <span>{origin} İskelesi Canlı Radarı</span>
                       <ExternalLink size={11} />
                     </a>
                   </div>
