@@ -19,7 +19,7 @@ export function PierSharingQrCard({
   const [copied, setCopied] = useState(false);
 
   const groupCode = `DT-${origin.slice(0, 3).toUpperCase()}-${destination.slice(0, 3).toUpperCase()}-942`;
-  const shareUrl = `https://vapur-seferleri.vercel.app/?seaTaxi=${groupCode}`;
+  const shareUrl = `https://adalar-sefer-asistani.vercel.app/?seaTaxi=${groupCode}`;
 
   const handleCopy = () => {
     if (typeof navigator !== "undefined" && navigator.clipboard) {

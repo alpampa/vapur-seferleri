@@ -17513,13 +17513,7 @@
     },
     {
       "category": "CANLI_SUNUCU_VE_APILER",
-      "testName": "Ana Port Canlı Üretim Sunucusu (vapur-seferleri.vercel.app)",
-      "status": "PASSED",
-      "details": "HTTP 200 OK - Edge CDN üzerinden anlık yanıt veriyor."
-    },
-    {
-      "category": "CANLI_SUNUCU_VE_APILER",
-      "testName": "Adalar Port Canlı Üretim Sunucusu (adalar-sefer-asistani.vercel.app)",
+      "testName": "Canlı Üretim Sunucusu (adalar-sefer-asistani.vercel.app)",
       "status": "PASSED",
       "details": "HTTP 200 OK - Adalar portalı canlı ve aktif."
     },
@@ -17610,27 +17604,22 @@
       "ok": true
     },
     {
-      "url": "https://vapur-seferleri.vercel.app",
-      "statusCode": 200,
-      "ok": true
-    },
-    {
       "url": "https://adalar-sefer-asistani.vercel.app",
       "statusCode": 200,
       "ok": true
     },
     {
-      "url": "https://vapur-seferleri.vercel.app/api/sync",
+      "url": "https://adalar-sefer-asistani.vercel.app/api/sync",
       "statusCode": 200,
       "ok": true
     },
     {
-      "url": "https://vapur-seferleri.vercel.app/api/audit",
+      "url": "https://adalar-sefer-asistani.vercel.app/api/audit",
       "statusCode": 200,
       "ok": true
     },
     {
-      "url": "https://vapur-seferleri.vercel.app/api/cron/sync-tariffs",
+      "url": "https://adalar-sefer-asistani.vercel.app/api/cron/sync-tariffs",
       "statusCode": 200,
       "ok": true
     }

@@ -63,7 +63,7 @@ function checkHttpEndpoint(targetUrl) {
 
 function fetchLiveAuditReport() {
   return new Promise((resolve) => {
-    https.get('https://vapur-seferleri.vercel.app/api/audit', { timeout: 10000 }, (res) => {
+    https.get('https://adalar-sefer-asistani.vercel.app/api/audit', { timeout: 10000 }, (res) => {
       let data = '';
       res.on('data', chunk => { data += chunk; });
       res.on('end', () => {
@@ -81,7 +81,7 @@ function fetchLiveAuditReport() {
 
 function trigger0100Sync() {
   return new Promise((resolve) => {
-    https.get('https://vapur-seferleri.vercel.app/api/cron/sync-tariffs', { timeout: 15000, headers: { 'User-Agent': 'local-audit-daemon-0100' } }, (res) => {
+    https.get('https://adalar-sefer-asistani.vercel.app/api/cron/sync-tariffs', { timeout: 15000, headers: { 'User-Agent': 'local-audit-daemon-0100' } }, (res) => {
       let data = '';
       res.on('data', chunk => { data += chunk; });
       res.on('end', () => {
@@ -133,11 +133,10 @@ async function runCycle(cycleCount) {
     'https://www.mavimarmara.net',
     'https://www.denturavrasya.com',
     'https://www.prenstur.net',
-    'https://vapur-seferleri.vercel.app',
     'https://adalar-sefer-asistani.vercel.app',
-    'https://vapur-seferleri.vercel.app/api/sync',
-    'https://vapur-seferleri.vercel.app/api/audit',
-    'https://vapur-seferleri.vercel.app/api/cron/sync-tariffs'
+    'https://adalar-sefer-asistani.vercel.app/api/sync',
+    'https://adalar-sefer-asistani.vercel.app/api/audit',
+    'https://adalar-sefer-asistani.vercel.app/api/cron/sync-tariffs'
   ];
 
   const httpResults = await Promise.all(officialSites.map(url => checkHttpEndpoint(url)));

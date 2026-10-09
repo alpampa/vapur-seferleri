@@ -602,13 +602,7 @@ export function auditLiveProductionEndpoints(): AuditCheckResult[] {
   return [
     {
       category: "CANLI_SUNUCU_VE_APILER",
-      testName: "Ana Port Canlı Üretim Sunucusu (vapur-seferleri.vercel.app)",
-      status: "WARNING",
-      details: "Canlı URL tanımlı; canlı HTTP denetimi bu döngüde gerçekleştirilmedi."
-    },
-    {
-      category: "CANLI_SUNUCU_VE_APILER",
-      testName: "Adalar Port Canlı Üretim Sunucusu (adalar-sefer-asistani.vercel.app)",
+      testName: "Canlı Üretim Sunucusu (adalar-sefer-asistani.vercel.app)",
       status: "WARNING",
       details: "Canlı URL tanımlı; canlı HTTP denetimi bu döngüde gerçekleştirilmedi."
     },
