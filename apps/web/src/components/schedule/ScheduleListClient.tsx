@@ -31,6 +31,7 @@ import { parseNaturalTransitQuery } from "@/lib/services/ai-transit-assistant";
 import { predictFerryDisruption } from "@/lib/services/predictive-disruption-model";
 import { transitAnnouncer } from "@/lib/services/tts-announcer";
 import { saveSchedulesOffline, loadSchedulesOffline } from "@/lib/services/offline-db";
+import { trackAppOpenOnce } from "@/lib/utils/analytics-tracker";
 
 interface ScheduleListClientProps {
   schedules: ScheduleCardDto[];
@@ -111,6 +112,11 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
 
   // Native IndexedDB Non-blocking Caching
   const [effectiveSchedules, setEffectiveSchedules] = useState<ScheduleCardDto[]>(schedules);
+
+  // Anonim oturum & telemetri açılış kaydı
+  useEffect(() => {
+    trackAppOpenOnce();
+  }, []);
 
   useEffect(() => {
     let isCancelled = false;

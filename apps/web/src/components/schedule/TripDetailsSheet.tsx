@@ -45,6 +45,13 @@ import { getPierMobility } from "@/lib/data/pier-parking-bicycle";
 import { resolveDynamicTrip, DynamicTripResolution } from "@/lib/utils/dynamic-trip";
 import { getDynamicMarineTrafficUrl, getDynamicVesselFinderUrl } from "@/lib/radar-links";
 import { verifyOnboardTelemetry, type OnboardVerificationResult } from "@/lib/agents/passenger-telemetry-agent";
+import {
+  trackLocationGranted,
+  trackPierProximity,
+  trackGpsUnderway,
+  trackOnboardConfirmed,
+  trackRadarClicked
+} from "@/lib/utils/analytics-tracker";
 import { DepartureTimeline } from "@/components/schedule/DepartureTimeline";
 import { SLOW_TICK_INTERVAL_MS } from "@/lib/constants";
 import { resolveLiveVesselName } from "@/lib/agents/fleet-registry";
@@ -157,6 +164,23 @@ export function TripDetailsSheet({
           }
         );
         setTelemetryResult(res);
+        try {
+          trackLocationGranted();
+          const lineKey = `${originPierName} - ${destPierName}`;
+          if (res.status === "CONFIRMED_ONBOARD") {
+            trackOnboardConfirmed(
+              lineKey,
+              schedule?.operator,
+              res.currentSpeedKnots,
+              res.matchedVessel?.name,
+              res.matchedVessel?.mmsi
+            );
+          } else if (res.status === "AT_PIER") {
+            trackPierProximity(originPierName, lineKey);
+          } else if (res.currentSpeedKnots > 3.0) {
+            trackGpsUnderway(lineKey, schedule?.operator, res.currentSpeedKnots);
+          }
+        } catch (e) {}
         try {
           localStorage.setItem("vapur_active_verified_trip", JSON.stringify({
             tripId: schedule?.id,
