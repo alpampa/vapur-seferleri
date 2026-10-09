@@ -22,6 +22,9 @@ import { IMMINENT_DEPARTURE_MS, FAST_TICK_THRESHOLD_MIN, SLOW_TICK_INTERVAL_MS }
 import { useAnnouncements } from "@/hooks/useAnnouncements";
 import { useAnnouncementStore } from "@/store/useAnnouncementStore";
 import { AnnouncementBanner } from "@/components/announcements/AnnouncementBanner";
+import { SmartCommutePills } from "@/components/schedule/SmartCommutePills";
+import { LastFerrySafeguardBanner } from "@/components/schedule/LastFerrySafeguardBanner";
+import { triggerHaptic } from "@/lib/utils/haptics";
 import { getOperatorRecord } from "@/lib/data/operator-registry";
 import type { MarineWeatherStatus } from "@/lib/services/marine-weather";
 import { parseNaturalTransitQuery } from "@/lib/services/ai-transit-assistant";
@@ -484,8 +487,27 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
         </div>
       )}
 
+      {/* 0. GECE GÜVENCESİ: SON VAPURU KAÇIRMA ASİSTANI (20:00 Sonrası Aktif) */}
+      <LastFerrySafeguardBanner
+        schedules={effectiveSchedules}
+        serverTimeIso={serverTimeIso}
+      />
+
+      {/* 0.1 AKILLI SIK KULLANILAN ROTA KISAYOLLARI (1-Tap Fast Commute) */}
+      <div className="px-3 pt-1">
+        <SmartCommutePills
+          currentOrigin={selectedOrigin}
+          currentDestination={selectedDestination}
+          onSelectRoute={(origin, destination, category) => {
+            setSelectedOrigin(origin);
+            setSelectedDestination(destination);
+            setSelectedCategory(category);
+          }}
+        />
+      </div>
+
       {/* 1. TEK KART BİRLEŞİK İSKELE SEÇİCİ (Origin ➔ Destination) */}
-      <div className="px-3 pt-2">
+      <div className="px-3 pt-1.5">
         <div className="w-full flex items-center gap-1 p-1 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl shadow-2xs">
           {/* Kalkış İskelesi */}
           <div className="relative flex-1 min-w-0">
@@ -506,7 +528,10 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
           {/* Yön Değiştir Butonu */}
           <button
             type="button"
-            onClick={swapOriginDestination}
+            onClick={() => {
+              triggerHaptic("light");
+              swapOriginDestination();
+            }}
             title="Kalkış ve Varış İskelesini Değiştir"
             aria-label="Kalkış ve varış iskelesini değiştir"
             className="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-amber-400 hover:text-slate-950 transition-all cursor-pointer active:scale-95 shrink-0 flex items-center justify-center touch-manipulation"
@@ -535,6 +560,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
             <button
               type="button"
               onClick={() => {
+                triggerHaptic("light");
                 setSelectedOrigin("ALL");
                 setSelectedDestination("ALL");
               }}

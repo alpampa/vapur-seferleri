@@ -12,6 +12,8 @@ import { requestNotificationPermission } from "@/lib/utils/sound";
 import { predictTripOccupancy } from "@/lib/utils/occupancy";
 import { getPierTransit } from "@/lib/data/pier-transit-connections";
 import { useActiveVoyageStore } from "@/store/useActiveVoyageStore";
+import { triggerHaptic } from "@/lib/utils/haptics";
+import { TransitRouteSchematic } from "@/components/schedule/TransitRouteSchematic";
 import type { ScheduleCardDto, TripStatus } from "@/lib/types/schedule";
 
 export interface ScheduleCardProps {
@@ -347,6 +349,7 @@ export function ScheduleCard(props: ScheduleCardProps) {
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
+                triggerHaptic(isFav ? "light" : "success");
                 toggleFavorite(routeKey);
               }}
               title={isFav ? "Favorilerden Çıkar" : "Favorilere Ekle"}
@@ -366,6 +369,7 @@ export function ScheduleCard(props: ScheduleCardProps) {
               type="button"
               onClick={async (e) => {
                 e.stopPropagation();
+                triggerHaptic(hasAlarm ? "light" : "medium");
                 await requestNotificationPermission();
                 toggleAlarm(props.id);
               }}
@@ -621,6 +625,7 @@ export function ScheduleCard(props: ScheduleCardProps) {
             type="button"
             onClick={(e) => {
               e.stopPropagation();
+              triggerHaptic(isFav ? "light" : "success");
               toggleFavorite(routeKey);
             }}
             title={isFav ? "Favorilerden Çıkar" : "Favorilere Ekle"}
@@ -640,6 +645,7 @@ export function ScheduleCard(props: ScheduleCardProps) {
             type="button"
             onClick={async (e) => {
               e.stopPropagation();
+              triggerHaptic(hasAlarm ? "light" : "medium");
               await requestNotificationPermission();
               toggleAlarm(props.id);
             }}
@@ -698,6 +704,18 @@ export function ScheduleCard(props: ScheduleCardProps) {
             })}
           </div>
         </div>
+      )}
+
+      {/* 3. TRANSIT ROTA ÇİZGİSİ ŞEMASI: Metro hatları tarzı görsel durak şeması */}
+      {!props.isCompact && props.stops && props.stops.length > 0 && (
+        <TransitRouteSchematic
+          origin={props.origin}
+          destination={props.destination}
+          departureTime={props.departureTime}
+          arrivalTime={props.arrivalTime}
+          stops={props.stops}
+          operator={props.operator}
+        />
       )}
     </div>
   );
