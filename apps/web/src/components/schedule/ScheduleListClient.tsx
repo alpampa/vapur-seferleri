@@ -467,6 +467,21 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
       {/* CANLI FIRMA DUYURU BANDI (iptal / tarife / ek sefer) */}
       <AnnouncementBanner announcements={announcements} />
 
+      {/* ÇEVRİMDIŞI PWA GÖSTERGESİ (Metro / Deniz Tünelinde Kesintisiz Hafıza Modu) */}
+      {!isOnline && (
+        <div className="px-3 pt-1.5 animate-fadeIn">
+          <div className="px-3 py-1.5 rounded-xl bg-slate-900/90 text-slate-200 border border-slate-700/80 text-[11px] font-bold flex items-center justify-between shadow-xs">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse shrink-0" />
+              <span>Çevrimdışı Mod — Kayıtlı Resmi Tarife Gösteriliyor</span>
+            </div>
+            <span className="text-[9.5px] font-mono px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 font-bold shrink-0">
+              PWA Çevrimdışı
+            </span>
+          </div>
+        </div>
+      )}
+
       {/* KOMPAKT ÜST KONTROL BARI (Mobil Öncelikli & Yer Kazandıran Modern Tasarım) */}
       <div className="px-3 pt-2 space-y-1.5">
         {/* 1. SATIR: Kategori Seçici + GPS Konum + Araç Butonları */}
@@ -795,7 +810,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
             <Wind size={16} className="text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between">
-                <span className="font-bold tracking-tight">AI Risk Modeli: {disruptionForecast.headline}</span>
+                <span className="font-bold tracking-tight">Meteorolojik Seyir Riski: {disruptionForecast.headline}</span>
                 <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-amber-200 dark:bg-amber-900/60 text-amber-900 dark:text-amber-200 font-bold">
                   Risk: %{disruptionForecast.cancellationRiskPercent}
                 </span>
