@@ -60,3 +60,30 @@ export function calculateDistanceKm(lat1: number, lon1: number, lat2: number, lo
     Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
+
+/**
+ * Verilen iskelenin Adalar bölgesinde (Büyükada, Heybeliada, Burgazada, Kınalıada, Sedef) olup olmadığını belirler.
+ */
+export function isIslandPier(pierName: string): boolean {
+  if (!pierName) return false;
+  const p = ISTANBUL_PIERS[pierName.trim()];
+  if (p && p.region === "Adalar") return true;
+  const norm = pierName.toLowerCase().replace(/['\s]/g, "");
+  return (
+    norm.includes("ada") ||
+    norm.includes("buyukada") ||
+    norm.includes("heybeli") ||
+    norm.includes("burgaz") ||
+    norm.includes("kinali") ||
+    norm.includes("sedef")
+  );
+}
+
+/**
+ * Seferin en az bir ucunun (kalkış veya varış) Adalar olup olmadığını denetler.
+ * Her iki uç da anakara ise (örn: Kadıköy ➔ Kabataş), bu bir Ada seferi DEĞİLDİR (anakaradan anakarayadır).
+ */
+export function isIslandRoute(origin: string, destination: string): boolean {
+  return isIslandPier(origin) || isIslandPier(destination);
+}
+

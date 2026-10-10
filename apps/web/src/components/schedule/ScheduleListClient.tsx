@@ -17,7 +17,7 @@ import { useOfflineSync } from "@/hooks/useOfflineSync";
 import { useTransitClock } from "@/hooks/useTransitClock";
 import { LiveTripTrackerBar } from "@/components/schedule/LiveTripTrackerBar";
 import { IslandHopPickerModal } from "@/components/schedule/IslandHopPickerModal";
-import { PIER_GEO_COORDINATES, calculateDistanceKm } from "@/lib/data/piers";
+import { PIER_GEO_COORDINATES, calculateDistanceKm, isIslandRoute } from "@/lib/data/piers";
 import { IMMINENT_DEPARTURE_MS, FAST_TICK_THRESHOLD_MIN, SLOW_TICK_INTERVAL_MS } from "@/lib/constants";
 import { useAnnouncements } from "@/hooks/useAnnouncements";
 import { useAnnouncementStore } from "@/store/useAnnouncementStore";
@@ -184,20 +184,6 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
   // 1. Filter and resolve dynamic state for active trips
   const activeSchedulesWithDyn = useMemo(() => {
     const rawList = effectiveSchedules
-      .filter((s) => {
-        // GLOBAL ARAMA: Kullanıcı bir arama terimi yazdığında kategori kilidi kalkar, tüm İstanbul taranır
-        if (searchQuery.trim().length > 0) return true;
-        if (selectedCategory === "ALL") return true;
-        const cat = s.category || (
-          s.destination.toLowerCase().includes('ada') ||
-          s.origin.toLowerCase().includes('ada') ||
-          s.destination === 'Büyükada' ||
-          s.origin === 'Büyükada'
-            ? 'ADALAR'
-            : 'BOGAZ'
-        );
-        return cat === selectedCategory;
-      })
       .map((s) => {
         const disruption = disruptionByTrip.get(s.id);
         const overlaySchedule =
@@ -224,6 +210,26 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
         // KULLANICI KURALI & SIFIR TOLERANS: Kalkış ve varış noktası aynı olan hatalı seferler (örn: Büyükada -> Büyükada) kesinlikle kabul edilmez
         if (dyn.currentOrigin.trim() === dyn.destination.trim()) return false;
         if (schedule.origin.trim() === schedule.destination.trim()) return false;
+
+        // GLOBAL ARAMA: Kullanıcı bir arama terimi yazdığında kategori kilidi kalkar, tüm İstanbul taranır
+        if (searchQuery.trim().length > 0) return true;
+        if (selectedCategory === "ALL") return true;
+
+        // KULLANICI KURALI: DİNAMİK KATEGORİ DENETİMİ (ADALAR vs BOĞAZ):
+        // Bir vapur Adalar'dan kalkıp anakaraya ulaştığında (örn: Adalar -> Kadıköy -> Kabataş),
+        // Adalar'ı terk edip Kadıköy'den Kabataş'a geçerken artık "anakaradan anakaraya" bir seferdir.
+        // Adalı yolcuyu ilgilendirmez; dolayısıyla "ADALAR" sekmesinde ASLA gösterilmemelidir!
+        // Yalnızca Boğaz / Şehir İçi ("BOGAZ") veya "ALL" sekmesinde görünebilir.
+        const isCurrentLegIsland = isIslandRoute(dyn.currentOrigin, dyn.destination);
+
+        if (selectedCategory === "ADALAR") {
+          return isCurrentLegIsland;
+        }
+
+        if (selectedCategory === "BOGAZ") {
+          return !isCurrentLegIsland;
+        }
+
         return true;
       });
 
