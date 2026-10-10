@@ -219,7 +219,13 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
           dyn
         };
       })
-      .filter(({ dyn }) => !dyn.isExpired);
+      .filter(({ dyn, schedule }) => {
+        if (dyn.isExpired) return false;
+        // KULLANICI KURALI & SIFIR TOLERANS: Kalkış ve varış noktası aynı olan hatalı seferler (örn: Büyükada -> Büyükada) kesinlikle kabul edilmez
+        if (dyn.currentOrigin.trim() === dyn.destination.trim()) return false;
+        if (schedule.origin.trim() === schedule.destination.trim()) return false;
+        return true;
+      });
 
     // KESİN TEKİLLEŞTİRME VE MASTER SEFER FİLTRESİ (Strict Master Voyage Deduplication):
     // Genel listede (selectedOrigin === "ALL") aynı fiziksel gemiye ait ara durak hayalet kartlarını eler.

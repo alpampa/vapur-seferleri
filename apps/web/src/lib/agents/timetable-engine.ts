@@ -102,15 +102,24 @@ export async function getLiveOrOfficialSchedules(): Promise<SchedulesResponse> {
     .filter(trip =>
       !trip.origin.includes('...') && !trip.destination.includes('...')
       && !trip.origin.includes('Sadece') && !trip.destination.includes('Sadece')
+      // SIFIR HATA: Kalkış ve varış noktası aynı olan (örn: Büyükada -> Büyükada) geçersiz seferler elenir
+      && trip.origin.trim() !== trip.destination.trim()
     )
     .map(trip => {
+      // Ara durak temizliği: stops içinde kalkış veya varış iskelesiyle aynı isimde olanlar temizlenir
+      const cleanedStops = trip.stops?.filter(
+        st => st.name.trim() !== trip.origin.trim() && st.name.trim() !== trip.destination.trim()
+      );
       const depHour = parseInt(trip.departureTime.slice(0, 2), 10);
       const hasBadArrival =
         !!trip.arrivalTime &&
         /^\d{2}:\d{2}$/.test(trip.arrivalTime) &&
         compareHhmm(trip.arrivalTime, trip.departureTime) < 0 &&
         depHour < 17;
-      return hasBadArrival ? { ...trip, arrivalTime: undefined } : trip;
+      return {
+        ...(hasBadArrival ? { ...trip, arrivalTime: undefined } : trip),
+        stops: cleanedStops && cleanedStops.length > 0 ? cleanedStops : undefined
+      };
     });
 
   // 2. Map raw official trips to full ScheduleCardDto

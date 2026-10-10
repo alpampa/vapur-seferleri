@@ -254,3 +254,62 @@ describe("isTripCancelled — ortak iptal tespiti", () => {
     expect(isTripCancelled({ status: "ON_TIME" }, okDyn)).toBe(false);
   });
 });
+
+describe("resolveDynamicTrip — Sıfır Hata / Kendine Sefer (Origin === Destination) ve Mükerrer Durak Engeli", () => {
+  it("Kalkış ve varış aynı olduğunda (Büyükada -> Büyükada) anında isExpired: true döner", () => {
+    const res = resolveDynamicTrip(
+      "Büyükada",
+      "Büyükada",
+      "08:55",
+      "2026-10-10T08:55:00+03:00",
+      undefined,
+      "08:55",
+      at("2026-10-10T08:50:00+03:00")
+    );
+    expect(res.isExpired).toBe(true);
+    expect(res.status).toBe("COMPLETED");
+  });
+
+  it("Ara duraklarda varış noktası tekrarlanıyorsa tekilleştirilir ve asla varış durağı kalkış yapılarak X -> X üretilmez", () => {
+    // Kartal 08:30 -> Büyükada 08:55 -> Heybeliada 09:05
+    // Kartal bacağı geçmiş (şimdi 08:52), aktif bacak Büyükada -> Heybeliada olmalı
+    const res = resolveDynamicTrip(
+      "Kartal",
+      "Heybeliada",
+      "08:30",
+      "2026-10-10T08:30:00+03:00",
+      [
+        { name: "Büyükada", time: "08:55" },
+        { name: "Heybeliada", time: "09:05" }, // Hatalı veride varış da stops içine girmiş olsa bile
+      ],
+      "09:05",
+      at("2026-10-10T08:52:00+03:00")
+    );
+
+    // Aktif bacak: Büyükada -> Heybeliada olmalı
+    expect(res.currentOrigin).toBe("Büyükada");
+    expect(res.destination).toBe("Heybeliada");
+    expect(res.currentOrigin).not.toBe(res.destination);
+    // Waypoints içinde Heybeliada sadece 1 kez yer almalı
+    const heybeliadaCount = res.waypoints.filter((w) => w.name === "Heybeliada").length;
+    expect(heybeliadaCount).toBe(1);
+  });
+
+  it("Direkt seferde ara durakta varış noktası yanlışlıkla verilmişse (Kartal -> Büyükada, stop: Büyükada) Kartal geçince Büyükada -> Büyükada ÜRETİLMEZ", () => {
+    // Kartal kalkış 08:30, varış Büyükada 08:55. Şimdi 08:52 (Kartal geçmiş).
+    const res = resolveDynamicTrip(
+      "Kartal",
+      "Büyükada",
+      "08:30",
+      "2026-10-10T08:30:00+03:00",
+      [
+        { name: "Büyükada", time: "08:55" }, // Hatalı ara durak
+      ],
+      "08:55",
+      at("2026-10-10T08:52:00+03:00")
+    );
+
+    // Bu sefer tamamlanmış olmalı, kesinlikle 'Büyükada -> Büyükada' aktif olmamalı!
+    expect(res.isExpired).toBe(true);
+  });
+});

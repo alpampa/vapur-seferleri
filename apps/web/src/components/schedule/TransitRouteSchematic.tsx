@@ -28,16 +28,27 @@ export function TransitRouteSchematic({
   stops,
   operator,
 }: TransitRouteSchematicProps) {
-  if (!stops || stops.length === 0) {
+  if (!stops || stops.length === 0 || origin.trim() === destination.trim()) {
     return null;
   }
 
+  // Ara durakları filtrele: kalkış veya varış iskelesiyle aynı olan duraklar elenir
+  const filteredStops = stops.filter(
+    (s) => s.name.trim() !== origin.trim() && s.name.trim() !== destination.trim()
+  );
+
   // Tüm durak zinciri: Kalkış + Ara Duraklar + Varış
-  const fullChain = [
-    { name: origin, time: departureTime, isOrigin: true },
-    ...stops.map((s) => ({ name: s.name, time: s.time, isOrigin: false })),
-    { name: destination, time: arrivalTime || "", isDestination: true },
+  const rawChain = [
+    { name: origin.trim(), time: departureTime, isOrigin: true },
+    ...filteredStops.map((s) => ({ name: s.name.trim(), time: s.time, isOrigin: false })),
+    { name: destination.trim(), time: arrivalTime || "", isDestination: true },
   ];
+
+  // Ardışık mükerrer durakları tekilleştir
+  const fullChain = rawChain.filter((item, idx, arr) => {
+    if (idx === 0) return true;
+    return item.name !== arr[idx - 1].name;
+  });
 
   return (
     <div className="w-full mt-2 pt-2 border-t border-slate-200/60 dark:border-slate-800/80 animate-fadeIn">

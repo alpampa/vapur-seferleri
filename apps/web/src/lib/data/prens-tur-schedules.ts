@@ -79,7 +79,7 @@ export function getPrensTurSchedules(): RawOfficialTrip[] {
     const buyukadaArr = addMinutes(k.dep, 25);
     const heybeliadaArr = addMinutes(k.dep, 35);
 
-    // Kartal ➔ Heybeliada (Ana bacak)
+    // Kartal ➔ Heybeliada (Ana bacak: Kartal -> Büyükada -> Heybeliada)
     trips.push({
       id: `prenstur-kartal-adalar-${idx}`,
       origin: "Kartal",
@@ -93,12 +93,11 @@ export function getPrensTurSchedules(): RawOfficialTrip[] {
       isWeekdayOnly: k.isWeekdayOnly,
       stops: [
         { name: "Büyükada", time: buyukadaArr },
-        { name: "Heybeliada", time: heybeliadaArr },
       ],
       lineName: "Kartal - Adalar Hattı",
     });
 
-    // Kartal ➔ Büyükada (Doğrudan arayan yolcu için)
+    // Kartal ➔ Büyükada (Doğrudan Büyükada'ya giden direkt sefer)
     trips.push({
       id: `prenstur-kartal-buyukada-${idx}`,
       origin: "Kartal",
@@ -110,16 +109,14 @@ export function getPrensTurSchedules(): RawOfficialTrip[] {
       platform: "Kartal Prens Tur İskelesi",
       price: "115 ₺",
       isWeekdayOnly: k.isWeekdayOnly,
-      stops: [
-        { name: "Büyükada", time: buyukadaArr },
-      ],
+      stops: undefined,
       lineName: "Kartal - Büyükada Hattı",
     });
   });
 
   // 2. Adalar ➔ Kartal
   ADALAR_DEPARTURES.forEach((a, idx) => {
-    // Heybeliada ➔ Kartal
+    // Heybeliada ➔ Kartal (Heybeliada -> Büyükada -> Kartal)
     trips.push({
       id: `prenstur-heybeliada-kartal-${idx}`,
       origin: "Heybeliada",
@@ -133,12 +130,11 @@ export function getPrensTurSchedules(): RawOfficialTrip[] {
       isWeekdayOnly: a.isWeekdayOnly,
       stops: [
         { name: "Büyükada", time: a.buyukadaDep },
-        { name: "Kartal", time: a.kartalArr },
       ],
       lineName: "Adalar - Kartal Hattı",
     });
 
-    // Büyükada ➔ Kartal
+    // Büyükada ➔ Kartal (Büyükada'dan doğrudan Kartal'a)
     trips.push({
       id: `prenstur-buyukada-kartal-${idx}`,
       origin: "Büyükada",
@@ -150,9 +146,7 @@ export function getPrensTurSchedules(): RawOfficialTrip[] {
       platform: "Büyükada Prens Tur İskelesi",
       price: "115 ₺",
       isWeekdayOnly: a.isWeekdayOnly,
-      stops: [
-        { name: "Kartal", time: a.kartalArr },
-      ],
+      stops: undefined,
       lineName: "Büyükada - Kartal Hattı",
     });
 
@@ -168,9 +162,7 @@ export function getPrensTurSchedules(): RawOfficialTrip[] {
       platform: "Heybeliada İskelesi",
       price: "70 ₺",
       isWeekdayOnly: a.isWeekdayOnly,
-      stops: [
-        { name: "Büyükada", time: a.buyukadaDep },
-      ],
+      stops: undefined,
       lineName: "Heybeliada - Büyükada Ada İçi Geçiş",
     });
   });

@@ -88,6 +88,27 @@ export function resolveDynamicTrip(
   // Kural tek kaynaktır: nightRolloverDayOffset (istanbul-time).
   const baseDayOffset = nightRolloverDayOffset(departureTime, accurateNow);
 
+  // 0. Güvenlik Kontrolü: Kalkış ve varış aynı olamaz (örn: Büyükada -> Büyükada)
+  if (!initialOrigin || !destination || initialOrigin.trim() === destination.trim()) {
+    return {
+      currentOrigin: initialOrigin || "",
+      initialOrigin: initialOrigin || "",
+      destination: destination || "",
+      routeTitle: `${initialOrigin} ➔ ${destination} Hattı`,
+      currentDepartureTime: departureTime,
+      currentDepartureTime12: departureTime,
+      currentTargetIso: targetTimeIso,
+      isDeparted: true,
+      countdown: null,
+      minutesUntilDeparture: null,
+      status: "COMPLETED",
+      isExpired: true,
+      waypoints: [],
+      activeChain: [],
+      activeLegIndex: 0
+    };
+  }
+
   // 1. Build chronological waypoints with proper midnight rollover.
   // Bir durak saati bir öncekinden ERKENSE (örn. 23:45 kalkış → 00:10 varış)
   // o durak/varış ertesi güne aittir ve `dayOffset` artırılır.
@@ -115,11 +136,21 @@ export function resolveDynamicTrip(
     allWaypoints.push(buildWaypoint(name, time, dayOffset));
   };
 
-  pushWaypoint(initialOrigin, departureTime);
+  pushWaypoint(initialOrigin.trim(), departureTime);
 
-  // Ara duraklar
+  // Ara duraklar: Sadece gerçek ara duraklar! Kalkış veya Varış ile aynı olamaz, ardışık mükerrer olamaz
   if (stops && stops.length > 0) {
-    stops.forEach(st => pushWaypoint(st.name, st.time));
+    stops.forEach(st => {
+      const cleanName = st.name.trim();
+      if (cleanName === initialOrigin.trim() || cleanName === destination.trim()) {
+        return; // Asla kalkış veya varış noktasını ara durak olarak ekleme!
+      }
+      const prev = allWaypoints[allWaypoints.length - 1];
+      if (prev && prev.name.trim() === cleanName) {
+        return; // Ardışık aynı durağı mükerrer ekleme!
+      }
+      pushWaypoint(cleanName, st.time);
+    });
   }
 
   // Varış noktası
@@ -131,7 +162,10 @@ export function resolveDynamicTrip(
     const estHour = (h + Math.floor((m + ESTIMATED_TRAVEL_MIN_PER_HOP) / 60)) % 24;
     finalArrTime = `${String(estHour).padStart(2, '0')}:${String(estMin).padStart(2, '0')}`;
   }
-  pushWaypoint(destination, finalArrTime);
+  const lastWp = allWaypoints[allWaypoints.length - 1];
+  if (!lastWp || lastWp.name.trim() !== destination.trim()) {
+    pushWaypoint(destination.trim(), finalArrTime);
+  }
 
   const numLegs = allWaypoints.length - 1; // Number of departure stations (excluding final destination arrival)
 
@@ -139,10 +173,19 @@ export function resolveDynamicTrip(
   // Each departure leg i is active until DEPARTED_GRACE_MS after its departure time
   for (let i = 0; i < numLegs; i++) {
     const leg = allWaypoints[i];
+
+    // GÜVENLİK KURALI: Kalkış bacağı asla varış noktası olamaz (X -> X engeli)!
+    if (leg.name.trim() === destination.trim()) {
+      continue;
+    }
+
     const diff = leg.targetTimeMs - accurateNow;
 
     // Check if we are before departure or within the grace window after departure
     if (diff > -DEPARTED_GRACE_MS) {
+      if (leg.name.trim() === destination.trim()) {
+        continue;
+      }
       // THIS LEG IS CURRENTLY ACTIVE!
       let isDeparted = false;
       let countdown: string | null = null;
@@ -228,15 +271,16 @@ export function resolveDynamicTrip(
     isDestination: cIdx === arr.length - 1
   }));
 
-  const lastLeg = allWaypoints[numLegs - 1];
+  const lastLeg = (numLegs > 0 && allWaypoints[numLegs - 1]) ? allWaypoints[numLegs - 1] : allWaypoints[0];
+  const fallbackOrigin = lastLeg?.name || initialOrigin;
   return {
-    currentOrigin: lastLeg.name,
+    currentOrigin: fallbackOrigin,
     initialOrigin,
     destination,
-    routeTitle: `${lastLeg.name} ➔ ${destination} Hattı`,
-    currentDepartureTime: lastLeg.time,
-    currentDepartureTime12: lastLeg.time,
-    currentTargetIso: lastLeg.targetTimeIso,
+    routeTitle: `${fallbackOrigin} ➔ ${destination} Hattı`,
+    currentDepartureTime: lastLeg?.time || departureTime,
+    currentDepartureTime12: lastLeg?.time || departureTime,
+    currentTargetIso: lastLeg?.targetTimeIso || targetTimeIso,
     isDeparted: false,
     countdown: null,
     minutesUntilDeparture: null,

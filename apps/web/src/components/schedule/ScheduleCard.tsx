@@ -125,8 +125,16 @@ export function ScheduleCard(props: ScheduleCardProps) {
     props.departureTime
   );
 
-  // If the trip has completely expired (30 seconds after its final departure leg), do not render
-  if (dynState.isExpired) {
+  // KULLANICI KURALI & SIFIR TOLERANS (SIFIR HALÜSİNASYON / MÜKERRER ENGELİ):
+  // 1. Süresi dolan seferler render edilmez.
+  // 2. Kalkış ve varış noktası aynı olan (örn: Büyükada ➔ Büyükada) anlamsız/hatalı seferler ASLA render edilemez!
+  if (
+    dynState.isExpired ||
+    !props.origin ||
+    !props.destination ||
+    props.origin.trim() === props.destination.trim() ||
+    dynState.currentOrigin.trim() === dynState.destination.trim()
+  ) {
     return null;
   }
 

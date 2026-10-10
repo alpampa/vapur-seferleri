@@ -131,6 +131,21 @@ export function selfHealTripRecord(rawTrip: RawOfficialTrip): RawOfficialTrip {
     healed.price = fare.fullFare;
   }
 
+  // 4. Ara duraklarda kalkış veya varış iskelesiyle aynı isimde olan mükerrerlikleri otonom temizle
+  if (healed.stops && healed.stops.length > 0) {
+    const originalLen = healed.stops.length;
+    healed.stops = healed.stops.filter(
+      st => st.name.trim() !== healed.origin.trim() && st.name.trim() !== healed.destination.trim()
+    );
+    if (healed.stops.length !== originalLen) {
+      logSelfHealingAction({
+        targetType: "OPERATOR_CRAWLER",
+        description: `Sefer #${healed.id} (${healed.origin} -> ${healed.destination}) ara duraklarındaki kalkış/varış mükerrerliği otonom temizlendi.`,
+        severity: "AUTO_HEALED"
+      });
+    }
+  }
+
   return healed;
 }
 
