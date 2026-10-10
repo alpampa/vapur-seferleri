@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
-  getOrCreateLobby,
+  getPublicLobby,
   joinLobby,
   leaveLobby,
   addLobbyMessage
@@ -13,8 +13,9 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const origin = searchParams.get("origin") || "Bostancı";
     const destination = searchParams.get("destination") || "Büyükada";
+    const participantId = searchParams.get("participantId") || undefined;
 
-    const lobby = getOrCreateLobby(origin, destination);
+    const lobby = getPublicLobby(origin, destination, participantId);
 
     return NextResponse.json(lobby, {
       headers: { "Cache-Control": "no-store, max-age=0" }
@@ -30,33 +31,52 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { action, origin, destination, payload } = body;
 
-    if (!origin || !destination) {
-      return NextResponse.json({ error: "Missing origin or destination" }, { status: 400 });
+    if (!origin || !destination || typeof origin !== "string" || typeof destination !== "string") {
+      return NextResponse.json({ error: "Missing or invalid origin or destination" }, { status: 400 });
     }
 
     if (action === "JOIN") {
+      if (!payload || typeof payload !== "object") {
+        return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
+      }
+
+      const name = String(payload.name || "").trim().slice(0, 40) || "Misafir Yolcu";
+      const phone = String(payload.phone || "").trim().slice(0, 20);
+      const note = payload.note ? String(payload.note).trim().slice(0, 150) : "";
+      const rawCount = Number(payload.passengerCount) || 1;
+      const passengerCount = Math.max(1, Math.min(6, rawCount));
+
       const result = joinLobby(origin, destination, {
-        name: payload.name || "Misafir Yolcu",
-        phone: payload.phone || "",
-        passengerCount: payload.passengerCount || 1,
-        note: payload.note || ""
+        name,
+        phone,
+        passengerCount,
+        note
       });
       return NextResponse.json(result);
     }
 
     if (action === "LEAVE") {
-      const lobby = leaveLobby(origin, destination, payload.participantId);
+      if (!payload?.participantId || typeof payload.participantId !== "string") {
+        return NextResponse.json({ error: "Missing participantId" }, { status: 400 });
+      }
+      const lobby = leaveLobby(origin, destination, payload.participantId.slice(0, 60));
       return NextResponse.json({ lobby, success: true });
     }
 
     if (action === "MESSAGE") {
-      const lobby = addLobbyMessage(
-        origin,
-        destination,
-        payload.senderId || "anon",
-        payload.senderName || "Misafir",
-        payload.text || ""
-      );
+      if (!payload || typeof payload !== "object") {
+        return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
+      }
+
+      const senderId = String(payload.senderId || "anon").slice(0, 60);
+      const senderName = String(payload.senderName || "Misafir").trim().slice(0, 40);
+      const text = String(payload.text || "").trim().slice(0, 300);
+
+      if (!text) {
+        return NextResponse.json({ error: "Message text cannot be empty" }, { status: 400 });
+      }
+
+      const lobby = addLobbyMessage(origin, destination, senderId, senderName, text);
       return NextResponse.json({ lobby, success: true });
     }
 

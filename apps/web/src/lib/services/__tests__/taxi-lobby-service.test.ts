@@ -4,7 +4,9 @@ import {
   getMeetupPoint,
   joinLobby,
   leaveLobby,
-  addLobbyMessage
+  addLobbyMessage,
+  maskPhoneNumber,
+  getPublicLobby
 } from "../taxi-lobby-service";
 
 describe("Sea Taxi Shared Ride Meetup Lobby Service", () => {
@@ -71,5 +73,17 @@ describe("Sea Taxi Shared Ride Meetup Lobby Service", () => {
     const lastMsg = lobby.messages[lobby.messages.length - 1];
     expect(lastMsg.senderName).toBe("Ahmet");
     expect(lastMsg.text).toBe("Ben gişelerin önüne geldim!");
+  });
+
+  it("masks phone numbers properly to protect PII against scrapers", () => {
+    expect(maskPhoneNumber("0532 411 20 89")).toBe("0532 *** ** 89");
+    expect(maskPhoneNumber("05448831542")).toBe("0544 *** ** 42");
+    expect(maskPhoneNumber("123")).toBe("***");
+
+    const publicLobby = getPublicLobby("Bostancı", "Büyükada");
+    // Anonymous viewer should never see unmasked cleartext phone
+    for (const p of publicLobby.participants) {
+      expect(p.phone).toContain("***");
+    }
   });
 });

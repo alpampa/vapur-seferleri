@@ -9,7 +9,35 @@ export const dynamic = "force-dynamic";
  * GitHub Actions workflow'u (nightly-tariff-sync.yml) 20:00 UTC = 23:00 İstanbul'da tetikler.
  * Dentur tarifesini + tüm duyuruları canlı çeker, diff yapar, değişikliği raporlar.
  */
+function verifyCronAuth(request: NextRequest): boolean {
+  const authHeader = request.headers.get("authorization");
+  const cronSecret = process.env.CRON_SECRET;
+
+  if (cronSecret && authHeader === `Bearer ${cronSecret}`) {
+    return true;
+  }
+
+  const isVercelCron = request.headers.get("user-agent")?.includes("vercel-cron");
+  if (isVercelCron) {
+    return true;
+  }
+
+  // Geliştirme ortamında test erişimine izin ver
+  if (process.env.NODE_ENV === "development") {
+    return true;
+  }
+
+  return false;
+}
+
 export async function GET(request: NextRequest) {
+  if (!verifyCronAuth(request)) {
+    return NextResponse.json(
+      { error: "Unauthorized: Missing or invalid authorization token" },
+      { status: 401 }
+    );
+  }
+
   const isVercelCron = request.headers.get("user-agent")?.includes("vercel-cron");
 
   const now = new Date();

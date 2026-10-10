@@ -22,7 +22,10 @@ import {
   TrendingUp,
   BarChart3,
   Anchor,
-  Compass
+  Compass,
+  Lock,
+  Unlock,
+  Key
 } from "lucide-react";
 import { getLatestDiffSnapshots, DiffSnapshot } from "@/lib/agents/visual-diff-recorder";
 import { triggerCancellationPushAlert, requestDisruptionNotificationPermission } from "@/lib/utils/push-alert-service";
@@ -64,21 +67,75 @@ export default function AdminDashboard() {
   const [lastRefreshed, setLastRefreshed] = useState<string>("");
   const [triggerMsg, setTriggerMsg] = useState<string>("");
 
-  const fetchData = async () => {
-    setIsLoading(true);
-    try {
-      // 1. Audit verisi
-      const auditRes = await fetch("/api/audit");
-      if (auditRes.ok) {
-        const json = await auditRes.json();
-        setAuditData(json);
-      }
+  // Güvenlik & Yetkilendirme Durumu
+  const [adminKey, setAdminKey] = useState<string>("");
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [pinInput, setPinInput] = useState<string>("");
+  const [pinError, setPinError] = useState<string>("");
+  const [isVerifying, setIsVerifying] = useState<boolean>(false);
 
-      // 2. Canlı Yolcu Telemetri İstatistikleri
-      const telemRes = await fetch("/api/telemetry/stats");
+  const verifyAndLoad = async (keyToTest: string) => {
+    setIsVerifying(true);
+    setPinError("");
+    try {
+      const headers = { "x-admin-key": keyToTest };
+      const [telemRes, auditRes] = await Promise.all([
+        fetch("/api/telemetry/stats", { headers }),
+        fetch("/api/audit", { headers })
+      ]);
+
       if (telemRes.ok) {
+        setIsAuthenticated(true);
+        setAdminKey(keyToTest);
+        if (typeof window !== "undefined") {
+          sessionStorage.setItem("vapur_admin_key", keyToTest);
+        }
         const telemJson = await telemRes.json();
         setTelemetryData(telemJson);
+
+        if (auditRes.ok) {
+          const auditJson = await auditRes.json();
+          setAuditData(auditJson);
+        }
+
+        setLastRefreshed(new Date().toLocaleTimeString("tr-TR"));
+        setDiffSnapshots(getLatestDiffSnapshots());
+      } else {
+        setIsAuthenticated(false);
+        setPinError("Geçersiz yönetici PIN kodu veya yetkisiz erişim anahtarı.");
+      }
+    } catch (e) {
+      setPinError("Yetkilendirme sunucusuna ulaşılamadı.");
+    } finally {
+      setIsVerifying(false);
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const savedKey = typeof window !== "undefined" ? sessionStorage.getItem("vapur_admin_key") : null;
+    if (savedKey) {
+      verifyAndLoad(savedKey);
+    } else {
+      setIsLoading(false);
+    }
+  }, []);
+
+  const fetchData = async () => {
+    if (!adminKey) return;
+    setIsLoading(true);
+    try {
+      const headers = { "x-admin-key": adminKey };
+      const [auditRes, telemRes] = await Promise.all([
+        fetch("/api/audit", { headers }),
+        fetch("/api/telemetry/stats", { headers })
+      ]);
+
+      if (auditRes.ok) {
+        setAuditData(await auditRes.json());
+      }
+      if (telemRes.ok) {
+        setTelemetryData(await telemRes.json());
       }
 
       setLastRefreshed(new Date().toLocaleTimeString("tr-TR"));
@@ -91,10 +148,27 @@ export default function AdminDashboard() {
   };
 
   useEffect(() => {
-    fetchData();
+    if (!isAuthenticated || !adminKey) return;
     const interval = setInterval(fetchData, 20000);
     return () => clearInterval(interval);
-  }, []);
+  }, [isAuthenticated, adminKey]);
+
+  const handlePinSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!pinInput.trim()) {
+      setPinError("Lütfen PIN kodunuzu girin.");
+      return;
+    }
+    verifyAndLoad(pinInput.trim());
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    setAdminKey("");
+    if (typeof window !== "undefined") {
+      sessionStorage.removeItem("vapur_admin_key");
+    }
+  };
 
   const handleRunHealing = () => {
     setTriggerMsg("Otonom düzeltme motoru tetiklendi. Tüm tarifeler ve seferler anında eşitlendi.");
@@ -114,6 +188,76 @@ export default function AdminDashboard() {
   };
 
   const isHealthy = auditData?.overallStatus === "HEALTHY";
+
+  // Yetkilendirilmemiş ise Güvenli Kilit Ekranı
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-[70vh] flex items-center justify-center px-4 py-12">
+        <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl text-center space-y-6">
+          <div className="w-16 h-16 mx-auto rounded-2xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400">
+            <Lock size={30} className="animate-pulse" />
+          </div>
+
+          <div className="space-y-2">
+            <h2 className="text-xl font-black text-white tracking-tight">
+              Yönetici & Geliştirici Erişimi
+            </h2>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              Bu panel gerçek zamanlı yolcu telemetrisi ve otonom sistem denetimlerini barındırır.
+              Devam etmek için yetkili erişim PIN anahtarınızı girin.
+            </p>
+          </div>
+
+          <form onSubmit={handlePinSubmit} className="space-y-4 text-left">
+            <div>
+              <label className="block text-[11px] font-mono font-bold text-slate-300 uppercase mb-1.5">
+                Geliştirici PIN / Erişim Anahtarı
+              </label>
+              <div className="relative">
+                <input
+                  type="password"
+                  value={pinInput}
+                  onChange={(e) => setPinInput(e.target.value)}
+                  placeholder="PIN kodunu girin..."
+                  autoFocus
+                  className="w-full px-4 py-3 bg-slate-950 border border-slate-700 rounded-xl text-white text-sm font-mono placeholder:text-slate-600 focus:outline-none focus:border-blue-500 transition-all"
+                />
+                <Key size={16} className="absolute right-3.5 top-3.5 text-slate-500" />
+              </div>
+            </div>
+
+            {pinError && (
+              <p className="text-xs text-rose-400 bg-rose-950/40 border border-rose-800/60 p-2.5 rounded-xl font-medium">
+                {pinError}
+              </p>
+            )}
+
+            <button
+              type="submit"
+              disabled={isVerifying}
+              className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-black text-xs shadow-lg shadow-blue-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+            >
+              {isVerifying ? (
+                <>
+                  <RefreshCw size={14} className="animate-spin" />
+                  <span>Doğrulanıyor...</span>
+                </>
+              ) : (
+                <>
+                  <Unlock size={14} />
+                  <span>Panele Güvenli Giriş Yap</span>
+                </>
+              )}
+            </button>
+          </form>
+
+          <div className="pt-2 border-t border-slate-800/80 text-[10px] text-slate-500 font-mono">
+            ZKİO Geliştirici Güvenlik Protokolü &bull; Vapur Sefer Asistanı
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8 space-y-8">
@@ -149,6 +293,15 @@ export default function AdminDashboard() {
           >
             <RefreshCw size={14} className={isLoading ? "animate-spin" : ""} />
             Verileri Tazele ({lastRefreshed || "Az önce"})
+          </button>
+
+          <button
+            onClick={handleLogout}
+            title="Paneli Kilitle ve Güvenli Çıkış Yap"
+            className="flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 font-bold text-xs shadow-sm transition-all cursor-pointer"
+          >
+            <Lock size={13} className="text-amber-400" />
+            <span>Kilitle</span>
           </button>
         </div>
       </div>

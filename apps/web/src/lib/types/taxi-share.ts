@@ -2,6 +2,7 @@ export interface LobbyParticipant {
   id: string;
   name: string;
   phone: string;
+  maskedPhone: string;
   passengerCount: number;
   joinedAt: number;
   note?: string;

@@ -1,9 +1,17 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getTelemetrySummary } from "@/lib/services/passenger-analytics-service";
+import { verifyAdminAuth } from "@/lib/utils/admin-auth";
 
 export const dynamic = "force-dynamic";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  if (!verifyAdminAuth(request)) {
+    return NextResponse.json(
+      { error: "Unauthorized: Admin access key required" },
+      { status: 401 }
+    );
+  }
+
   try {
     const stats = getTelemetrySummary();
     return NextResponse.json(stats, {

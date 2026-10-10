@@ -67,10 +67,12 @@ export function SharedSeaTaxiModal({
   const [statusMsg, setStatusMsg] = useState("");
 
   // Lobiyi getir
-  const fetchLobby = async (orig: string, dest: string) => {
+  const fetchLobby = async (orig: string, dest: string, userId?: string | null) => {
     try {
       setIsLoadingLobby(true);
-      const res = await fetch(`/api/taxishare/lobby?origin=${encodeURIComponent(orig)}&destination=${encodeURIComponent(dest)}`);
+      const uid = userId !== undefined ? userId : currentUserId;
+      const paramUid = uid ? `&participantId=${encodeURIComponent(uid)}` : "";
+      const res = await fetch(`/api/taxishare/lobby?origin=${encodeURIComponent(orig)}&destination=${encodeURIComponent(dest)}${paramUid}`);
       if (res.ok) {
         const data = (await res.json()) as SeaTaxiLobby;
         setLobby(data);
@@ -84,9 +86,9 @@ export function SharedSeaTaxiModal({
 
   useEffect(() => {
     if (isOpen) {
-      fetchLobby(origin, destination);
       const storedId = localStorage.getItem("vapur_taxi_participant_id");
       if (storedId) setCurrentUserId(storedId);
+      fetchLobby(origin, destination, storedId);
     }
   }, [isOpen, origin, destination]);
 

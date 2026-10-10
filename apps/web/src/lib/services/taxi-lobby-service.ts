@@ -24,6 +24,12 @@ export function getMeetupPoint(pierName: string): string {
   return `${pierName} İskelesi Ana Biniş Kapısı Önü`;
 }
 
+export function maskPhoneNumber(phone: string): string {
+  const clean = phone.replace(/[\s\-_()]/g, "");
+  if (clean.length < 7) return "***";
+  return `${clean.slice(0, 4)} *** ** ${clean.slice(-2)}`;
+}
+
 function initPrepopulatedLobby(origin: string, destination: string): SeaTaxiLobby {
   const route = getSeaTaxiRoute(origin, destination);
   const now = Date.now();
@@ -34,6 +40,7 @@ function initPrepopulatedLobby(origin: string, destination: string): SeaTaxiLobb
       id: "p-01",
       name: "Murat T.",
       phone: "0532 411 20 89",
+      maskedPhone: maskPhoneNumber("0532 411 20 89"),
       passengerCount: 1,
       joinedAt: now - 1000 * 60 * 12,
       note: "Turnike önünde bekliyorum, siyah montluyum"
@@ -42,6 +49,7 @@ function initPrepopulatedLobby(origin: string, destination: string): SeaTaxiLobb
       id: "p-02",
       name: "Zeynep & Arkadaşı",
       phone: "0544 883 15 42",
+      maskedPhone: maskPhoneNumber("0544 883 15 42"),
       passengerCount: 2,
       joinedAt: now - 1000 * 60 * 6,
       note: "Saat kulesi yanındayız, 1 kişi daha gelse çıkarız"
@@ -120,13 +128,19 @@ export function joinLobby(
 ): { lobby: SeaTaxiLobby; participant: LobbyParticipant } {
   const lobby = getOrCreateLobby(origin, destination);
 
+  const cleanName = data.name.trim().slice(0, 40) || "Misafir Yolcu";
+  const cleanPhone = data.phone.trim().slice(0, 20);
+  const cleanNote = data.note ? data.note.trim().slice(0, 150) : undefined;
+  const count = Math.max(1, Math.min(6, data.passengerCount || 1));
+
   const participant: LobbyParticipant = {
     id: `p-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
-    name: data.name.trim(),
-    phone: data.phone.trim(),
-    passengerCount: Math.max(1, Math.min(6, data.passengerCount)),
+    name: cleanName,
+    phone: cleanPhone,
+    maskedPhone: maskPhoneNumber(cleanPhone),
+    passengerCount: count,
     joinedAt: Date.now(),
-    note: data.note?.trim(),
+    note: cleanNote,
     isCurrentUser: true
   };
 
@@ -140,6 +154,10 @@ export function joinLobby(
     text: `${participant.name} gruba katıldı (${participant.passengerCount} yolcu). ${participant.note ? `Not: "${participant.note}"` : ""}`,
     timestamp: new Date().toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" })
   });
+
+  if (lobby.messages.length > 50) {
+    lobby.messages = lobby.messages.slice(-50);
+  }
 
   recalcLobbyFares(lobby);
   return { lobby, participant };
@@ -159,6 +177,10 @@ export function leaveLobby(origin: string, destination: string, participantId: s
       text: `${p.name} gruptan ayrıldı.`,
       timestamp: new Date().toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" })
     });
+
+    if (lobby.messages.length > 50) {
+      lobby.messages = lobby.messages.slice(-50);
+    }
   }
 
   recalcLobbyFares(lobby);
@@ -174,13 +196,49 @@ export function addLobbyMessage(
 ): SeaTaxiLobby {
   const lobby = getOrCreateLobby(origin, destination);
 
-  lobby.messages.push({
-    id: `m-${Date.now()}`,
-    senderId,
-    senderName,
-    text: text.trim(),
-    timestamp: new Date().toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" })
-  });
+  const cleanSenderName = senderName.trim().slice(0, 40) || "Misafir";
+  const cleanText = text.trim().slice(0, 300);
+
+  if (cleanText) {
+    lobby.messages.push({
+      id: `m-${Date.now()}`,
+      senderId: senderId.slice(0, 50),
+      senderName: cleanSenderName,
+      text: cleanText,
+      timestamp: new Date().toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" })
+    });
+
+    if (lobby.messages.length > 50) {
+      lobby.messages = lobby.messages.slice(-50);
+    }
+  }
 
   return lobby;
+}
+
+/**
+ * Genel GET istekleri için hassas PII (telefon no) maskeleme yapar.
+ * Yalnızca lobiye katılmış kullanıcılar doğrudan arama / iletişim detayını görebilir.
+ */
+export function getPublicLobby(
+  origin: string,
+  destination: string,
+  viewerParticipantId?: string
+): SeaTaxiLobby {
+  const lobby = getOrCreateLobby(origin, destination);
+  const isJoinedViewer = Boolean(
+    viewerParticipantId && lobby.participants.some((p) => p.id === viewerParticipantId)
+  );
+
+  return {
+    ...lobby,
+    participants: lobby.participants.map((p) => {
+      const isSelf = p.id === viewerParticipantId;
+      return {
+        ...p,
+        phone: isSelf || isJoinedViewer ? p.phone : maskPhoneNumber(p.phone),
+        maskedPhone: maskPhoneNumber(p.phone)
+      };
+    })
+  };
 }
