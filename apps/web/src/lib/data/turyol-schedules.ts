@@ -24,10 +24,53 @@ export function getTuryolSchedules(): RawOfficialTrip[] {
   const routes = rawTuryolData as ScrapedRoute[];
 
   routes.forEach((route, rIdx) => {
-    // Tekilleştir ve sırala
-    const uniqueTimes = Array.from(new Set(route.times)).sort();
+    // Turyol tablosu 3 sütunludur (Hafta İçi / Cumartesi / Pazar).
+    // Bir saat 3 kez geçiyorsa her gün, 2 kez geçiyorsa Hafta Sonu (Cmt+Paz) veya H.İçi+Cmt,
+    // tek sütunlu mesai hatlarında (17:05-18:20 Kadıköy-Karaköy/Eminönü) sadece Hafta İçi çalışır.
+    const freqMap = new Map<string, number>();
+    for (const t of route.times) {
+      freqMap.set(t, (freqMap.get(t) ?? 0) + 1);
+    }
+    const maxFreqInRoute = Math.max(...Array.from(freqMap.values()), 1);
+    const uniqueTimes = Array.from(freqMap.keys()).sort();
 
     uniqueTimes.forEach((depTime, tIdx) => {
+      const count = freqMap.get(depTime) ?? 1;
+      let runsWeekday = true;
+      let runsSaturday = true;
+      let runsSunday = true;
+
+      if (maxFreqInRoute === 1) {
+        // Tek sütunlu akşam mesai hattı (Karaköy/Eminönü ⇄ Kadıköy): yalnızca Hafta İçi
+        runsWeekday = true;
+        runsSaturday = false;
+        runsSunday = false;
+      } else if (route.category === "ADALAR") {
+        // Adalar hattında 3 sütun: H.İçi, Cumartesi, Pazar.
+        // 2 kez geçen akşam/öğleden sonra ek seferleri (14:40 gidiş, 19:15/20:15 dönüş) yalnızca Hafta Sonu (Cmt+Paz) çalışır!
+        if (count === 2) {
+          runsWeekday = false;
+          runsSaturday = true;
+          runsSunday = true;
+        } else if (count === 1) {
+          // 14:15 gibi tek sütun geçişi yalnızca Hafta İçi
+          runsWeekday = true;
+          runsSaturday = false;
+          runsSunday = false;
+        }
+      } else {
+        // Boğaz hattı (Üsküdar ⇄ Eminönü / Karaköy): 2 kez geçen sabah erken/akşam seferleri H.İçi + Cumartesi çalışır, Pazar çalışmaz
+        if (count === 2) {
+          runsWeekday = true;
+          runsSaturday = true;
+          runsSunday = false;
+        } else if (count === 1) {
+          runsWeekday = true;
+          runsSaturday = false;
+          runsSunday = false;
+        }
+      }
+
       let estDurationMins = 20;
       if (route.category === "ADALAR") {
         if (route.destination === "Büyükada") estDurationMins = 70;
@@ -56,6 +99,9 @@ export function getTuryolSchedules(): RawOfficialTrip[] {
         arrivalTime: arrTime,
         platform,
         price,
+        runsWeekday,
+        runsSaturday,
+        runsSunday,
         lineName: `Turyol ${route.origin} - ${route.destination} Hattı`,
       });
     });
