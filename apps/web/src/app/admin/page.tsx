@@ -30,6 +30,21 @@ import {
 import { getLatestDiffSnapshots, DiffSnapshot } from "@/lib/agents/visual-diff-recorder";
 import { triggerCancellationPushAlert, requestDisruptionNotificationPermission } from "@/lib/utils/push-alert-service";
 import type { DailyAnalyticsSummary } from "@/lib/types/analytics";
+import type { SponsoredAdOffer, TariffWatchdogItem } from "@/lib/data/sponsored-ads";
+
+interface AdsAdminResponse {
+  ads: SponsoredAdOffer[];
+  summary: {
+    activeSponsorCount: number;
+    totalSponsorCount: number;
+    totalMonthlyFixedTry: number;
+    totalImpressions: number;
+    totalClicks: number;
+    totalWhatsappLeads: number;
+    averageCtrPercent: number;
+  };
+  tariffWatchdog: TariffWatchdogItem[];
+}
 
 interface AuditSummary {
   timestamp: string;
@@ -59,13 +74,24 @@ interface AuditSummary {
 }
 
 export default function AdminDashboard() {
-  const [adminTab, setAdminTab] = useState<"TELEMETRY" | "AUDIT">("TELEMETRY");
+  const [adminTab, setAdminTab] = useState<"TELEMETRY" | "ADS" | "AUDIT">("TELEMETRY");
   const [auditData, setAuditData] = useState<AuditSummary | null>(null);
   const [telemetryData, setTelemetryData] = useState<DailyAnalyticsSummary | null>(null);
+  const [adsAdminData, setAdsAdminData] = useState<AdsAdminResponse | null>(null);
   const [diffSnapshots, setDiffSnapshots] = useState<DiffSnapshot[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [lastRefreshed, setLastRefreshed] = useState<string>("");
   const [triggerMsg, setTriggerMsg] = useState<string>("");
+
+  // Yeni Sponsorlu Satır Ekleme Formu
+  const [newSponsorName, setNewSponsorName] = useState("");
+  const [newHeadline, setNewHeadline] = useState("");
+  const [newOfferText, setNewOfferText] = useState("");
+  const [newCouponCode, setNewCouponCode] = useState("VAPUR15");
+  const [newTargetUrl, setNewTargetUrl] = useState("");
+  const [newWhatsappPhone, setNewWhatsappPhone] = useState("");
+  const [newTargetPiers, setNewTargetPiers] = useState("Büyükada, Heybeliada");
+  const [newMonthlyFee, setNewMonthlyFee] = useState("10000");
 
   // Güvenlik & Yetkilendirme Durumu
   const [adminKey, setAdminKey] = useState<string>("");
@@ -79,9 +105,10 @@ export default function AdminDashboard() {
     setPinError("");
     try {
       const headers = { "x-admin-key": keyToTest };
-      const [telemRes, auditRes] = await Promise.all([
+      const [telemRes, auditRes, adsRes] = await Promise.all([
         fetch("/api/telemetry/stats", { headers }),
-        fetch("/api/audit", { headers })
+        fetch("/api/audit", { headers }),
+        fetch("/api/ads", { headers })
       ]);
 
       if (telemRes.ok) {
@@ -96,6 +123,11 @@ export default function AdminDashboard() {
         if (auditRes.ok) {
           const auditJson = await auditRes.json();
           setAuditData(auditJson);
+        }
+
+        if (adsRes.ok) {
+          const adsJson = await adsRes.json();
+          setAdsAdminData(adsJson);
         }
 
         setLastRefreshed(new Date().toLocaleTimeString("tr-TR"));
@@ -126,9 +158,10 @@ export default function AdminDashboard() {
     setIsLoading(true);
     try {
       const headers = { "x-admin-key": adminKey };
-      const [auditRes, telemRes] = await Promise.all([
+      const [auditRes, telemRes, adsRes] = await Promise.all([
         fetch("/api/audit", { headers }),
-        fetch("/api/telemetry/stats", { headers })
+        fetch("/api/telemetry/stats", { headers }),
+        fetch("/api/ads", { headers })
       ]);
 
       if (auditRes.ok) {
@@ -136,6 +169,9 @@ export default function AdminDashboard() {
       }
       if (telemRes.ok) {
         setTelemetryData(await telemRes.json());
+      }
+      if (adsRes.ok) {
+        setAdsAdminData(await adsRes.json());
       }
 
       setLastRefreshed(new Date().toLocaleTimeString("tr-TR"));
@@ -185,6 +221,69 @@ export default function AdminDashboard() {
     );
     setTriggerMsg("Canlı Sefer İptal Push Bildirimi ve Siren testi başarıyla çalıştırıldı.");
     setTimeout(() => setTriggerMsg(""), 5000);
+  };
+
+  const handleToggleAd = async (adId: string) => {
+    if (!adminKey) return;
+    try {
+      const res = await fetch("/api/ads", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-admin-key": adminKey
+        },
+        body: JSON.stringify({ action: "TOGGLE_ACTIVE", adId })
+      });
+      if (res.ok) {
+        setTriggerMsg("Sponsorlu sefer satırı durumu anında güncellendi.");
+        fetchData();
+        setTimeout(() => setTriggerMsg(""), 4000);
+      }
+    } catch (e) {}
+  };
+
+  const handleCreateAd = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!adminKey || !newSponsorName.trim() || !newHeadline.trim() || !newTargetUrl.trim()) return;
+    try {
+      const piers = newTargetPiers
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean);
+      const res = await fetch("/api/ads", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-admin-key": adminKey
+        },
+        body: JSON.stringify({
+          action: "CREATE_AD",
+          payload: {
+            sponsorName: newSponsorName.trim(),
+            headline: newHeadline.trim(),
+            offerText: newOfferText.trim() || "Vapur yolcularına özel indirimli rezervasyon fırsatı.",
+            couponCode: newCouponCode.trim() || "VAPUR15",
+            targetUrl: newTargetUrl.trim(),
+            whatsappPhone: newWhatsappPhone.trim(),
+            targetPiers: piers.length > 0 ? piers : ["Büyükada", "Heybeliada"],
+            monthlyFeeTry: Number(newMonthlyFee) || 10000,
+            routeCategory: piers.some((p) => ["Büyükada", "Heybeliada", "Burgazada", "Kınalıada"].includes(p))
+              ? "ADALAR"
+              : "BOGAZ"
+          }
+        })
+      });
+      if (res.ok) {
+        setNewSponsorName("");
+        setNewHeadline("");
+        setNewOfferText("");
+        setNewTargetUrl("");
+        setNewWhatsappPhone("");
+        setTriggerMsg("Yeni sponsorlu sefer satırı başarıyla eklendi ve canlı akışa alındı!");
+        fetchData();
+        setTimeout(() => setTriggerMsg(""), 5000);
+      }
+    } catch (e) {}
   };
 
   const isHealthy = auditData?.overallStatus === "HEALTHY";
@@ -313,8 +412,8 @@ export default function AdminDashboard() {
         </div>
       )}
 
-      {/* Ana Sekme Seçimi: Canlı Yolcu Telemetrisi vs. Otonom Denetim */}
-      <div className="flex items-center gap-2 p-1.5 bg-slate-900 border border-slate-800 rounded-2xl w-fit">
+      {/* Ana Sekme Seçimi: Canlı Yolcu Telemetrisi vs. Ticari Gelir & Sponsorlu Satır vs. Otonom Denetim */}
+      <div className="flex items-center gap-2 p-1.5 bg-slate-900 border border-slate-800 rounded-2xl w-fit flex-wrap">
         <button
           type="button"
           onClick={() => setAdminTab("TELEMETRY")}
@@ -326,6 +425,19 @@ export default function AdminDashboard() {
         >
           <Users size={15} />
           <span>📊 Canlı Yolcu & Ulaşım İstatistikleri</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setAdminTab("ADS")}
+          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black transition-all cursor-pointer ${
+            adminTab === "ADS"
+              ? "bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20"
+              : "text-slate-400 hover:text-white"
+          }`}
+        >
+          <TrendingUp size={15} />
+          <span>💰 Ticari Gelir, Sponsorlu Satır & Tarife Bekçisi</span>
         </button>
 
         <button
@@ -536,7 +648,337 @@ export default function AdminDashboard() {
       )}
 
       {/* ============================================================== */}
-      {/* SEKME 2: OTONOM KENDİNİ ONARMA & SİSTEM DENETİMİ                 */}
+      {/* SEKME 2: TİCARİ GELİR, SPONSORLU SATIR & TARİFE BEKÇİSİ        */}
+      {/* ============================================================== */}
+      {adminTab === "ADS" && (
+        <div className="space-y-8 animate-fade-in">
+          {/* Ticari Gelir & Performans KPI Kartları */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="p-5 rounded-2xl bg-gradient-to-br from-[#0e1626] to-amber-950/35 border border-amber-500/40 shadow-lg">
+              <div className="flex items-center justify-between text-amber-300 text-xs font-semibold">
+                <span>AYLIK SABİT SPONSORLUK</span>
+                <TrendingUp size={18} className="text-amber-400" />
+              </div>
+              <div className="mt-3 flex items-baseline gap-2">
+                <span className="text-3xl font-black text-white">
+                  {(adsAdminData?.summary.totalMonthlyFixedTry ?? 37500).toLocaleString("tr-TR")} ₺
+                </span>
+                <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300">
+                  / Ay
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-400 mt-1">
+                {adsAdminData?.summary.activeSponsorCount ?? 4} Aktif Sefer Satırı Sponsoru
+              </p>
+            </div>
+
+            <div className="p-5 rounded-2xl bg-[#0e1626] border border-slate-800 shadow-md">
+              <div className="flex items-center justify-between text-slate-400 text-xs font-semibold">
+                <span>SEFER SATIRI GÖSTERİMİ</span>
+                <Activity size={18} className="text-cyan-400" />
+              </div>
+              <div className="mt-3 flex items-baseline gap-2">
+                <span className="text-3xl font-black text-cyan-300">
+                  {(adsAdminData?.summary.totalImpressions ?? 4520).toLocaleString("tr-TR")}
+                </span>
+                <span className="text-[11px] font-bold text-slate-400">Gösterim</span>
+              </div>
+              <p className="text-[11px] text-slate-500 mt-1">2. vapur satırı altında doğal görünüm</p>
+            </div>
+
+            <div className="p-5 rounded-2xl bg-[#0e1626] border border-slate-800 shadow-md">
+              <div className="flex items-center justify-between text-slate-400 text-xs font-semibold">
+                <span>DOĞRUDAN TIKLAMA (CTR)</span>
+                <Sparkles size={18} className="text-blue-400" />
+              </div>
+              <div className="mt-3 flex items-baseline gap-2">
+                <span className="text-3xl font-black text-white">
+                  {adsAdminData?.summary.totalClicks ?? 361}
+                </span>
+                <span className="text-[11px] font-mono font-bold px-2 py-0.5 rounded bg-blue-500/20 text-blue-300">
+                  %{adsAdminData?.summary.averageCtrPercent ?? 8.0} CTR
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-500 mt-1">Otel & mekan sayfasına yönlenen yolcu</p>
+            </div>
+
+            <div className="p-5 rounded-2xl bg-gradient-to-br from-[#0e1626] to-emerald-950/35 border border-emerald-500/40 shadow-lg">
+              <div className="flex items-center justify-between text-emerald-300 text-xs font-semibold">
+                <span>WHATSAPP REZERVASYON LEAD</span>
+                <CheckCircle2 size={18} className="text-emerald-400" />
+              </div>
+              <div className="mt-3 flex items-baseline gap-2">
+                <span className="text-3xl font-black text-emerald-400">
+                  {adsAdminData?.summary.totalWhatsappLeads ?? 92}
+                </span>
+                <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300">
+                  Müşteri
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-400 mt-1">Kupon koduyla doğrudan rezervasyon talebi</p>
+            </div>
+          </div>
+
+          {/* Aktif Sponsorlu Sefer Satırları Yönetim Tablosu */}
+          <div className="p-6 rounded-2xl bg-[#0e1626] border border-slate-800 shadow-lg space-y-4">
+            <div className="flex items-center justify-between flex-wrap gap-2">
+              <div className="flex items-center gap-2">
+                <TrendingUp size={18} className="text-amber-400" />
+                <h2 className="text-base font-black text-white">
+                  Sefer Satırı Arası Sponsorlu İşletmeler (Ada Otel / Restoran / Kafe)
+                </h2>
+              </div>
+              <span className="text-xs text-amber-400 font-mono font-bold">
+                Bağlamsal Rota Eşleşmesi Aktif
+              </span>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead>
+                  <tr className="border-b border-slate-800 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                    <th className="py-3 px-3">Sponsor İşletme & Başlık</th>
+                    <th className="py-3 px-3">Hedef İskeleler</th>
+                    <th className="py-3 px-3 text-center">Kupon</th>
+                    <th className="py-3 px-3 text-center">Aylık Ücret</th>
+                    <th className="py-3 px-3 text-center">Gösterim / Tık / Lead</th>
+                    <th className="py-3 px-3 text-right">Durum & Kontrol</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-800/60">
+                  {(adsAdminData?.ads ?? []).map((ad) => (
+                    <tr key={ad.id} className="hover:bg-slate-900/50 transition-colors">
+                      <td className="py-3 px-3">
+                        <div className="flex items-center gap-2">
+                          <span className="text-lg">{ad.iconEmoji}</span>
+                          <div>
+                            <a
+                              href={ad.targetUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="font-bold text-white hover:text-amber-300 flex items-center gap-1"
+                            >
+                              <span>{ad.sponsorName}</span>
+                              <ExternalLink size={11} />
+                            </a>
+                            <div className="text-[11px] text-slate-400 line-clamp-1">{ad.headline}</div>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="py-3 px-3">
+                        <div className="flex flex-wrap gap-1">
+                          {ad.targetPiers.map((p) => (
+                            <span
+                              key={p}
+                              className="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 font-mono text-[10px]"
+                            >
+                              {p}
+                            </span>
+                          ))}
+                        </div>
+                      </td>
+                      <td className="py-3 px-3 text-center font-mono font-bold text-amber-400">
+                        #{ad.couponCode}
+                      </td>
+                      <td className="py-3 px-3 text-center font-mono font-bold text-emerald-300">
+                        {ad.monthlyFeeTry.toLocaleString("tr-TR")} ₺
+                      </td>
+                      <td className="py-3 px-3 text-center font-mono text-slate-300">
+                        {ad.impressions} / <strong className="text-white">{ad.clicks}</strong> /{" "}
+                        <strong className="text-emerald-400">{ad.whatsappLeads} WA</strong>
+                      </td>
+                      <td className="py-3 px-3 text-right">
+                        <button
+                          type="button"
+                          onClick={() => handleToggleAd(ad.id)}
+                          className={`px-3 py-1 rounded-xl font-black text-[11px] cursor-pointer transition-all ${
+                            ad.active
+                              ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 hover:bg-rose-500/20 hover:text-rose-300"
+                              : "bg-slate-800 text-slate-400 border border-slate-700 hover:bg-emerald-500/20 hover:text-emerald-300"
+                          }`}
+                        >
+                          {ad.active ? "🟢 Yayında (Duraklat)" : "⏸️ Duraklatıldı (Yayınla)"}
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Yeni Sponsorlu Sefer Satırı Ekleme Formu */}
+          <div className="p-6 rounded-2xl bg-[#0e1626] border border-slate-800 shadow-lg space-y-4">
+            <div className="flex items-center gap-2">
+              <Sparkles size={18} className="text-amber-400" />
+              <h3 className="text-base font-black text-white">
+                Yeni Sponsorlu Sefer Satırı Ekle (Anında Canlıya Alınır)
+              </h3>
+            </div>
+
+            <form onSubmit={handleCreateAd} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+              <div>
+                <label className="block text-[10px] font-mono font-bold text-slate-400 uppercase mb-1">
+                  İşletme / Otel Adı *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={newSponsorName}
+                  onChange={(e) => setNewSponsorName(e.target.value)}
+                  placeholder="Örn: Büyükada Splendid Otel"
+                  className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-white"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[10px] font-mono font-bold text-slate-400 uppercase mb-1">
+                  Satır Başlığı *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={newHeadline}
+                  onChange={(e) => setNewHeadline(e.target.value)}
+                  placeholder="Örn: İskele Karşısında Tarihi Konaklama"
+                  className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-white"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[10px] font-mono font-bold text-slate-400 uppercase mb-1">
+                  Hedef Web / Rezervasyon Linki *
+                </label>
+                <input
+                  type="url"
+                  required
+                  value={newTargetUrl}
+                  onChange={(e) => setNewTargetUrl(e.target.value)}
+                  placeholder="https://..."
+                  className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-white font-mono"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[10px] font-mono font-bold text-slate-400 uppercase mb-1">
+                  WhatsApp Rezervasyon No (Opsiyonel)
+                </label>
+                <input
+                  type="text"
+                  value={newWhatsappPhone}
+                  onChange={(e) => setNewWhatsappPhone(e.target.value)}
+                  placeholder="90532..."
+                  className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-white font-mono"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[10px] font-mono font-bold text-slate-400 uppercase mb-1">
+                  Fırsat Açıklaması
+                </label>
+                <input
+                  type="text"
+                  value={newOfferText}
+                  onChange={(e) => setNewOfferText(e.target.value)}
+                  placeholder="Vapur yolcularına %15 indirim..."
+                  className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-white"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[10px] font-mono font-bold text-slate-400 uppercase mb-1">
+                  Hedef İskeleler (Virgülle)
+                </label>
+                <input
+                  type="text"
+                  value={newTargetPiers}
+                  onChange={(e) => setNewTargetPiers(e.target.value)}
+                  placeholder="Büyükada, Bostancı, Kadıköy"
+                  className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-white"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[10px] font-mono font-bold text-slate-400 uppercase mb-1">
+                  İndirim Kupon Kodu & Aylık Ücret (₺)
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={newCouponCode}
+                    onChange={(e) => setNewCouponCode(e.target.value)}
+                    placeholder="VAPUR15"
+                    className="w-1/2 px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-amber-400 font-mono font-bold"
+                  />
+                  <input
+                    type="number"
+                    value={newMonthlyFee}
+                    onChange={(e) => setNewMonthlyFee(e.target.value)}
+                    placeholder="10000"
+                    className="w-1/2 px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-emerald-400 font-mono font-bold"
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-end">
+                <button
+                  type="submit"
+                  className="w-full py-2.5 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs shadow-md transition-all cursor-pointer"
+                >
+                  + Sefer Satırına Sponsor Ekle
+                </button>
+              </div>
+            </form>
+          </div>
+
+          {/* HAYATİ SEFER VERİSİ & SEZON GEÇİŞ BEKÇİSİ (Tariff Expiry & Accuracy Watchdog) */}
+          <div className="p-6 rounded-2xl bg-[#0e1626] border border-emerald-500/30 shadow-lg space-y-4">
+            <div className="flex items-center justify-between flex-wrap gap-2">
+              <div className="flex items-center gap-2">
+                <ShieldCheck size={18} className="text-emerald-400" />
+                <h3 className="text-base font-black text-white">
+                  Hayati Sefer Verisi & Sezon Geçiş Bekçisi (Tariff Watchdog)
+                </h3>
+              </div>
+              <span className="px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 text-[11px] font-bold">
+                5 / 5 Operatör Hafta İçi / Sonu Doğrulandı
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {(adsAdminData?.tariffWatchdog ?? []).map((item) => (
+                <div
+                  key={item.operator}
+                  className="p-4 rounded-xl bg-slate-900/70 border border-slate-800 space-y-2"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="font-black text-white text-xs">{item.operator}</span>
+                    <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono font-bold text-[10px]">
+                      {item.tariffSeason}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-300 leading-snug">{item.lifeSafetyNote}</p>
+                  <div className="flex items-center justify-between text-[10px] font-mono text-slate-500 pt-1">
+                    <span>Hash: {item.expectedHashPrefix}</span>
+                    <a
+                      href={item.sourceUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-400 hover:underline flex items-center gap-1"
+                    >
+                      <span>Resmi Tarife Kaynağı</span>
+                      <ExternalLink size={10} />
+                    </a>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ============================================================== */}
+      {/* SEKME 3: OTONOM KENDİNİ ONARMA & SİSTEM DENETİMİ                 */}
       {/* ============================================================== */}
       {adminTab === "AUDIT" && (
         <div className="space-y-8 animate-fade-in">

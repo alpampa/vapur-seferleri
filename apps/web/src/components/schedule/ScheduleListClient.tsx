@@ -32,6 +32,12 @@ import { predictFerryDisruption } from "@/lib/services/predictive-disruption-mod
 import { transitAnnouncer } from "@/lib/services/tts-announcer";
 import { saveSchedulesOffline, loadSchedulesOffline } from "@/lib/services/offline-db";
 import { trackAppOpenOnce } from "@/lib/utils/analytics-tracker";
+import { SponsoredTripRow } from "@/components/schedule/SponsoredTripRow";
+import {
+  getSponsoredAdsStore,
+  selectContextualSponsoredAd,
+  type SponsoredAdOffer,
+} from "@/lib/data/sponsored-ads";
 
 interface ScheduleListClientProps {
   schedules: ScheduleCardDto[];
@@ -112,11 +118,29 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
 
   // Native IndexedDB Non-blocking Caching
   const [effectiveSchedules, setEffectiveSchedules] = useState<ScheduleCardDto[]>(schedules);
+  const [sponsoredAds, setSponsoredAds] = useState<SponsoredAdOffer[]>(() => getSponsoredAdsStore());
 
-  // Anonim oturum & telemetri açılış kaydı
+  // Anonim oturum & telemetri açılış kaydı + Canlı Sponsorlu Satır Senkronizasyonu
   useEffect(() => {
     trackAppOpenOnce();
+    fetch("/api/ads")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((json) => {
+        if (json && Array.isArray(json.ads)) {
+          setSponsoredAds(json.ads);
+        }
+      })
+      .catch(() => {});
   }, []);
+
+  const activeSponsoredAd = useMemo(() => {
+    return selectContextualSponsoredAd(sponsoredAds, {
+      selectedCategory,
+      selectedOrigin,
+      selectedDestination,
+      searchQuery,
+    });
+  }, [sponsoredAds, selectedCategory, selectedOrigin, selectedDestination, searchQuery]);
 
   useEffect(() => {
     let isCancelled = false;
@@ -888,36 +912,46 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
       {/* Schedules List (Comfortable or Compact Rows) */}
       <div className={`px-3 flex flex-col ${isCompactDensity ? "gap-1.5" : "gap-2"} pb-36 sm:pb-28 mt-1`}>
         {upcomingTrips.length > 0 ? (
-          upcomingTrips.map(({ schedule, dyn }, idx) => (
-            <ScheduleCard
-              key={`${schedule.id}-${dyn.currentOrigin}`}
-              id={schedule.id}
-              origin={schedule.origin}
-              destination={schedule.destination}
-              operator={schedule.operator}
-              routeTitle={schedule.routeTitle}
-              departureTime={schedule.departureTime}
-              departureTime12={schedule.departureTime12}
-              status={schedule.status}
-              targetTimeIso={schedule.targetTimeIso}
-              serverTimeIso={serverTimeIso}
-              nowMs={nowMs}
-              delayText={schedule.delayText}
-              vessel={schedule.vessel}
-              platform={schedule.platform}
-              price={schedule.price}
-              progress={schedule.progress}
-              stops={schedule.stops}
-              arrivalTime={schedule.arrivalTime}
-              isContinuous={schedule.isContinuous}
-              continuousUntil={schedule.continuousUntil}
-              isCompact={isCompactDensity}
-              isFeaturedHero={idx === 0}
-              highlightStopName={searchQuery}
-              onClick={() => setSelectedSchedule(schedule)}
-              onSelectHop={(s) => setSelectedHopSchedule(s)}
-            />
-          ))
+          upcomingTrips.map(({ schedule, dyn }, idx) => {
+            const shouldShowSponsoredRowHere =
+              activeSponsoredAd != null &&
+              ((upcomingTrips.length >= 2 && idx === 1) || (upcomingTrips.length === 1 && idx === 0));
+
+            return (
+              <div key={`${schedule.id}-${dyn.currentOrigin}`} className="contents">
+                <ScheduleCard
+                  id={schedule.id}
+                  origin={schedule.origin}
+                  destination={schedule.destination}
+                  operator={schedule.operator}
+                  routeTitle={schedule.routeTitle}
+                  departureTime={schedule.departureTime}
+                  departureTime12={schedule.departureTime12}
+                  status={schedule.status}
+                  targetTimeIso={schedule.targetTimeIso}
+                  serverTimeIso={serverTimeIso}
+                  nowMs={nowMs}
+                  delayText={schedule.delayText}
+                  vessel={schedule.vessel}
+                  platform={schedule.platform}
+                  price={schedule.price}
+                  progress={schedule.progress}
+                  stops={schedule.stops}
+                  arrivalTime={schedule.arrivalTime}
+                  isContinuous={schedule.isContinuous}
+                  continuousUntil={schedule.continuousUntil}
+                  isCompact={isCompactDensity}
+                  isFeaturedHero={idx === 0}
+                  highlightStopName={searchQuery}
+                  onClick={() => setSelectedSchedule(schedule)}
+                  onSelectHop={(s) => setSelectedHopSchedule(s)}
+                />
+                {shouldShowSponsoredRowHere && (
+                  <SponsoredTripRow ad={activeSponsoredAd} isCompact={isCompactDensity} />
+                )}
+              </div>
+            );
+          })
         ) : (
           <div className="p-8 text-center bg-white dark:bg-slate-900/60 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-3 shadow-xs">
             <div className="text-3xl">⚓</div>

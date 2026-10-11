@@ -32,7 +32,8 @@ import {
   Radio,
   Navigation,
   Loader2,
-  ExternalLink
+  ExternalLink,
+  Share2
 } from "lucide-react";
 import { OperatorLogo } from "@/components/ui/OperatorLogo";
 import { TripStatusBadge } from "./ScheduleCard";
@@ -397,6 +398,30 @@ export function TripDetailsSheet({
                   className="p-2 rounded-xl bg-blue-50 dark:bg-blue-950/40 hover:bg-blue-100 dark:hover:bg-blue-900/60 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-700/60 transition-all touch-manipulation cursor-pointer"
                 >
                   <Pin size={15} />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    const org = dynState?.currentOrigin || schedule.origin;
+                    const dst = dynState?.destination || schedule.destination;
+                    const dep = dynState?.currentDepartureTime || schedule.departureTime;
+                    const shareText = `⛴️ ${dep} ${org} ➔ ${dst} (${schedule.operator}) vapurunda buluşalım! Canlı sefer ve iskele durumu: https://adalar-sefer-asistani.vercel.app`;
+                    if (typeof navigator !== "undefined" && navigator.share) {
+                      navigator.share({
+                        title: `${dep} ${org} - ${dst} Vapuru`,
+                        text: shareText,
+                        url: "https://adalar-sefer-asistani.vercel.app"
+                      }).catch(() => {});
+                    } else {
+                      window.open(`https://wa.me/?text=${encodeURIComponent(shareText)}`, "_blank", "noopener,noreferrer");
+                    }
+                  }}
+                  title="Seferi Arkadaşına Gönder (WhatsApp / Paylaş)"
+                  aria-label="Seferi arkadaşına gönder"
+                  className="p-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-700/60 transition-all touch-manipulation cursor-pointer"
+                >
+                  <Share2 size={15} />
                 </button>
 
                 <button
