@@ -1,15 +1,9 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Search, MapPin, Camera, Train, Navigation, Ship, ChevronRight } from "lucide-react";
+import { Search, MapPin, Train, Navigation, Ship, ChevronRight, Landmark, Tag } from "lucide-react";
 import { ISTANBUL_PIERS } from "@/lib/data/piers";
 import { getPierTransit } from "@/lib/data/pier-transit-connections";
-import { calculatePierCrowdDensity } from "@/lib/utils/occupancy";
-import { getPierMobility } from "@/lib/data/pier-parking-bicycle";
-import { Car, Bike } from "lucide-react";
-import { Users } from "lucide-react";
-import { PierLiveCameraModal } from "@/components/map/PierLiveCameraModal";
-import { Landmark, Tag, Sparkles, BookOpen, Compass } from "lucide-react";
 import { AdalarHeritageModal } from "@/components/adalar/AdalarHeritageModal";
 import { SponsoredDealsModal } from "@/components/commercial/SponsoredDealsModal";
 import type { ScheduleCardDto } from "@/lib/types/schedule";
@@ -22,7 +16,6 @@ interface PiersDirectoryViewProps {
 export function PiersDirectoryView({ schedules, onSelectPierForSchedules }: PiersDirectoryViewProps) {
   const [search, setSearch] = useState("");
   const [selectedRegion, setSelectedRegion] = useState<"ALL" | "Adalar" | "Avrupa" | "Anadolu">("ALL");
-  const [activeCameraPier, setActiveCameraPier] = useState<string | null>(null);
   const [isAdalarHeritageOpen, setIsAdalarHeritageOpen] = useState(false);
   const [isSponsoredDealsOpen, setIsSponsoredDealsOpen] = useState(false);
 
@@ -54,7 +47,7 @@ export function PiersDirectoryView({ schedules, onSelectPierForSchedules }: Pier
               </span>
             </h2>
             <p className="text-xs text-slate-400 mt-0.5">
-              Tüm iskelelerin canlı kameraları, metro/tramvay aktarma hatları ve kalkan vapur saatleri
+              Tüm iskelelerin metro/tramvay aktarma hatları, yol tarifleri ve kalkan vapur saatleri
             </p>
           </div>
         </div>
@@ -212,15 +205,6 @@ export function PiersDirectoryView({ schedules, onSelectPierForSchedules }: Pier
               {/* Action Buttons */}
               <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-2 flex-wrap">
                 <div className="flex items-center gap-1.5">
-                  <button
-                    onClick={() => setActiveCameraPier(pier.name)}
-                    className="px-2.5 py-1.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-700 dark:text-amber-300 border border-amber-400/30 text-xs font-bold flex items-center gap-1 transition-all"
-                    title="İskele Canlı Kamerasını İzle"
-                  >
-                    <Camera size={13} />
-                    <span>Canlı Kamera</span>
-                  </button>
-
                   <a
                     href={googleMapsUrl}
                     target="_blank"
@@ -236,7 +220,7 @@ export function PiersDirectoryView({ schedules, onSelectPierForSchedules }: Pier
                 {onSelectPierForSchedules && (
                   <button
                     onClick={() => onSelectPierForSchedules(pier.name)}
-                    className="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-black flex items-center gap-1 transition-all shadow-xs"
+                    className="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-black flex items-center gap-1 transition-all shadow-xs cursor-pointer"
                   >
                     <Ship size={13} />
                     <span>Seferleri Gör</span>
@@ -249,11 +233,15 @@ export function PiersDirectoryView({ schedules, onSelectPierForSchedules }: Pier
         })}
       </div>
 
-      {/* Pier Camera Modal */}
-      <PierLiveCameraModal
-        isOpen={!!activeCameraPier}
-        onClose={() => setActiveCameraPier(null)}
-        origin={activeCameraPier || "Kadıköy"}
+      <AdalarHeritageModal
+        isOpen={isAdalarHeritageOpen}
+        onClose={() => setIsAdalarHeritageOpen(false)}
+        onSelectIslandFilter={onSelectPierForSchedules}
+      />
+
+      <SponsoredDealsModal
+        isOpen={isSponsoredDealsOpen}
+        onClose={() => setIsSponsoredDealsOpen(false)}
       />
     </div>
   );

@@ -2,7 +2,6 @@
 
 import { Ship, Bell, BellRing, Star, ChevronRight, Footprints, Moon, Ban, Siren, Timer, AlertTriangle } from "lucide-react";
 import { OperatorLogo } from "@/components/ui/OperatorLogo";
-import { resolveLiveVesselName } from "@/lib/agents/fleet-registry";
 import { resolveDynamicTrip, isTripCancelled, DynamicTripResolution } from "@/lib/utils/dynamic-trip";
 import { formatRemainingShort } from "@/lib/utils/istanbul-time";
 import { useAlarmStore } from "@/store/useAlarmStore";
@@ -113,16 +112,6 @@ export function ScheduleCard(props: ScheduleCardProps) {
     props.arrivalTime,
     accurateNow,
     props.serverTimeIso
-  );
-
-  const liveVessel = resolveLiveVesselName(
-    props.origin,
-    props.destination,
-    props.operator,
-    dynState.isDeparted,
-    dynState.status,
-    props.id,
-    props.departureTime
   );
 
   // KULLANICI KURALI & SIFIR TOLERANS (SIFIR HALÜSİNASYON / MÜKERRER ENGELİ):
