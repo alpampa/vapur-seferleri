@@ -508,10 +508,11 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
         </div>
       )}
 
-      {/* 0. GECE GÜVENCESİ: SON VAPURU KAÇIRMA ASİSTANI (20:00 Sonrası Aktif) */}
+      {/* 0. GECE GÜVENCESİ: SON VAPURU KAÇIRMA ASİSTANI (23:45 Sonrası Aktif) */}
       <LastFerrySafeguardBanner
         schedules={effectiveSchedules}
         serverTimeIso={serverTimeIso}
+        onOpenNightTransit={() => setIsNightTransitOpen(true)}
       />
 
       {/* 0.1 AKILLI SIK KULLANILAN ROTA KISAYOLLARI (1-Tap Fast Commute) */}

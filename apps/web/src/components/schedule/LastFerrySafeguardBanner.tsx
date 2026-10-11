@@ -1,54 +1,67 @@
 "use client";
 
-import { Moon, ShieldAlert } from "lucide-react";
+import { Moon, ShieldAlert, ChevronRight } from "lucide-react";
 import type { ScheduleCardDto } from "@/lib/types/schedule";
-import { hhmmToMinutes } from "@/lib/utils/istanbul-time";
+import { getIstanbulParts, hhmmToMinutes } from "@/lib/utils/istanbul-time";
 
 interface LastFerrySafeguardBannerProps {
   schedules: ScheduleCardDto[];
   serverTimeIso: string;
+  onOpenNightTransit?: () => void;
 }
 
 /**
  * Son Vapuru Kaçırma Asistanı (Last Ferry Safeguard)
- * Akşam ve gece saatlerinde (20:00 sonrası) adada veya karşı yakada kalan yolcular için
- * o günkü son dönüş seferlerini ve kalan süreyi emniyet rozetiyle vurgular.
+ * Yalnızca gece 23:45 ile 02:00 arasında aktif olur; gündüz ve akşam saatlerinde
+ * boşuna satır kaplamaz. 03:45 gibi 24 saatlik nöbetçi seferleri değil, gece yarısı
+ * kapanan hatların son seferlerini baz alır ve tıklandığında Gece Ulaşım Rehberini açar.
  */
 export function LastFerrySafeguardBanner({
   schedules,
   serverTimeIso,
+  onOpenNightTransit,
 }: LastFerrySafeguardBannerProps) {
-  const now = new Date(serverTimeIso);
-  const hour = now.getHours();
+  const serverMs = Date.parse(serverTimeIso) || Date.now();
+  const { hour, minute } = getIstanbulParts(serverMs);
 
-  // Yalnızca akşam 19:30 ile gece 04:00 arasında tetiklenir
-  const isEveningOrNight = hour >= 19 || hour < 4;
-  if (!isEveningOrNight || schedules.length === 0) {
+  // KULLANICI KURALI: Yalnızca gece 23:45 sonrasında (23:45 – 01:59 arası) gösterilir.
+  // Normal akşam saatlerinde (21:00, 22:00 vb.) boşuna satır kaplamaz.
+  const isLateNightWindow = (hour === 23 && minute >= 45) || hour === 0 || hour === 1;
+  if (!isLateNightWindow || schedules.length === 0) {
     return null;
   }
 
-  // Akşam 22:00 sonrasına ait son seferleri bul
+  const nowTotalMins = hour < 4 ? (hour + 24) * 60 + minute : hour * 60 + minute;
+
+  // Gece 23:45 - 02:00 arasındaki gerçek son seferleri bul (03:45 gibi 24 saatlik sabaha karşı seferleri hariç tut)
   const lateTrips = schedules.filter((s) => {
     const mins = hhmmToMinutes(s.departureTime);
-    return mins != null && (mins >= 22 * 60 || mins < 4 * 60);
+    if (mins == null) return false;
+    const normMins = mins < 4 * 60 ? mins + 24 * 60 : mins;
+    // Yalnızca henüz kalkmamış ve 23:45 (1425) ile 02:00 (1560) arasındaki kapanış seferleri
+    return normMins >= nowTotalMins && normMins >= 23 * 60 + 45 && normMins <= 26 * 60;
   });
 
   if (lateTrips.length === 0) {
     return null;
   }
 
-  // En geç kalkan son sefer
-  const finalTrip = lateTrips.reduce((latest, current) => {
-    let mLatest = hhmmToMinutes(latest.departureTime) ?? 0;
+  // En yakın/son gece seferi
+  const finalTrip = lateTrips.reduce((earliest, current) => {
+    let mEarliest = hhmmToMinutes(earliest.departureTime) ?? 0;
     let mCurrent = hhmmToMinutes(current.departureTime) ?? 0;
-    if (mLatest < 4 * 60) mLatest += 24 * 60;
+    if (mEarliest < 4 * 60) mEarliest += 24 * 60;
     if (mCurrent < 4 * 60) mCurrent += 24 * 60;
-    return mCurrent > mLatest ? current : latest;
+    return mCurrent < mEarliest ? current : earliest;
   }, lateTrips[0]);
 
   return (
-    <div className="w-full px-3 pt-1.5 animate-fadeIn">
-      <div className="rounded-xl border border-indigo-400/50 bg-linear-to-r from-indigo-950/80 via-slate-900/90 to-blue-950/80 p-2.5 text-white shadow-xs flex items-center justify-between gap-2">
+    <div className="w-full px-3 pt-1.5">
+      <button
+        type="button"
+        onClick={onOpenNightTransit}
+        className="w-full text-left rounded-xl border border-indigo-400/50 bg-linear-to-r from-indigo-950/80 via-slate-900/90 to-blue-950/80 hover:from-indigo-900/80 hover:to-blue-900/80 p-2.5 text-white shadow-xs flex items-center justify-between gap-2 cursor-pointer transition-all active:scale-[0.99]"
+      >
         <div className="flex items-center gap-2 min-w-0">
           <div className="w-8 h-8 rounded-lg bg-indigo-500/20 border border-indigo-400/40 flex items-center justify-center shrink-0 text-indigo-300">
             <Moon size={15} />
@@ -57,22 +70,24 @@ export function LastFerrySafeguardBanner({
             <div className="flex items-center gap-1.5">
               <span className="text-[10px] font-black uppercase tracking-wider text-indigo-300 flex items-center gap-1">
                 <ShieldAlert size={10} className="text-amber-400" />
-                Son Vapur Asistanı
+                Gece Son Sefer Uyarısı
               </span>
               <span className="text-[9.5px] px-1.5 py-0.2 rounded bg-indigo-500/30 text-indigo-200 font-mono">
-                Gece Güvencesi
+                23:45+
               </span>
             </div>
             <p className="text-[11px] font-bold text-slate-200 truncate mt-0.5">
-              Son Sefer: <strong className="text-[#FFC72C] font-mono text-xs">{finalTrip.departureTime}</strong> • {finalTrip.origin} ➔ {finalTrip.destination}
+              Yaklaşan Gece Seferi: <strong className="text-[#FFC72C] font-mono text-xs">{finalTrip.departureTime}</strong> • {finalTrip.origin} ➔ {finalTrip.destination}
             </p>
           </div>
         </div>
 
-        <span className="text-[10px] font-black bg-indigo-600 hover:bg-indigo-500 text-white px-2 py-1 rounded-lg shrink-0">
-          {finalTrip.operator}
+        <span className="text-[10px] font-black bg-indigo-600 hover:bg-indigo-500 text-white px-2.5 py-1 rounded-lg shrink-0 flex items-center gap-1">
+          <span>Gece Rehberi</span>
+          <ChevronRight size={12} />
         </span>
-      </div>
+      </button>
     </div>
   );
 }
+

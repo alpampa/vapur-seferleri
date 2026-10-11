@@ -31,18 +31,17 @@ export function AnnouncementBanner({ announcements, className = "" }: Announceme
   const [dismissedIds, setDismissedIds] = useState<Set<string>>(new Set());
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Yalnızca doğrulanmış ve süresi dolmamış/güncel duyuruları filtrele
-  const verified = announcements.filter((a) => a.sourceVerified && isAnnouncementCurrent(a));
-  const cancellations = verified.filter(
-    (a) => a.type === "CANCELLATION" || a.type === "CANCELLED_TRIPS"
-  );
+  // KULLANICI KURALI: Duyuru bandında YALNIZCA doğrulanmış, güncel ve gerçek İPTAL seferleri gösterilir.
+  // Tarife değişimi, mehtap turu, genel bilgilendirme vb. haberler kesinlikle gösterilmez.
+  const activeList = announcements.filter((a) => {
+    if (!a.sourceVerified || dismissedIds.has(a.id) || !isAnnouncementCurrent(a)) return false;
+    if (a.type !== "CANCELLATION" && a.type !== "CANCELLED_TRIPS") return false;
+    const text = `${a.title || ""} ${a.body || ""}`.toLocaleLowerCase("tr-TR");
+    if (text.includes("bulunmamaktadır") || text.includes("bulunmamaktadir")) return false;
+    return text.includes("iptal") || text.includes("yapılamamakta") || text.includes("yapilamamakta");
+  });
 
-  const all = verified.filter((a) => !dismissedIds.has(a.id));
-  const hasCancellation = cancellations.length > 0;
-  // İptal varsa iptallere öncelik ver, yoksa tüm güncelleri göster
-  const activeList = hasCancellation
-    ? all.filter((a) => a.type === "CANCELLATION" || a.type === "CANCELLED_TRIPS")
-    : all;
+  const hasCancellation = activeList.length > 0;
 
   // Otomatik Rotasyon: Her 4.5 saniyede bir sonraki duyuruya geç (Hook kuralı: Erken return'den ÖNCE çağrılmalı)
   useEffect(() => {
@@ -56,7 +55,7 @@ export function AnnouncementBanner({ announcements, className = "" }: Announceme
   if (activeList.length === 0) return null;
 
   const currentItem = activeList[currentIndex % activeList.length] || activeList[0];
-  const tone = TYPE_META[currentItem.type]?.tone ?? "info";
+  const tone = TYPE_META[currentItem.type]?.tone ?? "danger";
 
   const dismissCurrent = () => {
     setDismissedIds((prev) => new Set(prev).add(currentItem.id));

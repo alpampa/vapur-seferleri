@@ -15,9 +15,18 @@ export const revalidate = 300;
 export async function GET() {
   try {
     const rawAnnouncements = getStoredAnnouncements();
-    // Eski veya süresi dolmuş duyuruları filtrele
-    const announcements = rawAnnouncements.filter((a) => isAnnouncementCurrent(a));
-    const disruptions = matchAnnouncementsToTrips(announcements);
+    // KULLANICI KURALI: Duyuru kısmında YALNIZCA güncel İPTAL sefer duyuruları gösterilir.
+    // Tarife, tur, genel bilgilendirme vb. duyurular elenir.
+    const announcements = rawAnnouncements.filter((a) => {
+      if (!isAnnouncementCurrent(a)) return false;
+      if (a.type !== "CANCELLATION" && a.type !== "CANCELLED_TRIPS") return false;
+      const text = `${a.title || ""} ${a.body || ""}`.toLocaleLowerCase("tr-TR");
+      if (text.includes("bulunmamaktadır") || text.includes("bulunmamaktadir")) return false;
+      return text.includes("iptal") || text.includes("yapılamamakta") || text.includes("yapilamamakta");
+    });
+    const disruptions = matchAnnouncementsToTrips(announcements).filter(
+      (d) => d.kind === "CANCELLED"
+    );
 
     return NextResponse.json({
       generatedAt: new Date().toISOString(),
