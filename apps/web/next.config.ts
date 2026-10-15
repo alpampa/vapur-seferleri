@@ -1,6 +1,19 @@
 import type { NextConfig } from "next";
 
+const isDev = process.env.NODE_ENV !== "production";
+
+// script-src: Next.js production build'i 'unsafe-eval' GEREKTİRMEZ.
+// Dev modunda HMR/React Refresh için gereklidir; prod'da kaldırılır.
+const scriptSrc = [
+  "'self'",
+  "'unsafe-inline'",
+  ...(isDev ? ["'unsafe-eval'"] : []),
+  "https://va.vercel-scripts.com",
+];
+
 const nextConfig: NextConfig = {
+  // Docker/prod dağıtımı için minimal standalone çıktı (Vercel bunu yok sayar).
+  output: "standalone",
   transpilePackages: ['react-map-gl', 'mapbox-gl', 'zustand', 'framer-motion', 'lucide-react'],
   // Düşük RAM'li makinede (7.7GB) build/OOM riskini azaltmak için
   // paralel worker sayısını sınırla.
@@ -62,7 +75,7 @@ const nextConfig: NextConfig = {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com",
+              `script-src ${scriptSrc.join(" ")}`,
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' blob: data: https:",
               "font-src 'self' data:",

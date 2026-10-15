@@ -1,52 +1,47 @@
 version: '3.8'
 
+# NOT: API tek bir SQLite dosyası kullanır (bkz. apps/api/prisma/schema.prisma).
+# Postgres/Redis servisleri kaldırıldı; kodda kullanılmıyorlardı ve Docker
+# imajını fiilen çalışmaz hale getiriyorlardı.
 services:
-  postgres:
-    image: postgis/postgis:15-3.3
-    container_name: ferryflow-postgres
-    environment:
-      POSTGRES_USER: ferryflow
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: ferryflow
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    restart: unless-stopped
-
-  redis:
-    image: redis:7-alpine
-    container_name: ferryflow-redis
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
-    restart: unless-stopped
-
   api:
-    build: 
+    build:
       context: .
       dockerfile: apps/api/Dockerfile
-    container_name: ferryflow-api
+    container_name: vapur-api
     ports:
       - "${API_PORT:-3001}:3001"
     environment:
       - NODE_ENV=production
       - PORT=3001
-      - DATABASE_URL=postgresql://${POSTGRES_USER:-ferryflow}:${POSTGRES_PASSWORD:-password}@postgres:5432/${POSTGRES_DB:-ferryflow}
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
+      - DATABASE_URL=file:/app/data/vapur.db
       - FRONTEND_URL=${FRONTEND_URL:-http://localhost:3000}
-    depends_on:
-      - postgres
-      - redis
+      - ENABLE_DEMO_MODE=${ENABLE_DEMO_MODE:-true}
+      - JWT_ACCESS_SECRET=${JWT_ACCESS_SECRET:-change_me_access_secret}
+      - JWT_REFRESH_SECRET=${JWT_REFRESH_SECRET:-change_me_refresh_secret}
+      - JWT_ACCESS_TTL=${JWT_ACCESS_TTL:-15m}
+      - JWT_REFRESH_TTL=${JWT_REFRESH_TTL:-7d}
+    volumes:
+      - api_data:/app/data
     restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://localhost:3001/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
 
   web:
     build:
       context: .
       dockerfile: apps/web/Dockerfile
-    container_name: ferryflow-web
+    container_name: vapur-web
     ports:
       - "${WEB_PORT:-3000}:3000"
     environment:
@@ -55,9 +50,9 @@ services:
       - NEXT_PUBLIC_WS_URL=${NEXT_PUBLIC_WS_URL:-http://localhost:3001}
       - NEXT_PUBLIC_MAPBOX_TOKEN=${NEXT_PUBLIC_MAPBOX_TOKEN:-}
     depends_on:
-      - api
+      api:
+        condition: service_healthy
     restart: unless-stopped
 
 volumes:
-  postgres_data:
-  redis_data:
+  api_data:

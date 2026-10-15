@@ -1,0 +1,9 @@
+# Vercel'e yüklenmeyecek dosyalar.
+# NEDEN: .env.local içinde yerel geliştirmeye ait NEXT_PUBLIC_* placeholder'ları
+# ve `vercel link` sonrası yazılan kısa ömürlü VERCEL_OIDC_TOKEN bulunur.
+# Build bulutta çalıştığı için yerel .next/node_modules de yüklenmemelidir.
+.env.local
+.env*.local
+.vercel
+.next
+node_modules

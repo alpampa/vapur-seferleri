@@ -1,6 +1,13 @@
 # FERRYFLOW — MASTER PROJECT SPECIFICATION
 ## Gerçek Zamanlı Feribot Takip, Sefer, Canlı Harita, Biletleme ve Bildirim Platformu
 
+> **⚠️ DURUM NOTU (güncel değil / aspirasyonel):** Bu dosya projenin ilk vizyonunu (ABD demo
+> rotaları, tam biletleme/ödeme altyapısı) tanımlar. Gerçek ürün **Vapur**'a (İstanbul deniz
+> ulaşımı) evrilmiştir ve teknik kararlar farklıdır (örn. seferlerin tek doğruluk kaynağı
+> `apps/web`; veritabanı SQLite; biletleme/ödeme henüz yok). Güncel mimari için `README.md`
+> ve `PRODUCT.md` / `DESIGN.md` dosyalarına bakın. Bu belge yalnızca tarihsel referans olarak
+> korunmaktadır.
+
 ---
 
 # 0. ANTIGRAVITY İÇİN ANA TALİMAT
