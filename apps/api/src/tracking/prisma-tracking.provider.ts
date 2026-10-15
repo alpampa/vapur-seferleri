@@ -1,9 +1,16 @@
-import { Injectable, Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  OnModuleDestroy,
+  OnModuleInit,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { TrackingProvider, VesselPosition } from './tracking.provider';
 
 @Injectable()
-export class PrismaTrackingProvider implements TrackingProvider, OnModuleInit, OnModuleDestroy {
+export class PrismaTrackingProvider
+  implements TrackingProvider, OnModuleInit, OnModuleDestroy
+{
   private readonly logger = new Logger(PrismaTrackingProvider.name);
   private intervalRef: NodeJS.Timeout;
   private vesselStates: Record<string, VesselPosition> = {};
@@ -14,9 +21,9 @@ export class PrismaTrackingProvider implements TrackingProvider, OnModuleInit, O
     this.logger.log('Initializing PrismaTrackingProvider (Virtual AIS)');
     // Fetch all vessels from DB
     const vessels = await this.prisma.vessel.findMany();
-    
+
     // Initialize in-memory simulation states from DB values
-    vessels.forEach(v => {
+    vessels.forEach((v) => {
       this.vesselStates[v.id] = {
         vesselId: v.id,
         latitude: v.latitude || 37.795,
@@ -46,13 +53,13 @@ export class PrismaTrackingProvider implements TrackingProvider, OnModuleInit, O
       // Change heading smoothly
       pos.heading = (pos.heading + (Math.random() - 0.5) * 10) % 360;
       pos.timestamp = new Date().toISOString();
-      
+
       // In a real system, we might periodically save this back to the DB or Redis.
       // For this demo, we'll just keep it in memory for the WebSocket.
     }
   }
 
-  async getPositions(): Promise<VesselPosition[]> {
-    return Object.values(this.vesselStates);
+  getPositions(): Promise<VesselPosition[]> {
+    return Promise.resolve(Object.values(this.vesselStates));
   }
 }

@@ -71,7 +71,9 @@ export class ScraperService implements OnModuleInit {
   constructor(private readonly prisma: PrismaService) {}
 
   async onModuleInit() {
-    this.logger.log('ScraperService initialized. Triggering live timetable sync...');
+    this.logger.log(
+      'ScraperService initialized. Triggering live timetable sync...',
+    );
     try {
       await this.syncTodaySchedules();
     } catch (err) {
@@ -127,10 +129,7 @@ export class ScraperService implements OnModuleInit {
   }
 
   /** Tablo satırlarını normalize edilmiş hücre dizilerine çevirir. */
-  private extractRows(
-    $: CheerioRoot,
-    $table: CheerioTable,
-  ): RawCell[][] {
+  private extractRows($: CheerioRoot, $table: CheerioTable): RawCell[][] {
     const rows: RawCell[][] = [];
     $table.find('tr').each((_ri, row) => {
       const cells: RawCell[] = [];
@@ -182,7 +181,8 @@ export class ScraperService implements OnModuleInit {
         stops.push({ name: stop.name, time });
       }
 
-      const arrival = cfg.arrivalCol != null ? cells[cfg.arrivalCol] : undefined;
+      const arrival =
+        cfg.arrivalCol != null ? cells[cfg.arrivalCol] : undefined;
 
       const candidate: ScrapedTrip = {
         departureTime: dep,
@@ -217,33 +217,27 @@ export class ScraperService implements OnModuleInit {
         'https://sehirhatlari.istanbul/tr/seferler/ic-hatlar/adalar-hatlari/kabatasadalar-177',
       );
 
-      const outbound = this.parseTable(
-        this.rowsFrom(html, isWeekend ? 1 : 0),
-        {
-          departureCol: 0,
-          arrivalCol: 6,
-          stopCols: [
-            { name: 'Kadıköy', col: 2 },
-            { name: 'Kınalıada', col: 3 },
-            { name: 'Burgazada', col: 4 },
-            { name: 'Heybeliada', col: 5 },
-          ],
-        },
-      );
+      const outbound = this.parseTable(this.rowsFrom(html, isWeekend ? 1 : 0), {
+        departureCol: 0,
+        arrivalCol: 6,
+        stopCols: [
+          { name: 'Kadıköy', col: 2 },
+          { name: 'Kınalıada', col: 3 },
+          { name: 'Burgazada', col: 4 },
+          { name: 'Heybeliada', col: 5 },
+        ],
+      });
 
-      const ret = this.parseTable(
-        this.rowsFrom(html, isWeekend ? 3 : 2),
-        {
-          departureCol: 1,
-          arrivalCol: 7,
-          stopCols: [
-            { name: 'Heybeliada', col: 2 },
-            { name: 'Burgazada', col: 3 },
-            { name: 'Kınalıada', col: 4 },
-            { name: 'Kadıköy', col: 5 },
-          ],
-        },
-      );
+      const ret = this.parseTable(this.rowsFrom(html, isWeekend ? 3 : 2), {
+        departureCol: 1,
+        arrivalCol: 7,
+        stopCols: [
+          { name: 'Heybeliada', col: 2 },
+          { name: 'Burgazada', col: 3 },
+          { name: 'Kınalıada', col: 4 },
+          { name: 'Kadıköy', col: 5 },
+        ],
+      });
 
       return { outboundTrips: outbound, returnTrips: ret };
     } catch (err) {
@@ -254,40 +248,35 @@ export class ScraperService implements OnModuleInit {
     }
   }
 
-  async scrapeSehirHatlariBostanciRing(
-    isWeekend: boolean,
-  ): Promise<{ bostanciToAdalar: ScrapedTrip[]; adalarToBostanci: ScrapedTrip[] }> {
+  async scrapeSehirHatlariBostanciRing(isWeekend: boolean): Promise<{
+    bostanciToAdalar: ScrapedTrip[];
+    adalarToBostanci: ScrapedTrip[];
+  }> {
     try {
       this.logger.log('Scraping: Şehir Hatları Bostancı Ring (770)...');
       const html = await this.fetchHtml(
         'https://sehirhatlari.istanbul/tr/seferler/ic-hatlar/adalar-hatlari/bostanci-adalar-ring-hatti-770',
       );
 
-      const forward = this.parseTable(
-        this.rowsFrom(html, isWeekend ? 1 : 0),
-        {
-          departureCol: 0,
-          arrivalCol: 4,
-          stopCols: [
-            { name: 'Kınalıada', col: 1 },
-            { name: 'Burgazada', col: 2 },
-            { name: 'Heybeliada', col: 3 },
-          ],
-        },
-      );
+      const forward = this.parseTable(this.rowsFrom(html, isWeekend ? 1 : 0), {
+        departureCol: 0,
+        arrivalCol: 4,
+        stopCols: [
+          { name: 'Kınalıada', col: 1 },
+          { name: 'Burgazada', col: 2 },
+          { name: 'Heybeliada', col: 3 },
+        ],
+      });
 
-      const reverse = this.parseTable(
-        this.rowsFrom(html, isWeekend ? 3 : 2),
-        {
-          departureCol: 1,
-          arrivalCol: 5,
-          stopCols: [
-            { name: 'Heybeliada', col: 2 },
-            { name: 'Burgazada', col: 3 },
-            { name: 'Kınalıada', col: 4 },
-          ],
-        },
-      );
+      const reverse = this.parseTable(this.rowsFrom(html, isWeekend ? 3 : 2), {
+        departureCol: 1,
+        arrivalCol: 5,
+        stopCols: [
+          { name: 'Heybeliada', col: 2 },
+          { name: 'Burgazada', col: 3 },
+          { name: 'Kınalıada', col: 4 },
+        ],
+      });
 
       return { bostanciToAdalar: forward, adalarToBostanci: reverse };
     } catch (err) {
@@ -319,10 +308,10 @@ export class ScraperService implements OnModuleInit {
       const returnHtml = await this.fetchHtml(
         'https://mavimarmara.net/tarifeler/buyukada-bostanci/',
       );
-      const mmAdalarToBostanci = this.parseTable(
-        this.rowsFrom(returnHtml, 0),
-        { departureCol: 0, defaultRouteDesc: 'BOSTANCI' },
-      );
+      const mmAdalarToBostanci = this.parseTable(this.rowsFrom(returnHtml, 0), {
+        departureCol: 0,
+        defaultRouteDesc: 'BOSTANCI',
+      });
 
       return { mmBostanciToAdalar, mmAdalarToBostanci };
     } catch (err) {
@@ -333,18 +322,50 @@ export class ScraperService implements OnModuleInit {
     }
   }
 
-  async scrapePrensTurKartal(): Promise<{
+  scrapePrensTurKartal(): Promise<{
     ptKartalToAdalar: ScrapedTrip[];
     ptAdalarToKartal: ScrapedTrip[];
   }> {
     // Prens Tur resmi matbu tarifesi (canlı HTML tablo yoksa sabit doğrulanmış saatler).
-    const kartalTimes = ['06:20', '07:30', '08:30', '09:30', '10:30', '11:30', '12:30', '13:30', '14:30', '15:30', '16:30', '17:30', '18:30', '19:30', '20:30'];
-    const buyukadaTimes = ['07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00'];
+    const kartalTimes = [
+      '06:20',
+      '07:30',
+      '08:30',
+      '09:30',
+      '10:30',
+      '11:30',
+      '12:30',
+      '13:30',
+      '14:30',
+      '15:30',
+      '16:30',
+      '17:30',
+      '18:30',
+      '19:30',
+      '20:30',
+    ];
+    const buyukadaTimes = [
+      '07:00',
+      '08:00',
+      '09:00',
+      '10:00',
+      '11:00',
+      '12:00',
+      '13:00',
+      '14:00',
+      '15:00',
+      '16:00',
+      '17:00',
+      '18:00',
+      '19:00',
+      '20:00',
+      '21:00',
+    ];
 
-    return {
+    return Promise.resolve({
       ptKartalToAdalar: this.validateTimes(kartalTimes),
       ptAdalarToKartal: this.validateTimes(buyukadaTimes),
-    };
+    });
   }
 
   private validateTimes(times: string[]): ScrapedTrip[] {
@@ -372,14 +393,46 @@ export class ScraperService implements OnModuleInit {
       `Executing live timetable scraping for Istanbul ports (${today.toLocaleDateString('tr-TR')})...`,
     );
 
-    const routeMMBostanciBuyukada = await this.prisma.route.findFirst({ where: { originPort: { code: 'BOS' }, destinationPort: { code: 'ADA' }, operator: { code: 'MM' } } });
-    const routeMMBuyukadaBostanci = await this.prisma.route.findFirst({ where: { originPort: { code: 'ADA' }, destinationPort: { code: 'BOS' }, operator: { code: 'MM' } } });
-    const routeSHBostanciBuyukada = await this.prisma.route.findFirst({ where: { originPort: { code: 'BOS' }, destinationPort: { code: 'ADA' }, operator: { code: 'SH' } } });
-    const routeSHBuyukadaBostanci = await this.prisma.route.findFirst({ where: { originPort: { code: 'ADA' }, destinationPort: { code: 'BOS' }, operator: { code: 'SH' } } });
-    const routeKabatasBuyukada = await this.prisma.route.findFirst({ where: { originPort: { code: 'KAB' }, destinationPort: { code: 'ADA' } } });
-    const routeBuyukadaKabatas = await this.prisma.route.findFirst({ where: { originPort: { code: 'ADA' }, destinationPort: { code: 'KAB' } } });
-    const routeKartalBuyukada = await this.prisma.route.findFirst({ where: { originPort: { code: 'KRT' }, destinationPort: { code: 'ADA' } } });
-    const routeBuyukadaKartal = await this.prisma.route.findFirst({ where: { originPort: { code: 'ADA' }, destinationPort: { code: 'KRT' } } });
+    const routeMMBostanciBuyukada = await this.prisma.route.findFirst({
+      where: {
+        originPort: { code: 'BOS' },
+        destinationPort: { code: 'ADA' },
+        operator: { code: 'MM' },
+      },
+    });
+    const routeMMBuyukadaBostanci = await this.prisma.route.findFirst({
+      where: {
+        originPort: { code: 'ADA' },
+        destinationPort: { code: 'BOS' },
+        operator: { code: 'MM' },
+      },
+    });
+    const routeSHBostanciBuyukada = await this.prisma.route.findFirst({
+      where: {
+        originPort: { code: 'BOS' },
+        destinationPort: { code: 'ADA' },
+        operator: { code: 'SH' },
+      },
+    });
+    const routeSHBuyukadaBostanci = await this.prisma.route.findFirst({
+      where: {
+        originPort: { code: 'ADA' },
+        destinationPort: { code: 'BOS' },
+        operator: { code: 'SH' },
+      },
+    });
+    const routeKabatasBuyukada = await this.prisma.route.findFirst({
+      where: { originPort: { code: 'KAB' }, destinationPort: { code: 'ADA' } },
+    });
+    const routeBuyukadaKabatas = await this.prisma.route.findFirst({
+      where: { originPort: { code: 'ADA' }, destinationPort: { code: 'KAB' } },
+    });
+    const routeKartalBuyukada = await this.prisma.route.findFirst({
+      where: { originPort: { code: 'KRT' }, destinationPort: { code: 'ADA' } },
+    });
+    const routeBuyukadaKartal = await this.prisma.route.findFirst({
+      where: { originPort: { code: 'ADA' }, destinationPort: { code: 'KRT' } },
+    });
 
     const vessels = await this.prisma.vessel.findMany();
     if (
@@ -404,17 +457,24 @@ export class ScraperService implements OnModuleInit {
     }
 
     const isTodayWeekend = today.getDay() === 0 || today.getDay() === 6;
-    const isTomorrowWeekend = tomorrow.getDay() === 0 || tomorrow.getDay() === 6;
+    const isTomorrowWeekend =
+      tomorrow.getDay() === 0 || tomorrow.getDay() === 6;
 
-    const [shKabatasToday, shRingToday, mmToday, ptToday, shKabatasTmrw, shRingTmrw] =
-      await Promise.all([
-        this.scrapeSehirHatlariKabatas(isTodayWeekend),
-        this.scrapeSehirHatlariBostanciRing(isTodayWeekend),
-        this.scrapeMaviMarmaraBostanci(),
-        this.scrapePrensTurKartal(),
-        this.scrapeSehirHatlariKabatas(isTomorrowWeekend),
-        this.scrapeSehirHatlariBostanciRing(isTomorrowWeekend),
-      ]);
+    const [
+      shKabatasToday,
+      shRingToday,
+      mmToday,
+      ptToday,
+      shKabatasTmrw,
+      shRingTmrw,
+    ] = await Promise.all([
+      this.scrapeSehirHatlariKabatas(isTodayWeekend),
+      this.scrapeSehirHatlariBostanciRing(isTodayWeekend),
+      this.scrapeMaviMarmaraBostanci(),
+      this.scrapePrensTurKartal(),
+      this.scrapeSehirHatlariKabatas(isTomorrowWeekend),
+      this.scrapeSehirHatlariBostanciRing(isTomorrowWeekend),
+    ]);
 
     const nowMs = Date.now();
 
@@ -457,25 +517,148 @@ export class ScraperService implements OnModuleInit {
           status,
           price,
           platform,
-          stops: item.stops && item.stops.length > 0 ? JSON.stringify(item.stops) : null,
+          stops:
+            item.stops && item.stops.length > 0
+              ? JSON.stringify(item.stops)
+              : null,
         };
       });
 
     const trips: ReturnType<typeof mapTripsToDb> = [];
 
-    trips.push(...mapTripsToDb(routeKabatasBuyukada!.id, vSH1, shKabatasToday.outboundTrips, 105, 45.0, 'Peron 2', today));
-    trips.push(...mapTripsToDb(routeBuyukadaKabatas!.id, vSH1, shKabatasToday.returnTrips, 120, 45.0, 'Peron 2', today));
-    trips.push(...mapTripsToDb(routeSHBostanciBuyukada!.id, vSH1, shRingToday.bostanciToAdalar, 75, 45.0, 'Peron 2', today));
-    trips.push(...mapTripsToDb(routeSHBuyukadaBostanci!.id, vSH1, shRingToday.adalarToBostanci, 75, 45.0, 'Peron 2', today));
-    trips.push(...mapTripsToDb(routeMMBostanciBuyukada!.id, vMM1, mmToday.mmBostanciToAdalar, 35, 65.0, 'Peron 1', today));
-    trips.push(...mapTripsToDb(routeMMBuyukadaBostanci!.id, vMM1, mmToday.mmAdalarToBostanci, 35, 65.0, 'Peron 1', today));
-    trips.push(...mapTripsToDb(routeKartalBuyukada!.id, vPT1, ptToday.ptKartalToAdalar, 25, 50.0, 'Peron 1', today));
-    trips.push(...mapTripsToDb(routeBuyukadaKartal!.id, vPT1, ptToday.ptAdalarToKartal, 25, 50.0, 'Peron 1', today));
+    trips.push(
+      ...mapTripsToDb(
+        routeKabatasBuyukada.id,
+        vSH1,
+        shKabatasToday.outboundTrips,
+        105,
+        45.0,
+        'Peron 2',
+        today,
+      ),
+    );
+    trips.push(
+      ...mapTripsToDb(
+        routeBuyukadaKabatas!.id,
+        vSH1,
+        shKabatasToday.returnTrips,
+        120,
+        45.0,
+        'Peron 2',
+        today,
+      ),
+    );
+    trips.push(
+      ...mapTripsToDb(
+        routeSHBostanciBuyukada.id,
+        vSH1,
+        shRingToday.bostanciToAdalar,
+        75,
+        45.0,
+        'Peron 2',
+        today,
+      ),
+    );
+    trips.push(
+      ...mapTripsToDb(
+        routeSHBuyukadaBostanci!.id,
+        vSH1,
+        shRingToday.adalarToBostanci,
+        75,
+        45.0,
+        'Peron 2',
+        today,
+      ),
+    );
+    trips.push(
+      ...mapTripsToDb(
+        routeMMBostanciBuyukada.id,
+        vMM1,
+        mmToday.mmBostanciToAdalar,
+        35,
+        65.0,
+        'Peron 1',
+        today,
+      ),
+    );
+    trips.push(
+      ...mapTripsToDb(
+        routeMMBuyukadaBostanci!.id,
+        vMM1,
+        mmToday.mmAdalarToBostanci,
+        35,
+        65.0,
+        'Peron 1',
+        today,
+      ),
+    );
+    trips.push(
+      ...mapTripsToDb(
+        routeKartalBuyukada.id,
+        vPT1,
+        ptToday.ptKartalToAdalar,
+        25,
+        50.0,
+        'Peron 1',
+        today,
+      ),
+    );
+    trips.push(
+      ...mapTripsToDb(
+        routeBuyukadaKartal!.id,
+        vPT1,
+        ptToday.ptAdalarToKartal,
+        25,
+        50.0,
+        'Peron 1',
+        today,
+      ),
+    );
 
-    trips.push(...mapTripsToDb(routeKabatasBuyukada!.id, vSH1, shKabatasTmrw.outboundTrips, 105, 45.0, 'Peron 2', tomorrow));
-    trips.push(...mapTripsToDb(routeBuyukadaKabatas!.id, vSH1, shKabatasTmrw.returnTrips, 120, 45.0, 'Peron 2', tomorrow));
-    trips.push(...mapTripsToDb(routeSHBostanciBuyukada!.id, vSH1, shRingTmrw.bostanciToAdalar, 75, 45.0, 'Peron 2', tomorrow));
-    trips.push(...mapTripsToDb(routeSHBuyukadaBostanci!.id, vSH1, shRingTmrw.adalarToBostanci, 75, 45.0, 'Peron 2', tomorrow));
+    trips.push(
+      ...mapTripsToDb(
+        routeKabatasBuyukada.id,
+        vSH1,
+        shKabatasTmrw.outboundTrips,
+        105,
+        45.0,
+        'Peron 2',
+        tomorrow,
+      ),
+    );
+    trips.push(
+      ...mapTripsToDb(
+        routeBuyukadaKabatas!.id,
+        vSH1,
+        shKabatasTmrw.returnTrips,
+        120,
+        45.0,
+        'Peron 2',
+        tomorrow,
+      ),
+    );
+    trips.push(
+      ...mapTripsToDb(
+        routeSHBostanciBuyukada.id,
+        vSH1,
+        shRingTmrw.bostanciToAdalar,
+        75,
+        45.0,
+        'Peron 2',
+        tomorrow,
+      ),
+    );
+    trips.push(
+      ...mapTripsToDb(
+        routeSHBuyukadaBostanci!.id,
+        vSH1,
+        shRingTmrw.adalarToBostanci,
+        75,
+        45.0,
+        'Peron 2',
+        tomorrow,
+      ),
+    );
 
     // ZERO-DESTRUCTION: hiç geçerli sefer çekilemediyse mevcut veriyi KORU.
     if (trips.length === 0) {

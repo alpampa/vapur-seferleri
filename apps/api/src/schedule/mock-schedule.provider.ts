@@ -9,7 +9,7 @@ import {
 export class MockScheduleProvider implements ScheduleProvider {
   private readonly logger = new Logger(MockScheduleProvider.name);
 
-  async getSchedules(): Promise<SchedulesResponse> {
+  getSchedules(): Promise<SchedulesResponse> {
     this.logger.debug('Fetching schedules from MockProvider');
     const now = new Date();
     const serverTimeIso = now.toISOString();
@@ -137,6 +137,6 @@ export class MockScheduleProvider implements ScheduleProvider {
       },
     ];
 
-    return { serverTimeIso, schedules };
+    return Promise.resolve({ serverTimeIso, schedules });
   }
 }

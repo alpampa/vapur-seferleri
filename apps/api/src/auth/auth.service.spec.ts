@@ -22,8 +22,7 @@ describe('AuthService', () => {
     },
   } as unknown as PrismaService;
 
-  const hashToken = (t: string) =>
-    createHash('sha256').update(t).digest('hex');
+  const hashToken = (t: string) => createHash('sha256').update(t).digest('hex');
 
   beforeAll(() => {
     process.env.JWT_ACCESS_SECRET = 'test-access';
@@ -54,11 +53,11 @@ describe('AuthService', () => {
 
     expect(tokens.accessToken).toBeTruthy();
     expect(tokens.refreshToken).toBeTruthy();
-    expect(prisma.user.create).toHaveBeenCalledWith(
-      expect.objectContaining({
-        data: expect.objectContaining({ email: 'a@b.com' }),
-      }),
-    );
+    const createMock = prisma.user.create as jest.Mock;
+    const createArg = (createMock.mock.calls as unknown[][])[0][0] as {
+      data: { email: string };
+    };
+    expect(createArg.data.email).toBe('a@b.com');
   });
 
   it('register: mevcut e-postada ConflictException fırlatır', async () => {
@@ -121,7 +120,8 @@ describe('AuthService', () => {
 
     const tokens = await service.refresh(refreshToken);
     expect(tokens.refreshToken).toBeTruthy();
-    expect(prisma.refreshToken.update).toHaveBeenCalledWith(
+    const updateMock = prisma.refreshToken.update as jest.Mock;
+    expect(updateMock).toHaveBeenCalledWith(
       expect.objectContaining({ where: { id: 'rt1' } }),
     );
   });
@@ -142,7 +142,8 @@ describe('AuthService', () => {
     await expect(service.refresh(refreshToken)).rejects.toBeInstanceOf(
       UnauthorizedException,
     );
-    expect(prisma.refreshToken.updateMany).toHaveBeenCalled();
+    const updateManyMock = prisma.refreshToken.updateMany as jest.Mock;
+    expect(updateManyMock).toHaveBeenCalled();
   });
 
   it('refresh: geçersiz imzayı reddeder', async () => {

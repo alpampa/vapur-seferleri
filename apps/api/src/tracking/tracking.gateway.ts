@@ -80,14 +80,16 @@ export class TrackingGateway
 
   handleConnection(client: Socket) {
     if (!this.isAuthorized(client)) {
-      this.logger.warn(`Unauthorized WebSocket connection rejected: ${client.id}`);
+      this.logger.warn(
+        `Unauthorized WebSocket connection rejected: ${client.id}`,
+      );
       client.emit('auth.error', { message: 'Unauthorized' });
       client.disconnect(true);
       return;
     }
 
     this.logger.log(`Client connected: ${client.id}`);
-    this.trackingProvider.getPositions().then((positions) => {
+    void this.trackingProvider.getPositions().then((positions) => {
       client.emit('vessel.positions', positions);
     });
   }
@@ -97,13 +99,15 @@ export class TrackingGateway
   }
 
   private startBroadcasting() {
-    this.broadcastInterval = setInterval(async () => {
-      try {
-        const positions = await this.trackingProvider.getPositions();
-        this.server.emit('vessel.positions', positions);
-      } catch (err) {
-        this.logger.error('Failed to broadcast positions', err);
-      }
+    this.broadcastInterval = setInterval(() => {
+      void this.trackingProvider
+        .getPositions()
+        .then((positions) => {
+          this.server.emit('vessel.positions', positions);
+        })
+        .catch((err) => {
+          this.logger.error('Failed to broadcast positions', err);
+        });
     }, 3000);
   }
 }

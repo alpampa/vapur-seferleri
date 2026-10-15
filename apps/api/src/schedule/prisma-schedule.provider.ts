@@ -1,6 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { ScheduleProvider, SchedulesResponse, ScheduleCardDto, TripStatus } from './schedule.provider';
+import {
+  ScheduleProvider,
+  SchedulesResponse,
+  ScheduleCardDto,
+  TripStatus,
+} from './schedule.provider';
 
 @Injectable()
 export class PrismaScheduleProvider implements ScheduleProvider {
@@ -10,7 +15,7 @@ export class PrismaScheduleProvider implements ScheduleProvider {
 
   async getSchedules(): Promise<SchedulesResponse> {
     this.logger.debug('Fetching schedules from DB');
-    
+
     // Only fetch trips that haven't departed more than 1 minute ago
     const oneMinuteAgo = new Date();
     oneMinuteAgo.setMinutes(oneMinuteAgo.getMinutes() - 1);
@@ -18,8 +23,8 @@ export class PrismaScheduleProvider implements ScheduleProvider {
     const trips = await this.prisma.trip.findMany({
       where: {
         scheduledDeparture: {
-          gte: oneMinuteAgo
-        }
+          gte: oneMinuteAgo,
+        },
       },
       include: {
         route: {
@@ -27,42 +32,42 @@ export class PrismaScheduleProvider implements ScheduleProvider {
             originPort: true,
             destinationPort: true,
             operator: true,
-          }
+          },
         },
         vessel: true,
       },
       orderBy: { scheduledDeparture: 'asc' },
     });
 
-    const schedules: ScheduleCardDto[] = trips.map(t => {
+    const schedules: ScheduleCardDto[] = trips.map((t) => {
       // Mock progress calculation for Demo
       let progress = 0;
       if (t.status === 'IN_TRANSIT') progress = 50;
       else if (t.status === 'COMPLETED') progress = 100;
 
       const targetDate = t.scheduledDeparture;
-      
+
       // Format to Europe/Istanbul time
       const timeFormatter = new Intl.DateTimeFormat('tr-TR', {
         timeZone: 'Europe/Istanbul',
         hour: '2-digit',
         minute: '2-digit',
-        hour12: false
+        hour12: false,
       });
       const time24 = timeFormatter.format(targetDate);
-      
+
       const time12Formatter = new Intl.DateTimeFormat('tr-TR', {
         timeZone: 'Europe/Istanbul',
         hour: '2-digit',
         minute: '2-digit',
-        hour12: true
+        hour12: true,
       });
       const time12 = time12Formatter.format(targetDate);
 
-      let parsedStops = [];
+      let parsedStops: { name: string; time: string }[] = [];
       if (t.stops) {
         try {
-          parsedStops = JSON.parse(t.stops);
+          parsedStops = JSON.parse(t.stops) as { name: string; time: string }[];
         } catch (e) {
           this.logger.error('Failed to parse stops JSON', e);
         }
@@ -91,7 +96,7 @@ export class PrismaScheduleProvider implements ScheduleProvider {
       timeZone: 'Europe/Istanbul',
       weekday: 'long',
       month: 'long',
-      day: 'numeric'
+      day: 'numeric',
     });
 
     return {

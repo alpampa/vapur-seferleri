@@ -64,7 +64,7 @@ export class AuthService {
       expiresIn: this.refreshTtl,
     });
 
-    const decoded = this.jwt.decode(refreshToken) as { exp: number };
+    const decoded = this.jwt.decode<{ exp: number }>(refreshToken);
     const expiresAt = new Date(decoded.exp * 1000);
 
     await this.prisma.refreshToken.create({
@@ -98,7 +98,10 @@ export class AuthService {
     const user = await this.prisma.user.findUnique({ where: { email } });
     if (!user || !user.active) {
       // Zamanlama sızıntısını (timing attack) azaltmak için yine de hash karşılaştır.
-      await bcrypt.compare(dto.password, '$2a$12$invalidinvalidinvalidinvalidinvalidinvalidinvalidinvalidinvalid');
+      await bcrypt.compare(
+        dto.password,
+        '$2a$12$invalidinvalidinvalidinvalidinvalidinvalidinvalidinvalidinvalid',
+      );
       throw new UnauthorizedException('E-posta veya şifre hatalı.');
     }
 

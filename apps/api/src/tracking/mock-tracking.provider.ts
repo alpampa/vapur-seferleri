@@ -49,8 +49,8 @@ export class MockTrackingProvider implements TrackingProvider, OnModuleDestroy {
     }
   }
 
-  async getPositions(): Promise<VesselPosition[]> {
+  getPositions(): Promise<VesselPosition[]> {
     this.logger.debug('Fetching positions from MockProvider');
-    return Object.values(this.mockPositions);
+    return Promise.resolve(Object.values(this.mockPositions));
   }
 }
