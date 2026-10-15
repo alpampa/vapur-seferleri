@@ -1,20 +1,37 @@
 {
-  "generatedAt": "2026-10-04T19:41:03.265Z",
+  "generatedAt": "2026-10-15T20:05:47.913Z",
   "failures": [],
   "sources": [
     {
       "operator": "Şehir Hatları",
-      "fetchedAt": "2026-10-04T19:41:03.034Z",
+      "fetchedAt": "2026-10-15T20:05:47.439Z",
       "sourceUrl": "https://sehirhatlari.istanbul/tr/iptal-seferler",
       "announcements": [
         {
-          "id": "sh-status-live",
+          "id": "sh-status-15.10.2026",
           "operator": "Şehir Hatları",
-          "title": "Resmi Sefer Durumu — Tüm Hatlar Açık",
-          "body": "İptal seferimiz bulunmamaktadır.",
+          "title": "Sefer Durumu — 15.10.2026",
+          "body": "İptal sefer bilgisi sayfada bulunamadı.",
           "type": "INFO",
           "affectedLines": [],
+          "publishedAt": "15.10.2026",
           "sourceUrl": "https://sehirhatlari.istanbul/tr/iptal-seferler",
+          "sourceVerified": true
+        },
+        {
+          "id": "sh-maltepeadalar-hatti-sefer-duzenlemesi-3811",
+          "operator": "Şehir Hatları",
+          "title": "Maltepe-Adalar Hattı Sefer Düzenlemesi",
+          "type": "SCHEDULE_CHANGE",
+          "sourceUrl": "https://sehirhatlari.istanbul/tr/duyurular/maltepeadalar-hatti-sefer-duzenlemesi-3811",
+          "sourceVerified": true
+        },
+        {
+          "id": "sh-1213-eylul-2026-tarihli-halic-hatti-sefer-duzenlemeleri-3803",
+          "operator": "Şehir Hatları",
+          "title": "12-13 Eylül 2026 Tarihli Haliç Hattı Sefer Düzenlemeleri",
+          "type": "SCHEDULE_CHANGE",
+          "sourceUrl": "https://sehirhatlari.istanbul/tr/duyurular/1213-eylul-2026-tarihli-halic-hatti-sefer-duzenlemeleri-3803",
           "sourceVerified": true
         },
         {
@@ -26,11 +43,35 @@
           "sourceVerified": true
         },
         {
+          "id": "sh-23-agustos-iptal-seferler-duyurusu-3783",
+          "operator": "Şehir Hatları",
+          "title": "23 Ağustos İptal Seferler Duyurusu",
+          "type": "CANCELLED_TRIPS",
+          "sourceUrl": "https://sehirhatlari.istanbul/tr/duyurular/23-agustos-iptal-seferler-duyurusu-3783",
+          "sourceVerified": true
+        },
+        {
+          "id": "sh-16-agustos-2026-sefer-duzenlemeleri-duyurusu-3781",
+          "operator": "Şehir Hatları",
+          "title": "16 Ağustos 2026 Sefer Düzenlemeleri Duyurusu",
+          "type": "SCHEDULE_CHANGE",
+          "sourceUrl": "https://sehirhatlari.istanbul/tr/duyurular/16-agustos-2026-sefer-duzenlemeleri-duyurusu-3781",
+          "sourceVerified": true
+        },
+        {
           "id": "sh-mehtap-turu-bilgilendirme-duyurusu-3779",
           "operator": "Şehir Hatları",
           "title": "Mehtap Turu Bilgilendirme Duyurusu",
           "type": "INFO",
           "sourceUrl": "https://sehirhatlari.istanbul/tr/duyurular/mehtap-turu-bilgilendirme-duyurusu-3779",
+          "sourceVerified": true
+        },
+        {
+          "id": "sh-26-temmuz-2026-adalarbostanci-ek-seferi-3777",
+          "operator": "Şehir Hatları",
+          "title": "26 Temmuz 2026 Adalar-Bostancı Ek Seferi",
+          "type": "EXTRA_SERVICE",
+          "sourceUrl": "https://sehirhatlari.istanbul/tr/duyurular/26-temmuz-2026-adalarbostanci-ek-seferi-3777",
           "sourceVerified": true
         },
         {
@@ -42,18 +83,26 @@
           "sourceVerified": true
         },
         {
-          "id": "sh-moda-iskelesi-ugramasi-duyurusu-3765",
+          "id": "sh-24-haziran-2026-ek-sefer-duyurusu-3769",
           "operator": "Şehir Hatları",
-          "title": "Moda İskelesi Uğraması Duyurusu",
-          "type": "INFO",
-          "sourceUrl": "https://sehirhatlari.istanbul/tr/duyurular/moda-iskelesi-ugramasi-duyurusu-3765",
+          "title": "24 Haziran 2026 Ek Sefer Duyurusu",
+          "type": "EXTRA_SERVICE",
+          "sourceUrl": "https://sehirhatlari.istanbul/tr/duyurular/24-haziran-2026-ek-sefer-duyurusu-3769",
+          "sourceVerified": true
+        },
+        {
+          "id": "sh-sehir-hatlari-yaz-tarifesine-geciyor-3767",
+          "operator": "Şehir Hatları",
+          "title": "ŞEHİR HATLARI YAZ TARİFESİNE GEÇİYOR",
+          "type": "SCHEDULE_CHANGE",
+          "sourceUrl": "https://sehirhatlari.istanbul/tr/duyurular/sehir-hatlari-yaz-tarifesine-geciyor-3767",
           "sourceVerified": true
         }
       ]
     },
     {
       "operator": "Dentur Avrasya",
-      "fetchedAt": "2026-10-04T19:41:03.265Z",
+      "fetchedAt": "2026-10-15T20:05:47.913Z",
       "sourceUrl": "https://www.denturavrasya.com/tr-TR/duyurular",
       "announcements": [
         {
@@ -62,6 +111,14 @@
           "title": "Yalova Adalar Cuma Cumartesi Pazar",
           "type": "INFO",
           "sourceUrl": "https://www.denturavrasya.com/tr-TR/duyurular/yalova-adalar-cuma-cumartesi-pazar",
+          "sourceVerified": true
+        },
+        {
+          "id": "den-hk-15-temmuz-yalova-adalar-sefer-bilgilendirmesi-hk",
+          "operator": "Dentur Avrasya",
+          "title": "Temmuz Yalova Adalar Sefer Bilgilendirmesi Hk",
+          "type": "INFO",
+          "sourceUrl": "https://www.denturavrasya.com/tr-TR/duyurular/15-temmuz-yalova-adalar-sefer-bilgilendirmesi-hk",
           "sourceVerified": true
         },
         {
@@ -78,6 +135,38 @@
           "title": "Yalova Adalar Besiktas Ve Kabatas Sefer Bilgilendirmesi",
           "type": "INFO",
           "sourceUrl": "https://www.denturavrasya.com/tr-TR/duyurular/yalova-adalar-besiktas-ve-kabatas-sefer-bilgilendirmesi",
+          "sourceVerified": true
+        },
+        {
+          "id": "den-bedava-14-subat-sevgililer-gunu-1-bogaz-turu-1-bilet-alana-1-bilet-bedava",
+          "operator": "Dentur Avrasya",
+          "title": "Subat Sevgililer Gunu 1 Bogaz Turu 1 Bilet Alana 1 Bilet Bedava",
+          "type": "INFO",
+          "sourceUrl": "https://www.denturavrasya.com/tr-TR/duyurular/14-subat-sevgililer-gunu-1-bogaz-turu-1-bilet-alana-1-bilet-bedava",
+          "sourceVerified": true
+        },
+        {
+          "id": "den-unutmadik-6-subat-2023-unutmadik",
+          "operator": "Dentur Avrasya",
+          "title": "Subat 2023 Unutmadik",
+          "type": "INFO",
+          "sourceUrl": "https://www.denturavrasya.com/tr-TR/duyurular/6-subat-2023-unutmadik",
+          "sourceVerified": true
+        },
+        {
+          "id": "den-ocak-sefer-durumu-bilgilendirmesi-8-ocak",
+          "operator": "Dentur Avrasya",
+          "title": "Sefer Durumu Bilgilendirmesi 8 Ocak",
+          "type": "SCHEDULE_CHANGE",
+          "sourceUrl": "https://www.denturavrasya.com/tr-TR/duyurular/sefer-durumu-bilgilendirmesi-8-ocak",
+          "sourceVerified": true
+        },
+        {
+          "id": "den-tarifesi-yilbasi-gecesi-tarifesi",
+          "operator": "Dentur Avrasya",
+          "title": "Yilbasi Gecesi Tarifesi",
+          "type": "SCHEDULE_CHANGE",
+          "sourceUrl": "https://www.denturavrasya.com/tr-TR/duyurular/yilbasi-gecesi-tarifesi",
           "sourceVerified": true
         },
         {
