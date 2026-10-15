@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+/*
+ * KRİTİK: Tailwind v4'te `dark:` variant'ı VARSAYILAN OLARAK medya sorgusudur
+ * (prefers-color-scheme). Bu uygulama temayı <html> üzerindeki `.dark` SINIFIYLA
+ * yönetir (useThemeStore + layout.tsx FOUC script). Bu satır olmadan store'un
+ * seçtiği tema ile `dark:` utility'leri uyuşmaz ve koyu tema uygulanmaz.
+ */
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   /* Core Colors */
   --primary-navy: #071a33;
@@ -303,6 +311,21 @@ button, a, input, select {
   --app-accent: #059669;
   --background: #f0fdf4;
   --foreground: #064e3b;
+}
+
+/* GÜNEŞ MODU: açık havada okunabilirlik. Saf beyaz zemin + saf siyah metin (21:1, WCAG AAA).
+   Dikkat: bu modda ikincil metin BİLE koyudur (soluk gri yasak) — güneşte gri metin kaybolur. */
+[data-theme="sun-contrast"] {
+  --app-bg: #ffffff;
+  --app-surface: #ffffff;
+  --app-card: #ffffff;
+  --app-card-hover: #e8e8e8;
+  --app-border: #000000;
+  --app-text: #000000;
+  --app-text-muted: #1c1c1c;
+  --app-accent: #0040c8;
+  --background: #ffffff;
+  --foreground: #000000;
 }
 
 /* Dynamic theme helper classes */

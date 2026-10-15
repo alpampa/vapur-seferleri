@@ -2,6 +2,7 @@
 
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { DEFAULT_THEME_ID, THEME_STORAGE_KEY } from "@/lib/theme-ids";
 
 export type ThemePresetId =
   | "deep-navy"      // 1. Derin Boğaz & Lacivert (Bosphorus Midnight Navy)
@@ -9,7 +10,8 @@ export type ThemePresetId =
   | "heritage-brass" // 3. Tarihi Vapur & Klasik Pirinç (Istanbul Heritage Nautical)
   | "cyber-radar"    // 4. Siber Deniz & OLED Siyah (Cyber Marine Phosphor)
   | "golden-hour"    // 5. Boğaz Gün Batımı & Altın Saat (Sunset Twilight)
-  | "aegean-emerald"; // 6. Ege & Kıyı Ferahlığı (Aegean Sea Emerald)
+  | "aegean-emerald" // 6. Ege & Kıyı Ferahlığı (Aegean Sea Emerald)
+  | "sun-contrast";  // 7. Güneş Modu & Ultra Kontrast (Sunlight Legibility)
 
 export interface ThemePreset {
   id: ThemePresetId;
@@ -89,6 +91,17 @@ export const THEME_PRESETS: ThemePreset[] = [
     bgClass: "bg-[#f0fdf4]",
     cardBgClass: "bg-white",
     accentColor: "#059669"
+  },
+  {
+    id: "sun-contrast",
+    name: "Güneş Modu & Ultra Kontrast",
+    nameEn: "Sunlight Ultra Contrast",
+    description: "Açık havada maksimum okunabilirlik: saf beyaz zemin, saf siyah metin ve koyu kenarlıklar. İskele güneşinde telefonu zorlamadan okumak için.",
+    previewColors: ["#ffffff", "#ffffff", "#000000", "#0040c8"],
+    isDark: false,
+    bgClass: "bg-white",
+    cardBgClass: "bg-white",
+    accentColor: "#0040c8"
   }
 ];
 
@@ -101,7 +114,7 @@ interface ThemeStoreState {
 export const useThemeStore = create<ThemeStoreState>()(
   persist(
     (set, get) => ({
-      theme: "deep-navy",
+      theme: DEFAULT_THEME_ID,
       setTheme: (themeId: ThemePresetId) => {
         set({ theme: themeId });
         if (typeof document !== "undefined") {
@@ -120,7 +133,7 @@ export const useThemeStore = create<ThemeStoreState>()(
       }
     }),
     {
-      name: "vapur_app_theme_v2",
+      name: THEME_STORAGE_KEY,
       onRehydrateStorage: () => (state) => {
         if (state && typeof document !== "undefined") {
           const preset = THEME_PRESETS.find(p => p.id === state.theme) || THEME_PRESETS[0];

@@ -5,6 +5,7 @@ import "leaflet/dist/leaflet.css";
 import { NotificationContainer } from "@/components/ui/NotificationToast";
 import { ServiceWorkerRegister } from "@/components/pwa/ServiceWorkerRegister";
 import { ReducedMotionProvider } from "@/components/providers/ReducedMotionProvider";
+import { DARK_THEME_IDS, DEFAULT_THEME_ID, THEME_STORAGE_KEY } from "@/lib/theme-ids";
 
 const inter = Inter({
   subsets: ["latin", "latin-ext"],
@@ -40,16 +41,22 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: `
               try {
-                var stored = localStorage.getItem('vapur_app_theme_v1');
-                if (stored) {
-                  var parsed = JSON.parse(stored);
-                  if (parsed && parsed.state && parsed.state.theme === 'dark') {
-                    document.documentElement.classList.add('dark');
-                  } else if (parsed && parsed.state && parsed.state.theme === 'light') {
-                    document.documentElement.classList.remove('dark');
+                var key = ${JSON.stringify(THEME_STORAGE_KEY)};
+                var darkIds = ${JSON.stringify(DARK_THEME_IDS)};
+                var themeId = ${JSON.stringify(DEFAULT_THEME_ID)};
+                var raw = localStorage.getItem(key);
+                if (raw) {
+                  var parsed = JSON.parse(raw);
+                  if (parsed && parsed.state && parsed.state.theme) {
+                    themeId = parsed.state.theme;
                   }
-                } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                  document.documentElement.classList.add('dark');
+                }
+                var root = document.documentElement;
+                root.setAttribute('data-theme', themeId);
+                if (darkIds.indexOf(themeId) !== -1) {
+                  root.classList.add('dark');
+                } else {
+                  root.classList.remove('dark');
                 }
               } catch (e) {}
             `,
