@@ -1,9 +1,10 @@
 import { PrismaClient } from '@prisma/client';
+import * as bcrypt from 'bcryptjs';
 const prisma = new PrismaClient();
 
 async function main() {
   console.log('Seeding exact REAL schedules for Mainland <-> Islands...');
-  
+
   // CLEAR EXISTING DATA
   await prisma.trip.deleteMany();
   await prisma.route.deleteMany();
@@ -11,6 +12,24 @@ async function main() {
   await prisma.vessel.deleteMany();
   await prisma.port.deleteMany();
   await prisma.operator.deleteMany();
+  await prisma.refreshToken.deleteMany();
+  await prisma.user.deleteMany();
+
+  // 0. ADMIN KULLANICI (kimlik doğrulama için)
+  const adminEmail = (process.env.SEED_ADMIN_EMAIL ?? 'admin@vapur.app')
+    .trim()
+    .toLowerCase();
+  const adminPassword = process.env.SEED_ADMIN_PASSWORD ?? 'ChangeMe123!';
+  const passwordHash = await bcrypt.hash(adminPassword, 12);
+  await prisma.user.create({
+    data: {
+      email: adminEmail,
+      passwordHash,
+      name: 'Vapur Admin',
+      role: 'ADMIN',
+    },
+  });
+  console.log(`Admin kullanıcı oluşturuldu: ${adminEmail}`);
 
   // 1. CREATE OPERATORS
   const sehirHatlari = await prisma.operator.create({ data: { name: 'Şehir Hatları', code: 'SH' } });

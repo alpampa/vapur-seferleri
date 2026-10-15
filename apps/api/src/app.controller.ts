@@ -1,20 +1,29 @@
 import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
+import { PrismaService } from './prisma/prisma.service';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(
+    private readonly appService: AppService,
+    private readonly prisma: PrismaService,
+  ) {}
 
   @Get('health')
-  getHealth() {
-    // In production, this would use @nestjs/terminus to check DB/Redis
+  async getHealth() {
+    let databaseUp = true;
+    try {
+      await this.prisma.$queryRaw`SELECT 1`;
+    } catch {
+      databaseUp = false;
+    }
+
     return {
-      status: 'ok',
+      status: databaseUp ? 'ok' : 'degraded',
       timestamp: new Date().toISOString(),
       services: {
         application: 'up',
-        database: process.env.ENABLE_DEMO_MODE === 'true' ? 'mocked' : 'up',
-        redis: process.env.ENABLE_DEMO_MODE === 'true' ? 'mocked' : 'up',
+        database: databaseUp ? 'up' : 'down',
       },
     };
   }

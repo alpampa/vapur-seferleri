@@ -9,6 +9,7 @@ import { TrackingModule } from './tracking/tracking.module';
 import { AdminController } from './admin/admin.controller';
 import { PrismaModule } from './prisma/prisma.module';
 import { ScraperModule } from './scraper/scraper.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { ScraperModule } from './scraper/scraper.module';
     ]),
     NestScheduleModule.forRoot(),
     PrismaModule,
+    AuthModule,
     ScheduleModule,
     TrackingModule,
     ScraperModule,

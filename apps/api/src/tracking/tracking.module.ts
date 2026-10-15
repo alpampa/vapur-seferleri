@@ -4,8 +4,10 @@ import { MockTrackingProvider } from './mock-tracking.provider';
 import { PrismaTrackingProvider } from './prisma-tracking.provider';
 import { TRACKING_PROVIDER } from './tracking.provider';
 import { PrismaService } from '../prisma/prisma.service';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
+  imports: [AuthModule],
   providers: [
     TrackingGateway,
     {
