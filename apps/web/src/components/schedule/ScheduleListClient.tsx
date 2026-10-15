@@ -24,6 +24,8 @@ import { useAnnouncementStore } from "@/store/useAnnouncementStore";
 import { AnnouncementBanner } from "@/components/announcements/AnnouncementBanner";
 import { SmartCommutePills } from "@/components/schedule/SmartCommutePills";
 import { LastFerrySafeguardBanner } from "@/components/schedule/LastFerrySafeguardBanner";
+import { ServiceDataTrustBar } from "@/components/trust/ServiceDataTrustBar";
+import type { SourceFreshnessMeta } from "@/components/trust/ServiceDataTrustBar";
 import { getOperatorRecord, OPERATOR_REGISTRY } from "@/lib/data/operator-registry";
 import { triggerHaptic } from "@/lib/utils/haptics";
 import type { MarineWeatherStatus } from "@/lib/services/marine-weather";
@@ -44,9 +46,11 @@ interface ScheduleListClientProps {
   serverTimeIso: string;
   initialOrigin?: string;
   marineWeather?: MarineWeatherStatus | null;
+  /** GÜVEN KATMANI: resmî kaynakların son doğrulanma üst verisi (sunucudan gelir). */
+  sourceFreshness: SourceFreshnessMeta;
 }
 
-export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, marineWeather }: ScheduleListClientProps) {
+export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, marineWeather, sourceFreshness }: ScheduleListClientProps) {
   const { t, language } = useLanguageStore();
   // Y4 — İKİ KADEME TICK: canlı MM:SS penceresine giren görünür sefer varken 1 sn,
   // aksi halde 15 sn (dakika hassasiyeti yeterli). Kademe geçişi aşağıdaki effect ile yönetilir.
@@ -531,6 +535,9 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
           </div>
         </div>
       )}
+
+      {/* GÜVEN KATMANI: bugünün tarifesi (hafta içi/cumartesi/pazar/tatil) + kaynak doğrulama tazeliği */}
+      <ServiceDataTrustBar serverTimeIso={serverTimeIso} freshness={sourceFreshness} />
 
       {/* 0. GECE GÜVENCESİ: SON VAPURU KAÇIRMA ASİSTANI (23:45 Sonrası Aktif) */}
       <LastFerrySafeguardBanner

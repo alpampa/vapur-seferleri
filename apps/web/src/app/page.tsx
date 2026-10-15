@@ -2,6 +2,7 @@ import { TopBar } from "@/components/navigation/TopBar";
 import { MainAppShell } from "@/components/views/MainAppShell";
 import type { SchedulesResponse } from "@/lib/types/schedule";
 import { getLiveOrOfficialSchedules } from "@/lib/agents/timetable-engine";
+import { getStoredAnnouncementsMeta } from "@/lib/agents/data-snapshot-store";
 import { fetchLiveMarineWeather, type MarineWeatherStatus } from "@/lib/services/marine-weather";
 
 // Canlı sefer panosu: sayfa her istekte yeniden render edilir (önbelleğe alınmaz).
@@ -54,6 +55,10 @@ export default async function Home() {
   const schedules = data?.schedules || [];
   const serverTimeIso = data?.serverTimeIso || new Date().toISOString();
 
+  // GÜVEN KATMANI: resmî kaynakların en son doğrulanma üst verisi (sunucuda okunur,
+  // client bundle'a JSON girmemesi için prop olarak geçirilir).
+  const announcementsMeta = getStoredAnnouncementsMeta();
+
   return (
     <div className="flex flex-col min-h-screen theme-app-shell bg-[var(--app-bg,#070e1e)] text-[var(--app-text,#f8fafc)] transition-colors duration-200">
       <TopBar />
@@ -63,6 +68,10 @@ export default async function Home() {
           schedules={schedules}
           serverTimeIso={serverTimeIso}
           marineWeather={weather}
+          sourceFreshness={{
+            generatedAt: announcementsMeta.generatedAt,
+            sourceCount: announcementsMeta.sourceCount,
+          }}
         />
       </main>
     </div>
