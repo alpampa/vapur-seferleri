@@ -1,0 +1,10 @@
+# gitleaks yapılandırması — varsayılan kurallar + şablon dosyası istisnası.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Şablon (.env.example) ve referans görselleri taranmaz; gerçek .env dosyaları ASLA allowlist'e alınmaz."
+paths = [
+  '''\.env\.example$''',
+  '''reference/.*''',
+]
