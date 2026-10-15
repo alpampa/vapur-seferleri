@@ -119,3 +119,8 @@ check.js
 scrape_test.js
 test-*.js
 
+# Playwright
+test-results/
+playwright-report/
+blob-report/
+
