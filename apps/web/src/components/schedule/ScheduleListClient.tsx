@@ -4,14 +4,13 @@ import { useState, useEffect, useMemo } from "react";
 import { ScheduleCard } from "@/components/schedule/ScheduleCard";
 import { TripDetailsSheet } from "@/components/schedule/TripDetailsSheet";
 import type { ScheduleCardDto } from "@/lib/types/schedule";
-import { Search, Navigation, ArrowLeftRight, Compass, LayoutGrid, List, RotateCcw, ChevronDown, ChevronUp, History, Sparkles, Wind, Volume2, X, AlertOctagon } from "lucide-react";
+import { Search, Navigation, ArrowLeftRight, Compass, LayoutGrid, List, RotateCcw, ChevronDown, ChevronUp, History, Sparkles, Wind, X, AlertOctagon } from "lucide-react";
 import { matchesTurkishSearch } from "@/lib/utils/search-normalizer";
 import { LateNightTransitModal } from "@/components/night/LateNightTransitModal";
 import { MissedFerryAssistantModal } from "@/components/planner/MissedFerryAssistantModal";
 import { resolveDynamicTrip, isTripCancelled, type DynamicTripResolution } from "@/lib/utils/dynamic-trip";
 import { AlarmManager } from "@/components/schedule/AlarmManager";
 import { TripPlannerWithMap } from "@/components/planner/TripPlannerWithMap";
-import { OperatorLogo } from "@/components/ui/OperatorLogo";
 import { useLanguageStore } from "@/store/useLanguageStore";
 import { useOfflineSync } from "@/hooks/useOfflineSync";
 import { useTransitClock } from "@/hooks/useTransitClock";
@@ -31,7 +30,6 @@ import { triggerHaptic } from "@/lib/utils/haptics";
 import type { MarineWeatherStatus } from "@/lib/services/marine-weather";
 import { parseNaturalTransitQuery } from "@/lib/services/ai-transit-assistant";
 import { predictFerryDisruption } from "@/lib/services/predictive-disruption-model";
-import { transitAnnouncer } from "@/lib/services/tts-announcer";
 import { saveSchedulesOffline, loadSchedulesOffline } from "@/lib/services/offline-db";
 import { trackAppOpenOnce } from "@/lib/utils/analytics-tracker";
 import { SponsoredTripRow } from "@/components/schedule/SponsoredTripRow";
@@ -489,11 +487,6 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
     });
     return { upcomingTrips: upcoming, pastTrips: past };
   }, [filteredList]);
-
-  // G3 — SONRAKİ SEFER: Kronolojik ilk yaklaşan sefer (iptaller atlanır, kartlarda görünür kalır)
-  const nextDeparture = useMemo(() => {
-    return upcomingTrips.find(({ schedule, dyn }) => !isTripCancelled(schedule, dyn)) ?? null;
-  }, [upcomingTrips]);
 
   // Y4 — KADEME SEÇİMİ: canlı geri sayım penceresine (eşik: pencere + 1 dk tampon)
   // giren görünür sefer varken saniyelik tick. Aynı değere setTickMs no-op'tur;

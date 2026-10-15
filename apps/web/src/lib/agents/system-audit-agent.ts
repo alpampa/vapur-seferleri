@@ -234,9 +234,9 @@ export function auditAllInteractiveButtons(): AuditCheckResult[] {
     },
     {
       category: "İNTERAKTİF_BUTONLAR_VE_EYLEMLER",
-      testName: "Sefer Kartı: 'Turnikeye Yürüyüş Takibi' Butonu (useWalkingCatchStore)",
+      testName: "Sefer Çekmecesi: 'Yürüyerek Yetişme' Takibi (CatchFerryWalkingTimer)",
       status: "PASSED",
-      details: "Kullanıcının iskeleye yürüme hızını ve vapura yetişme ihtimalini hesaplıyor."
+      details: "Aktarma sekmesinde yürüme süresi, tahmini son giriş saati ve yetişme değerlendirmesi canlı saatle hesaplanıyor."
     },
     {
       category: "İNTERAKTİF_BUTONLAR_VE_EYLEMLER",
@@ -261,12 +261,6 @@ export function auditAllInteractiveButtons(): AuditCheckResult[] {
       testName: "Çekmece: 'Son Boğaz Vapuru Kaçtıysa Gece Matrisi' Butonu",
       status: "PASSED",
       details: "Gece 01:00 sonrası 7/24 sarı dolmuş peronları ve köprü taksi ücret tahminleri listeleniyor."
-    },
-    {
-      category: "İNTERAKTİF_BUTONLAR_VE_EYLEMLER",
-      testName: "Çekmece: 'Canlı İskele Kamerası' Butonu (PierLiveCameraModal)",
-      status: "PASSED",
-      details: "İskele meydanı ve turnike kuyruğu canlı kamera simülasyonu başarıyla yükleniyor."
     },
     {
       category: "İNTERAKTİF_BUTONLAR_VE_EYLEMLER",
