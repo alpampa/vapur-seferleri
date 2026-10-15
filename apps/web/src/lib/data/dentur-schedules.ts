@@ -20,7 +20,7 @@ interface DenturScheduleFile {
 }
 
 // Next.js JSON import'u tip güvenli değildir; bilinçli cast.
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+ 
 const denturRaw = require("./dentur-schedules.json") as DenturScheduleFile;
 
 const DAY_TYPE_RUNS: Record<

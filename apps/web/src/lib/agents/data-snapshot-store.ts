@@ -24,7 +24,7 @@ export interface AnnouncementsSnapshotFile {
 }
 
 // Next.js JSON import — tip güvenli cast
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+ 
 const announcementsRaw = require("./data-snapshots/announcements.json") as AnnouncementsSnapshotFile;
 
 export function getStoredAnnouncements(): OperatorAnnouncement[] {

@@ -59,7 +59,7 @@ function calculateHeading(origin: string, dest: string): number {
   const x =
     Math.cos((o.lat * Math.PI) / 180) * Math.sin((d.lat * Math.PI) / 180) -
     Math.sin((o.lat * Math.PI) / 180) * Math.cos((d.lat * Math.PI) / 180) * Math.cos(dLng);
-  let brng = (Math.atan2(y, x) * 180) / Math.PI;
+  const brng = (Math.atan2(y, x) * 180) / Math.PI;
   return Math.round((brng + 360) % 360);
 }
 
