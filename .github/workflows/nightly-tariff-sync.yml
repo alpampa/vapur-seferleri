@@ -60,4 +60,5 @@ jobs:
 
       - name: Özet raporla
         if: always()
-        run: echo "Senkron tamamlandı. Değişiklik: ${{ steps.diff.outputs.changed }} dosya."
+        run: |
+          echo "Senkron tamamlandı. Değişiklik: ${{ steps.diff.outputs.changed }} dosya."

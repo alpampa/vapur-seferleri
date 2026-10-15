@@ -1,10 +1,4 @@
 {
-  "crons": [
-    {
-      "path": "/api/cron/sync-tariffs",
-      "schedule": "0 22 * * *"
-    }
-  ],
   "headers": [
     {
       "source": "/sw.js",
