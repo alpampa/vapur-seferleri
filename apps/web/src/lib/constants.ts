@@ -12,6 +12,28 @@ export const LIVE_COUNTDOWN_WINDOW_MS = 5 * 60_000;
 /** "Biniyor" (BOARDING) durumuna geçilen eşik (ms) */
 export const BOARDING_THRESHOLD_MS = 2 * 60_000;
 
+/** Bir dakikanın milisaniye cinsinden değeri (tek kaynak) */
+export const MS_PER_MINUTE = 60_000;
+
+/**
+ * Turnike + rampa geçiş payı (dk).
+ *
+ * Bu bir RESMÎ kapı kapanış saati DEĞİLDİR; yolcunun turnikeden geçip
+ * rampadan vapura inmesi için önerilen güvenlik payıdır. Uydurma operasyonel
+ * veri üretmemek için "son giriş" hesabı bu pay üzerinden yapılır ve arayüzde
+ * her zaman "tahmini" olarak etiketlenir.
+ *
+ * Not: Bu değer daha önce `CatchFerryWalkingTimer` içinde gömülüydü (3 dk);
+ * tek doğruluk kaynağı olması için buraya taşındı.
+ */
+export const TURNSTILE_GANGWAY_BUFFER_MIN = 3;
+
+/** Yürüme hızı varsayımı: 4.8 km/sa ≈ 80 metre/dk (tek kaynak) */
+export const WALKING_METERS_PER_MINUTE = 80;
+
+/** "Son giriş" uyarısının gösterildiği son pencere (dk) */
+export const LAST_ENTRY_WARNING_WINDOW_MIN = 10;
+
 /** "Yaklaşan seferler" (≤15 dk) filtresi eşiği (ms) */
 export const IMMINENT_DEPARTURE_MS = 15 * 60_000;
 

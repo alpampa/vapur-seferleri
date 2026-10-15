@@ -78,10 +78,19 @@ export function useTransitClock(intervalMs: number = 1000, options: TransitClock
         }
       } else if (!options.keepTickingWhenHidden) {
         // Tab hidden: clear interval to save battery and memory
-        // (arka planda da çalışması gereken servisler için keepTickingWhenHidden)
         if (timerId) {
           clearInterval(timerId);
           timerId = null;
+        }
+      }
+    };
+
+    // bfcache / tab restore: pageshow fires when iOS Safari restores a frozen page
+    const handlePageShow = (e: PageTransitionEvent) => {
+      if (e.persisted) {
+        tick();
+        if (!timerId) {
+          timerId = setInterval(tick, intervalMs);
         }
       }
     };
@@ -91,12 +100,14 @@ export function useTransitClock(intervalMs: number = 1000, options: TransitClock
     // atışını beklemeden güncel zaman (yavaş kademeden hızlıya geçişte kritik).
     tick();
     document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("pageshow", handlePageShow);
 
     return () => {
       if (timerId) clearInterval(timerId);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("pageshow", handlePageShow);
     };
-  }, [intervalMs, options.keepTickingWhenHidden]);
+  }, [intervalMs, options.keepTickingWhenHidden, options.serverTimeIso]);
 
   return clock;
 }

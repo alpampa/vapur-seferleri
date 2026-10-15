@@ -1,6 +1,6 @@
 "use client";
 
-import { Ship, Bell, BellRing, Star, ChevronRight, Footprints, Moon, Ban, Siren, Timer, AlertTriangle } from "lucide-react";
+import { Ship, Moon, Ban, Siren, Timer, AlertTriangle } from "lucide-react";
 import { OperatorLogo } from "@/components/ui/OperatorLogo";
 import { resolveDynamicTrip, isTripCancelled, DynamicTripResolution } from "@/lib/utils/dynamic-trip";
 import { formatRemainingShort } from "@/lib/utils/istanbul-time";
@@ -13,7 +13,12 @@ import { getPierTransit } from "@/lib/data/pier-transit-connections";
 import { useActiveVoyageStore } from "@/store/useActiveVoyageStore";
 import { triggerHaptic } from "@/lib/utils/haptics";
 import { TransitRouteSchematic } from "@/components/schedule/TransitRouteSchematic";
+import { ScheduleCardActions } from "@/components/schedule/card/ScheduleCardActions";
+import { TripStatusBadge } from "@/components/schedule/card/TripStatusBadge";
 import type { ScheduleCardDto, TripStatus } from "@/lib/types/schedule";
+
+// Geriye dönük uyumluluk: eski import yolları çalışmaya devam eder.
+export { TripStatusBadge };
 
 export interface ScheduleCardProps {
   id: string;
@@ -41,51 +46,6 @@ export interface ScheduleCardProps {
   isFeaturedHero?: boolean;
   highlightStopName?: string;
   onSelectHop?: (schedule: ScheduleCardDto) => void;
-}
-
-export function TripStatusBadge({ status, delayText }: { status: TripStatus; delayText?: string }) {
-  let bgColor = "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300";
-  let label = status.replace("_", " ");
-  
-  switch (status) {
-    case "ON_TIME": 
-      // Kullanıcı kuralı: "Zamanında" yazısı kaldırıldı, yalın görünür
-      return null;
-    case "DEPARTING_SOON": 
-      bgColor = "bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-500/40 font-black animate-pulse"; 
-      label = "AZ KALDI"; 
-      break;
-    case "BOARDING": 
-      bgColor = "bg-blue-100 dark:bg-blue-600/30 text-blue-700 dark:text-blue-300 border border-blue-300 dark:border-blue-500/40 font-bold animate-pulse"; 
-      label = "YOLCU ALINIYOR"; 
-      break;
-    case "IN_TRANSIT": 
-      bgColor = "bg-indigo-100 dark:bg-indigo-600/30 text-indigo-700 dark:text-indigo-300 border border-indigo-300 dark:border-indigo-500/40 font-bold"; 
-      label = "SEYİRDE"; 
-      break;
-    case "ARRIVING": 
-      bgColor = "bg-cyan-100 dark:bg-cyan-600/30 text-cyan-700 dark:text-cyan-300 border border-cyan-300 dark:border-cyan-500/40 font-bold"; 
-      label = "YANAŞIYOR"; 
-      break;
-    case "DELAYED": 
-      bgColor = "bg-rose-100 dark:bg-rose-600/30 text-rose-700 dark:text-rose-300 border border-rose-300 dark:border-rose-500/40 font-bold"; 
-      label = "GECİKMELİ"; 
-      break;
-    case "CANCELLED": 
-      bgColor = "bg-rose-100 dark:bg-rose-950/90 text-rose-700 dark:text-rose-300 font-black border border-rose-400 dark:border-rose-500/60 animate-pulse"; 
-      label = "İPTAL EDİLDİ"; 
-      break;
-    case "COMPLETED": 
-      bgColor = "bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400"; 
-      label = "TAMAMLANDI"; 
-      break;
-  }
-
-  return (
-    <span className={`px-1.5 py-0.5 rounded text-[10px] uppercase tracking-tight text-center whitespace-nowrap leading-none ${bgColor}`}>
-      {label} {delayText && `(${delayText})`}
-    </span>
-  );
 }
 
 export function ScheduleCard(props: ScheduleCardProps) {
@@ -138,6 +98,13 @@ export function ScheduleCard(props: ScheduleCardProps) {
   // KULLANICI KURALI: İptal Sefer Tespiti (/ İPTAL Kırmızı Yanıp Sönen Rozet) — ortak tek doğruluk kaynağı
   const isCancelled = isTripCancelled({ status: props.status, delayText: props.delayText }, dynState);
 
+  // YETİŞME MODU: Tahmini son giriş penceresi (turnike + rampa güvenlik payı).
+  // DİKKAT: Resmî kapı kapanış saati DEĞİLDİR → "~" ile "tahmini" etiketlenir.
+  const boarding = dynState.boardingDeadline ?? null;
+  const canBoard = !isCancelled && !dynState.isDeparted;
+  const showLastEntrySoon = canBoard && boarding?.isWithinWarningWindow === true;
+  const showLastEntryPassed = canBoard && boarding?.isPastLastEntry === true;
+
   // Kalan Saniyeyi Hesapla
   let remainingSec = 0;
   if (dynState.countdown) {
@@ -147,14 +114,14 @@ export function ScheduleCard(props: ScheduleCardProps) {
     }
   }
 
-  // KULLANICI KURALI: Son 3 Dakika Dairesel Kalan Saniye Progress Göstergesi
-  const isLast3Minutes = !isCancelled && !dynState.isDeparted && remainingSec > 0 && remainingSec <= 180;
-  const ringRatio = isLast3Minutes ? Math.max(0, Math.min(1, remainingSec / 180)) : 1;
+  // KULLANICI KURALI: Son 60 Saniye Dairesel Kalan Saniye Geri Sayım Göstergesi
+  const isLastMinute = !isCancelled && !dynState.isDeparted && remainingSec > 0 && remainingSec <= 60;
+  const ringRatio = isLastMinute ? Math.max(0, Math.min(1, remainingSec / 60)) : 1;
   const ringCircumference = 94.2; // 2 * PI * 15
   const ringOffset = ringCircumference * (1 - ringRatio);
   let ringColor = "#f59e0b";
-  if (remainingSec <= 60) ringColor = "#ef4444";
-  else if (remainingSec <= 120) ringColor = "#f97316";
+  if (remainingSec <= 20) ringColor = "#ef4444";
+  else if (remainingSec <= 40) ringColor = "#f97316";
 
   // Gece Seferi Tespiti (00:00 - 05:59 arası seferler UKOME Çift Tarife)
   const departureHour = parseInt(dynState.currentDepartureTime.split(":")[0], 10);
@@ -183,6 +150,17 @@ export function ScheduleCard(props: ScheduleCardProps) {
     progress: props.progress,
     stops: props.stops,
     arrivalTime: props.arrivalTime,
+  };
+
+  const handleToggleFavorite = () => {
+    triggerHaptic(isFav ? "light" : "success");
+    toggleFavorite(routeKey);
+  };
+
+  const handleToggleAlarm = async () => {
+    triggerHaptic(hasAlarm ? "light" : "medium");
+    await requestNotificationPermission();
+    toggleAlarm(props.id);
   };
 
   const handleCardClick = () => {
@@ -220,7 +198,7 @@ export function ScheduleCard(props: ScheduleCardProps) {
               ? "border-slate-200 dark:border-slate-800/80 bg-slate-50/60 dark:bg-slate-900/40 text-slate-500 dark:text-slate-400 opacity-65"
               : isNightTrip
               ? "border-indigo-400/70 dark:border-indigo-500/50 bg-white dark:bg-[#111726] text-slate-900 dark:text-white"
-              : isLast3Minutes
+              : isLastMinute
               ? "border-rose-400 bg-rose-50/30 dark:bg-rose-950/20 text-slate-900 dark:text-white"
               : isLast5Minutes
               ? "border-amber-400/80 bg-amber-50/30 dark:bg-amber-950/20 text-slate-900 dark:text-white"
@@ -235,7 +213,7 @@ export function ScheduleCard(props: ScheduleCardProps) {
                   ? "line-through text-rose-500"
                   : dynState.isDeparted
                   ? "text-slate-400 dark:text-slate-500"
-                  : isLast3Minutes
+                  : isLastMinute
                   ? "text-rose-600 dark:text-rose-400 animate-pulse font-extrabold"
                   : isNightTrip
                   ? "text-indigo-600 dark:text-indigo-300 font-extrabold"
@@ -257,11 +235,28 @@ export function ScheduleCard(props: ScheduleCardProps) {
                   ? "bg-amber-500 text-slate-950 border-amber-400 font-extrabold shadow-2xs"
                   : "bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 border-amber-300/60 dark:border-amber-500/30"
               }`}>
-                {dynState.countdown}
+                {remainingSec > 0 && remainingSec <= 60 ? remainingSec + "s" : dynState.countdown}
               </span>
             ) : dynState.minutesUntilDeparture != null && dynState.status === "ON_TIME" && !isCancelled ? (
               <span className="text-[9px] font-mono font-black px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 tabular-nums whitespace-nowrap">
                 {formatRemainingShort(dynState.minutesUntilDeparture)}
+              </span>
+            ) : null}
+
+            {/* YETİŞME MODU: son giriş penceresi — resmî kapı kapanış saati değil, tahmini güvenlik payı */}
+            {showLastEntryPassed ? (
+              <span
+                title="Tahmini: turnike + rampa geçiş payı. Resmî kapı kapanış saati değildir."
+                className="text-[9px] font-black px-1.5 py-0.5 rounded bg-rose-600 text-white border border-rose-500 whitespace-nowrap"
+              >
+                Son giriş geçti
+              </span>
+            ) : showLastEntrySoon ? (
+              <span
+                title="Tahmini: turnike + rampa geçiş payı. Resmî kapı kapanış saati değildir."
+                className="text-[9px] font-black px-1.5 py-0.5 rounded bg-amber-500 text-slate-950 border border-amber-400 tabular-nums whitespace-nowrap"
+              >
+                Son giriş ~{boarding?.lastEntryHhmm}
               </span>
             ) : null}
           </div>
@@ -337,50 +332,13 @@ export function ScheduleCard(props: ScheduleCardProps) {
           </div>
 
           {/* Sağ: Eylemler */}
-          <div className="flex items-center gap-1 shrink-0 text-right">
-            {/* Favori Butonu */}
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                triggerHaptic(isFav ? "light" : "success");
-                toggleFavorite(routeKey);
-              }}
-              title={isFav ? "Favorilerden Çıkar" : "Favorilere Ekle"}
-              aria-label={isFav ? "Favorilerden çıkar" : "Favorilere ekle"}
-              aria-pressed={isFav}
-              className={`w-8 h-8 flex items-center justify-center rounded-lg transition-all active:scale-95 touch-manipulation cursor-pointer ${
-                isFav
-                  ? "text-amber-500 bg-amber-100 dark:bg-amber-400/20 ring-1 ring-amber-400/30"
-                  : "text-slate-400 hover:text-amber-500 hover:bg-slate-100 dark:hover:bg-slate-800"
-              }`}
-            >
-              <Star size={14} className={isFav ? "fill-amber-500 text-amber-500" : ""} />
-            </button>
-
-            {/* Alarm Butonu */}
-            <button
-              type="button"
-              onClick={async (e) => {
-                e.stopPropagation();
-                triggerHaptic(hasAlarm ? "light" : "medium");
-                await requestNotificationPermission();
-                toggleAlarm(props.id);
-              }}
-              title={hasAlarm ? "Hatırlatıcıyı Kaldır" : "15 Dk Önce Hatırlat"}
-              aria-label={hasAlarm ? "Hatırlatıcıyı kaldır" : "15 dakika önce hatırlat"}
-              aria-pressed={hasAlarm}
-              className={`w-8 h-8 flex items-center justify-center rounded-lg transition-all active:scale-95 touch-manipulation cursor-pointer ${
-                hasAlarm
-                  ? "text-blue-600 bg-blue-100 dark:bg-blue-500/20 ring-1 ring-blue-500/30"
-                  : "text-slate-400 hover:text-blue-600 hover:bg-slate-100 dark:hover:bg-slate-800"
-              }`}
-            >
-              {hasAlarm ? <BellRing size={14} className="text-blue-600 animate-bounce" /> : <Bell size={14} />}
-            </button>
-
-            <ChevronRight size={15} className="text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200 transition-all shrink-0 ml-0.5" />
-          </div>
+          <ScheduleCardActions
+            variant="compact"
+            isFav={isFav}
+            hasAlarm={hasAlarm}
+            onToggleFavorite={handleToggleFavorite}
+            onToggleAlarm={handleToggleAlarm}
+          />
         </div>
       </>
     );
@@ -416,8 +374,8 @@ export function ScheduleCard(props: ScheduleCardProps) {
       <div className="flex items-center justify-between gap-2.5 w-full">
         {/* 1. Sol: Kalkış Saati & Dairesel Geri Sayım Progress Halkası */}
         <div className="flex items-center gap-2 shrink-0">
-          {/* Son 3 Dakika Kalan Saniye Dairesel Progress Halkası */}
-          {isLast3Minutes && (
+          {/* Son 60 Saniye Kalan Saniye Dairesel Progress Halkası */}
+          {isLastMinute && (
             <div className="relative w-10 h-10 flex items-center justify-center shrink-0" title={`Kalkışa ${remainingSec} saniye kaldı!`}>
               <svg className="w-10 h-10 -rotate-90" viewBox="0 0 36 36">
                 <circle
@@ -443,7 +401,7 @@ export function ScheduleCard(props: ScheduleCardProps) {
                 />
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center leading-none">
-                <span className={`text-[10px] font-mono font-black tabular-nums ${remainingSec <= 60 ? "text-rose-600 dark:text-rose-400 animate-pulse font-extrabold" : "text-amber-600 dark:text-amber-400"}`}>
+                <span className="text-[10px] font-mono font-black tabular-nums text-rose-600 dark:text-rose-400 animate-pulse font-extrabold">
                   {remainingSec}s
                 </span>
                 <span className="text-[8px] font-bold text-slate-400">KALDI</span>
@@ -458,7 +416,7 @@ export function ScheduleCard(props: ScheduleCardProps) {
                   ? "line-through text-rose-500 dark:text-rose-400 font-bold opacity-80"
                   : dynState.isDeparted
                   ? "text-slate-400 dark:text-slate-500"
-                  : isLast3Minutes
+                  : isLastMinute
                   ? "text-rose-600 dark:text-rose-400 font-extrabold scale-105 animate-pulse"
                   : isLast5Minutes
                   ? "text-amber-500 dark:text-amber-400 animate-pulse font-extrabold"
@@ -482,15 +440,9 @@ export function ScheduleCard(props: ScheduleCardProps) {
                   <Ship size={10} />
                   <span>{t("departed")}</span>
                 </span>
-              ) : isLast3Minutes ? (
-                <span className={`px-1.5 py-0.5 rounded text-[9px] font-black uppercase tracking-wider inline-flex items-center gap-0.5 shadow-xs animate-pulse ${
-                  remainingSec <= 60 ? "bg-rose-600 text-white" : "bg-amber-500 text-slate-950 font-extrabold"
-                }`}>
-                  {remainingSec <= 60 ? (
-                    <><Siren size={10} aria-hidden="true" /> SON ÇAĞRI</>
-                  ) : (
-                    <><Footprints size={10} aria-hidden="true" /> KAPI KAPANIYOR</>
-                  )}
+              ) : isLastMinute ? (
+                <span className="px-1.5 py-0.5 rounded text-[9px] font-black uppercase tracking-wider inline-flex items-center gap-0.5 shadow-xs animate-pulse bg-rose-600 text-white">
+                  <Siren size={10} aria-hidden="true" /> SON ÇAĞRI — {remainingSec}s
                 </span>
               ) : dynState.countdown ? (
                 <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-black bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-500/40 animate-pulse whitespace-nowrap inline-flex items-center gap-0.5">
@@ -504,6 +456,27 @@ export function ScheduleCard(props: ScheduleCardProps) {
                 <TripStatusBadge status={dynState.status} delayText={props.delayText} />
               )}
             </div>
+
+            {/* YETİŞME MODU: son giriş penceresi (tahmini güvenlik payı, resmî kapı saati değil) */}
+            {canBoard && boarding && (showLastEntryPassed || showLastEntrySoon) && (
+              <div className="mt-1">
+                {showLastEntryPassed ? (
+                  <span
+                    title="Tahmini: turnike + rampa geçiş payı. Resmî kapı kapanış saati değildir."
+                    className="px-1.5 py-0.5 rounded text-[9px] font-black bg-rose-600 text-white border border-rose-500 inline-flex items-center gap-0.5 whitespace-nowrap"
+                  >
+                    <Siren size={9} aria-hidden="true" /> Son giriş geçti ~{boarding.lastEntryHhmm}
+                  </span>
+                ) : (
+                  <span
+                    title="Tahmini: turnike + rampa geçiş payı. Resmî kapı kapanış saati değildir."
+                    className="px-1.5 py-0.5 rounded text-[9px] font-black bg-amber-500 text-slate-950 border border-amber-400 tabular-nums inline-flex items-center gap-0.5 whitespace-nowrap"
+                  >
+                    <Timer size={9} aria-hidden="true" /> Son giriş ~{boarding.lastEntryHhmm}
+                  </span>
+                )}
+              </div>
+            )}
           </div>
         </div>
 
@@ -586,55 +559,13 @@ export function ScheduleCard(props: ScheduleCardProps) {
         </div>
 
         {/* 3. Sağ: Hızlı Eylemler (Favori, Alarm, Detay Oku) */}
-        <div className="flex items-center gap-1 shrink-0">
-          {/* Favori Yıldızı */}
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              triggerHaptic(isFav ? "light" : "success");
-              toggleFavorite(routeKey);
-            }}
-            title={isFav ? "Favorilerden Çıkar" : "Favorilere Ekle"}
-            aria-label={isFav ? "Favorilerden çıkar" : "Favorilere ekle"}
-            aria-pressed={isFav}
-            className={`w-8 h-8 flex items-center justify-center rounded-lg transition-all active:scale-90 touch-manipulation cursor-pointer ${
-              isFav
-                ? "text-amber-500 dark:text-amber-400 bg-amber-100 dark:bg-amber-400/20 ring-1 ring-amber-400/30"
-                : "text-slate-400 hover:text-amber-500 dark:hover:text-amber-300 hover:bg-slate-100 dark:hover:bg-slate-800"
-            }`}
-          >
-            <Star size={15} className={isFav ? "fill-amber-500 text-amber-500" : ""} />
-          </button>
-
-          {/* Alarm Zili */}
-          <button
-            type="button"
-            onClick={async (e) => {
-              e.stopPropagation();
-              triggerHaptic(hasAlarm ? "light" : "medium");
-              await requestNotificationPermission();
-              toggleAlarm(props.id);
-            }}
-            title={hasAlarm ? "Hatırlatıcıyı Kaldır" : "15 Dk Önce Hatırlat"}
-            aria-label={hasAlarm ? "Hatırlatıcıyı kaldır" : "15 dakika önce hatırlat"}
-            aria-pressed={hasAlarm}
-            className={`w-8 h-8 flex items-center justify-center rounded-lg transition-all active:scale-90 touch-manipulation cursor-pointer ${
-              hasAlarm
-                ? "text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-500/20 ring-1 ring-blue-500/30"
-                : "text-slate-400 hover:text-blue-600 dark:hover:text-blue-300 hover:bg-slate-100 dark:hover:bg-slate-800"
-            }`}
-          >
-            {hasAlarm ? (
-              <BellRing size={15} className="text-blue-600 dark:text-blue-400 animate-bounce" />
-            ) : (
-              <Bell size={15} />
-            )}
-          </button>
-
-          {/* Detay Gösterge Oku */}
-          <ChevronRight size={16} className="text-slate-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 group-hover:translate-x-0.5 transition-all shrink-0 ml-0.5" />
-        </div>
+        <ScheduleCardActions
+          variant="full"
+          isFav={isFav}
+          hasAlarm={hasAlarm}
+          onToggleFavorite={handleToggleFavorite}
+          onToggleAlarm={handleToggleAlarm}
+        />
       </div>
 
       {/* 2. BÜTÜN DURAKLAR: Mobilde asla kesilmeyen, sarmalanan (flex-wrap) İstasyon Güzergahı */}

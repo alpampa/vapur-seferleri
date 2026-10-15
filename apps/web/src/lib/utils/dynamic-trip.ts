@@ -7,6 +7,10 @@ import {
   BOARDING_THRESHOLD_MS,
   ESTIMATED_TRAVEL_MIN_PER_HOP,
 } from "@/lib/constants";
+import {
+  resolveBoardingDeadline,
+  type BoardingDeadline,
+} from "@/lib/utils/boarding-deadline";
 
 export interface WaypointItem {
   name: string;
@@ -39,6 +43,12 @@ export interface DynamicTripResolution {
   waypoints: DynamicWaypointView[];
   activeChain: DynamicWaypointView[];
   activeLegIndex: number;
+  /**
+   * Tahmini "son giriş" penceresi (turnike + rampa güvenlik payı).
+   * DİKKAT: Resmî kapı kapanış saati DEĞİLDİR; arayüzde "tahmini" etiketiyle
+   * gösterilir. Doğrulanmış operatör verisi yoksa uydurulmaz → null.
+   */
+  boardingDeadline?: BoardingDeadline | null;
 }
 
 /**
@@ -105,7 +115,8 @@ export function resolveDynamicTrip(
       isExpired: true,
       waypoints: [],
       activeChain: [],
-      activeLegIndex: 0
+      activeLegIndex: 0,
+      boardingDeadline: null
     };
   }
 
@@ -256,7 +267,8 @@ export function resolveDynamicTrip(
         isExpired: false,
         waypoints: waypointsView,
         activeChain,
-        activeLegIndex: i
+        activeLegIndex: i,
+        boardingDeadline: resolveBoardingDeadline(leg.targetTimeMs, accurateNow)
       };
     }
   }
@@ -288,6 +300,7 @@ export function resolveDynamicTrip(
     isExpired: true, // EXPIRED: Will be automatically removed from the list!
     waypoints: finalWaypointsView,
     activeChain: [],
-    activeLegIndex: numLegs
+    activeLegIndex: numLegs,
+    boardingDeadline: null
   };
 }

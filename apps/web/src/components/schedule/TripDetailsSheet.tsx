@@ -38,6 +38,7 @@ import { getPierGroundTransit } from "@/lib/data/pier-taxi-transit";
 import { getPierMobility } from "@/lib/data/pier-parking-bicycle";
 import { resolveDynamicTrip, DynamicTripResolution } from "@/lib/utils/dynamic-trip";
 import { DepartureTimeline } from "@/components/schedule/DepartureTimeline";
+import { CatchFerryWalkingTimer } from "@/components/planner/CatchFerryWalkingTimer";
 import { SLOW_TICK_INTERVAL_MS } from "@/lib/constants";
 import { useAlarmStore } from "@/store/useAlarmStore";
 import { useFavoritesStore } from "@/store/useFavoritesStore";
@@ -464,6 +465,12 @@ export function TripDetailsSheet({
             {/* SEKME 2: İSKELE AKTARMA & ULAŞIM */}
             {activeDetailTab === "TRANSIT" && (
               <div className="space-y-3.5 animate-fadeIn text-xs">
+                {/* YETİŞME MODU: "Kalkış iskelesine yürüyerek yetişebilir miyim?" */}
+                <CatchFerryWalkingTimer
+                  departureTime={dynState?.currentDepartureTime || schedule.departureTime}
+                  originPier={dynState?.currentOrigin || schedule.origin}
+                />
+
                 {/* 1. Varış Noktasında Aktarma & Ulaşım (Kabataş, Kadıköy, Bostancı, Adalar) */}
                 {destTransit.length > 0 && (
                   <div className="p-3.5 rounded-2xl bg-blue-50/70 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800/60">

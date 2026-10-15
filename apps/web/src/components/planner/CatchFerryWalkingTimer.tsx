@@ -3,6 +3,8 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import { Footprints, Navigation, Clock, AlertTriangle, CheckCircle2, Volume2, VolumeX, ShieldAlert } from "lucide-react";
 import { ISTANBUL_PIERS } from "@/lib/data/piers";
+import { TURNSTILE_GANGWAY_BUFFER_MIN } from "@/lib/constants";
+import { estimateWalkingMinutes } from "@/lib/utils/boarding-deadline";
 import { useTransitClock } from "@/hooks/useTransitClock";
 
 interface CatchFerryWalkingTimerProps {
@@ -90,10 +92,9 @@ export function CatchFerryWalkingTimer({ departureTime, originPier }: CatchFerry
     }
   };
 
-  // Walking calculations
-  // Average human speed: 4.8 km/h = 80 meters/min
-  const walkingMinutes = Math.ceil(distanceMeters / 80);
-  const turnstileBufferMinutes = 3; // 3 mins to cross turnstile and walk down the gangway
+  // Walking calculations — tek doğruluk kaynağı: lib/constants + boarding-deadline
+  const walkingMinutes = estimateWalkingMinutes(distanceMeters);
+  const turnstileBufferMinutes = TURNSTILE_GANGWAY_BUFFER_MIN;
   const totalTravelNeededMinutes = walkingMinutes + turnstileBufferMinutes;
 
   // Minutes until departure
