@@ -313,3 +313,57 @@ describe("resolveDynamicTrip — Sıfır Hata / Kendine Sefer (Origin === Destin
     expect(res.isExpired).toBe(true);
   });
 });
+
+describe("resolveDynamicTrip — canlı seyir (underway) ilerlemesi", () => {
+  const TARGET = "2026-10-01T06:00:00.000Z"; // 09:00 İstanbul kalkışı
+
+  const resolve = (
+    nowIso: string,
+    stops: { name: string; time: string }[],
+    arrival: string
+  ) =>
+    resolveDynamicTrip(
+      "Kınalıada",
+      "Bostancı",
+      "09:00",
+      TARGET,
+      stops,
+      arrival,
+      at(nowIso)
+    );
+
+  it("kalkıştan önce underway yoktur", () => {
+    const res = resolve("2026-10-01T08:55:00+03:00", [{ name: "Burgazada", time: "09:10" }], "09:25");
+    expect(res.underway).toBeNull();
+  });
+
+  it("seyir ortasında zaman oranına göre ilerler (10 dk hop → %50)", () => {
+    const res = resolve("2026-10-01T09:05:00+03:00", [{ name: "Burgazada", time: "09:10" }], "09:25");
+    expect(res.underway).not.toBeNull();
+    expect(res.underway?.fromName).toBe("Kınalıada");
+    expect(res.underway?.toName).toBe("Burgazada");
+    expect(res.underway?.ratio).toBeCloseTo(0.5, 2);
+    expect(res.underway?.minutesToArrival).toBe(5);
+    expect(res.underway?.isApproaching).toBe(false);
+    expect(res.underway?.hasArrived).toBe(false);
+  });
+
+  it("iskeleye ≤ 3 dk kala yaklaşma bayrağı açılır", () => {
+    const res = resolve("2026-10-01T09:08:00+03:00", [{ name: "Burgazada", time: "09:10" }], "09:25");
+    expect(res.underway?.isApproaching).toBe(true);
+    expect(res.underway?.minutesToArrival).toBe(2);
+  });
+
+  it("uzun beklemede seyir süresi 15 dk ile sınırlanır: varış + iskelede bekleme", () => {
+    const res = resolve("2026-10-01T09:20:00+03:00", [{ name: "Burgazada", time: "09:30" }], "09:45");
+    expect(res.underway?.hasArrived).toBe(true);
+    expect(res.underway?.ratio).toBe(1);
+    expect(res.underway?.minutesToArrival).toBe(0);
+  });
+
+  it("tamamlanan seferde underway yoktur", () => {
+    const res = resolve("2026-10-01T09:40:00+03:00", [{ name: "Burgazada", time: "09:10" }], "09:25");
+    expect(res.isExpired).toBe(true);
+    expect(res.underway).toBeNull();
+  });
+});

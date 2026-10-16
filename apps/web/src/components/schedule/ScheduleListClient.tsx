@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import { ScheduleCard } from "@/components/schedule/ScheduleCard";
 import { TripDetailsSheet } from "@/components/schedule/TripDetailsSheet";
 import type { ScheduleCardDto } from "@/lib/types/schedule";
-import { Search, Navigation, ArrowLeftRight, Compass, LayoutGrid, List, RotateCcw, ChevronDown, ChevronUp, History, Sparkles, Wind, X, AlertOctagon } from "lucide-react";
+import { Search, Navigation, ArrowLeftRight, RotateCcw, ChevronDown, ChevronUp, History, Sparkles, Wind, X, AlertOctagon, SlidersHorizontal } from "lucide-react";
 import { matchesTurkishSearch } from "@/lib/utils/search-normalizer";
 import { LateNightTransitModal } from "@/components/night/LateNightTransitModal";
 import { MissedFerryAssistantModal } from "@/components/planner/MissedFerryAssistantModal";
@@ -23,7 +23,8 @@ import { IMMINENT_DEPARTURE_MS, FAST_TICK_THRESHOLD_MIN, SLOW_TICK_INTERVAL_MS }
 import { useAnnouncements } from "@/hooks/useAnnouncements";
 import { useAnnouncementStore } from "@/store/useAnnouncementStore";
 import { AnnouncementBanner } from "@/components/announcements/AnnouncementBanner";
-import { SmartCommutePills } from "@/components/schedule/SmartCommutePills";
+import { NextDepartureStrip } from "@/components/schedule/NextDepartureStrip";
+import { ScheduleToolsSheet } from "@/components/schedule/ScheduleToolsSheet";
 import { LastFerrySafeguardBanner } from "@/components/schedule/LastFerrySafeguardBanner";
 import { ServiceDataTrustBar } from "@/components/trust/ServiceDataTrustBar";
 import type { SourceFreshnessMeta } from "@/components/trust/ServiceDataTrustBar";
@@ -71,6 +72,8 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
   const [onlyImminent, setOnlyImminent] = useState<boolean>(false);
   const [isCompactDensity, setIsCompactDensity] = useState<boolean>(false);
   const [showPastTrips, setShowPastTrips] = useState<boolean>(false);
+  const [isToolsOpen, setIsToolsOpen] = useState<boolean>(false);
+  const toolFilterCount = (selectedOperator !== "ALL" ? 1 : 0) + (showPlanner ? 1 : 0) + (isCompactDensity ? 1 : 0);
 
   useEffect(() => {
     try {
@@ -494,6 +497,8 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
     return { upcomingTrips: upcoming, pastTrips: past };
   }, [filteredList]);
 
+  const glanceTrip = !touristMode && upcomingTrips.length > 0 ? upcomingTrips[0] : null;
+
   // Y4 — KADEME SEÇİMİ: canlı geri sayım penceresine (eşik: pencere + 1 dk tampon)
   // giren görünür sefer varken saniyelik tick. Aynı değere setTickMs no-op'tur;
   // upcomingTrips her tick'te yeniden üretilir ama efekt ucuzdur (.some taraması).
@@ -535,9 +540,6 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
         </div>
       )}
 
-      {/* GÜVEN KATMANI: bugünün tarifesi (hafta içi/cumartesi/pazar/tatil) + kaynak doğrulama tazeliği */}
-      <ServiceDataTrustBar serverTimeIso={serverTimeIso} freshness={sourceFreshness} />
-
       {/* 0. GECE GÜVENCESİ: SON VAPURU KAÇIRMA ASİSTANI (23:45 Sonrası Aktif) */}
       <LastFerrySafeguardBanner
         schedules={effectiveSchedules}
@@ -545,22 +547,24 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
         onOpenNightTransit={() => setIsNightTransitOpen(true)}
       />
 
-      {/* 0.1 AKILLI SIK KULLANILAN ROTA KISAYOLLARI (1-Tap Fast Commute) */}
-      <div className="px-3 pt-1">
-        <SmartCommutePills
-          currentOrigin={selectedOrigin}
-          currentDestination={selectedDestination}
-          onSelectRoute={(origin, destination, category) => {
-            setSelectedOrigin(origin);
-            setSelectedDestination(destination);
-            setSelectedCategory(category);
-          }}
-        />
-      </div>
+      {glanceTrip && (
+        <div className="px-3 pt-1.5">
+          <NextDepartureStrip
+            dyn={glanceTrip.dyn}
+            youAreAt={
+              geoStatus === "ACTIVE" && nearestPier && glanceTrip.dyn.currentOrigin === nearestPier.name
+                ? nearestPier.name
+                : null
+            }
+            onOpen={() => setSelectedSchedule(glanceTrip.schedule)}
+          />
+        </div>
+      )}
 
-      {/* 1. TEK KART BİRLEŞİK İSKELE SEÇİCİ (Origin ➔ Destination) */}
+      {/* 1. TEK KART: İSKELE SEÇİCİ + MİKRO FİLTRELER (Birleşik Kart) */}
       <div className="px-3 pt-1.5">
-        <div className="w-full flex items-center gap-1 p-1 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl shadow-2xs">
+        <div className="w-full rounded-2xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 shadow-2xs overflow-hidden">
+        <div className="w-full flex items-center gap-1 p-1">
           {/* Kalkış İskelesi */}
           <div className="relative flex-1 min-w-0">
             <select
@@ -623,11 +627,8 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
               <X size={14} />
             </button>
           )}
-        </div>
-      </div>
-
-      {/* 2. TEK SATIR YATAY KAYDIRILABİLİR MİKRO FİLTRE VE EYLEM HAPLARI */}
-      <div className="px-3 pt-1.5">
+          </div>
+          <div className="border-t border-slate-200/70 dark:border-slate-800/70 px-1.5 py-0.5">
         <div className="w-full overflow-x-auto hide-scrollbar flex items-center gap-1.5 py-0.5">
           {/* Adalar */}
           <button
@@ -676,22 +677,6 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
             <span>≤15 dk</span>
           </button>
 
-          {/* Operatör Seçici Dropdown Hapı */}
-          <div className="relative shrink-0">
-            <select
-              value={selectedOperator}
-              onChange={(e) => setSelectedOperator(e.target.value)}
-              aria-label="Firma / Operatör Filtresi"
-              className={`min-h-10 pl-3 pr-6 rounded-xl text-[11px] font-bold border appearance-none cursor-pointer ${
-                selectedOperator !== "ALL" ? chipOn : chipOff
-              }`}
-            >
-              <option value="ALL">🏢 Firmalar</option>
-              {uniqueOperators.map(op => <option key={op} value={op}>{op}</option>)}
-            </select>
-            <ChevronDown size={10} className={`absolute right-1.5 top-1/2 -translate-y-1/2 pointer-events-none ${selectedOperator !== "ALL" ? "text-slate-900" : "text-slate-400"}`} />
-          </div>
-
           {/* GPS En Yakın İskele */}
           <button
             type="button"
@@ -719,44 +704,25 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
             <span>{t("search")}</span>
           </button>
 
-          {/* Gece Seferleri */}
+          {/* Filtreler & Araçlar */}
           <button
             type="button"
-            onClick={() => setIsNightTransitOpen(true)}
-            className={`${chipBase} gap-1 ${chipOff}`}
+            onClick={() => setIsToolsOpen(true)}
+            aria-pressed={toolFilterCount > 0}
+            className={`${chipBase} gap-1 ${toolFilterCount > 0 ? chipOn : chipOff}`}
           >
-            <span>🌙</span>
-            <span>{t("nightMode")}</span>
-          </button>
-
-          {/* Harita */}
-          <button
-            type="button"
-            onClick={() => setShowPlanner(!showPlanner)}
-            aria-pressed={showPlanner}
-            className={`${chipBase} gap-1 ${
-              showPlanner ? chipOn : chipOff
-            }`}
-          >
-            <Compass size={11} />
-            <span>{t("map")}</span>
-          </button>
-
-          {/* Görünüm Yoğunluğu */}
-          <button
-            type="button"
-            onClick={handleToggleDensity}
-            className={`${chipBase} gap-1 ${chipOff}`}
-            title={isCompactDensity ? "Geniş Kart Görünümü" : "Kompakt Liste Görünümü"}
-          >
-            {isCompactDensity ? <LayoutGrid size={11} /> : <List size={11} />}
-            <span>{isCompactDensity ? t("viewComfort") : t("viewCompact")}</span>
+            <SlidersHorizontal size={11} />
+            <span>{t("filtersTools")}{toolFilterCount > 0 ? ` · ${toolFilterCount}` : ""}</span>
           </button>
         </div>
+        </div>
+        </div>
+      </div>
 
-        {/* GPS Konumu Bildirim Rozeti (En Yakın İskele Seçildiğinde) */}
-        {nearestPier && geoStatus === "ACTIVE" && selectedOrigin === nearestPier.name && (
-          <div className="flex items-center justify-between px-2.5 py-1 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200 text-[11px] mt-1.5 animate-fadeIn">
+      {/* GPS Konumu Bildirim Rozeti (En Yakın İskele Seçildiğinde) */}
+      {nearestPier && geoStatus === "ACTIVE" && selectedOrigin === nearestPier.name && (
+        <div className="px-3 pt-1.5 animate-fadeIn">
+          <div className="flex items-center justify-between px-2.5 py-1 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200 text-[11px] animate-fadeIn">
             <span className="flex items-center gap-1.5 font-bold">
               <Navigation size={11} className="fill-emerald-600 text-emerald-600 shrink-0" />
               <span>Konumunuza en yakın iskele: <strong>{nearestPier.name}</strong> (~{nearestPier.distanceKm.toFixed(1)} km)</span>
@@ -771,8 +737,8 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
               Tümünü Göster
             </button>
           </div>
+        </div>
         )}
-      </div>
 
       {/* 4. İSTEĞE BAĞLI SATIR: ARAMA ÇUBUĞU */}
       {isSearchVisible && (
@@ -871,27 +837,16 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
         <TouristTripList items={upcomingTrips} onExitTouristMode={() => setTouristMode(false)} />
       ) : (
         <>
-      {/* Sonuç Başlığı & Yoğunluk Seçici */}
-      <div className="px-3 pt-2 pb-1 flex items-center justify-between text-xs font-bold text-slate-500 dark:text-slate-400">
-        <div className="flex items-center gap-2">
-          <span className="text-[11px]">
-            {t("activeTrips")}: <strong className="text-slate-900 dark:text-white text-xs">{upcomingTrips.length}</strong>
-          </span>
-        </div>
-
-        {searchQuery.trim().length > 0 ? (
-          <span className="text-blue-700 dark:text-blue-300 font-extrabold bg-blue-100 dark:bg-blue-950/60 border border-blue-300 dark:border-blue-500/30 px-2 py-0.5 rounded text-[11px]">
-            🔍 {upcomingTrips.length} Sefer Bulundu
-          </span>
-        ) : selectedOrigin !== "ALL" || selectedDestination !== "ALL" ? (
-          <span className="text-amber-700 dark:text-amber-300 font-extrabold bg-amber-100 dark:bg-amber-950/60 border border-amber-300 dark:border-amber-500/30 px-2 py-0.5 rounded text-[11px] flex items-center gap-1">
-            <span>{selectedOrigin !== "ALL" ? selectedOrigin : "Tümü"}</span>
-            <span>➔</span>
-            <span>{selectedDestination !== "ALL" ? selectedDestination : "Tümü"}</span>
-          </span>
-        ) : (
-          <span className="text-[10px] text-slate-400 dark:text-slate-500 font-normal">
-            Detay için sefere dokunun
+      {/* SONUÇ & GÜVEN META SATIRI: sefer sayısı + tarife günü/kaynak tazeliği tek satır */}
+      <div className="px-3 pt-1.5 pb-1 flex items-center gap-2 min-w-0 text-[11px] font-bold text-slate-500 dark:text-slate-400">
+        <span className="shrink-0">
+          {t("activeTrips")}: <strong className="text-slate-900 dark:text-white text-xs">{upcomingTrips.length}</strong>
+        </span>
+        <span aria-hidden="true" className="text-slate-300 dark:text-slate-600 shrink-0">·</span>
+        <ServiceDataTrustBar serverTimeIso={serverTimeIso} freshness={sourceFreshness} />
+        {searchQuery.trim().length > 0 && (
+          <span className="ml-auto shrink-0 text-blue-700 dark:text-blue-300 font-extrabold bg-blue-100 dark:bg-blue-950/60 border border-blue-300 dark:border-blue-500/30 px-2 py-0.5 rounded text-[11px]">
+            🔍 {upcomingTrips.length}
           </span>
         )}
       </div>
@@ -1080,6 +1035,32 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
         isOpen={!!selectedSchedule}
         onClose={() => setSelectedSchedule(null)}
         serverTimeIso={serverTimeIso}
+      />
+
+      {/* Filtreler & Araçlar Bottom Sheet: Hızlı Rotalar + Operatör + Görünüm */}
+      <ScheduleToolsSheet
+        isOpen={isToolsOpen}
+        onClose={() => setIsToolsOpen(false)}
+        currentOrigin={selectedOrigin}
+        currentDestination={selectedDestination}
+        onSelectRoute={(origin, destination, category) => {
+          setSelectedOrigin(origin);
+          setSelectedDestination(destination);
+          setSelectedCategory(category);
+        }}
+        operators={uniqueOperators}
+        selectedOperator={selectedOperator}
+        onSelectOperator={setSelectedOperator}
+        onOpenNightGuide={() => setIsNightTransitOpen(true)}
+        showPlanner={showPlanner}
+        onTogglePlanner={() => setShowPlanner((v) => !v)}
+        isCompactDensity={isCompactDensity}
+        onToggleDensity={handleToggleDensity}
+        onClearFilters={() => {
+          setSelectedOperator("ALL");
+          setShowPlanner(false);
+          if (isCompactDensity) handleToggleDensity();
+        }}
       />
 
       {/* Gece Seferleri & Sabaha Karşı Dolmuş/Taksi Rehberi Modalı */}

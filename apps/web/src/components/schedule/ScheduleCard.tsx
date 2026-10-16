@@ -613,6 +613,7 @@ export function ScheduleCard(props: ScheduleCardProps) {
           arrivalTime={props.arrivalTime}
           stops={props.stops}
           operator={props.operator}
+          underway={dynState.underway}
         />
       )}
     </div>

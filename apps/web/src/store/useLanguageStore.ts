@@ -89,7 +89,12 @@ export const DICTIONARY = {
     onboard: "İndiğinizde Yanınızda",
     source: "Kaynak",
     fareNote: "Ücret İstanbulkart ile ödenir",
-    openInMaps: "Haritada Aç"
+    openInMaps: "Haritada Aç",
+    glanceYouAre: "Konumun",
+    glanceMinutes: "dk",
+    glanceDeparted: "Hareket etti",
+    filtersTools: "Filtreler & Araçlar",
+    operatorLabel: "Operatör"
   },
   en: {
     adalarLines: "Princes' Islands",
@@ -159,7 +164,12 @@ export const DICTIONARY = {
     onboard: "Around You on Arrival",
     source: "Source",
     fareNote: "Fare is paid with İstanbulkart",
-    openInMaps: "Open in Maps"
+    openInMaps: "Open in Maps",
+    glanceYouAre: "You are at",
+    glanceMinutes: "min",
+    glanceDeparted: "Departed",
+    filtersTools: "Filters & Tools",
+    operatorLabel: "Operator"
   },
   de: {
     adalarLines: "Prinzeninseln",
@@ -229,7 +239,12 @@ export const DICTIONARY = {
     onboard: "In Ihrer Nähe bei Ankunft",
     source: "Quelle",
     fareNote: "Zahlung mit İstanbulkart",
-    openInMaps: "In Karten öffnen"
+    openInMaps: "In Karten öffnen",
+    glanceYouAre: "Du bist in",
+    glanceMinutes: "Min.",
+    glanceDeparted: "Abgefahren",
+    filtersTools: "Filter & Werkzeuge",
+    operatorLabel: "Betreiber"
   },
   ar: {
     adalarLines: "خطوط جزر الأميرات",
@@ -299,7 +314,12 @@ export const DICTIONARY = {
     onboard: "حولك عند الوصول",
     source: "المصدر",
     fareNote: "الدفع ببطاقة إسطنبول",
-    openInMaps: "افتح في الخرائط"
+    openInMaps: "افتح في الخرائط",
+    glanceYouAre: "أنت في",
+    glanceMinutes: "د",
+    glanceDeparted: "انطلقت",
+    filtersTools: "الفلاتر والأدوات",
+    operatorLabel: "المشغل"
   },
   ru: {
     adalarLines: "Принцевы острова",
@@ -369,7 +389,12 @@ export const DICTIONARY = {
     onboard: "Рядом с вами по прибытии",
     source: "Источник",
     fareNote: "Оплата картой İstanbulkart",
-    openInMaps: "Открыть на карте"
+    openInMaps: "Открыть на карте",
+    glanceYouAre: "Вы здесь",
+    glanceMinutes: "мин",
+    glanceDeparted: "Отправился",
+    filtersTools: "Фильтры и инструменты",
+    operatorLabel: "Оператор"
   }
 } as const;
 

@@ -27,6 +27,24 @@ export interface DynamicWaypointView {
   isDestination?: boolean;
 }
 
+/**
+ * Metro tarzı canlı ilerleme: gemi şu an hangi iki iskele arasında, hangi oranda?
+ * `ratio` zamana göre doğrusal tahmindir (gerçek GPS değildir).
+ */
+export interface UnderwaySegment {
+  fromIndex: number;
+  toIndex: number;
+  fromName: string;
+  toName: string;
+  /** 0..1 — aktif segmentte zamana göre ilerleme */
+  ratio: number;
+  minutesToArrival: number;
+  /** Varışa ≤ 3 dk kaldı — renk vurgusu için */
+  isApproaching: boolean;
+  /** Seyir tamamlandı, iskelede bekleme (bir sonraki kalkışa kadar) */
+  hasArrived: boolean;
+}
+
 export interface DynamicTripResolution {
   currentOrigin: string;
   initialOrigin: string;
@@ -43,6 +61,8 @@ export interface DynamicTripResolution {
   waypoints: DynamicWaypointView[];
   activeChain: DynamicWaypointView[];
   activeLegIndex: number;
+  /** Gemi şu an iki iskele arasındaysa aktif seyir bilgisi; değilse null */
+  underway: UnderwaySegment | null;
   /**
    * Tahmini "son giriş" penceresi (turnike + rampa güvenlik payı).
    * DİKKAT: Resmî kapı kapanış saati DEĞİLDİR; arayüzde "tahmini" etiketiyle
@@ -116,6 +136,7 @@ export function resolveDynamicTrip(
       waypoints: [],
       activeChain: [],
       activeLegIndex: 0,
+      underway: null,
       boardingDeadline: null
     };
   }
@@ -179,6 +200,32 @@ export function resolveDynamicTrip(
   }
 
   const numLegs = allWaypoints.length - 1; // Number of departure stations (excluding final destination arrival)
+
+  // 1.5 Canlı seyir tespiti: kalkış saati geçen ama varış saati gelmemiş segment.
+  // Seyir süresi en fazla ESTIMATED_TRAVEL_MIN_PER_HOP; kalan süre iskelede beklemedir.
+  let underway: UnderwaySegment | null = null;
+  for (let k = 0; k < numLegs; k++) {
+    const a = allWaypoints[k];
+    const b = allWaypoints[k + 1];
+    if (!a || !b) break;
+    if (accurateNow >= a.targetTimeMs && accurateNow < b.targetTimeMs) {
+      const spanMs = Math.min(b.targetTimeMs - a.targetTimeMs, ESTIMATED_TRAVEL_MIN_PER_HOP * 60000);
+      const arrivalMs = a.targetTimeMs + spanMs;
+      const ratio = spanMs > 0 ? Math.min(1, Math.max(0, (accurateNow - a.targetTimeMs) / spanMs)) : 1;
+      const minutesToArrival = Math.max(0, Math.ceil((arrivalMs - accurateNow) / 60000));
+      underway = {
+        fromIndex: k,
+        toIndex: k + 1,
+        fromName: a.name,
+        toName: b.name,
+        ratio,
+        minutesToArrival,
+        isApproaching: minutesToArrival > 0 && minutesToArrival <= 3,
+        hasArrived: ratio >= 1
+      };
+      break;
+    }
+  }
 
   // 2. Find active leg
   // Each departure leg i is active until DEPARTED_GRACE_MS after its departure time
@@ -268,6 +315,7 @@ export function resolveDynamicTrip(
         waypoints: waypointsView,
         activeChain,
         activeLegIndex: i,
+        underway,
         boardingDeadline: resolveBoardingDeadline(leg.targetTimeMs, accurateNow)
       };
     }
@@ -301,6 +349,7 @@ export function resolveDynamicTrip(
     waypoints: finalWaypointsView,
     activeChain: [],
     activeLegIndex: numLegs,
+    underway: null,
     boardingDeadline: null
   };
 }
