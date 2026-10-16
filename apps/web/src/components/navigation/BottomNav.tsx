@@ -1,6 +1,7 @@
 "use client";
 
 import { Calendar, Compass, Star, CloudRain, Ship } from "lucide-react";
+import { useLanguageStore } from "@/store/useLanguageStore";
 
 interface BottomNavProps {
   activeTab?: string;
@@ -8,22 +9,25 @@ interface BottomNavProps {
 }
 
 const NAV_ITEMS = [
-  { id: "schedules", label: "Seferler", Icon: Calendar },
-  { id: "board", label: "Pano", Icon: Ship },
-  { id: "piers", label: "İskeleler", Icon: Compass },
-  { id: "weather", label: "Hava & Uyarı", Icon: CloudRain },
-  { id: "favorites", label: "Favorilerim", Icon: Star }
+  { id: "schedules", labelKey: "navSchedules", Icon: Calendar },
+  { id: "board", labelKey: "navBoard", Icon: Ship },
+  { id: "piers", labelKey: "navPiers", Icon: Compass },
+  { id: "weather", labelKey: "navWeather", Icon: CloudRain },
+  { id: "favorites", labelKey: "navFavorites", Icon: Star }
 ] as const;
 
 export function BottomNav({ activeTab = "schedules", onTabChange }: BottomNavProps) {
+  const { t } = useLanguageStore();
+
   return (
     <nav
       aria-label="Ana gezinme"
       className="fixed bottom-0 left-0 right-0 max-w-lg mx-auto bg-[#090d16]/95 backdrop-blur-xl border-t border-slate-800/90 pb-[env(safe-area-inset-bottom)] z-50 shadow-2xl"
     >
       <div className="flex justify-around items-center px-3 h-17">
-        {NAV_ITEMS.map(({ id, label, Icon }) => {
+        {NAV_ITEMS.map(({ id, labelKey, Icon }) => {
           const isActive = activeTab === id;
+          const label = t(labelKey);
           return (
             <button
               key={id}

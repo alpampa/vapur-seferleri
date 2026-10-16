@@ -12,6 +12,8 @@ import { resolveDynamicTrip, isTripCancelled, type DynamicTripResolution } from 
 import { AlarmManager } from "@/components/schedule/AlarmManager";
 import { TripPlannerWithMap } from "@/components/planner/TripPlannerWithMap";
 import { useLanguageStore } from "@/store/useLanguageStore";
+import { usePreferencesStore } from "@/store/usePreferencesStore";
+import { TouristTripList } from "@/components/schedule/TouristTripList";
 import { useOfflineSync } from "@/hooks/useOfflineSync";
 import { useTransitClock } from "@/hooks/useTransitClock";
 import { LiveTripTrackerBar } from "@/components/schedule/LiveTripTrackerBar";
@@ -50,6 +52,7 @@ interface ScheduleListClientProps {
 
 export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, marineWeather, sourceFreshness }: ScheduleListClientProps) {
   const { t, language } = useLanguageStore();
+  const { touristMode, setTouristMode } = usePreferencesStore();
   // Y4 — İKİ KADEME TICK: canlı MM:SS penceresine giren görünür sefer varken 1 sn,
   // aksi halde 15 sn (dakika hassasiyeti yeterli). Kademe geçişi aşağıdaki effect ile yönetilir.
   const [tickMs, setTickMs] = useState(1000);
@@ -707,7 +710,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
             title="Konumuma en yakın iskeleyi bul"
           >
             <Navigation size={11} className={geoStatus === "LOCATING" ? "animate-spin" : geoStatus === "ACTIVE" ? "fill-white" : ""} />
-            <span>En Yakın</span>
+            <span>{t("nearestShort")}</span>
           </button>
 
           {/* Arama Aç/Kapa */}
@@ -722,7 +725,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
             }`}
           >
             <Search size={11} />
-            <span>Ara</span>
+            <span>{t("search")}</span>
           </button>
 
           {/* Gece Seferleri */}
@@ -732,7 +735,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
             className="px-2 py-1 rounded-xl text-[11px] font-bold shrink-0 transition-all border bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800/80 hover:bg-indigo-100 flex items-center gap-1 cursor-pointer active:scale-95"
           >
             <span>🌙</span>
-            <span>Gece</span>
+            <span>{t("nightMode")}</span>
           </button>
 
           {/* Harita */}
@@ -747,7 +750,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
             }`}
           >
             <Compass size={11} />
-            <span>Harita</span>
+            <span>{t("map")}</span>
           </button>
 
           {/* Görünüm Yoğunluğu */}
@@ -758,7 +761,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
             title={isCompactDensity ? "Geniş Kart Görünümü" : "Kompakt Liste Görünümü"}
           >
             {isCompactDensity ? <LayoutGrid size={11} /> : <List size={11} />}
-            <span>{isCompactDensity ? "Geniş" : "Kompakt"}</span>
+            <span>{isCompactDensity ? t("viewComfort") : t("viewCompact")}</span>
           </button>
         </div>
 
@@ -789,7 +792,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
             <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-500" />
             <input
               type="text"
-              placeholder="İskele, hat veya doğal arama (Örn: 'Kadıköy'den Beşiktaş'a', 'Bostancı Adalar akşam')..."
+              placeholder={t("searchPlaceholder")}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-8 pr-7 py-1.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white text-xs placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all shadow-xs"
@@ -798,7 +801,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
               <button
                 onClick={() => setSearchQuery("")}
                 className="absolute right-2 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400 hover:text-rose-500 p-1"
-                title="Temizle"
+                title={t("clear")}
               >
                 ✕
               </button>
@@ -875,6 +878,10 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
         </div>
       )}
 
+      {touristMode ? (
+        <TouristTripList items={upcomingTrips} onExitTouristMode={() => setTouristMode(false)} />
+      ) : (
+        <>
       {/* Sonuç Başlığı & Yoğunluk Seçici */}
       <div className="px-3 pt-2 pb-1 flex items-center justify-between text-xs font-bold text-slate-500 dark:text-slate-400">
         <div className="flex items-center gap-2">
@@ -1077,6 +1084,8 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
           </div>
         )}
       </div>
+        </>
+      )}
 
 
       {/* Persistent Live Activity Bar (Sticky Bottom) */}

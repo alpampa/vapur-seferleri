@@ -367,3 +367,11 @@ button, a, input, select {
     scroll-behavior: auto !important;
   }
 }
+
+/* ==========================================================================
+   ERİŞİLEBİLİRLİK: BÜYÜK PUNTO MODU (html.text-scale-lg)
+   Kök punto 16px → 18px. rem tabanlı tipografi/zboşluk otomatik büyür.
+   ========================================================================== */
+html.text-scale-lg {
+  font-size: 112.5%;
+}

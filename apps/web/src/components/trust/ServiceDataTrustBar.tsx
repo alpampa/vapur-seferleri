@@ -3,6 +3,7 @@
 import { CalendarDays, ShieldAlert, ShieldCheck, Info } from "lucide-react";
 import { resolveServiceDayInfo, tariffBadgeLabel } from "@/lib/utils/service-day-info";
 import { resolveDataFreshness } from "@/lib/utils/data-freshness";
+import { useLanguageStore } from "@/store/useLanguageStore";
 
 /** Ajan snapshot'ının üst verisi — sunucudan prop olarak gelir (client bundle'a JSON sokmamak için). */
 export interface SourceFreshnessMeta {
@@ -27,6 +28,7 @@ interface ServiceDataTrustBarProps {
  * DÜRÜSTLÜK: Doğrulama tarihi yoksa tazelik iddia edilmez (uyarı gösterilir).
  */
 export function ServiceDataTrustBar({ serverTimeIso, freshness }: ServiceDataTrustBarProps) {
+  const { t } = useLanguageStore();
   // Saf render kuralı: Date.now() burada yasak. Sunucu her zaman geçerli ISO verir;
   // parse edilemezse 0 (epoch) kullanılır — yani "tarih bilinmiyorsa veriyi bayat say",
   // asla taze göstermeye çalışma (güvenli varsayılan).
@@ -92,11 +94,11 @@ export function ServiceDataTrustBar({ serverTimeIso, freshness }: ServiceDataTru
           )}
           <span className="text-[9.5px] font-bold tabular-nums whitespace-nowrap">
             {fresh.verifiedOnLabel
-              ? `Duyuru doğrulama: ${fresh.verifiedOnLabel} (${fresh.ageLabel})`
-              : "Duyuru doğrulama tarihi yok"}
+              ? `${t("trustAnnouncement")}: ${fresh.verifiedOnLabel} (${fresh.ageLabel})`
+              : t("trustMissing")}
           </span>
           <span className="text-[9.5px] font-bold text-slate-400 dark:text-slate-500 whitespace-nowrap">
-            · {freshness.sourceCount} kaynak
+            · {freshness.sourceCount} {t("sources")}
           </span>
         </div>
       </div>

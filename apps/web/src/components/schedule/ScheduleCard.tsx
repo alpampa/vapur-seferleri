@@ -225,7 +225,7 @@ export function ScheduleCard(props: ScheduleCardProps) {
 
             {dynState.isDeparted ? (
               <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
-                Kalktı
+                {t("departed")}
               </span>
             ) : dynState.countdown && !isCancelled ? (
               <span className={`text-[9px] font-mono font-black px-1.5 py-0.5 rounded tabular-nums border ${
@@ -247,16 +247,16 @@ export function ScheduleCard(props: ScheduleCardProps) {
             {showLastEntryPassed ? (
               <span
                 title="Tahmini: turnike + rampa geçiş payı. Resmî kapı kapanış saati değildir."
-                className="text-[9px] font-black px-1.5 py-0.5 rounded bg-rose-600 text-white border border-rose-500 whitespace-nowrap"
+                className="text-[10px] font-black px-1.5 py-0.5 rounded bg-rose-600 text-white border border-rose-500 whitespace-nowrap"
               >
-                Son giriş geçti
+                {t("lastEntryPassed")}
               </span>
             ) : showLastEntrySoon ? (
               <span
                 title="Tahmini: turnike + rampa geçiş payı. Resmî kapı kapanış saati değildir."
-                className="text-[9px] font-black px-1.5 py-0.5 rounded bg-amber-500 text-slate-950 border border-amber-400 tabular-nums whitespace-nowrap"
+                className="text-[10px] font-black px-1.5 py-0.5 rounded bg-amber-500 text-slate-950 border border-amber-400 tabular-nums whitespace-nowrap"
               >
-                Son giriş ~{boarding?.lastEntryHhmm}
+                {t("lastEntrySoon")} ~{boarding?.lastEntryHhmm}
               </span>
             ) : null}
           </div>
@@ -463,16 +463,16 @@ export function ScheduleCard(props: ScheduleCardProps) {
                 {showLastEntryPassed ? (
                   <span
                     title="Tahmini: turnike + rampa geçiş payı. Resmî kapı kapanış saati değildir."
-                    className="px-1.5 py-0.5 rounded text-[9px] font-black bg-rose-600 text-white border border-rose-500 inline-flex items-center gap-0.5 whitespace-nowrap"
+                    className="px-1.5 py-0.5 rounded text-[10px] font-black bg-rose-600 text-white border border-rose-500 inline-flex items-center gap-0.5 whitespace-nowrap"
                   >
-                    <Siren size={9} aria-hidden="true" /> Son giriş geçti ~{boarding.lastEntryHhmm}
+                    <Siren size={10} aria-hidden="true" /> {t("lastEntryPassed")} ~{boarding.lastEntryHhmm}
                   </span>
                 ) : (
                   <span
                     title="Tahmini: turnike + rampa geçiş payı. Resmî kapı kapanış saati değildir."
-                    className="px-1.5 py-0.5 rounded text-[9px] font-black bg-amber-500 text-slate-950 border border-amber-400 tabular-nums inline-flex items-center gap-0.5 whitespace-nowrap"
+                    className="px-1.5 py-0.5 rounded text-[10px] font-black bg-amber-500 text-slate-950 border border-amber-400 tabular-nums inline-flex items-center gap-0.5 whitespace-nowrap"
                   >
-                    <Timer size={9} aria-hidden="true" /> Son giriş ~{boarding.lastEntryHhmm}
+                    <Timer size={10} aria-hidden="true" /> {t("lastEntrySoon")} ~{boarding.lastEntryHhmm}
                   </span>
                 )}
               </div>
@@ -529,7 +529,7 @@ export function ScheduleCard(props: ScheduleCardProps) {
 
             {/* Direkt veya Durak Sayısı */}
             <span className="text-slate-600 dark:text-slate-300 text-[10px] font-semibold shrink-0">
-              {isDirect ? t("direct") : `${props.stops?.length} ara durak`}
+              {isDirect ? t("direct") : `${props.stops?.length} ${t("stops")}`}
             </span>
 
             {/* Doluluk Durumu & Turnike Yoğunluğu */}
@@ -568,8 +568,8 @@ export function ScheduleCard(props: ScheduleCardProps) {
         />
       </div>
 
-      {/* 2. BÜTÜN DURAKLAR: Mobilde asla kesilmeyen, sarmalanan (flex-wrap) İstasyon Güzergahı */}
-      {!props.isCompact && dynState.activeChain && dynState.activeChain.length > 1 && (
+      {/* 2. YEDEK GÜZERGAH ŞERİDİ: Yalnızca şematik çizilemediğinde (ara durak listesi yokken) gösterilir — mükerrer tekrar önlenir */}
+      {!props.isCompact && (!props.stops || props.stops.length === 0) && dynState.activeChain && dynState.activeChain.length > 1 && (
         <div className="w-full pt-1.5 mt-0.5 border-t border-slate-100 dark:border-slate-800/80">
           <div className="flex flex-wrap items-center gap-1 text-[11px]">
             <span className="text-[9.5px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider shrink-0 mr-0.5">

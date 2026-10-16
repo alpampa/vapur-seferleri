@@ -5,6 +5,7 @@ import { Ship, Clock, MapPin, Navigation, ChevronRight, Bell, BellRing, Sparkles
 import type { ScheduleCardDto } from "@/lib/types/schedule";
 import { resolveDynamicTrip } from "@/lib/utils/dynamic-trip";
 import { useAlarmStore } from "@/store/useAlarmStore";
+import { useLanguageStore } from "@/store/useLanguageStore";
 import { requestNotificationPermission } from "@/lib/utils/sound";
 
 interface PierDepartureBoardProps {
@@ -35,6 +36,7 @@ export function PierDepartureBoard({
 }: PierDepartureBoardProps) {
   const activePier = selectedOrigin !== "ALL" ? selectedOrigin : "Kadıköy";
   const { isAlarmSet, toggleAlarm } = useAlarmStore();
+  const { t } = useLanguageStore();
 
   // Find next 3 departures from activePier
   const nextDepartures = useMemo(() => {
@@ -86,12 +88,12 @@ export function PierDepartureBoard({
               <div className="flex items-center gap-1.5">
                 <span className="text-[10px] font-black tracking-widest uppercase text-amber-400 flex items-center gap-1">
                   <Sparkles size={11} />
-                  İSKELE KALKIŞ PANOSU
+                  {t("boardTitle")}
                 </span>
               </div>
               <h3 className="text-lg font-black text-white leading-none mt-0.5 flex items-center gap-1.5">
                 <span>{activePier} İskelesi</span>
-                <span className="text-xs font-semibold text-slate-400">(Sıradaki Vapurlar)</span>
+                <span className="text-xs font-semibold text-slate-400">({t("boardSubtitle")})</span>
               </h3>
             </div>
           </div>
@@ -124,12 +126,12 @@ export function PierDepartureBoard({
                 <div
                   key={schedule.id}
                   onClick={() => onSelectTrip?.(schedule)}
-                  className="bg-slate-900/90 hover:bg-[#162032] border border-slate-700/70 hover:border-amber-400/50 rounded-xl p-3 flex flex-col justify-between transition-all cursor-pointer shadow-md group relative overflow-hidden"
+                  className={`bg-slate-900/90 hover:bg-[#162032] border border-slate-700/70 hover:border-amber-400/50 rounded-xl p-3 flex flex-col justify-between transition-all cursor-pointer shadow-md group relative overflow-hidden min-h-36 ${idx === 0 ? "ring-1 ring-amber-400/50" : ""}`}
                 >
                   {/* Slot Top: Badge & Time */}
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex items-center gap-1.5">
-                      <span className="w-5 h-5 rounded-md bg-slate-800 border border-slate-700 text-slate-300 text-[10px] font-mono font-black flex items-center justify-center">
+                      <span className={`w-5 h-5 rounded-md border text-[10px] font-mono font-black flex items-center justify-center ${idx === 0 ? "bg-amber-400/20 border-amber-400/60 text-amber-300" : "bg-slate-800 border-slate-700 text-slate-300"}`}>
                         #{idx + 1}
                       </span>
                       <span className="text-[10px] font-bold text-slate-400 bg-slate-800/80 px-2 py-0.5 rounded">
@@ -165,18 +167,18 @@ export function PierDepartureBoard({
 
                       {dyn.isDeparted ? (
                         <span className="text-[10px] font-black bg-rose-600 text-white px-2 py-0.5 rounded animate-pulse">
-                          HAREKET ETTİ
+                          {t("underway")}
                         </span>
                       ) : dyn.countdown ? (
                         <div className="flex flex-col items-end">
-                          <span className="text-[9px] font-extrabold text-amber-400">KALKIŞA</span>
+                          <span className="text-[9px] font-extrabold text-amber-400">{t("boardCountdownTo")}</span>
                           <span className="font-mono text-sm font-black text-amber-300 animate-pulse">
                             {dyn.countdown}
                           </span>
                         </div>
                       ) : (
                         <span className="text-[10px] font-bold bg-emerald-950 border border-emerald-500/40 text-emerald-300 px-2 py-0.5 rounded">
-                          ZAMANINDA
+                          {t("boardOnTime")}
                         </span>
                       )}
                     </div>
@@ -203,7 +205,7 @@ export function PierDepartureBoard({
             })
           ) : (
             <div className="col-span-3 text-center py-6 bg-slate-900/60 rounded-xl border border-slate-800 text-slate-400 text-xs">
-              {activePier} iskelesinden bugün için kalan aktif sefer bulunamadı.
+              {activePier}: {t("boardEmpty")}
             </div>
           )}
         </div>

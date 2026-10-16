@@ -43,6 +43,7 @@ import { SLOW_TICK_INTERVAL_MS } from "@/lib/constants";
 import { useAlarmStore } from "@/store/useAlarmStore";
 import { useFavoritesStore } from "@/store/useFavoritesStore";
 import { useActiveVoyageStore } from "@/store/useActiveVoyageStore";
+import { useLanguageStore } from "@/store/useLanguageStore";
 import { requestNotificationPermission } from "@/lib/utils/sound";
 import { useTransitClock } from "@/hooks/useTransitClock";
 import { getIslandGuidePackage } from "@/lib/services/island-recommendation-engine";
@@ -87,6 +88,7 @@ export function TripDetailsSheet({
   const [isMissedOpen, setIsMissedOpen] = useState(false);
   const [isSeaTaxiOpen, setIsSeaTaxiOpen] = useState(false);
   const [activeDetailTab, setActiveDetailTab] = useState<"TICKET" | "TRANSIT" | "GUIDE">("TICKET");
+  const { t } = useLanguageStore();
   const [isSpeaking, setIsSpeaking] = useState(false);
 
   // Escape tuşu ile kapatma (klavye erişilebilirliği)
@@ -317,7 +319,7 @@ export function TripDetailsSheet({
                 }`}
               >
                 <Ticket size={13} aria-hidden="true" className="shrink-0" />
-                <span className="truncate">Tarife</span>
+                <span className="truncate">{t("tabTimetable")}</span>
               </button>
               <button
                 type="button"
@@ -331,7 +333,7 @@ export function TripDetailsSheet({
                 }`}
               >
                 <Train size={13} aria-hidden="true" className="shrink-0" />
-                <span className="truncate">Aktarma</span>
+                <span className="truncate">{t("tabTransit")}</span>
               </button>
               <button
                 type="button"
@@ -345,7 +347,7 @@ export function TripDetailsSheet({
                 }`}
               >
                 <Sparkles size={13} aria-hidden="true" className="shrink-0" />
-                <span className="truncate">Ada Rehberi</span>
+                <span className="truncate">{t("tabGuide")}</span>
               </button>
             </div>
 

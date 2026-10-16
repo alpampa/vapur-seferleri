@@ -46,7 +46,7 @@ test("Arama: doğal arama ile liste filtrelenir", async ({ page }) => {
   await page.goto("/");
 
   await page.getByRole("button", { name: "Ara", exact: true }).click();
-  const search = page.getByPlaceholder(/doğal arama/i);
+  const search = page.getByPlaceholder(/İskele veya hat ara/i);
   await search.fill("Büyükada");
 
   await expect(

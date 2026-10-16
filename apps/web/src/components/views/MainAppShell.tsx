@@ -7,6 +7,7 @@ import { PiersDirectoryView } from "@/components/views/PiersDirectoryView";
 import { MarineWeatherSafetyCenter } from "@/components/views/MarineWeatherSafetyCenter";
 import { FavoritesAlarmsView } from "@/components/views/FavoritesAlarmsView";
 import { BottomNav } from "@/components/navigation/BottomNav";
+import { PreferenceEffects } from "@/components/settings/PreferenceEffects";
 import type { ScheduleCardDto } from "@/lib/types/schedule";
 import type { MarineWeatherStatus } from "@/lib/services/marine-weather";
 import type { SourceFreshnessMeta } from "@/components/trust/ServiceDataTrustBar";
@@ -41,6 +42,8 @@ export function MainAppShell({ schedules, serverTimeIso, marineWeather, sourceFr
 
   return (
     <>
+      <PreferenceEffects />
+
       {activeTab === "schedules" && (
         <ScheduleListClient
           schedules={schedules}
