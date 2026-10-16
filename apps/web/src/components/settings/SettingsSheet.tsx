@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Settings, Check, Languages, Type, Compass } from "lucide-react";
+import { X, Settings, Check, Languages, Type, Compass, Sparkles, Store } from "lucide-react";
 import { useLanguageStore, SUPPORTED_LANGUAGES, type AppLanguage } from "@/store/useLanguageStore";
 import { usePreferencesStore } from "@/store/usePreferencesStore";
 
@@ -151,6 +152,26 @@ export function SettingsSheet({ isOpen, onClose }: SettingsSheetProps) {
                   />
                 </span>
               </button>
+            </section>
+
+            {/* 4. BAĞLANTILAR: PRO & İŞLETMELER */}
+            <section className="grid grid-cols-2 gap-2">
+              <Link
+                href="/pro"
+                onClick={onClose}
+                className="px-3 py-2.5 rounded-xl border border-indigo-300 dark:border-indigo-500/40 bg-indigo-50 dark:bg-indigo-950/30 text-indigo-700 dark:text-indigo-300 text-xs font-black flex items-center justify-center gap-1.5 hover:border-indigo-500 transition-colors"
+              >
+                <Sparkles size={14} aria-hidden="true" />
+                <span>Vapur Pro</span>
+              </Link>
+              <Link
+                href="/isletmeler"
+                onClick={onClose}
+                className="px-3 py-2.5 rounded-xl border border-amber-300 dark:border-amber-500/40 bg-amber-50 dark:bg-amber-950/30 text-amber-700 dark:text-amber-300 text-xs font-black flex items-center justify-center gap-1.5 hover:border-amber-500 transition-colors"
+              >
+                <Store size={14} aria-hidden="true" />
+                <span>İşletmeler İçin</span>
+              </Link>
             </section>
           </div>
         </motion.div>

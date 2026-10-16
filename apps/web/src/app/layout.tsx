@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import "leaflet/dist/leaflet.css";
 import { NotificationContainer } from "@/components/ui/NotificationToast";
@@ -64,6 +65,14 @@ export default function RootLayout({
         />
       </head>
       <body className="font-sans antialiased bg-slate-100 dark:bg-[#070b14] text-slate-900 dark:text-white min-h-[100dvh] touch-pan-y pb-[env(safe-area-inset-bottom)] transition-colors duration-150">
+        {process.env.NEXT_PUBLIC_ADSENSE_CLIENT ? (
+          <Script
+            async
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_CLIENT}`}
+            crossOrigin="anonymous"
+            strategy="afterInteractive"
+          />
+        ) : null}
         <ReducedMotionProvider>
           <ServiceWorkerRegister />
           {children}

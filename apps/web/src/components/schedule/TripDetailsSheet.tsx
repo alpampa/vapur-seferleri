@@ -26,7 +26,8 @@ import {
   Landmark,
   Tag,
   Gift,
-  Share2
+  Share2,
+  ExternalLink
 } from "lucide-react";
 import { OperatorLogo } from "@/components/ui/OperatorLogo";
 import { TripStatusBadge } from "./ScheduleCard";
@@ -47,6 +48,7 @@ import { useLanguageStore } from "@/store/useLanguageStore";
 import { requestNotificationPermission } from "@/lib/utils/sound";
 import { useTransitClock } from "@/hooks/useTransitClock";
 import { getIslandGuidePackage } from "@/lib/services/island-recommendation-engine";
+import { getPierWalkGuide } from "@/lib/data/pier-walks";
 import { transitAnnouncer } from "@/lib/services/tts-announcer";
 
 import { MissedFerryAssistantModal } from "@/components/planner/MissedFerryAssistantModal";
@@ -105,6 +107,11 @@ export function TripDetailsSheet({
     if (!schedule) return null;
     return getIslandGuidePackage(schedule.destination) || getIslandGuidePackage(schedule.origin);
   }, [schedule?.destination, schedule?.origin]);
+
+  const pierWalkGuide = useMemo(() => {
+    if (!schedule) return null;
+    return getPierWalkGuide(schedule.destination);
+  }, [schedule?.destination]);
 
   if (!schedule) return null;
 
@@ -695,6 +702,38 @@ export function TripDetailsSheet({
                     <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
                       Özel Ada Rehberi ve sponsorlu kuponlar Adalar (Büyükada, Heybeliada, Burgazada, Kınalıada) varışlı veya kalkışlı seferlerde otomatik olarak görüntülenir.
                     </p>
+                  </div>
+                )}
+
+                {/* İNDİĞİNİZDE YANINIZDA — Kaynaklı Şehir İçi Kültür Kartları */}
+                {pierWalkGuide && (
+                  <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800">
+                    <div className="text-[11px] font-black uppercase text-slate-500 dark:text-slate-400 mb-2 flex items-center gap-1.5">
+                      <Landmark size={13} className="text-emerald-500" />
+                      <span>{t("onboard")} · {pierWalkGuide.pierName}</span>
+                    </div>
+                    <div className="space-y-2">
+                      {pierWalkGuide.facts.map((fact) => (
+                        <div key={fact.id} className="p-2.5 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
+                          <div className="flex items-center justify-between">
+                            <span className="font-bold text-xs text-slate-900 dark:text-white">{fact.title}</span>
+                            <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-900">
+                              🚶 ~{fact.walkMinutes}′
+                            </span>
+                          </div>
+                          <p className="text-[11px] text-slate-600 dark:text-slate-400 mt-1">{fact.description}</p>
+                          <a
+                            href={fact.sourceUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 mt-1.5 text-[9px] font-bold text-blue-600 dark:text-blue-400 hover:underline"
+                          >
+                            <ExternalLink size={9} aria-hidden="true" />
+                            <span>{t("source")}: Wikipedia</span>
+                          </a>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>

@@ -35,6 +35,7 @@ import { predictFerryDisruption } from "@/lib/services/predictive-disruption-mod
 import { saveSchedulesOffline, loadSchedulesOffline } from "@/lib/services/offline-db";
 import { trackAppOpenOnce } from "@/lib/utils/analytics-tracker";
 import { SponsoredTripRow } from "@/components/schedule/SponsoredTripRow";
+import { AdSlot } from "@/components/commercial/AdSlot";
 import {
   getSponsoredAdsStore,
   selectContextualSponsoredAd,
@@ -52,7 +53,7 @@ interface ScheduleListClientProps {
 
 export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, marineWeather, sourceFreshness }: ScheduleListClientProps) {
   const { t, language } = useLanguageStore();
-  const { touristMode, setTouristMode } = usePreferencesStore();
+  const { touristMode, setTouristMode, proUnlocked } = usePreferencesStore();
   // Y4 — İKİ KADEME TICK: canlı MM:SS penceresine giren görünür sefer varken 1 sn,
   // aksi halde 15 sn (dakika hassasiyeti yeterli). Kademe geçişi aşağıdaki effect ile yönetilir.
   const [tickMs, setTickMs] = useState(1000);
@@ -139,13 +140,14 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
   }, []);
 
   const activeSponsoredAd = useMemo(() => {
+    if (proUnlocked) return null;
     return selectContextualSponsoredAd(sponsoredAds, {
       selectedCategory,
       selectedOrigin,
       selectedDestination,
       searchQuery,
     });
-  }, [sponsoredAds, selectedCategory, selectedOrigin, selectedDestination, searchQuery]);
+  }, [sponsoredAds, selectedCategory, selectedOrigin, selectedDestination, searchQuery, proUnlocked]);
 
   useEffect(() => {
     let isCancelled = false;
@@ -955,6 +957,9 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
                 />
                 {shouldShowSponsoredRowHere && (
                   <SponsoredTripRow ad={activeSponsoredAd} isCompact={isCompactDensity} />
+                )}
+                {idx === 7 && upcomingTrips.length > 10 && (
+                  <AdSlot slotId="sefer-listesi" className="pt-1" />
                 )}
               </div>
             );

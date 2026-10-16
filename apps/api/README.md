@@ -25,6 +25,14 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
+## Vapur v2 Durumu — Donduruldu (Ekim 2026)
+
+Bu API, v2 ürün kapsamında **geliştirme dondurma (freeze)** kararıyla durdurulmuştur:
+
+- Web uygulaması (`apps/web`) veriyi resmî kaynaklardan günlük senkronize edilen statik veri katmanından okur; çalışma zamanında bu API'ye bağımlılığı yoktur.
+- Servisler mock/örnek veri sağlayıcılarıyla korunur; lint ve birim testleri yeşil tutulur, yeni özellik geliştirilmez.
+- Üretime alınmadı (Docker/deploy altyapısı kurulmadı). Yeniden değerlendirme v3 planlamasına bırakıldı.
+
 ## Project setup
 
 ```bash
