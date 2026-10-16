@@ -54,7 +54,7 @@ export function ScheduleCardActions({
         title={isFav ? "Favorilerden Çıkar" : "Favorilere Ekle"}
         aria-label={isFav ? "Favorilerden çıkar" : "Favorilere ekle"}
         aria-pressed={isFav}
-        className={`w-8 h-8 flex items-center justify-center rounded-lg transition-all ${activeScale} touch-manipulation cursor-pointer ${favClass}`}
+        className={`w-10 h-10 flex items-center justify-center rounded-xl transition-all ${activeScale} touch-manipulation cursor-pointer ${favClass}`}
       >
         <Star size={iconSize} className={isFav ? "fill-amber-500 text-amber-500" : ""} />
       </button>
@@ -69,7 +69,7 @@ export function ScheduleCardActions({
         title={hasAlarm ? "Hatırlatıcıyı Kaldır" : "15 Dk Önce Hatırlat"}
         aria-label={hasAlarm ? "Hatırlatıcıyı kaldır" : "15 dakika önce hatırlat"}
         aria-pressed={hasAlarm}
-        className={`w-8 h-8 flex items-center justify-center rounded-lg transition-all ${activeScale} touch-manipulation cursor-pointer ${alarmClass}`}
+        className={`w-10 h-10 flex items-center justify-center rounded-xl transition-all ${activeScale} touch-manipulation cursor-pointer ${alarmClass}`}
       >
         {hasAlarm ? (
           <BellRing

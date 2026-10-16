@@ -1,6 +1,7 @@
 "use client";
 
 import { triggerHaptic } from "@/lib/utils/haptics";
+import { chipBase, chipOff, chipOn } from "@/lib/ui/button-styles";
 
 interface CommuteRoute {
   id: string;
@@ -52,10 +53,8 @@ export function SmartCommutePills({
               triggerHaptic("light");
               onSelectRoute(route.origin, route.destination, route.category);
             }}
-            className={`px-2.5 py-1 rounded-xl text-[11px] font-bold shrink-0 transition-all border flex items-center gap-1 cursor-pointer active:scale-95 touch-manipulation ${
-              isActive
-                ? "bg-[#FFC72C] text-slate-950 border-[#FFC72C] font-black shadow-xs ring-1 ring-[#FFC72C]/40"
-                : "bg-white/80 dark:bg-slate-900/80 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800"
+            className={`${chipBase} gap-1 ${
+              isActive ? chipOn : chipOff
             }`}
           >
             <span className="text-[11px]">⚡</span>

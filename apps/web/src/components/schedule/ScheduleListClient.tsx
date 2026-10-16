@@ -29,6 +29,7 @@ import { ServiceDataTrustBar } from "@/components/trust/ServiceDataTrustBar";
 import type { SourceFreshnessMeta } from "@/components/trust/ServiceDataTrustBar";
 import { getOperatorRecord, OPERATOR_REGISTRY } from "@/lib/data/operator-registry";
 import { triggerHaptic } from "@/lib/utils/haptics";
+import { chipBase, chipOff, chipOn, chipSuccess } from "@/lib/ui/button-styles";
 import type { MarineWeatherStatus } from "@/lib/services/marine-weather";
 import { parseNaturalTransitQuery } from "@/lib/services/ai-transit-assistant";
 import { predictFerryDisruption } from "@/lib/services/predictive-disruption-model";
@@ -566,7 +567,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
               value={selectedOrigin}
               onChange={(e) => setSelectedOrigin(e.target.value)}
               aria-label="Kalkış iskelesi seçin"
-              className="w-full pl-5 pr-5 py-1.5 bg-transparent text-xs font-bold text-slate-800 dark:text-slate-100 appearance-none rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 cursor-pointer truncate"
+              className="w-full min-h-10 pl-5 pr-5 py-1.5 bg-transparent text-xs font-bold text-slate-800 dark:text-slate-100 appearance-none rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 cursor-pointer truncate"
             >
               <option value="ALL">🟢 Nereden (Tümü)</option>
               {availableOrigins.map((pier) => (
@@ -585,9 +586,9 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
             }}
             title="Kalkış ve Varış İskelesini Değiştir"
             aria-label="Kalkış ve varış iskelesini değiştir"
-            className="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-amber-400 hover:text-slate-950 transition-all cursor-pointer active:scale-95 shrink-0 flex items-center justify-center touch-manipulation"
+            className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-amber-400 hover:text-slate-950 transition-all cursor-pointer active:scale-95 shrink-0 flex items-center justify-center touch-manipulation"
           >
-            <ArrowLeftRight size={12} />
+            <ArrowLeftRight size={14} />
           </button>
 
           {/* Varış İskelesi */}
@@ -596,7 +597,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
               value={selectedDestination}
               onChange={(e) => setSelectedDestination(e.target.value)}
               aria-label="Varış iskelesi seçin"
-              className="w-full pl-5 pr-5 py-1.5 bg-transparent text-xs font-bold text-slate-800 dark:text-slate-100 appearance-none rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 cursor-pointer truncate"
+              className="w-full min-h-10 pl-5 pr-5 py-1.5 bg-transparent text-xs font-bold text-slate-800 dark:text-slate-100 appearance-none rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 cursor-pointer truncate"
             >
               <option value="ALL">🔴 Nereye (Tümü)</option>
               {availableDestinations.map((pier) => (
@@ -617,9 +618,9 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
               }}
               title="İskele seçimini temizle"
               aria-label="İskele seçimini temizle"
-              className="w-7 h-7 rounded-lg bg-rose-50 dark:bg-rose-950/60 hover:bg-rose-100 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-800 transition-all cursor-pointer flex items-center justify-center shrink-0 active:scale-95"
+              className="w-10 h-10 rounded-xl bg-rose-50 dark:bg-rose-950/60 hover:bg-rose-100 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-800 transition-all cursor-pointer flex items-center justify-center shrink-0 active:scale-95"
             >
-              <X size={12} />
+              <X size={14} />
             </button>
           )}
         </div>
@@ -637,10 +638,8 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
               setSelectedDestination("ALL");
             }}
             aria-pressed={selectedCategory === "ADALAR"}
-            className={`px-2.5 py-1 rounded-xl text-[11px] font-black shrink-0 transition-all border flex items-center gap-1 cursor-pointer active:scale-95 ${
-              selectedCategory === "ADALAR"
-                ? "bg-amber-400 text-slate-950 border-amber-400 shadow-2xs font-black"
-                : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-800 hover:bg-slate-100"
+            className={`${chipBase} gap-1 ${
+              selectedCategory === "ADALAR" ? chipOn : chipOff
             }`}
           >
             <span>🏝️</span>
@@ -656,10 +655,8 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
               setSelectedDestination("ALL");
             }}
             aria-pressed={selectedCategory === "BOGAZ"}
-            className={`px-2.5 py-1 rounded-xl text-[11px] font-black shrink-0 transition-all border flex items-center gap-1 cursor-pointer active:scale-95 ${
-              selectedCategory === "BOGAZ"
-                ? "bg-blue-600 text-white border-blue-500 shadow-2xs"
-                : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-800 hover:bg-slate-100"
+            className={`${chipBase} gap-1 ${
+              selectedCategory === "BOGAZ" ? chipOn : chipOff
             }`}
           >
             <span>🌊</span>
@@ -671,10 +668,8 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
             type="button"
             onClick={() => setOnlyImminent(!onlyImminent)}
             aria-pressed={onlyImminent}
-            className={`px-2.5 py-1 rounded-xl text-[11px] font-black shrink-0 transition-all border flex items-center gap-1 cursor-pointer active:scale-95 ${
-              onlyImminent
-                ? "bg-amber-400 text-slate-950 border-amber-400 shadow-2xs font-black"
-                : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-800 hover:bg-slate-100"
+            className={`${chipBase} gap-1 ${
+              onlyImminent ? chipOn : chipOff
             }`}
           >
             <span>⚡</span>
@@ -687,16 +682,14 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
               value={selectedOperator}
               onChange={(e) => setSelectedOperator(e.target.value)}
               aria-label="Firma / Operatör Filtresi"
-              className={`pl-2 pr-5 py-1 rounded-xl text-[11px] font-bold border appearance-none cursor-pointer ${
-                selectedOperator !== "ALL"
-                  ? "bg-blue-600 text-white border-blue-500 font-black shadow-2xs"
-                  : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-800 hover:bg-slate-100"
+              className={`min-h-10 pl-3 pr-6 rounded-xl text-[11px] font-bold border appearance-none cursor-pointer ${
+                selectedOperator !== "ALL" ? chipOn : chipOff
               }`}
             >
               <option value="ALL">🏢 Firmalar</option>
               {uniqueOperators.map(op => <option key={op} value={op}>{op}</option>)}
             </select>
-            <ChevronDown size={10} className={`absolute right-1.5 top-1/2 -translate-y-1/2 pointer-events-none ${selectedOperator !== "ALL" ? "text-white" : "text-slate-400"}`} />
+            <ChevronDown size={10} className={`absolute right-1.5 top-1/2 -translate-y-1/2 pointer-events-none ${selectedOperator !== "ALL" ? "text-slate-900" : "text-slate-400"}`} />
           </div>
 
           {/* GPS En Yakın İskele */}
@@ -704,10 +697,8 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
             type="button"
             onClick={requestLocation}
             disabled={geoStatus === "LOCATING"}
-            className={`px-2 py-1 rounded-xl text-[11px] font-bold shrink-0 transition-all border flex items-center gap-1 cursor-pointer active:scale-95 ${
-              geoStatus === "ACTIVE"
-                ? "bg-emerald-500 text-white border-emerald-400 font-black shadow-2xs"
-                : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-800 hover:bg-slate-100"
+            className={`${chipBase} gap-1 ${
+              geoStatus === "ACTIVE" ? chipSuccess : chipOff
             }`}
             title="Konumuma en yakın iskeleyi bul"
           >
@@ -720,10 +711,8 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
             type="button"
             onClick={() => setIsSearchVisible(!isSearchVisible)}
             aria-pressed={isSearchVisible || searchQuery.trim().length > 0}
-            className={`px-2 py-1 rounded-xl text-[11px] font-bold shrink-0 transition-all border flex items-center gap-1 cursor-pointer active:scale-95 ${
-              isSearchVisible || searchQuery.trim().length > 0
-                ? "bg-blue-600 text-white border-blue-500 shadow-2xs"
-                : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-800 hover:bg-slate-100"
+            className={`${chipBase} gap-1 ${
+              isSearchVisible || searchQuery.trim().length > 0 ? chipOn : chipOff
             }`}
           >
             <Search size={11} />
@@ -734,7 +723,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
           <button
             type="button"
             onClick={() => setIsNightTransitOpen(true)}
-            className="px-2 py-1 rounded-xl text-[11px] font-bold shrink-0 transition-all border bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800/80 hover:bg-indigo-100 flex items-center gap-1 cursor-pointer active:scale-95"
+            className={`${chipBase} gap-1 ${chipOff}`}
           >
             <span>🌙</span>
             <span>{t("nightMode")}</span>
@@ -745,10 +734,8 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
             type="button"
             onClick={() => setShowPlanner(!showPlanner)}
             aria-pressed={showPlanner}
-            className={`px-2 py-1 rounded-xl text-[11px] font-bold shrink-0 transition-all border flex items-center gap-1 cursor-pointer active:scale-95 ${
-              showPlanner
-                ? "bg-cyan-600 text-white border-cyan-500 shadow-2xs"
-                : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-800 hover:bg-slate-100"
+            className={`${chipBase} gap-1 ${
+              showPlanner ? chipOn : chipOff
             }`}
           >
             <Compass size={11} />
@@ -759,7 +746,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
           <button
             type="button"
             onClick={handleToggleDensity}
-            className="px-2 py-1 rounded-xl text-[11px] font-bold shrink-0 transition-all border bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-800 hover:bg-slate-100 flex items-center gap-1 cursor-pointer active:scale-95"
+            className={`${chipBase} gap-1 ${chipOff}`}
             title={isCompactDensity ? "Geniş Kart Görünümü" : "Kompakt Liste Görünümü"}
           >
             {isCompactDensity ? <LayoutGrid size={11} /> : <List size={11} />}
@@ -779,7 +766,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
                 setSelectedOrigin("ALL");
                 setGeoStatus("IDLE");
               }}
-              className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold hover:underline shrink-0 ml-2 cursor-pointer"
+              className="min-h-10 px-2 rounded-lg text-[10px] font-bold text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 shrink-0 ml-1 cursor-pointer flex items-center"
             >
               Tümünü Göster
             </button>
@@ -890,15 +877,6 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
           <span className="text-[11px]">
             {t("activeTrips")}: <strong className="text-slate-900 dark:text-white text-xs">{upcomingTrips.length}</strong>
           </span>
-
-          <button
-            onClick={handleToggleDensity}
-            title={isCompactDensity ? "Geniş Kart Görünümü" : "Kompakt Liste Görünümü"}
-            className="px-1.5 py-0.5 rounded border border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-900 text-[10px] text-slate-600 dark:text-slate-400 hover:text-blue-600 flex items-center gap-1 shadow-2xs cursor-pointer"
-          >
-            {isCompactDensity ? <LayoutGrid size={11} /> : <List size={11} />}
-            <span className="hidden xs:inline">{isCompactDensity ? t("viewComfort") : t("viewCompact")}</span>
-          </button>
         </div>
 
         {searchQuery.trim().length > 0 ? (

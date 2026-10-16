@@ -293,7 +293,7 @@ export function TripDetailsSheet({
                   }}
                   title="Seferi Arkadaşına Gönder (WhatsApp / Paylaş)"
                   aria-label="Seferi arkadaşına gönder"
-                  className="p-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-700/60 transition-all touch-manipulation cursor-pointer"
+                  className="w-10 h-10 flex items-center justify-center rounded-xl bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-700/60 transition-all touch-manipulation cursor-pointer"
                 >
                   <Share2 size={15} />
                 </button>
@@ -301,7 +301,7 @@ export function TripDetailsSheet({
                 <button
                   onClick={onClose}
                   aria-label="Kapat"
-                  className="w-8 h-8 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 rounded-xl flex items-center justify-center text-slate-600 dark:text-slate-300 transition-colors border border-slate-200 dark:border-slate-700 cursor-pointer touch-manipulation"
+                  className="w-10 h-10 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 rounded-xl flex items-center justify-center text-slate-600 dark:text-slate-300 transition-colors border border-slate-200 dark:border-slate-700 cursor-pointer touch-manipulation"
                 >
                   <X size={15} />
                 </button>
@@ -319,9 +319,9 @@ export function TripDetailsSheet({
                 role="tab"
                 aria-selected={activeDetailTab === "TICKET"}
                 onClick={() => setActiveDetailTab("TICKET")}
-                className={`flex-1 min-w-0 py-2 px-1 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-1 cursor-pointer touch-manipulation ${
+                className={`flex-1 min-w-0 min-h-11 px-2 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-1 cursor-pointer touch-manipulation ${
                   activeDetailTab === "TICKET"
-                    ? "bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 shadow-xs"
+                    ? "bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs"
                     : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                 }`}
               >
@@ -333,9 +333,9 @@ export function TripDetailsSheet({
                 role="tab"
                 aria-selected={activeDetailTab === "TRANSIT"}
                 onClick={() => setActiveDetailTab("TRANSIT")}
-                className={`flex-1 min-w-0 py-2 px-1 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-1 cursor-pointer touch-manipulation ${
+                className={`flex-1 min-w-0 min-h-11 px-2 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-1 cursor-pointer touch-manipulation ${
                   activeDetailTab === "TRANSIT"
-                    ? "bg-white dark:bg-slate-800 text-purple-600 dark:text-purple-400 shadow-xs"
+                    ? "bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs"
                     : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                 }`}
               >
@@ -347,9 +347,9 @@ export function TripDetailsSheet({
                 role="tab"
                 aria-selected={activeDetailTab === "GUIDE"}
                 onClick={() => setActiveDetailTab("GUIDE")}
-                className={`flex-1 min-w-0 py-2 px-1 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-1 cursor-pointer touch-manipulation ${
+                className={`flex-1 min-w-0 min-h-11 px-2 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-1 cursor-pointer touch-manipulation ${
                   activeDetailTab === "GUIDE"
-                    ? "bg-amber-400 text-slate-950 shadow-xs font-black"
+                    ? "bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs"
                     : "text-slate-600 dark:text-slate-400 hover:text-amber-500 dark:hover:text-amber-400"
                 }`}
               >
