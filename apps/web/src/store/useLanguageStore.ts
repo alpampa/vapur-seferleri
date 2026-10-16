@@ -90,9 +90,6 @@ export const DICTIONARY = {
     source: "Kaynak",
     fareNote: "Ücret İstanbulkart ile ödenir",
     openInMaps: "Haritada Aç",
-    glanceYouAre: "Konumun",
-    glanceMinutes: "dk",
-    glanceDeparted: "Hareket etti",
     filtersTools: "Filtreler & Araçlar",
     operatorLabel: "Operatör"
   },
@@ -165,9 +162,6 @@ export const DICTIONARY = {
     source: "Source",
     fareNote: "Fare is paid with İstanbulkart",
     openInMaps: "Open in Maps",
-    glanceYouAre: "You are at",
-    glanceMinutes: "min",
-    glanceDeparted: "Departed",
     filtersTools: "Filters & Tools",
     operatorLabel: "Operator"
   },
@@ -240,9 +234,6 @@ export const DICTIONARY = {
     source: "Quelle",
     fareNote: "Zahlung mit İstanbulkart",
     openInMaps: "In Karten öffnen",
-    glanceYouAre: "Du bist in",
-    glanceMinutes: "Min.",
-    glanceDeparted: "Abgefahren",
     filtersTools: "Filter & Werkzeuge",
     operatorLabel: "Betreiber"
   },
@@ -315,9 +306,6 @@ export const DICTIONARY = {
     source: "المصدر",
     fareNote: "الدفع ببطاقة إسطنبول",
     openInMaps: "افتح في الخرائط",
-    glanceYouAre: "أنت في",
-    glanceMinutes: "د",
-    glanceDeparted: "انطلقت",
     filtersTools: "الفلاتر والأدوات",
     operatorLabel: "المشغل"
   },
@@ -390,9 +378,6 @@ export const DICTIONARY = {
     source: "Источник",
     fareNote: "Оплата картой İstanbulkart",
     openInMaps: "Открыть на карте",
-    glanceYouAre: "Вы здесь",
-    glanceMinutes: "мин",
-    glanceDeparted: "Отправился",
     filtersTools: "Фильтры и инструменты",
     operatorLabel: "Оператор"
   }

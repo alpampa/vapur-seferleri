@@ -23,7 +23,6 @@ import { IMMINENT_DEPARTURE_MS, FAST_TICK_THRESHOLD_MIN, SLOW_TICK_INTERVAL_MS }
 import { useAnnouncements } from "@/hooks/useAnnouncements";
 import { useAnnouncementStore } from "@/store/useAnnouncementStore";
 import { AnnouncementBanner } from "@/components/announcements/AnnouncementBanner";
-import { NextDepartureStrip } from "@/components/schedule/NextDepartureStrip";
 import { ScheduleToolsSheet } from "@/components/schedule/ScheduleToolsSheet";
 import { LastFerrySafeguardBanner } from "@/components/schedule/LastFerrySafeguardBanner";
 import { ServiceDataTrustBar } from "@/components/trust/ServiceDataTrustBar";
@@ -55,7 +54,7 @@ interface ScheduleListClientProps {
 
 export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, marineWeather, sourceFreshness }: ScheduleListClientProps) {
   const { t, language } = useLanguageStore();
-  const { touristMode, setTouristMode, proUnlocked } = usePreferencesStore();
+  const { touristMode, setTouristMode, proUnlocked, scheduleCategory, setScheduleCategory } = usePreferencesStore();
   // Y4 — İKİ KADEME TICK: canlı MM:SS penceresine giren görünür sefer varken 1 sn,
   // aksi halde 15 sn (dakika hassasiyeti yeterli). Kademe geçişi aşağıdaki effect ile yönetilir.
   const [tickMs, setTickMs] = useState(1000);
@@ -63,7 +62,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
   const now = nowMs;
 
   const [selectedSchedule, setSelectedSchedule] = useState<ScheduleCardDto | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<"ADALAR" | "BOGAZ" | "ALL">("ADALAR");
+  const [selectedCategory, setSelectedCategory] = useState<"ADALAR" | "BOGAZ" | "ALL">(scheduleCategory);
   const [selectedOrigin, setSelectedOrigin] = useState<string>(initialOrigin || "ALL");
   const [selectedDestination, setSelectedDestination] = useState<string>("ALL");
   const [selectedOperator, setSelectedOperator] = useState<string>("ALL");
@@ -74,6 +73,13 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
   const [showPastTrips, setShowPastTrips] = useState<boolean>(false);
   const [isToolsOpen, setIsToolsOpen] = useState<boolean>(false);
   const toolFilterCount = (selectedOperator !== "ALL" ? 1 : 0) + (showPlanner ? 1 : 0) + (isCompactDensity ? 1 : 0);
+
+  // KULLANICI KURALI: Kategori seçimi tercih olarak saklanır — Adalar seçen kullanıcı
+  // uygulamayı Yeniden açtığında yine Adalar görür (her açılışta sıfırlanmaz).
+  const updateCategory = (category: "ADALAR" | "BOGAZ" | "ALL") => {
+    setSelectedCategory(category);
+    setScheduleCategory(category);
+  };
 
   useEffect(() => {
     try {
@@ -206,13 +212,25 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
           setNearestPier(closest);
           setSelectedOrigin(closest.name);
           setGeoStatus("ACTIVE");
+          // KULLANICI KURALI: Konum modu "oradaki seferleri göster" demektir —
+          // seçili kategori en yakın iskeleden sefer üretmiyorsa kategori kilidi açılır.
+          const categoryHasPier =
+            selectedCategory === "ALL" ||
+            effectiveSchedules.some((s) => {
+              if (s.origin !== closest.name) return false;
+              const island = isIslandRoute(s.origin, s.destination);
+              return selectedCategory === "ADALAR" ? island : !island;
+            });
+          if (!categoryHasPier) {
+            updateCategory("ALL");
+          }
         }
       },
       (error) => {
         console.warn("Geolocation denied or error:", error.message);
         setGeoStatus("DENIED");
       },
-      { timeout: 10000, enableHighAccuracy: true }
+      { timeout: 15000, enableHighAccuracy: true, maximumAge: 0 }
     );
   };
 
@@ -497,7 +515,16 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
     return { upcomingTrips: upcoming, pastTrips: past };
   }, [filteredList]);
 
-  const glanceTrip = !touristMode && upcomingTrips.length > 0 ? upcomingTrips[0] : null;
+  // KULLANICI KURALI: Gece güvenlik bandı yalnızca seçili kategoriye uyan seferleri
+  // dikkate alır (Adalar seçiliyken Boğaz seferi duyurulmaz) ve listede zaten görünen
+  // bir seferi ikinci kez duyurmaz (mükerrer bilgi yasağı).
+  const safeguardSchedules = useMemo(() => {
+    if (selectedCategory === "ALL") return effectiveSchedules;
+    return effectiveSchedules.filter((s) => {
+      const island = isIslandRoute(s.origin, s.destination);
+      return selectedCategory === "ADALAR" ? island : !island;
+    });
+  }, [effectiveSchedules, selectedCategory]);
 
   // Y4 — KADEME SEÇİMİ: canlı geri sayım penceresine (eşik: pencere + 1 dk tampon)
   // giren görünür sefer varken saniyelik tick. Aynı değere setTickMs no-op'tur;
@@ -542,24 +569,11 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
 
       {/* 0. GECE GÜVENCESİ: SON VAPURU KAÇIRMA ASİSTANI (23:45 Sonrası Aktif) */}
       <LastFerrySafeguardBanner
-        schedules={effectiveSchedules}
+        schedules={safeguardSchedules}
+        visibleSchedules={upcomingTrips.map((t) => t.schedule)}
         serverTimeIso={serverTimeIso}
         onOpenNightTransit={() => setIsNightTransitOpen(true)}
       />
-
-      {glanceTrip && (
-        <div className="px-3 pt-1.5">
-          <NextDepartureStrip
-            dyn={glanceTrip.dyn}
-            youAreAt={
-              geoStatus === "ACTIVE" && nearestPier && glanceTrip.dyn.currentOrigin === nearestPier.name
-                ? nearestPier.name
-                : null
-            }
-            onOpen={() => setSelectedSchedule(glanceTrip.schedule)}
-          />
-        </div>
-      )}
 
       {/* 1. TEK KART: İSKELE SEÇİCİ + MİKRO FİLTRELER (Birleşik Kart) */}
       <div className="px-3 pt-1.5">
@@ -634,7 +648,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
           <button
             type="button"
             onClick={() => {
-              setSelectedCategory(selectedCategory === "ADALAR" ? "ALL" : "ADALAR");
+              updateCategory(selectedCategory === "ADALAR" ? "ALL" : "ADALAR");
               setSelectedOrigin("ALL");
               setSelectedDestination("ALL");
             }}
@@ -651,7 +665,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
           <button
             type="button"
             onClick={() => {
-              setSelectedCategory(selectedCategory === "BOGAZ" ? "ALL" : "BOGAZ");
+              updateCategory(selectedCategory === "BOGAZ" ? "ALL" : "BOGAZ");
               setSelectedOrigin("ALL");
               setSelectedDestination("ALL");
             }}
@@ -955,7 +969,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
                   setSearchQuery("");
                   setSelectedOrigin("ALL");
                   setSelectedDestination("ALL");
-                  setSelectedCategory("ALL");
+                  updateCategory("ALL");
                   setSelectedOperator("ALL");
                 }}
                 className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-black text-xs shadow-md transition-all cursor-pointer inline-flex items-center gap-1.5"
@@ -1046,7 +1060,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
         onSelectRoute={(origin, destination, category) => {
           setSelectedOrigin(origin);
           setSelectedDestination(destination);
-          setSelectedCategory(category);
+          updateCategory(category);
         }}
         operators={uniqueOperators}
         selectedOperator={selectedOperator}

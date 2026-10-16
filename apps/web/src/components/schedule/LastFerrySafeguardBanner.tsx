@@ -6,6 +6,8 @@ import { getIstanbulParts, hhmmToMinutes } from "@/lib/utils/istanbul-time";
 
 interface LastFerrySafeguardBannerProps {
   schedules: ScheduleCardDto[];
+  /** Ekranda hâlihazırda görünen seferler — mükerrer duyuru engeli için. */
+  visibleSchedules?: ScheduleCardDto[];
   serverTimeIso: string;
   onOpenNightTransit?: () => void;
 }
@@ -18,6 +20,7 @@ interface LastFerrySafeguardBannerProps {
  */
 export function LastFerrySafeguardBanner({
   schedules,
+  visibleSchedules,
   serverTimeIso,
   onOpenNightTransit,
 }: LastFerrySafeguardBannerProps) {
@@ -54,6 +57,19 @@ export function LastFerrySafeguardBanner({
     if (mCurrent < 4 * 60) mCurrent += 24 * 60;
     return mCurrent < mEarliest ? current : earliest;
   }, lateTrips[0]);
+
+  // MÜKERRER BİLGİ YASAĞI: Bu sefer listede zaten görünüyorsa bandı gösterme.
+  if (
+    visibleSchedules &&
+    visibleSchedules.some(
+      (v) =>
+        v.origin === finalTrip.origin &&
+        v.destination === finalTrip.destination &&
+        v.departureTime === finalTrip.departureTime
+    )
+  ) {
+    return null;
+  }
 
   return (
     <div className="w-full px-3 pt-1.5">
