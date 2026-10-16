@@ -43,10 +43,10 @@ export function TopBar() {
           <Clock size={13} className="text-blue-600 dark:text-blue-400 shrink-0" />
           <div className="flex flex-col items-start leading-none">
             {/* suppressHydrationWarning: SSR anındaki sunucu saati ile istemci hidrasyon saati saniye bazında farklıdır */}
-            <span suppressHydrationWarning className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+            <span suppressHydrationWarning className="text-[8px] sm:text-[9px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
               {dateStr}
             </span>
-            <span suppressHydrationWarning className="font-mono font-black text-[11px] sm:text-sm tracking-tight text-slate-900 dark:text-white tabular-nums mt-0.5">
+            <span suppressHydrationWarning className="font-mono font-black text-[13px] sm:text-base tracking-tight text-slate-900 dark:text-white tabular-nums mt-0.5">
               {timeStr}
             </span>
           </div>

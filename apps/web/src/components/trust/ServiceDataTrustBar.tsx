@@ -1,6 +1,6 @@
 "use client";
 
-import { CalendarDays, ShieldAlert, ShieldCheck } from "lucide-react";
+import { ShieldAlert, ShieldCheck } from "lucide-react";
 import { resolveServiceDayInfo, tariffBadgeLabel } from "@/lib/utils/service-day-info";
 import { resolveDataFreshness } from "@/lib/utils/data-freshness";
 import { useLanguageStore } from "@/store/useLanguageStore";
@@ -39,8 +39,6 @@ export function ServiceDataTrustBar({ serverTimeIso, freshness }: ServiceDataTru
       }`}
       title="Tarife günün koşullarına göre otomatik seçilir; canlı duyurular resmî operatör kaynaklarından en son belirtilen tarihte çekildi."
     >
-      <CalendarDays size={11} className="shrink-0" aria-hidden="true" />
-      <span className="text-[10px] font-bold whitespace-nowrap shrink-0">{day.dateLabel}</span>
       <span
         className={`text-[9px] font-black px-1.5 py-0.5 rounded border whitespace-nowrap shrink-0 ${tariffTone}`}
       >
