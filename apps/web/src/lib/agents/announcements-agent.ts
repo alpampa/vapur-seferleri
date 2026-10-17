@@ -13,7 +13,9 @@
  * - Mavi Marmara  : durum.mavimarmara.net/feed.json — firmanın ana sayfasındaki
  *                   gömülü "Sefer Durumları" paneli canlı durum akışı yayınlar
  *                   (status: running/disrupted/cancelled)           → TARANIYOR
- * - Turyol        : resmi sitede duyuru/durum sayfası YOK (tüm denemeler 404) → kaynak yok
+ * - Turyol        : turyol.com ana sayfa açılış popup'ı
+ *                   (/Home/AktifPopupDuyurulari, fancybox iframe) iptal
+ *                   duyurularını yayınlar                      → TARANIYOR
  * - Prens Tur     : resmi sitede duyuru bölümü YOK (prenstur.net/duyurular → 404) → kaynak yok
  *
  * Kaynağı olmayan firmalar sessizce atlanmaz; tarama raporunda (coverage)
@@ -267,6 +269,67 @@ export function parseMaviMarmaraStatusFeed(raw: string): OperatorAnnouncement[] 
 }
 
 /* ------------------------------------------------------------------ */
+/* TURYOL (turyol.com ana sayfa aktif duyuru popup'ı)                   */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Turyol, iptal duyurularını ana sayfada fancybox ile açılan popup'ta
+ * yayınlar: /Home/AktifPopupDuyurulari (sunucu-taraflı HTML, iframe içeriği).
+ * İçerik birebir düz metne çevrilir; hiçbir cümle üretilmez.
+ * İptal yoksa popup içeriği boş gelir → boş dizi döner.
+ */
+export function parseTuryolAnnouncements(html: string): OperatorAnnouncement[] {
+  // Türkçe büyük İ (U+0130) nedeniyle /iptal/i regex'i yetmez; tr-TR
+  // normalizePierName ile kontrol edilir ("İPTAL" → "iptal").
+  if (!normalizePierName(decodeHtmlEntities(html)).includes("iptal")) return [];
+
+  const bodyMatch = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+  const inner = bodyMatch ? bodyMatch[1] : html;
+  const text = decodeHtmlEntities(
+    inner
+      .replace(/<script[\s\S]*?<\/script>/gi, "")
+      .replace(/<style[\s\S]*?<\/style>/gi, "")
+      .replace(/<br\s*\/?>/gi, "\n")
+      .replace(/<\/(p|li|tr|div|h[1-6])>/gi, "\n")
+      .replace(/<[^>]+>/g, " ")
+  )
+    .split("\n")
+    .map((l) => l.replace(/\s+/g, " ").trim())
+    .filter(Boolean)
+    .join("\n")
+    .slice(0, 1400);
+
+  if (!normalizePierName(text).includes("iptal")) return [];
+
+  // Eşleştirme çapası: firma kendi metninde "ADA SEFERLERİMİZ ... İPTAL
+  // EDİLMİŞTİR" diyorsa (yalnızca o cümle iptal diyorsa!) kanonik "Adalar"
+  // token'ı eklenir; böylece eşleştirici YALNIZCA firmanın ADALAR
+  // kategorili gerçek seferlerini işaretler (uydurma iptal yok).
+  const lines = text.split("\n");
+  const adaLine = lines.find((l) => {
+    const n = normalizePierName(l);
+    return n.includes("adaseferler") || n.includes("adalar");
+  });
+  const adaCancelled = !!adaLine && normalizePierName(adaLine).includes("iptal");
+  const body =
+    adaCancelled && !normalizePierName(text).includes("adalar")
+      ? `${text}\nAdalar seferleri iptal edilmiştir.`
+      : text;
+
+  return [
+    {
+      id: "turyol-aktif-popup-iptal",
+      operator: "Turyol",
+      title: "İptal Seferler",
+      body,
+      type: "CANCELLED_TRIPS",
+      sourceUrl: "https://turyol.com/Home/AktifPopupDuyurulari",
+      sourceVerified: true,
+    },
+  ];
+}
+
+/* ------------------------------------------------------------------ */
 /* ORTAK SINIFLANDIRICI                                                 */
 /* ------------------------------------------------------------------ */
 
@@ -321,6 +384,11 @@ export const ANNOUNCEMENT_SOURCES: AnnouncementSource[] = [
     url: "https://durum.mavimarmara.net/feed.json",
     parser: parseMaviMarmaraStatusFeed,
   },
+  {
+    operator: "Turyol",
+    url: "https://turyol.com/Home/AktifPopupDuyurulari",
+    parser: parseTuryolAnnouncements,
+  },
 ];
 
 /**
@@ -329,8 +397,6 @@ export const ANNOUNCEMENT_SOURCES: AnnouncementSource[] = [
  * yayını bulunmadığı raporda NO_SOURCE olarak açıkça belirtilir (sessiz atlama yok).
  */
 const NO_SOURCE_NOTES: Record<string, string> = {
-  Turyol:
-    "Resmi sitede duyuru/sefer-durumu sayfası yok: /duyurular, /tr/duyurular, /Haberler, /sefer-durumu → tümü 404. İptaller çağrı merkeziyle duyurulur.",
   "Prens Tur":
     "Resmi sitede duyuru bölümü yok: prenstur.net/duyurular, /duyuru.html, /haberler.html → tümü 404. Tarife yalnızca JPEG afiş; iptal duyurusu web'de yayınlanmıyor.",
 };

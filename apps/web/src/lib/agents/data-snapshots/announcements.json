@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-17T10:25:28.984Z",
+  "generatedAt": "2026-10-17T14:52:49.987Z",
   "failures": [],
   "coverage": [
     {
@@ -21,27 +21,28 @@
       "announcementCount": 1
     },
     {
+      "operator": "Turyol",
+      "status": "SCANNED",
+      "url": "https://turyol.com/Home/AktifPopupDuyurulari",
+      "announcementCount": 1
+    },
+    {
       "operator": "Prens Tur",
       "status": "NO_SOURCE",
       "note": "Resmi sitede duyuru bölümü yok: prenstur.net/duyurular, /duyuru.html, /haberler.html → tümü 404. Tarife yalnızca JPEG afiş; iptal duyurusu web'de yayınlanmıyor."
-    },
-    {
-      "operator": "Turyol",
-      "status": "NO_SOURCE",
-      "note": "Resmi sitede duyuru/sefer-durumu sayfası yok: /duyurular, /tr/duyurular, /Haberler, /sefer-durumu → tümü 404. İptaller çağrı merkeziyle duyurulur."
     }
   ],
   "sources": [
     {
       "operator": "Şehir Hatları",
-      "fetchedAt": "2026-10-17T10:25:28.983Z",
+      "fetchedAt": "2026-10-17T14:52:49.987Z",
       "sourceUrl": "https://sehirhatlari.istanbul/tr/iptal-seferler",
       "announcements": [
         {
           "id": "sh-status-17.10.2026",
           "operator": "Şehir Hatları",
           "title": "İptal Seferler — 17.10.2026",
-          "body": "17.10.2026\nDeğerli yolcularımız,\nElverişsiz hava koşulları nedeniyle aşağıda belirtilen hatlardaki seferlerimiz gerçekleştirilemeyecektir.\nKadıköy-Karaköy-Eminönü, Üsküdar-Karaköy-Eminönü ve Kadıköy-Beşiktaş hatlarımızda ise ikinci bir duyuruya kadar uygulanacak sefer tarifeleri aşağıda yer almaktadır.\nBilgilerinize sunarız.\nİptal Seferler:\nBoğaz Gidiş-Geliş\nÜsküdar-Haliç\nAnadolukavağı-Rumelikavağı-Sarıyer\nÇengelköy-Bebek-Kanlıca-İstinye\nEminönü-Rumelikavağı\nÜsküdar-Anadolukavağı\nAdalar-Beşiktaş\nKısa Boğaz Turu\nUzun Boğaz Turu\nKadıköy-Üsküdar-Ortaköy\nİstinye-Çubuklu\nBeykoz-Sarıyer\nKabataş-Kadıköy\nAşiyan-Anadoluhisarı-Küçüksu\nÜsküdar-Aşiyan\nBeşiktaş-Haliç\nKadıköy-Haliç\nMaltepe-Büyükada-Heybeliada-Burgazada-Kınalıada\nÇengelköy-Kabataş\nOrtaköy-Beşiktaş-Eminönü\nBostancı-Moda-Karaköy-Kabataş\nTuzla-Pendik-Büyükada",
+          "body": "17.10.2026\nDeğerli yolcularımız,\nElverişsiz hava koşulları nedeniyle aşağıda belirtilen hatlardaki seferlerimiz ikinci bir duyuruya kadar gerçekleştirilemeyecektir.\nKadıköy-Karaköy-Eminönü, Üsküdar-Karaköy-Eminönü ve Kadıköy-Beşiktaş hatlarımızda ise ikinci bir duyuruya kadar uygulanacak sefer tarifeleri aşağıda yer almaktadır.\nBilgilerinize sunarız.\nİptal Seferler:\nBoğaz Gidiş-Geliş\nÜsküdar-Haliç\nAnadolukavağı-Rumelikavağı-Sarıyer\nÇengelköy-Bebek-Kanlıca-İstinye\nEminönü-Rumelikavağı\nÜsküdar-Anadolukavağı\nAdalar-Beşiktaş\nKısa Boğaz Turu\nUzun Boğaz Turu\nKadıköy-Üsküdar-Ortaköy\nİstinye-Çubuklu\nBeykoz-Sarıyer\nKabataş-Kadıköy\nAşiyan-Anadoluhisarı-Küçüksu\nÜsküdar-Aşiyan\nBeşiktaş-Haliç\nKadıköy-Haliç\nMaltepe-Büyükada-Heybeliada-Burgazada-Kınalıada\nÇengelköy-Kabataş\nOrtaköy-Beşiktaş-Eminönü\nBostancı-Moda-Karaköy-Kabataş\nTuzla-Pendik-Büyükada",
           "type": "CANCELLED_TRIPS",
           "affectedLines": [],
           "publishedAt": "17.10.2026",
@@ -124,7 +125,7 @@
     },
     {
       "operator": "Dentur Avrasya",
-      "fetchedAt": "2026-10-17T10:25:28.984Z",
+      "fetchedAt": "2026-10-17T14:52:49.987Z",
       "sourceUrl": "https://www.denturavrasya.com/tr-TR/duyurular",
       "announcements": [
         {
@@ -211,7 +212,7 @@
     },
     {
       "operator": "Mavi Marmara",
-      "fetchedAt": "2026-10-17T10:25:28.984Z",
+      "fetchedAt": "2026-10-17T14:52:49.987Z",
       "sourceUrl": "https://durum.mavimarmara.net/feed.json",
       "announcements": [
         {
@@ -221,6 +222,22 @@
           "body": "İptal Seferler:\nBeşiktaş-Kabataş\nKabataş-Büyükada\nSirkeci-Büyükada",
           "type": "CANCELLED_TRIPS",
           "sourceUrl": "https://durum.mavimarmara.net/",
+          "sourceVerified": true
+        }
+      ]
+    },
+    {
+      "operator": "Turyol",
+      "fetchedAt": "2026-10-17T14:52:49.987Z",
+      "sourceUrl": "https://turyol.com/Home/AktifPopupDuyurulari",
+      "announcements": [
+        {
+          "id": "turyol-aktif-popup-iptal",
+          "operator": "Turyol",
+          "title": "İptal Seferler",
+          "body": "HAVA MUHALEFETİ SEBEBİYLE\nÇINARCIK - KOCADERE - ESENKÖY SEFERLERİMİZ\n18.10.2026 PAZAR GÜNÜ AKŞAM 18.00 SEFERİNE KADAR\nİPTAL EDİLMİŞTİR.\nADA SEFERLERİMİZ HAVA MUHALEFETİ NEDENİYLE İPTAL EDİLMİŞTİR\nAdalar seferleri iptal edilmiştir.",
+          "type": "CANCELLED_TRIPS",
+          "sourceUrl": "https://turyol.com/Home/AktifPopupDuyurulari",
           "sourceVerified": true
         }
       ]

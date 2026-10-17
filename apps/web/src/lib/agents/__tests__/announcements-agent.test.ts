@@ -6,6 +6,7 @@ import {
   parseSehirHatlariAnnouncements,
   parseDenturAnnouncements,
   parseMaviMarmaraStatusFeed,
+  parseTuryolAnnouncements,
   classifyAnnouncement,
   extractArticleBodyText,
   scrapeAllAnnouncements,
@@ -201,6 +202,49 @@ describe("Mavi Marmara duyuru ajanı (durum.mavimarmara.net feed.json fixture)",
   });
 });
 
+describe("Turyol duyuru ajanı (ana sayfa aktif popup fixture)", () => {
+  const html = fixture("turyol-aktif-popup.html");
+
+  it("popup metnini birebir çıkarır; Ada iptaline dayalı eşleştirme çapası ekler", () => {
+    const anns = parseTuryolAnnouncements(html);
+    expect(anns).toHaveLength(1);
+    const a = anns[0];
+    expect(a.operator).toBe("Turyol");
+    expect(a.type).toBe("CANCELLED_TRIPS");
+    expect(a.sourceVerified).toBe(true);
+    // Birebir resmi metin (HTML entity'leri çözülmüş)
+    expect(a.body).toContain("ÇINARCIK - KOCADERE - ESENKÖY");
+    expect(a.body).toContain("ADA SEFERLERİMİZ HAVA MUHALEFETİ NEDENİYLE İPTAL EDİLMİŞTİR");
+    // Çapa, YALNIZCA resmi "Ada seferleri iptal" cümlesi varsa eklenir
+    expect(a.body).toContain("Adalar seferleri iptal edilmiştir.");
+  });
+
+  it("eşleştirici YALNIZCA Turyol ADALAR seferlerini işaretler (Boğaz hattı etkilenmez)", () => {
+    const anns = parseTuryolAnnouncements(html);
+    const disruptions = matchAnnouncementToTrips(anns[0]);
+    const turyolAdaTrips = OFFICIAL_SCHEDULES_DATA.filter(
+      (t) => t.operator === "Turyol" && t.category === "ADALAR"
+    );
+    const turyolOtherTrips = OFFICIAL_SCHEDULES_DATA.filter(
+      (t) => t.operator === "Turyol" && t.category !== "ADALAR"
+    );
+    expect(turyolAdaTrips.length).toBeGreaterThan(0);
+    expect(disruptions.filter((d) => d.operator === "Turyol")).toHaveLength(
+      turyolAdaTrips.length
+    );
+    const ids = new Set(disruptions.map((d) => d.tripId));
+    for (const t of turyolAdaTrips) expect(ids.has(t.id), t.id).toBe(true);
+    for (const t of turyolOtherTrips) expect(ids.has(t.id), t.id).toBe(false);
+  });
+
+  it("iptal yoksa duyuru üretmez", () => {
+    expect(
+      parseTuryolAnnouncements("<body><div>Duyuru bulunmamaktadır.</div></body>")
+    ).toHaveLength(0);
+    expect(parseTuryolAnnouncements("")).toHaveLength(0);
+  });
+});
+
 describe("KULLANICI KURALI: TÜM firmalar taranır (çok-firmalı tarama)", () => {
   it("kapsam kaydı her operatörü içerir; kaynaklı/kaynaksız ayrımı kanıtlıdır", () => {
     expect(OPERATOR_SCAN_COVERAGE.length).toBe(OPERATOR_REGISTRY.length);
@@ -224,11 +268,13 @@ describe("KULLANICI KURALI: TÜM firmalar taranır (çok-firmalı tarama)", () =
     const shHtml = fixture("sehirhatlari-iptal-seferler-17102026.html");
     const denturHtml = fixture("dentur-duyurular.html");
     const mmFeed = fixture("mavi-marmara-durum-feed.json");
+    const turyolHtml = fixture("turyol-aktif-popup.html");
     const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
       const url = String(input);
       if (url.includes("sehirhatlari.istanbul")) return new Response(shHtml, { status: 200 });
       if (url.includes("denturavrasya.com")) return new Response(denturHtml, { status: 200 });
       if (url.includes("durum.mavimarmara.net")) return new Response(mmFeed, { status: 200 });
+      if (url.includes("turyol.com")) return new Response(turyolHtml, { status: 200 });
       throw new Error(`beklenmeyen URL: ${url}`);
     });
     vi.stubGlobal("fetch", fetchMock);
@@ -238,15 +284,21 @@ describe("KULLANICI KURALI: TÜM firmalar taranır (çok-firmalı tarama)", () =
       expect(snapshots.map((s) => s.operator).sort()).toEqual([
         "Dentur Avrasya",
         "Mavi Marmara",
+        "Turyol",
         "Şehir Hatları",
       ]);
       const scanned = coverage
         .filter((c) => c.status === "SCANNED")
         .map((c) => c.operator)
         .sort();
-      expect(scanned).toEqual(["Dentur Avrasya", "Mavi Marmara", "Şehir Hatları"]);
+      expect(scanned).toEqual([
+        "Dentur Avrasya",
+        "Mavi Marmara",
+        "Turyol",
+        "Şehir Hatları",
+      ]);
       const noSource = coverage.filter((c) => c.status === "NO_SOURCE");
-      expect(noSource.map((c) => c.operator).sort()).toEqual(["Prens Tur", "Turyol"].sort());
+      expect(noSource.map((c) => c.operator)).toEqual(["Prens Tur"]);
       expect(noSource.every((c) => !!c.note)).toBe(true);
     } finally {
       vi.unstubAllGlobals();
@@ -256,11 +308,13 @@ describe("KULLANICI KURALI: TÜM firmalar taranır (çok-firmalı tarama)", () =
   it("bir firma kaynağı çökerse yalnız o firma FAILED olur; diğerleri taranmaya devam eder", async () => {
     const denturHtml = fixture("dentur-duyurular.html");
     const mmFeed = fixture("mavi-marmara-durum-feed.json");
+    const turyolHtml = fixture("turyol-aktif-popup.html");
     const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
       const url = String(input);
       if (url.includes("sehirhatlari.istanbul")) return new Response("bakım", { status: 503 });
       if (url.includes("denturavrasya.com")) return new Response(denturHtml, { status: 200 });
       if (url.includes("durum.mavimarmara.net")) return new Response(mmFeed, { status: 200 });
+      if (url.includes("turyol.com")) return new Response(turyolHtml, { status: 200 });
       throw new Error(`beklenmeyen URL: ${url}`);
     });
     vi.stubGlobal("fetch", fetchMock);
@@ -270,7 +324,8 @@ describe("KULLANICI KURALI: TÜM firmalar taranır (çok-firmalı tarama)", () =
       expect(coverage.find((c) => c.operator === "Şehir Hatları")?.status).toBe("FAILED");
       expect(coverage.find((c) => c.operator === "Dentur Avrasya")?.status).toBe("SCANNED");
       expect(coverage.find((c) => c.operator === "Mavi Marmara")?.status).toBe("SCANNED");
-      expect(snapshots).toHaveLength(2);
+      expect(coverage.find((c) => c.operator === "Turyol")?.status).toBe("SCANNED");
+      expect(snapshots).toHaveLength(3);
     } finally {
       vi.unstubAllGlobals();
     }
