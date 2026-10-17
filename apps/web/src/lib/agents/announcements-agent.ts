@@ -1,22 +1,27 @@
 /**
  * DUYURU AJANLARI (HUSUSİ)
  *
- * Her firmanın resmi duyuru / iptal-sefer sayfasını çeker, gerçek duyuru
- * kayıtlarını başlık ve girdileriyle birlikte çıkarır. Uydurma üretilmez;
+ * KULLANICI KURALI: İptal duyuruları TÜM firmaların resmi ekranlarında yayınlanır.
+ * Bu yüzden ajanlar HER firmayı anlık tarar; iptal varsa ekrana yazılır — tek firma değil.
+ * Her firmanın resmi duyuru / iptal-sefer sayfası çekilir, gerçek duyuru
+ * kayıtları başlık ve girdileriyle birlikte çıkarılır. Uydurma üretilmez;
  * yalnızca sayfada birebir bulunan metin kaydedilir.
  *
- * Kaynaklar (doğrulandı 2026-10-04):
- * - Şehir Hatları : sehirhatlari.istanbul/tr/iptal-seferler
- *                   → bugünkü iptal durumu + "Diğer Duyurular" listesi
- * - Dentur Avrasya: denturavrasya.com/tr-TR/duyurular
- *                   → duyuru sayfa linkleri (slug, resmi URL)
+ * Kaynak durumu (2026-10-17 canlı doğrulama):
+ * - Şehir Hatları : sehirhatlari.istanbul/tr/iptal-seferler  → TARANIYOR
+ * - Dentur Avrasya: denturavrasya.com/tr-TR/duyurular        → TARANIYOR
+ * - Mavi Marmara  : resmi sitede duyuru sayfası YOK (mavimarmara.net/duyurular → 404;
+ *                   WordPress API'de duyuru kategorisi/gönderisi yok) → kaynak yok
+ * - Turyol        : resmi sitede duyuru/durum sayfası YOK (tüm denemeler 404) → kaynak yok
+ * - Prens Tur     : resmi sitede duyuru bölümü YOK (prenstur.net/duyurular → 404) → kaynak yok
  *
- * Turyol / Prens Tur: düzenli, makine-okunur duyuru yayını bulunamadı:
- * döngüde "kaynak yok" olarak işaretlenir (uydurma duyuru üretilmez).
+ * Kaynağı olmayan firmalar sessizce atlanmaz; tarama raporunda (coverage)
+ * "NO_SOURCE" olarak kanıtlı notla raporlanır.
  */
 
 import { fetchHtml, normalizePierName } from "@/lib/agents/scraper-agent";
 import { isAnnouncementCurrent } from "@/lib/utils/announcement-filter";
+import { OPERATOR_REGISTRY } from "@/lib/data/operator-registry";
 import type { OperatorAnnouncement, AnnouncementsSnapshot } from "@/lib/types/announcement";
 
 /** Türkçe slug → okunur başlık (yalnızca resmi URL'den, uydurma değil) */
@@ -237,6 +242,10 @@ export interface AnnouncementSource {
   parseStatus?: (html: string) => unknown;
 }
 
+/**
+ * TARANAN KAYNAKLAR (parser'lı, canlı çekilebilir resmi sayfalar).
+ * Her yeni firma kaynağı buraya eklenir; UI ve eşleştirici otomatik kapsar.
+ */
 export const ANNOUNCEMENT_SOURCES: AnnouncementSource[] = [
   {
     operator: "Şehir Hatları",
@@ -251,58 +260,146 @@ export const ANNOUNCEMENT_SOURCES: AnnouncementSource[] = [
   },
 ];
 
+/**
+ * KAYNAĞI OLMAYAN FİRMALAR — kanıtlı not (2026-10-17 canlı deneme sonuçları).
+ * Bu firmalar da her senkronda "taranır": resmi sitesinde makine-okunur duyuru
+ * yayını bulunmadığı raporda NO_SOURCE olarak açıkça belirtilir (sessiz atlama yok).
+ */
+const NO_SOURCE_NOTES: Record<string, string> = {
+  "Mavi Marmara":
+    "Resmi sitede duyuru sayfası yok: mavimarmara.net/duyurular → 404; WordPress içeriğinde duyuru kategorisi/gönderisi bulunmuyor (son gönderi 2022). İptaller operasyon merkezinden duyurulur.",
+  Turyol:
+    "Resmi sitede duyuru/sefer-durumu sayfası yok: /duyurular, /tr/duyurular, /Haberler, /sefer-durumu → tümü 404. İptaller çağrı merkeziyle duyurulur.",
+  "Prens Tur":
+    "Resmi sitede duyuru bölümü yok: prenstur.net/duyurular, /duyuru.html, /haberler.html → tümü 404. Tarife yalnızca JPEG afiş; iptal duyurusu web'de yayınlanmıyor.",
+};
+
+/** Operatör tarama kapsam kaydı (UI/meta/tests için) */
+export interface OperatorScanCoverage {
+  operator: string;
+  hasSource: boolean;
+  url?: string;
+  note?: string;
+}
+
+/** Kayıtlı tüm operatörlerin tarama kapsamı (kaynak defteri + kanıtlı notlar) */
+export const OPERATOR_SCAN_COVERAGE: OperatorScanCoverage[] = OPERATOR_REGISTRY.map((op) => {
+  const source = ANNOUNCEMENT_SOURCES.find((s) => s.operator === op.name);
+  return source
+    ? { operator: op.name, hasSource: true, url: source.url }
+    : { operator: op.name, hasSource: false, note: NO_SOURCE_NOTES[op.name] ?? "Resmi duyuru kaynağı bulunamadı." };
+});
+
 /** Tek senkronda detay sayfası çekilecek azami iptal duyurusu sayısı */
 const MAX_DETAIL_FETCHES = 3;
+/** Resmi kaynak sayfası için ağ zaman aşımı (istek yolunda çalışır) */
+const SOURCE_TIMEOUT_MS = 8000;
+/** Detay sayfası için ağ zaman aşımı */
+const DETAIL_TIMEOUT_MS = 6000;
 
 /**
  * İptal duyurularının GÖVDESİNİ resmi detay sayfasından birebir çeker.
  * Gövde olmadan "hangi hatlar iptal" bilgisi eşleştirilemez; yalnızca
  * başlıkla gösterim eksik kalır. Bu yüzden güncel iptal duyurularının
  * detay sayfası ayrıca indirilir (uydurma yok; sayfa metni aynen alınır).
+ * TÜM firmalar için çalışır (URL'de /duyurular/ geçen resmi detay sayfaları).
  */
 async function enrichCancellationBodies(announcements: OperatorAnnouncement[]): Promise<void> {
-  let fetches = 0;
-  for (const a of announcements) {
-    if (fetches >= MAX_DETAIL_FETCHES) break;
-    if (a.body || a.type !== "CANCELLED_TRIPS") continue;
-    if (!a.sourceUrl.includes("/duyurular/")) continue;
-    if (!isAnnouncementCurrent(a)) continue;
-    try {
-      const detailHtml = await fetchHtml(a.sourceUrl);
-      const body = extractArticleBodyText(detailHtml);
-      if (body) a.body = body;
-      fetches++;
-    } catch {
-      // Detay alınamazsa duyuru başlığıyla kalır — uydurma yok.
-    }
-  }
+  const candidates = announcements
+    .filter(
+      (a) =>
+        !a.body &&
+        a.type === "CANCELLED_TRIPS" &&
+        a.sourceUrl.includes("/duyurular/") &&
+        isAnnouncementCurrent(a)
+    )
+    .slice(0, MAX_DETAIL_FETCHES);
+
+  await Promise.allSettled(
+    candidates.map(async (a) => {
+      try {
+        const detailHtml = await fetchHtml(a.sourceUrl, undefined, {
+          timeoutMs: DETAIL_TIMEOUT_MS,
+          fresh: true,
+        });
+        const body = extractArticleBodyText(detailHtml);
+        if (body) a.body = body;
+      } catch {
+        // Detay alınamazsa duyuru başlığıyla kalır — uydurma yok.
+      }
+    })
+  );
 }
 
-/** Tüm duyuru kaynaklarını çeker; hata olan operatörü atlar */
+/** Bir firmanın bu senkronundaki tarama sonucu */
+export interface OperatorScanReport {
+  operator: string;
+  status: "SCANNED" | "NO_SOURCE" | "FAILED";
+  url?: string;
+  announcementCount?: number;
+  error?: string;
+  note?: string;
+}
+
+/**
+ * KULLANICI KURALI: TÜM firmaları tara — yalnızca bir firma değil.
+ * Kaynaklı firmalar PARALEL canlı çekilir; kaynağı olmayanlar kanıtlı notla
+ * NO_SOURCE raporlanır; hata alan firmanın önceki snapshot'ı korunur (çağıran taraf).
+ */
 export async function scrapeAllAnnouncements(): Promise<{
   snapshots: AnnouncementsSnapshot[];
   failures: { operator: string; error: string }[];
+  coverage: OperatorScanReport[];
 }> {
   const snapshots: AnnouncementsSnapshot[] = [];
   const failures: { operator: string; error: string }[] = [];
+  const coverage: OperatorScanReport[] = [];
 
-  for (const source of ANNOUNCEMENT_SOURCES) {
-    try {
-      const html = await fetchHtml(source.url);
+  const settled = await Promise.allSettled(
+    ANNOUNCEMENT_SOURCES.map(async (source) => {
+      const html = await fetchHtml(source.url, undefined, {
+        timeoutMs: SOURCE_TIMEOUT_MS,
+        fresh: true,
+      });
       const announcements = source.parser(html);
-      if (source.operator === "Şehir Hatları") {
-        await enrichCancellationBodies(announcements);
-      }
+      await enrichCancellationBodies(announcements);
+      return { source, announcements };
+    })
+  );
+
+  settled.forEach((result, idx) => {
+    const source = ANNOUNCEMENT_SOURCES[idx];
+    if (result.status === "fulfilled") {
+      const { announcements } = result.value;
       snapshots.push({
         operator: source.operator,
         fetchedAt: new Date().toISOString(),
         sourceUrl: source.url,
         announcements,
       });
-    } catch (err: any) {
-      failures.push({ operator: source.operator, error: err?.message || String(err) });
+      coverage.push({
+        operator: source.operator,
+        status: "SCANNED",
+        url: source.url,
+        announcementCount: announcements.length,
+      });
+    } else {
+      const error = result.reason?.message || String(result.reason);
+      failures.push({ operator: source.operator, error });
+      coverage.push({ operator: source.operator, status: "FAILED", url: source.url, error });
     }
+  });
+
+  // Kaynağı olmayan operatörler: sessiz atlama yok, kanıtlı rapor
+  const scannedOperators = new Set(ANNOUNCEMENT_SOURCES.map((s) => s.operator));
+  for (const op of OPERATOR_REGISTRY) {
+    if (scannedOperators.has(op.name)) continue;
+    coverage.push({
+      operator: op.name,
+      status: "NO_SOURCE",
+      note: NO_SOURCE_NOTES[op.name] ?? "Resmi duyuru kaynağı bulunamadı.",
+    });
   }
 
-  return { snapshots, failures };
+  return { snapshots, failures, coverage };
 }

@@ -83,14 +83,22 @@ export function buildSnapshotState(current: HashableContent): SnapshotState {
   };
 }
 
-/** Firmaların canlı sayfalarını çeker (ajanlar arasında ortak) */
-export async function fetchHtml(url: string, ua = "Vapur-Sync-Agent/3.0"): Promise<string> {
+/** Firmaların canlı sayfalarını çeker (ajanlar arasında ortak).
+ *  - timeoutMs: ağ yanıtı için üst sınır (iptal taraması istek yolunda çalışır)
+ *  - fresh: true → önbelleğe almadan canlı çek (anlık iptal taraması)
+ */
+export async function fetchHtml(
+  url: string,
+  ua = "Vapur-Sync-Agent/3.0",
+  options: { timeoutMs?: number; fresh?: boolean } = {}
+): Promise<string> {
   const res = await fetch(url, {
     headers: {
       "User-Agent": ua,
       Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
     },
-    next: { revalidate: 3600 },
+    ...(options.fresh ? { cache: "no-store" as RequestCache } : { next: { revalidate: 3600 } }),
+    ...(options.timeoutMs ? { signal: AbortSignal.timeout(options.timeoutMs) } : {}),
   });
   if (!res.ok) throw new Error(`HTTP ${res.status}: ${url}`);
   return res.text();

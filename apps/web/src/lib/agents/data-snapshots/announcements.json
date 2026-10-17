@@ -1,10 +1,39 @@
 {
-  "generatedAt": "2026-10-17T08:29:09.987Z",
+  "generatedAt": "2026-10-17T09:14:21.968Z",
   "failures": [],
+  "coverage": [
+    {
+      "operator": "Şehir Hatları",
+      "status": "SCANNED",
+      "url": "https://sehirhatlari.istanbul/tr/iptal-seferler",
+      "announcementCount": 10
+    },
+    {
+      "operator": "Dentur Avrasya",
+      "status": "SCANNED",
+      "url": "https://www.denturavrasya.com/tr-TR/duyurular",
+      "announcementCount": 10
+    },
+    {
+      "operator": "Mavi Marmara",
+      "status": "NO_SOURCE",
+      "note": "Resmi sitede duyuru sayfası yok: mavimarmara.net/duyurular → 404; WordPress içeriğinde duyuru kategorisi/gönderisi bulunmuyor (son gönderi 2022). İptaller operasyon merkezinden duyurulur."
+    },
+    {
+      "operator": "Prens Tur",
+      "status": "NO_SOURCE",
+      "note": "Resmi sitede duyuru bölümü yok: prenstur.net/duyurular, /duyuru.html, /haberler.html → tümü 404. Tarife yalnızca JPEG afiş; iptal duyurusu web'de yayınlanmıyor."
+    },
+    {
+      "operator": "Turyol",
+      "status": "NO_SOURCE",
+      "note": "Resmi sitede duyuru/sefer-durumu sayfası yok: /duyurular, /tr/duyurular, /Haberler, /sefer-durumu → tümü 404. İptaller çağrı merkeziyle duyurulur."
+    }
+  ],
   "sources": [
     {
       "operator": "Şehir Hatları",
-      "fetchedAt": "2026-10-17T08:29:08.988Z",
+      "fetchedAt": "2026-10-17T09:14:21.968Z",
       "sourceUrl": "https://sehirhatlari.istanbul/tr/iptal-seferler",
       "announcements": [
         {
@@ -94,7 +123,7 @@
     },
     {
       "operator": "Dentur Avrasya",
-      "fetchedAt": "2026-10-17T08:29:09.987Z",
+      "fetchedAt": "2026-10-17T09:14:21.968Z",
       "sourceUrl": "https://www.denturavrasya.com/tr-TR/duyurular",
       "announcements": [
         {

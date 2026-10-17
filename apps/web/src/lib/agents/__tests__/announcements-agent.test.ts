@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import {
@@ -7,6 +7,9 @@ import {
   parseDenturAnnouncements,
   classifyAnnouncement,
   extractArticleBodyText,
+  scrapeAllAnnouncements,
+  ANNOUNCEMENT_SOURCES,
+  OPERATOR_SCAN_COVERAGE,
 } from "@/lib/agents/announcements-agent";
 import {
   matchAnnouncementToTrips,
@@ -16,6 +19,7 @@ import {
 } from "@/lib/agents/announcement-trip-matcher";
 import { compareSnapshots, computeFingerprint, buildSnapshotState } from "@/lib/agents/scraper-agent";
 import { OFFICIAL_SCHEDULES_DATA } from "@/lib/data/official-schedules";
+import { OPERATOR_REGISTRY } from "@/lib/data/operator-registry";
 import type { OperatorAnnouncement } from "@/lib/types/announcement";
 
 function fixture(name: string): string {
@@ -139,6 +143,78 @@ describe("classifyAnnouncement", () => {
     expect(classifyAnnouncement("26 Temmuz 2026 Adalar-Bostancı Ek Seferi")).toBe("EXTRA_SERVICE");
     expect(classifyAnnouncement("Sefer Düzenlemeleri Duyurusu")).toBe("SCHEDULE_CHANGE");
     expect(classifyAnnouncement("Mehtap Turu Bilgilendirme")).toBe("INFO");
+  });
+});
+
+describe("KULLANICI KURALI: TÜM firmalar taranır (çok-firmalı tarama)", () => {
+  it("kapsam kaydı her operatörü içerir; kaynaklı/kaynaksız ayrımı kanıtlıdır", () => {
+    expect(OPERATOR_SCAN_COVERAGE.length).toBe(OPERATOR_REGISTRY.length);
+    for (const op of OPERATOR_REGISTRY) {
+      const entry = OPERATOR_SCAN_COVERAGE.find((c) => c.operator === op.name);
+      expect(entry, `${op.name} kapsam kaydında yok`).toBeTruthy();
+      if (entry!.hasSource) {
+        expect(entry!.url).toBeTruthy();
+      } else {
+        // Kaynağı olmayan firma sessizce atlanmaz → kanıtlı not zorunlu
+        expect(entry!.note).toBeTruthy();
+      }
+    }
+    const withSource = OPERATOR_SCAN_COVERAGE.filter((c) => c.hasSource)
+      .map((c) => c.operator)
+      .sort();
+    expect(withSource).toEqual(ANNOUNCEMENT_SOURCES.map((s) => s.operator).sort());
+  });
+
+  it("scrapeAllAnnouncements firmaları paralel tarar; kaynaksızlar NO_SOURCE raporlanır", async () => {
+    const shHtml = fixture("sehirhatlari-iptal-seferler-17102026.html");
+    const denturHtml = fixture("dentur-duyurular.html");
+    const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.includes("sehirhatlari.istanbul")) return new Response(shHtml, { status: 200 });
+      if (url.includes("denturavrasya.com")) return new Response(denturHtml, { status: 200 });
+      throw new Error(`beklenmeyen URL: ${url}`);
+    });
+    vi.stubGlobal("fetch", fetchMock);
+    try {
+      const { snapshots, failures, coverage } = await scrapeAllAnnouncements();
+      expect(failures).toHaveLength(0);
+      expect(snapshots.map((s) => s.operator).sort()).toEqual([
+        "Dentur Avrasya",
+        "Şehir Hatları",
+      ]);
+      const scanned = coverage
+        .filter((c) => c.status === "SCANNED")
+        .map((c) => c.operator)
+        .sort();
+      expect(scanned).toEqual(["Dentur Avrasya", "Şehir Hatları"]);
+      const noSource = coverage.filter((c) => c.status === "NO_SOURCE");
+      expect(noSource.map((c) => c.operator).sort()).toEqual(
+        ["Mavi Marmara", "Prens Tur", "Turyol"].sort()
+      );
+      expect(noSource.every((c) => !!c.note)).toBe(true);
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+
+  it("bir firma kaynağı çökerse yalnız o firma FAILED olur; diğerleri taranmaya devam eder", async () => {
+    const denturHtml = fixture("dentur-duyurular.html");
+    const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.includes("sehirhatlari.istanbul")) return new Response("bakım", { status: 503 });
+      if (url.includes("denturavrasya.com")) return new Response(denturHtml, { status: 200 });
+      throw new Error(`beklenmeyen URL: ${url}`);
+    });
+    vi.stubGlobal("fetch", fetchMock);
+    try {
+      const { snapshots, failures, coverage } = await scrapeAllAnnouncements();
+      expect(failures.some((f) => f.operator === "Şehir Hatları")).toBe(true);
+      expect(coverage.find((c) => c.operator === "Şehir Hatları")?.status).toBe("FAILED");
+      expect(coverage.find((c) => c.operator === "Dentur Avrasya")?.status).toBe("SCANNED");
+      expect(snapshots).toHaveLength(1);
+    } finally {
+      vi.unstubAllGlobals();
+    }
   });
 });
 

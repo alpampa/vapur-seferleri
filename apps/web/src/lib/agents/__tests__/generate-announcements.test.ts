@@ -14,10 +14,11 @@ describe("duyuru üretici", () => {
   it("canlı duyuruları çekip snapshot üretir (env ile)", async () => {
     if (process.env.GENERATE_ANNOUNCEMENTS !== "1") return;
 
-    const { snapshots, failures } = await scrapeAllAnnouncements();
+    const { snapshots, failures, coverage } = await scrapeAllAnnouncements();
     const payload = {
       generatedAt: new Date().toISOString(),
       failures,
+      coverage,
       sources: snapshots,
     };
 

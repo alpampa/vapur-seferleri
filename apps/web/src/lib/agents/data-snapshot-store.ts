@@ -11,10 +11,13 @@
  */
 
 import type { OperatorAnnouncement } from "@/lib/types/announcement";
+import type { OperatorScanReport } from "@/lib/agents/announcements-agent";
 
 export interface AnnouncementsSnapshotFile {
   generatedAt: string;
   failures?: { operator: string; error: string }[];
+  /** Son senkronun firma-bazlı tarama raporu (kaynağı olmayanlar dahil) */
+  coverage?: OperatorScanReport[];
   sources: {
     operator: string;
     fetchedAt: string;

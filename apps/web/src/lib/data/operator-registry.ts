@@ -71,7 +71,9 @@ export const OPERATOR_REGISTRY: OperatorRecord[] = [
       "https://www.mavimarmara.net/tarifeler/bostanci-buyukada/",
       "https://www.mavimarmara.net/tarifeler/kabatas-adalar/",
     ],
-    announcementEndpoints: ["https://www.mavimarmara.net/duyurular/"],
+    // 2026-10-17 canlı doğrulama: mavimarmara.net/duyurular → 404; WordPress
+    // içeriğinde duyuru kategorisi/gönderisi yok (son gönderi 2022). Kaynak yok.
+    announcementEndpoints: [],
     logoPath: "/logos/operator-mavimarmara.png",
     brandColor: "#0284C7",
     category: "ADALAR",
