@@ -88,7 +88,7 @@ export function AnnouncementBanner({ announcements, className = "" }: Announceme
         type="button"
         onClick={handlePrev}
         aria-label="Önceki duyuru"
-        className="flex h-7 w-7 sm:h-10 sm:w-10 items-center justify-center rounded-md active:bg-slate-200/60 dark:active:bg-slate-800 sm:hover:text-slate-700 dark:sm:hover:text-slate-200 sm:hover:bg-slate-200/60 dark:sm:hover:bg-slate-800 cursor-pointer ml-1"
+        className="relative flex h-7 w-7 sm:h-10 sm:w-10 items-center justify-center rounded-md active:bg-slate-200/60 dark:active:bg-slate-800 sm:hover:text-slate-700 dark:sm:hover:text-slate-200 sm:hover:bg-slate-200/60 dark:sm:hover:bg-slate-800 cursor-pointer ml-1 after:content-[''] after:absolute after:left-1/2 after:top-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:h-10 after:w-[30px] sm:after:hidden"
       >
         <ChevronLeft size={14} />
       </button>
@@ -96,7 +96,7 @@ export function AnnouncementBanner({ announcements, className = "" }: Announceme
         type="button"
         onClick={handleNext}
         aria-label="Sonraki duyuru"
-        className="flex h-7 w-7 sm:h-10 sm:w-10 items-center justify-center rounded-md active:bg-slate-200/60 dark:active:bg-slate-800 sm:hover:text-slate-700 dark:sm:hover:text-slate-200 sm:hover:bg-slate-200/60 dark:sm:hover:bg-slate-800 cursor-pointer"
+        className="relative flex h-7 w-7 sm:h-10 sm:w-10 items-center justify-center rounded-md active:bg-slate-200/60 dark:active:bg-slate-800 sm:hover:text-slate-700 dark:sm:hover:text-slate-200 sm:hover:bg-slate-200/60 dark:sm:hover:bg-slate-800 cursor-pointer after:content-[''] after:absolute after:left-1/2 after:top-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:h-10 after:w-[30px] sm:after:hidden"
       >
         <ChevronRight size={14} />
       </button>
