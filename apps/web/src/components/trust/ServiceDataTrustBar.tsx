@@ -28,10 +28,6 @@ export function ServiceDataTrustBar({ serverTimeIso, freshness }: ServiceDataTru
     ? "bg-indigo-500/15 text-indigo-700 dark:text-indigo-300 border-indigo-400/40"
     : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700";
 
-  const freshnessLabel = fresh.verifiedOnLabel
-    ? `${t("trustAnnouncement")}: ${fresh.verifiedOnLabel} (${fresh.ageLabel}) · ${freshness.sourceCount} ${t("sources")}`
-    : t("trustMissing");
-
   return (
     <div
       className={`flex flex-1 items-center gap-1.5 min-w-0 overflow-hidden ${
@@ -59,7 +55,17 @@ export function ServiceDataTrustBar({ serverTimeIso, freshness }: ServiceDataTru
         ) : (
           <ShieldCheck size={11} className="shrink-0 text-emerald-500" aria-hidden="true" />
         )}
-        <span className="text-[10px] font-bold tabular-nums truncate">{freshnessLabel}</span>
+        {/* MOBİL: uzun "Duyuru doğrulama:" öneki gizlenir, satır kesilmeden sığar */}
+        <span className="text-[10px] font-bold tabular-nums truncate">
+          {fresh.verifiedOnLabel ? (
+            <>
+              <span className="hidden sm:inline">{t("trustAnnouncement")}: </span>
+              {fresh.verifiedOnLabel} ({fresh.ageLabel}) · {freshness.sourceCount} {t("sources")}
+            </>
+          ) : (
+            t("trustMissing")
+          )}
+        </span>
       </span>
     </div>
   );

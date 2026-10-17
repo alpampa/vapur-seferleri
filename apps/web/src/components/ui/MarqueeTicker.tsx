@@ -129,9 +129,9 @@ export function MarqueeTicker({
         flowing
           ? {
               maskImage:
-                "linear-gradient(to right, transparent, black 12px, black calc(100% - 12px), transparent)",
+                "linear-gradient(to right, transparent, black 16px, black calc(100% - 16px), transparent)",
               WebkitMaskImage:
-                "linear-gradient(to right, transparent, black 12px, black calc(100% - 12px), transparent)",
+                "linear-gradient(to right, transparent, black 16px, black calc(100% - 16px), transparent)",
             }
           : undefined
       }

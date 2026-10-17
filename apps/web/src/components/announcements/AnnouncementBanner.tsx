@@ -74,7 +74,9 @@ export function AnnouncementBanner({ announcements, className = "" }: Announceme
     setCurrentIndex((prev) => (prev + 1) % activeList.length);
   };
 
-  // İlerleme sayacı + oklar: MOBİLDE üst sıranın sağında, masaüstünde sağ blokta.
+  // İlerleme sayacı + oklar: ÜST DÜZEY MOBİL DESEN — dokunmatikte "takılı hover"
+  // oluşmaması için hover stilleri yalnızca masaüstünde (sm:hover:), dokunmada
+  // active: geri bildirimi verilir.
   const navControls = (
     <div className="flex items-center gap-0.5 text-[9px] font-mono mr-1">
       <span className="text-slate-700 dark:text-slate-300 font-bold">
@@ -86,7 +88,7 @@ export function AnnouncementBanner({ announcements, className = "" }: Announceme
         type="button"
         onClick={handlePrev}
         aria-label="Önceki duyuru"
-        className="flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-md hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-slate-800 cursor-pointer ml-1"
+        className="flex h-7 w-7 sm:h-10 sm:w-10 items-center justify-center rounded-md active:bg-slate-200/60 dark:active:bg-slate-800 sm:hover:text-slate-700 dark:sm:hover:text-slate-200 sm:hover:bg-slate-200/60 dark:sm:hover:bg-slate-800 cursor-pointer ml-1"
       >
         <ChevronLeft size={14} />
       </button>
@@ -94,7 +96,7 @@ export function AnnouncementBanner({ announcements, className = "" }: Announceme
         type="button"
         onClick={handleNext}
         aria-label="Sonraki duyuru"
-        className="flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-md hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-slate-800 cursor-pointer"
+        className="flex h-7 w-7 sm:h-10 sm:w-10 items-center justify-center rounded-md active:bg-slate-200/60 dark:active:bg-slate-800 sm:hover:text-slate-700 dark:sm:hover:text-slate-200 sm:hover:bg-slate-200/60 dark:sm:hover:bg-slate-800 cursor-pointer"
       >
         <ChevronRight size={14} />
       </button>
@@ -130,15 +132,20 @@ export function AnnouncementBanner({ announcements, className = "" }: Announceme
             >
               {TYPE_META[currentItem.type]?.label || (hasCancellation ? "İPTAL" : "DUYURU")}
             </span>
+            {/* MOBİL: firma logosu + kısa adı rozetin yanında (bildirim kartı deseni) —
+                böylece kayan metne ALT SATIRDA tam genişlik kalır */}
+            <OperatorLogo operator={currentItem.operator} size="sm" className="sm:hidden" />
           </div>
           {activeList.length > 1 && (
             <div className="flex sm:hidden items-center text-slate-400">{navControls}</div>
           )}
         </div>
 
-        {/* Mobilde TAM GENİŞLİK: TEK SATIR KAYAN duyuru metni — tıklanınca detay UYGULAMA İÇİNDE açılır */}
+        {/* Mobilde ALT SATIR tam genişlik kayan metin; masaüstünde logo + metin yan yana */}
         <div className="min-w-0 flex-1 flex items-center gap-1.5 text-xs">
-          <OperatorLogo operator={currentItem.operator} size="sm" showName={false} />
+          <span className="hidden sm:inline-flex">
+            <OperatorLogo operator={currentItem.operator} size="sm" showName={false} />
+          </span>
           <MarqueeTicker
             speedPxPerSec={55}
             cycleKey={`${currentIndex % activeList.length}:${currentItem.id}`}
@@ -150,14 +157,14 @@ export function AnnouncementBanner({ announcements, className = "" }: Announceme
               aria-label="Duyuru detayını aç"
               className={`font-semibold text-xs sm:text-[11px] leading-tight hover:underline inline-flex items-center gap-1 min-h-8 sm:min-h-10 cursor-pointer text-left ${
                 tone === "danger"
-                  ? "text-rose-700 dark:text-rose-300 font-bold"
+                  ? "text-rose-700 dark:text-rose-200 font-bold"
                   : "text-slate-800 dark:text-slate-200"
               }`}
               title={`${currentItem.title} ${currentItem.body ? `- ${currentItem.body}` : ""}`}
             >
               {/* İptal durumunda doğrudan açıklama cümlesini yaz */}
               {hasCancellation && currentItem.body ? (
-                <span className="text-rose-700 dark:text-rose-200 font-extrabold">
+                <span className="text-rose-700 dark:text-rose-100 font-extrabold">
                   {currentItem.body}
                 </span>
               ) : (
