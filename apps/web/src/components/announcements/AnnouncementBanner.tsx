@@ -115,9 +115,11 @@ export function AnnouncementBanner({ announcements, className = "" }: Announceme
       >
         {/* Üst sıra (mobil) / sol blok (masaüstü): İkon + rozet; mobilde sağda sayaç+oklar */}
         <div className="flex items-center justify-between gap-1.5 shrink-0 sm:justify-start">
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1.5 min-w-0">
+            {/* MOBİL: ikon gizlenir — rozet ("DUYURU") zaten etiketler; 320px'te
+                sığma payı kazandırır ve başlık satırını sadeleştirir */}
             <span
-              className={`${
+              className={`hidden sm:inline ${
                 hasCancellation ? "text-rose-500 animate-pulse" : "text-sky-500 dark:text-sky-400"
               }`}
             >
