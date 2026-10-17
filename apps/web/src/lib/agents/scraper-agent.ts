@@ -86,16 +86,18 @@ export function buildSnapshotState(current: HashableContent): SnapshotState {
 /** Firmaların canlı sayfalarını çeker (ajanlar arasında ortak).
  *  - timeoutMs: ağ yanıtı için üst sınır (iptal taraması istek yolunda çalışır)
  *  - fresh: true → önbelleğe almadan canlı çek (anlık iptal taraması)
+ *  - extraHeaders: bazı resmi siteler (WAF) tarayıcı-benzeri başlık ister
  */
 export async function fetchHtml(
   url: string,
   ua = "Vapur-Sync-Agent/3.0",
-  options: { timeoutMs?: number; fresh?: boolean } = {}
+  options: { timeoutMs?: number; fresh?: boolean; extraHeaders?: Record<string, string> } = {}
 ): Promise<string> {
   const res = await fetch(url, {
     headers: {
       "User-Agent": ua,
       Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+      ...(options.extraHeaders ?? {}),
     },
     ...(options.fresh ? { cache: "no-store" as RequestCache } : { next: { revalidate: 3600 } }),
     ...(options.timeoutMs ? { signal: AbortSignal.timeout(options.timeoutMs) } : {}),

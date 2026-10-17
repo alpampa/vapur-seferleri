@@ -296,6 +296,17 @@ const MAX_DETAIL_FETCHES = 3;
 const SOURCE_TIMEOUT_MS = 8000;
 /** Detay sayfası için ağ zaman aşımı */
 const DETAIL_TIMEOUT_MS = 6000;
+/**
+ * Bazı resmi sitelerin WAF'ı veri merkezi IP'lerinden gelen ajan isteklerini
+ * engeller (canlıda Şehir Hatları 403 döndü). Kanıt: aynı içerik TR IP'den
+ * sorunsuz alınıyor; engel içerikte değil istek kimliğinde. Bu yüzden canlı
+ * tarama, herkese açık sayfayı standart bir tarayıcı kimliğiyle okur.
+ */
+const LIVE_SCRAPE_UA =
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36";
+const LIVE_SCRAPE_HEADERS = {
+  "Accept-Language": "tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7",
+};
 
 /**
  * İptal duyurularının GÖVDESİNİ resmi detay sayfasından birebir çeker.
@@ -318,9 +329,10 @@ async function enrichCancellationBodies(announcements: OperatorAnnouncement[]): 
   await Promise.allSettled(
     candidates.map(async (a) => {
       try {
-        const detailHtml = await fetchHtml(a.sourceUrl, undefined, {
+        const detailHtml = await fetchHtml(a.sourceUrl, LIVE_SCRAPE_UA, {
           timeoutMs: DETAIL_TIMEOUT_MS,
           fresh: true,
+          extraHeaders: LIVE_SCRAPE_HEADERS,
         });
         const body = extractArticleBodyText(detailHtml);
         if (body) a.body = body;
@@ -357,9 +369,10 @@ export async function scrapeAllAnnouncements(): Promise<{
 
   const settled = await Promise.allSettled(
     ANNOUNCEMENT_SOURCES.map(async (source) => {
-      const html = await fetchHtml(source.url, undefined, {
+      const html = await fetchHtml(source.url, LIVE_SCRAPE_UA, {
         timeoutMs: SOURCE_TIMEOUT_MS,
         fresh: true,
+        extraHeaders: LIVE_SCRAPE_HEADERS,
       });
       const announcements = source.parser(html);
       await enrichCancellationBodies(announcements);
