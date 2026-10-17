@@ -1,10 +1,7 @@
 import { NextResponse } from "next/server";
 import { getStoredAnnouncements, getStoredAnnouncementsMeta } from "@/lib/agents/data-snapshot-store";
-import {
-  scrapeAllAnnouncements,
-  OPERATOR_SCAN_COVERAGE,
-  type OperatorScanReport,
-} from "@/lib/agents/announcements-agent";
+import { OPERATOR_SCAN_COVERAGE, type OperatorScanReport } from "@/lib/agents/announcements-agent";
+import { getLiveScan } from "@/lib/agents/live-scan-cache";
 import { matchAnnouncementsToTrips } from "@/lib/agents/announcement-trip-matcher";
 import { isAnnouncementCurrent } from "@/lib/utils/announcement-filter";
 import type { OperatorAnnouncement } from "@/lib/types/announcement";
@@ -19,32 +16,9 @@ export const revalidate = 0;
  * bu yüzden uç nokta HER firmayı anlık tarar. Canlı tarama başarılıysa firmanın
  * GÜNCEL duyuruları kullanılır; bir firma alınamazsa o firma için son doğrulanmış
  * snapshot korunur (veri asla sessizce kaybolmaz, uydurma üretilmez).
+ * Tarama önbelleği paylaşımlıdır (bkz. live-scan-cache): gece cron'u da aynı
+ * önbelleği tazeler.
  */
-
-interface LiveScanCache {
-  at: number;
-  snapshots: { operator: string; announcements: OperatorAnnouncement[] }[];
-  failures: { operator: string; error: string }[];
-  coverage: OperatorScanReport[];
-}
-
-/** Canlı tarama önbelleği — her istemci isteğinde siteleri yormamak için 10 dk */
-const LIVE_SCAN_TTL_MS = 10 * 60 * 1000;
-let liveScanCache: LiveScanCache | null = null;
-
-async function getLiveScan(): Promise<LiveScanCache | null> {
-  if (liveScanCache && Date.now() - liveScanCache.at < LIVE_SCAN_TTL_MS) {
-    return liveScanCache;
-  }
-  try {
-    const { snapshots, failures, coverage } = await scrapeAllAnnouncements();
-    liveScanCache = { at: Date.now(), snapshots, failures, coverage };
-    return liveScanCache;
-  } catch {
-    // Tümden başarısız: çağıran taraf snapshot'a düşer
-    return null;
-  }
-}
 
 export async function GET() {
   try {

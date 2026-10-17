@@ -1,5 +1,11 @@
 {
   "regions": ["fra1"],
+  "crons": [
+    {
+      "path": "/api/cron/scan-announcements",
+      "schedule": "5 21 * * *"
+    }
+  ],
   "headers": [
     {
       "source": "/sw.js",

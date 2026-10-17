@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { X, AlertTriangle } from "lucide-react";
 import { OperatorLogo } from "@/components/ui/OperatorLogo";
+import { extractIstanbulDisiRoutes } from "@/lib/utils/announcement-body";
 import type { OperatorAnnouncement } from "@/lib/types/announcement";
 
 interface AnnouncementDetailSheetProps {
@@ -39,6 +40,8 @@ export function AnnouncementDetailSheet({
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [isOpen, onClose]);
+
+  const istanbulDisi = announcement ? extractIstanbulDisiRoutes(announcement.body) : [];
 
   return (
     <AnimatePresence>
@@ -99,6 +102,30 @@ export function AnnouncementDetailSheet({
                   Bu duyurunun ayrıntı metni kaynak sayfada yayınlanmamıştır; yalnızca başlık
                   bilgisi mevcuttur.
                 </p>
+              )}
+
+              {/* KULLANICI KURALI: İstanbul dışı hatlar ayrı bölümde gösterilir
+                  (bu hatlar uygulama kapsamı dışında; sefer listesine işlenmez) */}
+              {istanbulDisi.length > 0 && (
+                <div className="mt-3 rounded-xl border border-amber-200 dark:border-amber-900/60 bg-amber-50 dark:bg-amber-950/30 px-3 py-2">
+                  <div className="text-[10px] font-black uppercase tracking-wider text-amber-700 dark:text-amber-300 mb-1.5">
+                    İstanbul Dışı Hatlar
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {istanbulDisi.map((route) => (
+                      <span
+                        key={route}
+                        className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-white dark:bg-slate-900 border border-amber-300 dark:border-amber-800 text-amber-800 dark:text-amber-200"
+                      >
+                        {route}
+                      </span>
+                    ))}
+                  </div>
+                  <p className="text-[10px] text-amber-700/90 dark:text-amber-300/90 mt-1.5">
+                    Bu hatlar uygulama kapsamı dışındadır; iptal bilgisi yalnızca duyuruda
+                    gösterilir.
+                  </p>
+                </div>
               )}
             </div>
 

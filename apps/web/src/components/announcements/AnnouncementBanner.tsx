@@ -17,8 +17,10 @@ const TYPE_META: Record<
   OperatorAnnouncement["type"],
   { label: string; tone: "danger" | "notice" | "info" }
 > = {
-  CANCELLATION: { label: "İPTAL", tone: "danger" },
-  CANCELLED_TRIPS: { label: "İPTAL SEFERLER", tone: "danger" },
+  // KULLANICI KURALI: Üst satır "DUYURU" (firma açıklaması), alt şerit
+  // "İPTAL SEFERLER" (saatli sefer listesi) — rozetler görev ayrımını netleştirir.
+  CANCELLATION: { label: "DUYURU", tone: "danger" },
+  CANCELLED_TRIPS: { label: "DUYURU", tone: "danger" },
   EXTRA_SERVICE: { label: "EK SEFER", tone: "notice" },
   SCHEDULE_CHANGE: { label: "TARİFE", tone: "notice" },
   INFO: { label: "DUYURU", tone: "info" },
