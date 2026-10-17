@@ -122,7 +122,7 @@ export function TransitRouteSchematic({
               <React.Fragment key={`${stop.name}-${index}`}>
                 <div className="flex flex-col items-center group/stop">
                   {stop.time && (
-                    <span className="text-[9px] sm:text-[9.5px] font-mono tabular-nums font-bold text-slate-500 dark:text-slate-400 leading-none mb-1">
+                    <span className="text-[9px] sm:text-[9.5px] font-mono tabular-nums font-bold text-slate-500 dark:text-slate-400 leading-none mb-2">
                       {stop.time}
                     </span>
                   )}
@@ -160,11 +160,11 @@ export function TransitRouteSchematic({
                       />
                       <div
                         ref={shipRef}
-                        className="absolute bottom-0 z-10 -translate-x-1/2 transition-[left] duration-1000 ease-linear"
+                        className="absolute bottom-0 z-10 -translate-x-1/2 translate-y-[2px] transition-[left] duration-1000 ease-linear"
                         style={{ left: `${live.ratio * 100}%` }}
                       >
                         <AdaVapuruIcon
-                          className={`w-7 h-4.5 transition-[filter,opacity] duration-700 ${
+                          className={`w-6 h-4 sm:w-7 sm:h-4.5 transition-[filter,opacity] duration-700 ${
                             live.hasArrived
                               ? "drop-shadow-[0_0_2.5px_rgba(16,185,129,0.9)]"
                               : live.isApproaching
