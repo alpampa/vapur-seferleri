@@ -481,18 +481,19 @@ export function ScheduleCard(props: ScheduleCardProps) {
         <div className="flex flex-col min-w-0 flex-1 pr-1">
           {/* Güzergah — KULLANICI KURALI: TAM isimler (mobil dahil), "şu anki durak
               ➔ son durak". Yanıltma yasağı: mid-voyage asla ilk kalkış gösterilmez;
-              ring adı yerine gerçek son durak yazılır. Gerekirse punto küçülür. */}
-          <div className="flex items-center gap-1.5 font-black text-[13px] sm:text-base leading-tight min-w-0">
+              ring adı yerine gerçek son durak yazılır. Uzun adlar mobilde İKİNCİ
+              SATIRA sarılır — isim asla "Bo..." gibi kesilmez; masaüstü tek satır. */}
+          <div className="flex flex-wrap sm:flex-nowrap items-center gap-x-1.5 gap-y-0.5 font-black text-[13px] sm:text-base leading-tight min-w-0">
             <span
               title={dynState.currentOrigin}
-              className={`truncate min-w-0 ${isCancelled ? "line-through opacity-70 text-slate-500 dark:text-slate-400" : "text-slate-900 dark:text-white"}`}
+              className={`min-w-0 ${isCancelled ? "line-through opacity-70 text-slate-500 dark:text-slate-400" : "text-slate-900 dark:text-white"}`}
             >
               {dynState.currentOrigin}
             </span>
             <span className="text-blue-600 dark:text-blue-400 font-extrabold text-xs sm:text-sm shrink-0">➔</span>
             <span
               title={dynState.destination}
-              className={`truncate min-w-0 ${isCancelled ? "line-through opacity-70 text-slate-500 dark:text-slate-400" : "text-blue-700 dark:text-blue-300 font-bold"}`}
+              className={`min-w-0 ${isCancelled ? "line-through opacity-70 text-slate-500 dark:text-slate-400" : "text-blue-700 dark:text-blue-300 font-bold"}`}
             >
               {routeDestinationDisplay}
             </span>
