@@ -402,7 +402,7 @@ html.text-scale-lg {
 
 /* ==========================================================================
    ADA VAPURU İKONU — canlı seyir efektleri (TransitRouteSchematic).
-   Hafif yalpalama + baca dumanı + su hattında geriye akan iz.
+   Hafif yalpalama + baca dumanı + dalgalar + martılar.
    ========================================================================== */
 @keyframes ferry-bob {
   0%,
@@ -423,28 +423,35 @@ html.text-scale-lg {
     opacity: 0.85;
   }
   100% {
-    transform: translate(-4px, -7px) scale(1.4);
+    transform: translate(-4px, -5px) scale(1.5);
     opacity: 0;
   }
 }
 
-@keyframes ferry-wake {
-  0% {
-    transform: translateX(5px);
-    opacity: 0;
+/* Dalgalar: desen 4 birim periyotlu; 8px kayma = 2 tam periyot → dikişsiz döngü */
+@keyframes ferry-wave-flow {
+  from {
+    transform: translateX(0);
   }
-  30% {
-    opacity: 1;
+  to {
+    transform: translateX(-8px);
   }
+}
+
+@keyframes ferry-gull-float {
+  0%,
   100% {
-    transform: translateX(-7px);
-    opacity: 0;
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-1.6px) rotate(-5deg);
   }
 }
 
 .ferry-bob,
 .ferry-smoke,
-.ferry-wake {
+.ferry-wave,
+.ferry-gull {
   transform-box: fill-box;
   transform-origin: center;
 }
@@ -458,21 +465,38 @@ html.text-scale-lg {
 }
 
 .ferry-smoke-2 {
+  animation-delay: 0.7s;
+}
+
+.ferry-smoke-3 {
+  animation-delay: 1.45s;
+}
+
+.ferry-wave {
+  animation: ferry-wave-flow 1.1s linear infinite;
+}
+
+.ferry-wave-2 {
+  animation-delay: 0.25s;
+}
+
+.ferry-gull {
+  animation: ferry-gull-float 3.4s ease-in-out infinite;
+}
+
+.ferry-gull-2 {
   animation-delay: 1.1s;
 }
 
-.ferry-wake {
-  animation: ferry-wake 1.2s linear infinite;
-}
-
-.ferry-wake-2 {
-  animation-delay: 0.6s;
+.ferry-gull-3 {
+  animation-delay: 2.2s;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .ferry-bob,
   .ferry-smoke,
-  .ferry-wake {
+  .ferry-wave,
+  .ferry-gull {
     animation: none;
   }
 }

@@ -39,8 +39,8 @@ export function ScheduleCardActions({
       } hover:bg-slate-100 dark:hover:bg-slate-800`;
 
   const chevronClass = isCompact
-    ? "text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200 transition-all shrink-0 ml-0.5"
-    : "text-slate-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 group-hover:translate-x-0.5 transition-all shrink-0 ml-0.5";
+    ? "hidden sm:block text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200 transition-all shrink-0 ml-0.5"
+    : "hidden sm:block text-slate-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 group-hover:translate-x-0.5 transition-all shrink-0 ml-0.5";
 
   return (
     <div className={`flex items-center gap-1 shrink-0${isCompact ? " text-right" : ""}`}>

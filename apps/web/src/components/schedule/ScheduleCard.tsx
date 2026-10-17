@@ -431,8 +431,10 @@ export function ScheduleCard(props: ScheduleCardProps) {
               </span>
 
               {/* KULLANICI KURALI: "EN YAKIN" rozeti saatin YANINDA durur —
-                  rota satırını işgal edip nereye gittiğini gizlemez. */}
-              {props.isFeaturedHero && !isCancelled && !dynState.isDeparted && (
+                  rota satırını işgal edip nereye gittiğini gizlemez.
+                  Son 60 saniyede (SON ÇAĞRI + halka) rozet gizlenir ki
+                  rota satırına yer kalsın. */}
+              {props.isFeaturedHero && !isCancelled && !dynState.isDeparted && !isLastMinute && (
                 <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-blue-600 text-white text-[8px] font-black uppercase tracking-wider shadow-2xs shrink-0">
                   <span className="w-1 h-1 rounded-full bg-white animate-ping" /> EN YAKIN
                 </span>
@@ -455,7 +457,7 @@ export function ScheduleCard(props: ScheduleCardProps) {
                 </span>
               ) : isLastMinute ? (
                 <span className="px-1.5 py-0.5 rounded text-[9px] font-black uppercase tracking-wider inline-flex items-center gap-0.5 shadow-xs animate-pulse bg-rose-600 text-white">
-                  <Siren size={10} aria-hidden="true" /> SON ÇAĞRI — {remainingSec}s
+                  <Siren size={10} aria-hidden="true" /> SON ÇAĞRI
                 </span>
               ) : dynState.countdown ? (
                 <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-black bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-500/40 animate-pulse whitespace-nowrap inline-flex items-center gap-0.5">
@@ -470,26 +472,8 @@ export function ScheduleCard(props: ScheduleCardProps) {
               )}
             </div>
 
-            {/* YETİŞME MODU: son giriş penceresi (tahmini güvenlik payı, resmî kapı saati değil) */}
-            {canBoard && boarding && (showLastEntryPassed || showLastEntrySoon) && (
-              <div className="mt-1">
-                {showLastEntryPassed ? (
-                  <span
-                    title="Tahmini: turnike + rampa geçiş payı. Resmî kapı kapanış saati değildir."
-                    className="px-1.5 py-0.5 rounded text-[10px] font-black bg-rose-600 text-white border border-rose-500 inline-flex items-center gap-0.5 whitespace-nowrap"
-                  >
-                    <Siren size={10} aria-hidden="true" /> {t("lastEntryPassed")} ~{boarding.lastEntryHhmm}
-                  </span>
-                ) : (
-                  <span
-                    title="Tahmini: turnike + rampa geçiş payı. Resmî kapı kapanış saati değildir."
-                    className="px-1.5 py-0.5 rounded text-[10px] font-black bg-amber-500 text-slate-950 border border-amber-400 tabular-nums inline-flex items-center gap-0.5 whitespace-nowrap"
-                  >
-                    <Timer size={10} aria-hidden="true" /> {t("lastEntrySoon")} ~{boarding.lastEntryHhmm}
-                  </span>
-                )}
-              </div>
-            )}
+            {/* NOT: "Son giriş" uyarıları kartın tam genişliğindeki şeride taşındı —
+                sol kolonu şişirip rota satırını ezmesinler (mobil okunabilirlik kuralı). */}
           </div>
         </div>
 
@@ -581,6 +565,28 @@ export function ScheduleCard(props: ScheduleCardProps) {
           onToggleAlarm={handleToggleAlarm}
         />
       </div>
+
+      {/* YETİŞME MODU: son giriş penceresi — TAM GENİŞLİK şerit (tahmini güvenlik payı,
+          resmî kapı saati değil). Sol kolonda kalınca rota satırını eziyordu. */}
+      {canBoard && boarding && (showLastEntryPassed || showLastEntrySoon) && (
+        <div className="w-full">
+          {showLastEntryPassed ? (
+            <span
+              title="Tahmini: turnike + rampa geçiş payı. Resmî kapı kapanış saati değildir."
+              className="px-1.5 py-0.5 rounded text-[10px] font-black bg-rose-600 text-white border border-rose-500 inline-flex items-center gap-1 whitespace-nowrap"
+            >
+              <Siren size={10} aria-hidden="true" /> {t("lastEntryPassed")} ~{boarding.lastEntryHhmm}
+            </span>
+          ) : (
+            <span
+              title="Tahmini: turnike + rampa geçiş payı. Resmî kapı kapanış saati değildir."
+              className="px-1.5 py-0.5 rounded text-[10px] font-black bg-amber-500 text-slate-950 border border-amber-400 tabular-nums inline-flex items-center gap-1 whitespace-nowrap"
+            >
+              <Timer size={10} aria-hidden="true" /> {t("lastEntrySoon")} ~{boarding.lastEntryHhmm}
+            </span>
+          )}
+        </div>
+      )}
 
       {/* 2. YEDEK GÜZERGAH ŞERİDİ: Yalnızca şematik çizilemediğinde (ara durak listesi yokken) gösterilir — mükerrer tekrar önlenir */}
       {!props.isCompact && (!props.stops || props.stops.length === 0) && dynState.activeChain && dynState.activeChain.length > 1 && (

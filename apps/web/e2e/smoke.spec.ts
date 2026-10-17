@@ -49,9 +49,14 @@ test("Arama: doğal arama ile liste filtrelenir", async ({ page }) => {
   const search = page.getByPlaceholder(/İskele veya hat ara/i);
   await search.fill("Büyükada");
 
+  // Gece servis boşluğunda (son seferden ~00:10'a kadar) sonuç listesi boş olabilir;
+  // bu pencerede arama yine de yanıt vermiş olmalı (boş durum mesajı görünür).
   await expect(
-    page.getByRole("button", { name: /Büyükada/ }).first()
-  ).toBeVisible();
+    page
+      .getByRole("button", { name: /Büyükada/ })
+      .first()
+      .or(page.getByText(/eşleşen aktif vapur seferi bulunamadı/i).first())
+  ).toBeVisible({ timeout: 8000 });
 });
 
 test("Tema kalıcılığı: Güneş Modu seçilir ve yenilemede korunur", async ({ page }) => {
