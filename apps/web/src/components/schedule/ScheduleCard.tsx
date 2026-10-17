@@ -523,7 +523,7 @@ export function ScheduleCard(props: ScheduleCardProps) {
           <div className="flex items-center gap-1.5 mt-1 text-[11px] text-slate-500 dark:text-slate-400 truncate">
             <OperatorLogo operator={props.operator} size="sm" showName={false} />
 
-            <span className="text-slate-300 dark:text-slate-600 font-bold">•</span>
+            <span className="hidden sm:inline text-slate-300 dark:text-slate-600 font-bold">•</span>
 
             {/* Direkt veya Durak Sayısı */}
             <span className="text-slate-600 dark:text-slate-300 text-[10px] font-semibold shrink-0">
