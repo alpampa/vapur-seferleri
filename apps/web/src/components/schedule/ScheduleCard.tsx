@@ -15,7 +15,6 @@ import { triggerHaptic } from "@/lib/utils/haptics";
 import { TransitRouteSchematic } from "@/components/schedule/TransitRouteSchematic";
 import { ScheduleCardActions } from "@/components/schedule/card/ScheduleCardActions";
 import { TripStatusBadge } from "@/components/schedule/card/TripStatusBadge";
-import { pierShortName } from "@/lib/utils/pier-short-names";
 import type { ScheduleCardDto, TripStatus } from "@/lib/types/schedule";
 
 // Geriye dönük uyumluluk: eski import yolları çalışmaya devam eder.
@@ -87,6 +86,15 @@ export function ScheduleCard(props: ScheduleCardProps) {
   ) {
     return null;
   }
+
+  // KULLANICI KURALI (Yanıltma Yasağı): Üst satırda "ŞU ANKİ durak ➔ SON durak"
+  // tam isimlerle yazılır. Sefer henüz kalkmamışken ring/tur adı ("Adalar Ring
+  // (Bostancı)") olduğu gibi kalır; seyir başlayınca ring adı yerine gerçek son
+  // durak yazılır (örn. "Kınalıada ➔ Bostancı") — kimse yanlış iskelede beklemez.
+  const isUnderway = dynState.currentOrigin.trim() !== props.origin.trim();
+  const ringDestMatch = dynState.destination.match(/ring\s*\(([^)]+)\)/i);
+  const routeDestinationDisplay =
+    isUnderway && ringDestMatch ? ringDestMatch[1].trim() : dynState.destination;
 
   const destTransit = getPierTransit(dynState.destination);
   const primaryTransit = destTransit[0];
@@ -185,7 +193,7 @@ export function ScheduleCard(props: ScheduleCardProps) {
           onClick={handleCardClick}
           role="button"
           tabIndex={0}
-          aria-label={`${dynState.currentOrigin}'den ${dynState.destination}'na ${dynState.currentDepartureTime} seferi, detay için açın`}
+          aria-label={`${dynState.currentOrigin}'den ${routeDestinationDisplay}'na ${dynState.currentDepartureTime} seferi, detay için açın`}
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") {
               e.preventDefault();
@@ -265,14 +273,12 @@ export function ScheduleCard(props: ScheduleCardProps) {
           {/* Orta: Güzergah + Operatör + Durak & Gece Rozetleri */}
           <div className="flex items-center gap-1.5 min-w-0 flex-1 text-xs">
             <OperatorLogo operator={props.operator} size="sm" showName={false} />
-            <span title={props.origin} className={`font-bold truncate min-w-0 ${isCancelled ? "line-through text-slate-400" : ""}`}>
-              <span className="hidden sm:inline">{dynState.currentOrigin}</span>
-              <span className="sm:hidden">{pierShortName(props.origin)}</span>
+            <span title={dynState.currentOrigin} className={`font-bold truncate min-w-0 ${isCancelled ? "line-through text-slate-400" : ""}`}>
+              {dynState.currentOrigin}
             </span>
             <span className="text-blue-500 dark:text-blue-400 font-black text-[10px] shrink-0">➔</span>
-            <span title={props.destination} className={`font-bold truncate min-w-0 ${isCancelled ? "line-through text-slate-400" : "text-blue-700 dark:text-blue-300"}`}>
-              <span className="hidden sm:inline">{dynState.destination}</span>
-              <span className="sm:hidden">{pierShortName(props.destination)}</span>
+            <span title={dynState.destination} className={`font-bold truncate min-w-0 ${isCancelled ? "line-through text-slate-400" : "text-blue-700 dark:text-blue-300"}`}>
+              {routeDestinationDisplay}
             </span>
 
             {isNightTrip && (
@@ -356,7 +362,7 @@ export function ScheduleCard(props: ScheduleCardProps) {
       onClick={handleCardClick}
       role="button"
       tabIndex={0}
-      aria-label={`${dynState.currentOrigin}'den ${dynState.destination}'na ${dynState.currentDepartureTime} seferi, detay için açın`}
+      aria-label={`${dynState.currentOrigin}'den ${routeDestinationDisplay}'na ${dynState.currentDepartureTime} seferi, detay için açın`}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
@@ -473,26 +479,22 @@ export function ScheduleCard(props: ScheduleCardProps) {
 
         {/* 2. Orta: Dinamik Güzergah & Hafif Temel Bilgiler */}
         <div className="flex flex-col min-w-0 flex-1 pr-1">
-          {/* Güzergah — KULLANICI KURALI (mobil): ÜST satırda hattın İLK kalkışı →
-              SON varışı 3 harflik kısaltmayla yazılır (seyir ortasında da sabit:
-              "Bos ➔ Büy"). Masaüstünde tam adlar + biniş noktası (dynState) kalır.
-              EN YAKIN rozeti kaldırıldı (en yakınını yanıp sönen saat belli eder);
-              GECE yalnız ay sembolü; İPTAL mobilde sol kolondaki rozetle gösterilir. */}
-          <div className="flex items-center gap-1.5 font-black text-sm sm:text-base leading-tight min-w-0">
+          {/* Güzergah — KULLANICI KURALI: TAM isimler (mobil dahil), "şu anki durak
+              ➔ son durak". Yanıltma yasağı: mid-voyage asla ilk kalkış gösterilmez;
+              ring adı yerine gerçek son durak yazılır. Gerekirse punto küçülür. */}
+          <div className="flex items-center gap-1.5 font-black text-[13px] sm:text-base leading-tight min-w-0">
             <span
-              title={props.origin}
+              title={dynState.currentOrigin}
               className={`truncate min-w-0 ${isCancelled ? "line-through opacity-70 text-slate-500 dark:text-slate-400" : "text-slate-900 dark:text-white"}`}
             >
-              <span className="hidden sm:inline">{dynState.currentOrigin}</span>
-              <span className="sm:hidden">{pierShortName(props.origin)}</span>
+              {dynState.currentOrigin}
             </span>
             <span className="text-blue-600 dark:text-blue-400 font-extrabold text-xs sm:text-sm shrink-0">➔</span>
             <span
-              title={props.destination}
+              title={dynState.destination}
               className={`truncate min-w-0 ${isCancelled ? "line-through opacity-70 text-slate-500 dark:text-slate-400" : "text-blue-700 dark:text-blue-300 font-bold"}`}
             >
-              <span className="hidden sm:inline">{dynState.destination}</span>
-              <span className="sm:hidden">{pierShortName(props.destination)}</span>
+              {routeDestinationDisplay}
             </span>
 
             {/* İptal Rozeti — mobilde sol kolondaki rozet yeterli; burada yalnız sm+ */}

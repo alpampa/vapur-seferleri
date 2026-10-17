@@ -26,11 +26,11 @@ interface TransitRouteSchematicProps {
  * yaklaşırken (≤ 3 dk) amber yanıp söner, varışta yeşile döner (metro mantığı).
  *
  * KULLANICI KURALI (mobil): Şeritteki durak adları HER ZAMAN TAM yazılır —
- * kısaltma yalnızca üst rota satırındadır. Hat pencereye sığmadığında gemi
- * görünürde kalsın diye şerit kademeli olarak SOLA kayar: vapur bir sonraki
- * durağa ilerledikçe geride kalan duraklar ekranın solundan çıkar, aktif bölüm
- * ekranda kalır. Parmakla kaydırma her zaman önceliklidir; dokunuş sonrası
- * otomatik kaydırma 6 sn duraklar.
+ * kısaltma yok. Vapur bir duraktan hareket ettiğinde o durak şeridin SOL
+ * kenarına yaslanır: geçmiş duraklar ekrandan tamamen çıkar, yalnız
+ * "şu an + ileri" görünür (elle kaydırma her zaman önceliklidir; dokunuş
+ * sonrası otomatik kaydırma 6 sn duraklar). Otomatik kaydırma asla sola
+ * (geçmişe) yapılmaz.
  */
 export function TransitRouteSchematic({
   origin,
@@ -44,6 +44,8 @@ export function TransitRouteSchematic({
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const shipRef = useRef<HTMLDivElement | null>(null);
   const pausedUntilRef = useRef(0);
+  const nodeRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const alignedIndexRef = useRef<number | null>(null);
 
   const live = underway ?? null;
 
@@ -62,18 +64,34 @@ export function TransitRouteSchematic({
     };
   }, []);
 
-  // Gemi görünürden çıkacaksa şeridi yumuşakça ortala (canlı takip hissi)
+  // KULLANICI KURALI: Sefer her duraktan hareket ettiğinde o durak şeridin SOL
+  // kenarına yaslanır — "şu andan itibaren ilk kalkış" görünümü. Geçmiş duraklar
+  // ekrandan tamamen çıkar; isim asla kenarda kesilmez (elle kaydırma hariç).
+  useEffect(() => {
+    const scroller = scrollRef.current;
+    if (!scroller || live == null) return;
+    if (Date.now() < pausedUntilRef.current) return;
+    if (alignedIndexRef.current === live.fromIndex) return;
+    const node = nodeRefs.current[live.fromIndex];
+    if (!node) return;
+    alignedIndexRef.current = live.fromIndex;
+    scroller.scrollTo({ left: Math.max(0, node.offsetLeft - 8), behavior: "smooth" });
+  }, [live?.fromIndex, live]);
+
+  // Seyir ortasında gemi sağ banda yaklaşırsa şerit sağa kaydırılır (gemi hep
+  // görünür kalır). Otomatik kaydırma ASLA sola yapılmaz → geçmiş duraklar
+  // kendiliğinden geri gelmez, yalnız "şu an + ileri" görünür.
   useEffect(() => {
     const scroller = scrollRef.current;
     const ship = shipRef.current;
     if (!scroller || !ship || live == null) return;
     if (Date.now() < pausedUntilRef.current) return;
-
     const scRect = scroller.getBoundingClientRect();
     const shRect = ship.getBoundingClientRect();
-    const drift = shRect.left + shRect.width / 2 - (scRect.left + scRect.width / 2);
-    if (Math.abs(drift) > scRect.width * 0.22) {
-      scroller.scrollBy({ left: drift, behavior: "smooth" });
+    const shipCenter = shRect.left + shRect.width / 2;
+    if (shipCenter > scRect.left + scRect.width * 0.72) {
+      const delta = shipCenter - (scRect.left + scRect.width * 0.55);
+      scroller.scrollBy({ left: delta, behavior: "smooth" });
     }
   }, [live?.fromIndex, live?.ratio, live?.hasArrived, live]);
 
@@ -99,7 +117,7 @@ export function TransitRouteSchematic({
   return (
     <div className="w-full mt-2 pt-2 border-t border-slate-200/60 dark:border-slate-800/80 animate-fadeIn">
       <div ref={scrollRef} className="overflow-x-auto hide-scrollbar py-1">
-        <div className="flex items-center min-w-max px-1">
+        <div className="relative flex items-center min-w-max px-1">
           {fullChain.map((stop, index) => {
             const isFirst = index === 0;
             const isLast = index === fullChain.length - 1;
@@ -121,7 +139,12 @@ export function TransitRouteSchematic({
 
             return (
               <React.Fragment key={`${stop.name}-${index}`}>
-                <div className="flex flex-col items-center group/stop">
+                <div
+                  ref={(el) => {
+                    nodeRefs.current[index] = el;
+                  }}
+                  className="flex flex-col items-center group/stop"
+                >
                   {stop.time && (
                     <span className="text-[9px] sm:text-[9.5px] font-mono tabular-nums font-bold text-slate-500 dark:text-slate-400 leading-none mb-2">
                       {stop.time}

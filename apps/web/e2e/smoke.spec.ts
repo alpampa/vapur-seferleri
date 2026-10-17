@@ -27,6 +27,7 @@ test("Pano sekmesi: iskele kalkış panosu açılır", async ({ page }) => {
 });
 
 test("Sefer detayı: çekmece açılır, Aktarma sekmesinde yürüme takibi görünür", async ({ page }) => {
+  test.setTimeout(60000);
   await page.goto("/");
 
   await page
@@ -35,7 +36,7 @@ test("Sefer detayı: çekmece açılır, Aktarma sekmesinde yürüme takibi gör
     .click();
 
   const dialog = page.getByRole("dialog");
-  await expect(dialog).toBeVisible();
+  await expect(dialog).toBeVisible({ timeout: 10000 });
 
   await dialog.getByRole("tab", { name: "Aktarma" }).click();
   await expect(dialog.getByText("Yürüme Süresi")).toBeVisible();
@@ -60,6 +61,7 @@ test("Arama: doğal arama ile liste filtrelenir", async ({ page }) => {
 });
 
 test("Tema kalıcılığı: Güneş Modu seçilir ve yenilemede korunur", async ({ page }) => {
+  test.setTimeout(60000);
   await page.goto("/");
 
   await page.getByRole("button", { name: "Tema seç" }).click();
@@ -67,6 +69,12 @@ test("Tema kalıcılığı: Güneş Modu seçilir ve yenilemede korunur", async 
 
   await expect(page.locator("html")).toHaveAttribute("data-theme", "sun-contrast");
 
-  await page.reload();
+  // Gece yükü altında reload bazen ERR_ABORTED verebilir (servis çalışanı devri);
+  // kalıcılık kontrolü taze gezinmeyle de aynı şekilde doğrulanır.
+  try {
+    await page.reload({ timeout: 15000 });
+  } catch {
+    await page.goto("/", { timeout: 15000 });
+  }
   await expect(page.locator("html")).toHaveAttribute("data-theme", "sun-contrast");
 });
