@@ -29,6 +29,8 @@ const TYPE_META: Record<
 
 /**
  * Ana ekran duyuru bandı — TEK SATIRDA akan (marquee) kompakt tasarım.
+ * MOBİL: sayaç ve oklar üst sıraya alınır; kayan duyuru metni ALT SATIRDA
+ * TAM GENİŞLİK akar (dar pencere metni okunamaz hale getiriyordu).
  * KULLANICI KURALI: İptal duyuruları asla yok sayılamaz — kapatma düğmesi YOKTUR,
  * uzun resmi açıklama kayan yazı olarak harfiyen akar.
  */
@@ -72,37 +74,69 @@ export function AnnouncementBanner({ announcements, className = "" }: Announceme
     setCurrentIndex((prev) => (prev + 1) % activeList.length);
   };
 
+  // İlerleme sayacı + oklar: MOBİLDE üst sıranın sağında, masaüstünde sağ blokta.
+  const navControls = (
+    <div className="flex items-center gap-0.5 text-[9px] font-mono mr-1">
+      <span className="text-slate-700 dark:text-slate-300 font-bold">
+        {(currentIndex % activeList.length) + 1}
+      </span>
+      <span>/</span>
+      <span>{activeList.length}</span>
+      <button
+        type="button"
+        onClick={handlePrev}
+        aria-label="Önceki duyuru"
+        className="flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-md hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-slate-800 cursor-pointer ml-1"
+      >
+        <ChevronLeft size={14} />
+      </button>
+      <button
+        type="button"
+        onClick={handleNext}
+        aria-label="Sonraki duyuru"
+        className="flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-md hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-slate-800 cursor-pointer"
+      >
+        <ChevronRight size={14} />
+      </button>
+    </div>
+  );
+
   return (
     <>
       <div className={`px-3 pt-1.5 animate-fadeIn ${className}`} role="region" aria-label="Firma duyuruları">
       <div
-        className={`rounded-xl border px-2.5 py-1.5 shadow-2xs flex items-center justify-between gap-2 transition-all ${
+        className={`rounded-xl border px-2.5 py-1 sm:py-1.5 shadow-2xs flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-2 transition-all ${
           hasCancellation
             ? "bg-rose-50 dark:bg-rose-950/40 border-rose-200 dark:border-rose-900/60"
             : "bg-sky-50 dark:bg-slate-900/80 border-sky-200 dark:border-slate-800"
         }`}
       >
-        {/* Sol İkon + Başlık Rozeti */}
-        <div className="flex items-center gap-1.5 shrink-0">
-          <span
-            className={`${
-              hasCancellation ? "text-rose-500 animate-pulse" : "text-sky-500 dark:text-sky-400"
-            }`}
-          >
-            {hasCancellation ? <AlertTriangle size={13} aria-hidden /> : <Megaphone size={13} aria-hidden />}
-          </span>
-          <span
-            className={`text-[9.5px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-md ${
-              hasCancellation
-                ? "bg-rose-100 dark:bg-rose-900/60 text-rose-700 dark:text-rose-300"
-                : "bg-sky-100 dark:bg-sky-950/80 text-sky-700 dark:text-sky-300"
-            }`}
-          >
-            {TYPE_META[currentItem.type]?.label || (hasCancellation ? "İPTAL" : "DUYURU")}
-          </span>
+        {/* Üst sıra (mobil) / sol blok (masaüstü): İkon + rozet; mobilde sağda sayaç+oklar */}
+        <div className="flex items-center justify-between gap-1.5 shrink-0 sm:justify-start">
+          <div className="flex items-center gap-1.5">
+            <span
+              className={`${
+                hasCancellation ? "text-rose-500 animate-pulse" : "text-sky-500 dark:text-sky-400"
+              }`}
+            >
+              {hasCancellation ? <AlertTriangle size={13} aria-hidden /> : <Megaphone size={13} aria-hidden />}
+            </span>
+            <span
+              className={`text-[9.5px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-md ${
+                hasCancellation
+                  ? "bg-rose-100 dark:bg-rose-900/60 text-rose-700 dark:text-rose-300"
+                  : "bg-sky-100 dark:bg-sky-950/80 text-sky-700 dark:text-sky-300"
+              }`}
+            >
+              {TYPE_META[currentItem.type]?.label || (hasCancellation ? "İPTAL" : "DUYURU")}
+            </span>
+          </div>
+          {activeList.length > 1 && (
+            <div className="flex sm:hidden items-center text-slate-400">{navControls}</div>
+          )}
         </div>
 
-        {/* Orta: TEK SATIR KAYAN duyuru metni — tıklanınca detay UYGULAMA İÇİNDE açılır */}
+        {/* Mobilde TAM GENİŞLİK: TEK SATIR KAYAN duyuru metni — tıklanınca detay UYGULAMA İÇİNDE açılır */}
         <div className="min-w-0 flex-1 flex items-center gap-1.5 text-xs">
           <OperatorLogo operator={currentItem.operator} size="sm" showName={false} />
           <MarqueeTicker
@@ -114,7 +148,7 @@ export function AnnouncementBanner({ announcements, className = "" }: Announceme
               type="button"
               onClick={() => setDetailItem(currentItem)}
               aria-label="Duyuru detayını aç"
-              className={`font-semibold text-[11px] leading-tight hover:underline inline-flex items-center gap-1 min-h-10 cursor-pointer text-left ${
+              className={`font-semibold text-xs sm:text-[11px] leading-tight hover:underline inline-flex items-center gap-1 min-h-8 sm:min-h-10 cursor-pointer text-left ${
                 tone === "danger"
                   ? "text-rose-700 dark:text-rose-300 font-bold"
                   : "text-slate-800 dark:text-slate-200"
@@ -141,34 +175,12 @@ export function AnnouncementBanner({ announcements, className = "" }: Announceme
           </MarqueeTicker>
         </div>
 
-        {/* Sağ: İlerleme Sayacı ve Oklar (KULLANICI KURALI: İptal duyurusu kapatılamaz) */}
-        <div className="flex items-center gap-1 shrink-0 text-slate-400">
-          {activeList.length > 1 && (
-            <div className="flex items-center gap-0.5 text-[9px] font-mono mr-1">
-              <span className="text-slate-700 dark:text-slate-300 font-bold">
-                {(currentIndex % activeList.length) + 1}
-              </span>
-              <span>/</span>
-              <span>{activeList.length}</span>
-              <button
-                type="button"
-                onClick={handlePrev}
-                aria-label="Önceki duyuru"
-                className="flex h-10 w-10 items-center justify-center rounded-md hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-slate-800 cursor-pointer ml-1"
-              >
-                <ChevronLeft size={14} />
-              </button>
-              <button
-                type="button"
-                onClick={handleNext}
-                aria-label="Sonraki duyuru"
-                className="flex h-10 w-10 items-center justify-center rounded-md hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-slate-800 cursor-pointer"
-              >
-                <ChevronRight size={14} />
-              </button>
-            </div>
-          )}
-        </div>
+        {/* Masaüstü sağ blok: İlerleme Sayacı ve Oklar (KULLANICI KURALI: İptal duyurusu kapatılamaz) */}
+        {activeList.length > 1 && (
+          <div className="hidden sm:flex items-center gap-1 shrink-0 text-slate-400">
+            {navControls}
+          </div>
+        )}
       </div>
     </div>
 
