@@ -15,6 +15,7 @@ import { triggerHaptic } from "@/lib/utils/haptics";
 import { TransitRouteSchematic } from "@/components/schedule/TransitRouteSchematic";
 import { ScheduleCardActions } from "@/components/schedule/card/ScheduleCardActions";
 import { TripStatusBadge } from "@/components/schedule/card/TripStatusBadge";
+import { pierShortName } from "@/lib/utils/pier-short-names";
 import type { ScheduleCardDto, TripStatus } from "@/lib/types/schedule";
 
 // Geriye dönük uyumluluk: eski import yolları çalışmaya devam eder.
@@ -264,12 +265,14 @@ export function ScheduleCard(props: ScheduleCardProps) {
           {/* Orta: Güzergah + Operatör + Durak & Gece Rozetleri */}
           <div className="flex items-center gap-1.5 min-w-0 flex-1 text-xs">
             <OperatorLogo operator={props.operator} size="sm" showName={false} />
-            <span className={`font-bold truncate min-w-0 ${isCancelled ? "line-through text-slate-400" : ""}`}>
-              {dynState.currentOrigin}
+            <span title={dynState.currentOrigin} className={`font-bold truncate min-w-0 ${isCancelled ? "line-through text-slate-400" : ""}`}>
+              <span className="hidden sm:inline">{dynState.currentOrigin}</span>
+              <span className="sm:hidden">{pierShortName(dynState.currentOrigin)}</span>
             </span>
             <span className="text-blue-500 dark:text-blue-400 font-black text-[10px] shrink-0">➔</span>
-            <span className={`font-bold truncate min-w-0 ${isCancelled ? "line-through text-slate-400" : "text-blue-700 dark:text-blue-300"}`}>
-              {dynState.destination}
+            <span title={dynState.destination} className={`font-bold truncate min-w-0 ${isCancelled ? "line-through text-slate-400" : "text-blue-700 dark:text-blue-300"}`}>
+              <span className="hidden sm:inline">{dynState.destination}</span>
+              <span className="sm:hidden">{pierShortName(dynState.destination)}</span>
             </span>
 
             {isNightTrip && (
@@ -410,21 +413,31 @@ export function ScheduleCard(props: ScheduleCardProps) {
           )}
 
           <div className="flex flex-col items-start justify-center shrink-0 min-w-16">
-            <span
-              className={`font-mono font-black text-xl sm:text-2xl leading-none tabular-nums tracking-tight transition-all ${
-                isCancelled
-                  ? "line-through text-rose-500 dark:text-rose-400 font-bold opacity-80"
-                  : dynState.isDeparted
-                  ? "text-slate-400 dark:text-slate-500"
-                  : isLastMinute
-                  ? "text-rose-600 dark:text-rose-400 font-extrabold scale-105 animate-pulse"
-                  : isLast5Minutes
-                  ? "text-amber-500 dark:text-amber-400 animate-pulse font-extrabold"
-                  : "text-blue-600 dark:text-blue-400"
-              }`}
-            >
-              {dynState.currentDepartureTime}
-            </span>
+            <div className="flex items-center gap-1.5 min-w-0">
+              <span
+                className={`font-mono font-black text-xl sm:text-2xl leading-none tabular-nums tracking-tight transition-all ${
+                  isCancelled
+                    ? "line-through text-rose-500 dark:text-rose-400 font-bold opacity-80"
+                    : dynState.isDeparted
+                    ? "text-slate-400 dark:text-slate-500"
+                    : isLastMinute
+                    ? "text-rose-600 dark:text-rose-400 font-extrabold scale-105 animate-pulse"
+                    : isLast5Minutes
+                    ? "text-amber-500 dark:text-amber-400 animate-pulse font-extrabold"
+                    : "text-blue-600 dark:text-blue-400"
+                }`}
+              >
+                {dynState.currentDepartureTime}
+              </span>
+
+              {/* KULLANICI KURALI: "EN YAKIN" rozeti saatin YANINDA durur —
+                  rota satırını işgal edip nereye gittiğini gizlemez. */}
+              {props.isFeaturedHero && !isCancelled && !dynState.isDeparted && (
+                <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-blue-600 text-white text-[8px] font-black uppercase tracking-wider shadow-2xs shrink-0">
+                  <span className="w-1 h-1 rounded-full bg-white animate-ping" /> EN YAKIN
+                </span>
+              )}
+            </div>
             {props.isContinuous && !isCancelled && (
               <span className="mt-1 inline-flex items-center gap-0.5 text-[9px] font-black px-1.5 py-0.5 rounded bg-cyan-100 dark:bg-cyan-500/20 text-cyan-700 dark:text-cyan-300 border border-cyan-300/60 dark:border-cyan-500/30 shrink-0 whitespace-nowrap">
                 <Timer size={9} aria-hidden="true" /> SÜREKLİ{props.continuousUntil ? ` ${props.continuousUntil}` : ""}
@@ -482,22 +495,23 @@ export function ScheduleCard(props: ScheduleCardProps) {
 
         {/* 2. Orta: Dinamik Güzergah & Hafif Temel Bilgiler */}
         <div className="flex flex-col min-w-0 flex-1 pr-1">
-          {/* Güzergah */}
+          {/* Güzergah — MOBİL: 3 harflik kısaltmalar (title/aria tam adı taşır) */}
           <div className="flex items-center gap-1.5 font-black text-sm sm:text-base leading-tight min-w-0">
-            <span className={`truncate min-w-0 ${isCancelled ? "line-through opacity-70 text-slate-500 dark:text-slate-400" : "text-slate-900 dark:text-white"}`}>
-              {dynState.currentOrigin}
+            <span
+              title={dynState.currentOrigin}
+              className={`truncate min-w-0 ${isCancelled ? "line-through opacity-70 text-slate-500 dark:text-slate-400" : "text-slate-900 dark:text-white"}`}
+            >
+              <span className="hidden sm:inline">{dynState.currentOrigin}</span>
+              <span className="sm:hidden">{pierShortName(dynState.currentOrigin)}</span>
             </span>
             <span className="text-blue-600 dark:text-blue-400 font-extrabold text-xs sm:text-sm shrink-0">➔</span>
-            <span className={`truncate min-w-0 ${isCancelled ? "line-through opacity-70 text-slate-500 dark:text-slate-400" : "text-blue-700 dark:text-blue-300 font-bold"}`}>
-              {dynState.destination}
+            <span
+              title={dynState.destination}
+              className={`truncate min-w-0 ${isCancelled ? "line-through opacity-70 text-slate-500 dark:text-slate-400" : "text-blue-700 dark:text-blue-300 font-bold"}`}
+            >
+              <span className="hidden sm:inline">{dynState.destination}</span>
+              <span className="sm:hidden">{pierShortName(dynState.destination)}</span>
             </span>
-
-            {/* Sıradaki Kalkış / En Yakın Sefer Rozeti */}
-            {props.isFeaturedHero && !isCancelled && !dynState.isDeparted && (
-              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-blue-600 text-white text-[9px] font-black uppercase tracking-wider shadow-2xs shrink-0">
-                <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" /> EN YAKIN
-              </span>
-            )}
 
             {/* Gece Seferi Rozeti */}
             {isNightTrip && !isCancelled && (

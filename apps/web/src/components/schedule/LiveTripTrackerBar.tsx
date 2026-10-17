@@ -65,7 +65,8 @@ export function LiveTripTrackerBar() {
                 <span>{secondsRemaining > 0 ? `Kalkışa ${formattedCountdown}` : "Kalkış Saati"}</span>
               </span>
             </div>
-            <div className="text-[11px] text-blue-300 font-semibold truncate mt-0.5">
+            {/* KULLANICI KURALI: rota satırı ASLA kırpılmaz — "nereye gidiyor" her zaman okunur */}
+            <div className="text-[11px] text-blue-300 font-semibold mt-0.5 leading-snug">
               {activeVoyage.origin} ➔ {activeVoyage.destination}
             </div>
           </div>

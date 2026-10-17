@@ -1,8 +1,9 @@
 "use client";
 
-import React from "react";
-import { Ship } from "lucide-react";
+import React, { useEffect, useRef } from "react";
 import type { UnderwaySegment } from "@/lib/utils/dynamic-trip";
+import { AdaVapuruIcon } from "@/components/ui/AdaVapuruIcon";
+import { pierShortName } from "@/lib/utils/pier-short-names";
 
 interface Stop {
   name: string;
@@ -22,8 +23,13 @@ interface TransitRouteSchematicProps {
 /**
  * Massimo Vignelli & TfL Transit Standardı: Metro/Tramvay Şeması Tarzı Güzergâh Grafiği.
  * Uzun ada ve boğaz hatlarında durak sırasını şematik bir çizgi üzerinde gösterir.
- * `underway` verilirse gemi ikonu zamana göre ilerler: seyir mavi, iskeleye
+ * `underway` verilirse ada vapuru ikonu zamana göre ilerler: seyir mavi, iskeleye
  * yaklaşırken (≤ 3 dk) amber yanıp söner, varışta yeşile döner (metro mantığı).
+ *
+ * MOBİL (kullanıcı kuralı): 3 harflik iskele kısaltmaları + dar segmentlerle hat
+ * ekrana sığdırılır; hat pencereye sığmadığında gemi görünürde kalsın diye şerit
+ * yumuşakça kendiliğinden kayar. Parmakla kaydırma her zaman önceliklidir;
+ * dokunuş sonrası otomatik kaydırma kısa süre duraklar.
  */
 export function TransitRouteSchematic({
   origin,
@@ -34,6 +40,42 @@ export function TransitRouteSchematic({
   operator,
   underway,
 }: TransitRouteSchematicProps) {
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+  const shipRef = useRef<HTMLDivElement | null>(null);
+  const pausedUntilRef = useRef(0);
+
+  const live = underway ?? null;
+
+  // Kullanıcı dokunuşu/kaydırması otomatik kaydırmayı 6 sn duraklatır
+  useEffect(() => {
+    const scroller = scrollRef.current;
+    if (!scroller) return;
+    const pause = () => {
+      pausedUntilRef.current = Date.now() + 6000;
+    };
+    scroller.addEventListener("pointerdown", pause);
+    scroller.addEventListener("wheel", pause, { passive: true });
+    return () => {
+      scroller.removeEventListener("pointerdown", pause);
+      scroller.removeEventListener("wheel", pause);
+    };
+  }, []);
+
+  // Gemi görünürden çıkacaksa şeridi yumuşakça ortala (canlı takip hissi)
+  useEffect(() => {
+    const scroller = scrollRef.current;
+    const ship = shipRef.current;
+    if (!scroller || !ship || live == null) return;
+    if (Date.now() < pausedUntilRef.current) return;
+
+    const scRect = scroller.getBoundingClientRect();
+    const shRect = ship.getBoundingClientRect();
+    const drift = shRect.left + shRect.width / 2 - (scRect.left + scRect.width / 2);
+    if (Math.abs(drift) > scRect.width * 0.22) {
+      scroller.scrollBy({ left: drift, behavior: "smooth" });
+    }
+  }, [live?.fromIndex, live?.ratio, live?.hasArrived, live]);
+
   if (!stops || stops.length === 0 || origin.trim() === destination.trim()) {
     return null;
   }
@@ -53,11 +95,9 @@ export function TransitRouteSchematic({
     return item.name !== arr[idx - 1].name;
   });
 
-  const live = underway ?? null;
-
   return (
     <div className="w-full mt-2 pt-2 border-t border-slate-200/60 dark:border-slate-800/80 animate-fadeIn">
-      <div className="overflow-x-auto hide-scrollbar py-1">
+      <div ref={scrollRef} className="overflow-x-auto hide-scrollbar py-1">
         <div className="flex items-center min-w-max px-1">
           {fullChain.map((stop, index) => {
             const isFirst = index === 0;
@@ -82,7 +122,7 @@ export function TransitRouteSchematic({
               <React.Fragment key={`${stop.name}-${index}`}>
                 <div className="flex flex-col items-center group/stop">
                   {stop.time && (
-                    <span className="text-[9.5px] font-mono tabular-nums font-bold text-slate-500 dark:text-slate-400 leading-none mb-1">
+                    <span className="text-[9px] sm:text-[9.5px] font-mono tabular-nums font-bold text-slate-500 dark:text-slate-400 leading-none mb-1">
                       {stop.time}
                     </span>
                   )}
@@ -91,20 +131,23 @@ export function TransitRouteSchematic({
                     <span className={`w-3 h-3 rounded-full border-2 transition-all shrink-0 ${dotClass}`} />
                   </div>
 
+                  {/* MOBİL: 3 harflik kısaltma — masaüstünde tam ad (title tam adı taşır) */}
                   <span
+                    title={stop.name}
                     className={`text-[10px] mt-1 font-bold whitespace-nowrap leading-none ${
                       isFirst || isLast
                         ? "text-slate-900 dark:text-white font-extrabold"
                         : "text-slate-600 dark:text-slate-400 font-medium"
                     }`}
                   >
-                    {stop.name}
+                    <span className="hidden sm:inline">{stop.name}</span>
+                    <span className="sm:hidden">{pierShortName(stop.name)}</span>
                   </span>
                 </div>
 
                 {!isLast &&
                   (isActiveSegment && live ? (
-                    <div className="relative flex-1 min-w-10 sm:min-w-14 h-0.5 mx-1 mb-4 rounded-full bg-slate-200 dark:bg-slate-700">
+                    <div className="relative flex-1 min-w-7 sm:min-w-14 h-0.5 mx-1 mb-4 rounded-full bg-slate-200 dark:bg-slate-700">
                       <div
                         className={`absolute left-0 top-0 h-0.5 rounded-full transition-[width] duration-1000 ease-linear ${
                           live.hasArrived
@@ -116,35 +159,25 @@ export function TransitRouteSchematic({
                         style={{ width: `${Math.round(live.ratio * 100)}%` }}
                       />
                       <div
-                        className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 z-10 transition-[left] duration-1000 ease-linear"
+                        ref={shipRef}
+                        className="absolute bottom-0 z-10 -translate-x-1/2 transition-[left] duration-1000 ease-linear"
                         style={{ left: `${live.ratio * 100}%` }}
                       >
-                        <span
-                          className={`flex items-center justify-center w-5 h-5 rounded-full bg-white dark:bg-slate-900 shadow-md ring-2 ${
+                        <AdaVapuruIcon
+                          className={`w-7 h-4.5 transition-[filter,opacity] duration-700 ${
                             live.hasArrived
-                              ? "ring-emerald-500"
+                              ? "drop-shadow-[0_0_2.5px_rgba(16,185,129,0.9)]"
                               : live.isApproaching
-                              ? "ring-amber-500 animate-pulse"
-                              : "ring-blue-500"
+                              ? "drop-shadow-[0_0_2.5px_rgba(245,158,11,0.9)]"
+                              : "drop-shadow-[0_0_2px_rgba(59,130,246,0.7)]"
                           }`}
-                        >
-                          <Ship
-                            size={11}
-                            className={
-                              live.hasArrived
-                                ? "text-emerald-600 dark:text-emerald-400"
-                                : live.isApproaching
-                                ? "text-amber-600 dark:text-amber-400"
-                                : "text-blue-600 dark:text-blue-400"
-                            }
-                          />
-                        </span>
+                        />
                       </div>
                     </div>
                   ) : isDoneSegment ? (
-                    <div className="flex-1 min-w-10 sm:min-w-14 h-0.5 rounded-full bg-emerald-500 mx-1 mb-4" />
+                    <div className="flex-1 min-w-7 sm:min-w-14 h-0.5 rounded-full bg-emerald-500 mx-1 mb-4" />
                   ) : (
-                    <div className="flex-1 min-w-10 sm:min-w-14 h-0.5 bg-linear-to-r from-blue-400 to-indigo-500 dark:from-blue-500 dark:to-indigo-400 mx-1 mb-4" />
+                    <div className="flex-1 min-w-7 sm:min-w-14 h-0.5 bg-linear-to-r from-blue-400 to-indigo-500 dark:from-blue-500 dark:to-indigo-400 mx-1 mb-4" />
                   ))}
               </React.Fragment>
             );
