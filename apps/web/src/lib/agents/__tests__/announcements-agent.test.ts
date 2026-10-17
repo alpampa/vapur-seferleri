@@ -5,6 +5,7 @@ import {
   parseSehirHatlariCancellationStatus,
   parseSehirHatlariAnnouncements,
   parseDenturAnnouncements,
+  parseMaviMarmaraStatusFeed,
   classifyAnnouncement,
   extractArticleBodyText,
   scrapeAllAnnouncements,
@@ -146,6 +147,60 @@ describe("classifyAnnouncement", () => {
   });
 });
 
+describe("Mavi Marmara duyuru ajanı (durum.mavimarmara.net feed.json fixture)", () => {
+  const feed = fixture("mavi-marmara-durum-feed.json");
+
+  it("cancelled hatlardan İPTAL duyurusu üretir (firmanın kendi etiketleriyle)", () => {
+    const anns = parseMaviMarmaraStatusFeed(feed);
+    expect(anns).toHaveLength(1);
+    const a = anns[0];
+    expect(a.operator).toBe("Mavi Marmara");
+    expect(a.type).toBe("CANCELLED_TRIPS");
+    expect(a.sourceVerified).toBe(true);
+    expect(a.body).toContain("İptal Seferler:");
+    // Fixture'da besiktas/kabatas/sirkeci = cancelled (canlı doğrulama)
+    expect(a.body).toContain("Beşiktaş-Kabataş");
+    expect(a.body).toContain("Kabataş-Büyükada");
+    expect(a.body).toContain("Sirkeci-Büyükada");
+    // Koşan hat listeye GİRMEZ
+    expect(a.body).not.toContain("Bostancı-Adalar");
+  });
+
+  it("eşleştirici MM iptallerini MM seferlerine bağlar (uydurma yok)", () => {
+    const anns = parseMaviMarmaraStatusFeed(feed);
+    const disruptions = matchAnnouncementToTrips(anns[0]);
+    expect(disruptions.length).toBeGreaterThan(0);
+    expect(disruptions.every((d) => d.operator === "Mavi Marmara")).toBe(true);
+    // Kabataş-Büyükada hattı veri setinde gerçek MM seferleriyle eşleşmeli
+    const mmTripIds = new Set(
+      OFFICIAL_SCHEDULES_DATA.filter((t) => t.operator === "Mavi Marmara").map((t) => t.id)
+    );
+    expect(disruptions.every((d) => mmTripIds.has(d.tripId))).toBe(true);
+    const kabatasTrips = OFFICIAL_SCHEDULES_DATA.filter(
+      (t) =>
+        t.operator === "Mavi Marmara" &&
+        (t.origin === "Kabataş" || t.destination === "Kabataş")
+    );
+    expect(kabatasTrips.length).toBeGreaterThan(0);
+    expect(disruptions.some((d) => kabatasTrips.some((t) => t.id === d.tripId))).toBe(true);
+  });
+
+  it("iptal yoksa duyuru üretmez; bozuk JSON'da boş döner", () => {
+    const running = JSON.stringify({
+      updated_at: "2026-10-17T06:00:00Z",
+      revision: 12,
+      routes: {
+        bostanci: { status: "running", note: "" },
+        eminonu: { status: "running", note: "" },
+        besiktas: { status: "disrupted", note: "" },
+      },
+    });
+    expect(parseMaviMarmaraStatusFeed(running)).toHaveLength(0);
+    expect(parseMaviMarmaraStatusFeed("{bozuk")).toHaveLength(0);
+    expect(parseMaviMarmaraStatusFeed("")).toHaveLength(0);
+  });
+});
+
 describe("KULLANICI KURALI: TÜM firmalar taranır (çok-firmalı tarama)", () => {
   it("kapsam kaydı her operatörü içerir; kaynaklı/kaynaksız ayrımı kanıtlıdır", () => {
     expect(OPERATOR_SCAN_COVERAGE.length).toBe(OPERATOR_REGISTRY.length);
@@ -168,10 +223,12 @@ describe("KULLANICI KURALI: TÜM firmalar taranır (çok-firmalı tarama)", () =
   it("scrapeAllAnnouncements firmaları paralel tarar; kaynaksızlar NO_SOURCE raporlanır", async () => {
     const shHtml = fixture("sehirhatlari-iptal-seferler-17102026.html");
     const denturHtml = fixture("dentur-duyurular.html");
+    const mmFeed = fixture("mavi-marmara-durum-feed.json");
     const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
       const url = String(input);
       if (url.includes("sehirhatlari.istanbul")) return new Response(shHtml, { status: 200 });
       if (url.includes("denturavrasya.com")) return new Response(denturHtml, { status: 200 });
+      if (url.includes("durum.mavimarmara.net")) return new Response(mmFeed, { status: 200 });
       throw new Error(`beklenmeyen URL: ${url}`);
     });
     vi.stubGlobal("fetch", fetchMock);
@@ -180,17 +237,16 @@ describe("KULLANICI KURALI: TÜM firmalar taranır (çok-firmalı tarama)", () =
       expect(failures).toHaveLength(0);
       expect(snapshots.map((s) => s.operator).sort()).toEqual([
         "Dentur Avrasya",
+        "Mavi Marmara",
         "Şehir Hatları",
       ]);
       const scanned = coverage
         .filter((c) => c.status === "SCANNED")
         .map((c) => c.operator)
         .sort();
-      expect(scanned).toEqual(["Dentur Avrasya", "Şehir Hatları"]);
+      expect(scanned).toEqual(["Dentur Avrasya", "Mavi Marmara", "Şehir Hatları"]);
       const noSource = coverage.filter((c) => c.status === "NO_SOURCE");
-      expect(noSource.map((c) => c.operator).sort()).toEqual(
-        ["Mavi Marmara", "Prens Tur", "Turyol"].sort()
-      );
+      expect(noSource.map((c) => c.operator).sort()).toEqual(["Prens Tur", "Turyol"].sort());
       expect(noSource.every((c) => !!c.note)).toBe(true);
     } finally {
       vi.unstubAllGlobals();
@@ -199,10 +255,12 @@ describe("KULLANICI KURALI: TÜM firmalar taranır (çok-firmalı tarama)", () =
 
   it("bir firma kaynağı çökerse yalnız o firma FAILED olur; diğerleri taranmaya devam eder", async () => {
     const denturHtml = fixture("dentur-duyurular.html");
+    const mmFeed = fixture("mavi-marmara-durum-feed.json");
     const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
       const url = String(input);
       if (url.includes("sehirhatlari.istanbul")) return new Response("bakım", { status: 503 });
       if (url.includes("denturavrasya.com")) return new Response(denturHtml, { status: 200 });
+      if (url.includes("durum.mavimarmara.net")) return new Response(mmFeed, { status: 200 });
       throw new Error(`beklenmeyen URL: ${url}`);
     });
     vi.stubGlobal("fetch", fetchMock);
@@ -211,7 +269,8 @@ describe("KULLANICI KURALI: TÜM firmalar taranır (çok-firmalı tarama)", () =
       expect(failures.some((f) => f.operator === "Şehir Hatları")).toBe(true);
       expect(coverage.find((c) => c.operator === "Şehir Hatları")?.status).toBe("FAILED");
       expect(coverage.find((c) => c.operator === "Dentur Avrasya")?.status).toBe("SCANNED");
-      expect(snapshots).toHaveLength(1);
+      expect(coverage.find((c) => c.operator === "Mavi Marmara")?.status).toBe("SCANNED");
+      expect(snapshots).toHaveLength(2);
     } finally {
       vi.unstubAllGlobals();
     }

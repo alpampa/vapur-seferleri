@@ -8,10 +8,11 @@
  * yalnızca sayfada birebir bulunan metin kaydedilir.
  *
  * Kaynak durumu (2026-10-17 canlı doğrulama):
- * - Şehir Hatları : sehirhatlari.istanbul/tr/iptal-seferler  → TARANIYOR
- * - Dentur Avrasya: denturavrasya.com/tr-TR/duyurular        → TARANIYOR
- * - Mavi Marmara  : resmi sitede duyuru sayfası YOK (mavimarmara.net/duyurular → 404;
- *                   WordPress API'de duyuru kategorisi/gönderisi yok) → kaynak yok
+ * - Şehir Hatları : sehirhatlari.istanbul/tr/iptal-seferler        → TARANIYOR
+ * - Dentur Avrasya: denturavrasya.com/tr-TR/duyurular              → TARANIYOR
+ * - Mavi Marmara  : durum.mavimarmara.net/feed.json — firmanın ana sayfasındaki
+ *                   gömülü "Sefer Durumları" paneli canlı durum akışı yayınlar
+ *                   (status: running/disrupted/cancelled)           → TARANIYOR
  * - Turyol        : resmi sitede duyuru/durum sayfası YOK (tüm denemeler 404) → kaynak yok
  * - Prens Tur     : resmi sitede duyuru bölümü YOK (prenstur.net/duyurular → 404) → kaynak yok
  *
@@ -209,6 +210,63 @@ export function parseDenturAnnouncements(html: string): OperatorAnnouncement[] {
 }
 
 /* ------------------------------------------------------------------ */
+/* MAVİ MARMARA (durum.mavimarmara.net canlı sefer durumu akışı)        */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Mavi Marmara'nın resmi ana sayfasında gömülü "Sefer Durumları" paneli
+ * (durum.mavimarmara.net) makine-okunur bir durum akışı yayınlar:
+ * feed.json → { updated_at, revision, routes: { key: { status, note } } }.
+ * status değerleri firmanın kendi sayfasından: running=Yapılıyor,
+ * disrupted=Aksamalı, cancelled=İPTAL. Hat başlıkları da firmanın
+ * durum sayfasındaki birebir etiketlerdir (uydurma yok).
+ */
+const MM_ROUTE_LABELS: Record<string, string> = {
+  bostanci: "Bostancı-Adalar",
+  eminonu: "Eminönü",
+  besiktas: "Beşiktaş-Kabataş",
+  kabatas: "Kabataş-Büyükada",
+  sirkeci: "Sirkeci-Büyükada",
+};
+
+export function parseMaviMarmaraStatusFeed(raw: string): OperatorAnnouncement[] {
+  let feed: {
+    routes?: Record<string, { status?: unknown; note?: unknown }>;
+  };
+  try {
+    feed = JSON.parse(raw);
+  } catch {
+    return [];
+  }
+  const routes = feed.routes;
+  if (!routes || typeof routes !== "object") return [];
+
+  const cancelled = Object.entries(routes).filter(
+    ([key, row]) => row?.status === "cancelled" && MM_ROUTE_LABELS[key]
+  );
+  if (cancelled.length === 0) return [];
+
+  // Notlar (varsa) hat listesinden ÖNCE yazılır; liste satırları temiz kalır.
+  const notes = cancelled
+    .map(([, row]) => (typeof row?.note === "string" ? row.note.trim() : ""))
+    .filter(Boolean);
+  const lines = cancelled.map(([key]) => MM_ROUTE_LABELS[key]);
+  const body = [...notes, "İptal Seferler:", ...lines].join("\n");
+
+  return [
+    {
+      id: "mavi-marmara-durum-iptal",
+      operator: "Mavi Marmara",
+      title: "İptal Seferler",
+      body,
+      type: "CANCELLED_TRIPS",
+      sourceUrl: "https://durum.mavimarmara.net/",
+      sourceVerified: true,
+    },
+  ];
+}
+
+/* ------------------------------------------------------------------ */
 /* ORTAK SINIFLANDIRICI                                                 */
 /* ------------------------------------------------------------------ */
 
@@ -258,6 +316,11 @@ export const ANNOUNCEMENT_SOURCES: AnnouncementSource[] = [
     url: "https://www.denturavrasya.com/tr-TR/duyurular",
     parser: parseDenturAnnouncements,
   },
+  {
+    operator: "Mavi Marmara",
+    url: "https://durum.mavimarmara.net/feed.json",
+    parser: parseMaviMarmaraStatusFeed,
+  },
 ];
 
 /**
@@ -266,8 +329,6 @@ export const ANNOUNCEMENT_SOURCES: AnnouncementSource[] = [
  * yayını bulunmadığı raporda NO_SOURCE olarak açıkça belirtilir (sessiz atlama yok).
  */
 const NO_SOURCE_NOTES: Record<string, string> = {
-  "Mavi Marmara":
-    "Resmi sitede duyuru sayfası yok: mavimarmara.net/duyurular → 404; WordPress içeriğinde duyuru kategorisi/gönderisi bulunmuyor (son gönderi 2022). İptaller operasyon merkezinden duyurulur.",
   Turyol:
     "Resmi sitede duyuru/sefer-durumu sayfası yok: /duyurular, /tr/duyurular, /Haberler, /sefer-durumu → tümü 404. İptaller çağrı merkeziyle duyurulur.",
   "Prens Tur":

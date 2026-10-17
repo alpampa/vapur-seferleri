@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-17T09:14:21.968Z",
+  "generatedAt": "2026-10-17T10:25:28.984Z",
   "failures": [],
   "coverage": [
     {
@@ -16,8 +16,9 @@
     },
     {
       "operator": "Mavi Marmara",
-      "status": "NO_SOURCE",
-      "note": "Resmi sitede duyuru sayfası yok: mavimarmara.net/duyurular → 404; WordPress içeriğinde duyuru kategorisi/gönderisi bulunmuyor (son gönderi 2022). İptaller operasyon merkezinden duyurulur."
+      "status": "SCANNED",
+      "url": "https://durum.mavimarmara.net/feed.json",
+      "announcementCount": 1
     },
     {
       "operator": "Prens Tur",
@@ -33,14 +34,14 @@
   "sources": [
     {
       "operator": "Şehir Hatları",
-      "fetchedAt": "2026-10-17T09:14:21.968Z",
+      "fetchedAt": "2026-10-17T10:25:28.983Z",
       "sourceUrl": "https://sehirhatlari.istanbul/tr/iptal-seferler",
       "announcements": [
         {
           "id": "sh-status-17.10.2026",
           "operator": "Şehir Hatları",
           "title": "İptal Seferler — 17.10.2026",
-          "body": "17.10.2026\nDeğerli yolcularımız,\nElverişsiz hava koşulları nedeniyle 17 Ekim 2026 Cumartesi günü aşağıda belirtilen hatlardaki seferlerimiz gerçekleştirilemeyecektir.\nKadıköy-Karaköy-Eminönü, Üsküdar-Karaköy-Eminönü ve Kadıköy-Beşiktaş hatlarımızda ise ikinci bir duyuruya kadar uygulanacak sefer tarifeleri aşağıda yer almaktadır.\nBilgilerinize sunarız.\nİptal Seferler:\nBoğaz Gidiş-Geliş\nÜsküdar-Haliç\nAnadolukavağı-Rumelikavağı-Sarıyer\nÇengelköy-Bebek-Kanlıca-İstinye\nEminönü-Rumelikavağı\nÜsküdar-Anadolukavağı\nAdalar-Beşiktaş\nKısa Boğaz Turu\nUzun Boğaz Turu\nKadıköy-Üsküdar-Ortaköy\nİstinye-Çubuklu\nBeykoz-Sarıyer\nKabataş-Kadıköy\nAşiyan-Anadoluhisarı-Küçüksu\nÜsküdar-Aşiyan\nBeşiktaş-Haliç\nKadıköy-Haliç\nMaltepe-Büyükada-Heybeliada-Burgazada-Kınalıada\nÇengelköy-Kabataş\nOrtaköy-Beşiktaş-Eminönü\nBostancı-Moda-Karaköy-Kabataş\nTuzla-Pendik-Büyükada",
+          "body": "17.10.2026\nDeğerli yolcularımız,\nElverişsiz hava koşulları nedeniyle aşağıda belirtilen hatlardaki seferlerimiz gerçekleştirilemeyecektir.\nKadıköy-Karaköy-Eminönü, Üsküdar-Karaköy-Eminönü ve Kadıköy-Beşiktaş hatlarımızda ise ikinci bir duyuruya kadar uygulanacak sefer tarifeleri aşağıda yer almaktadır.\nBilgilerinize sunarız.\nİptal Seferler:\nBoğaz Gidiş-Geliş\nÜsküdar-Haliç\nAnadolukavağı-Rumelikavağı-Sarıyer\nÇengelköy-Bebek-Kanlıca-İstinye\nEminönü-Rumelikavağı\nÜsküdar-Anadolukavağı\nAdalar-Beşiktaş\nKısa Boğaz Turu\nUzun Boğaz Turu\nKadıköy-Üsküdar-Ortaköy\nİstinye-Çubuklu\nBeykoz-Sarıyer\nKabataş-Kadıköy\nAşiyan-Anadoluhisarı-Küçüksu\nÜsküdar-Aşiyan\nBeşiktaş-Haliç\nKadıköy-Haliç\nMaltepe-Büyükada-Heybeliada-Burgazada-Kınalıada\nÇengelköy-Kabataş\nOrtaköy-Beşiktaş-Eminönü\nBostancı-Moda-Karaköy-Kabataş\nTuzla-Pendik-Büyükada",
           "type": "CANCELLED_TRIPS",
           "affectedLines": [],
           "publishedAt": "17.10.2026",
@@ -123,7 +124,7 @@
     },
     {
       "operator": "Dentur Avrasya",
-      "fetchedAt": "2026-10-17T09:14:21.968Z",
+      "fetchedAt": "2026-10-17T10:25:28.984Z",
       "sourceUrl": "https://www.denturavrasya.com/tr-TR/duyurular",
       "announcements": [
         {
@@ -204,6 +205,22 @@
           "title": "Dentur X Sifir Emisyonlu Yapay Zeka Destekli Otonom Elektrik Tahrikli Yolcu Gemisi Projesi",
           "type": "INFO",
           "sourceUrl": "https://www.denturavrasya.com/tr-TR/duyurular/dentur-x-sifir-emisyonlu-yapay-zeka-destekli-otonom-elektrik-tahrikli-yolcu-gemisi-projesi",
+          "sourceVerified": true
+        }
+      ]
+    },
+    {
+      "operator": "Mavi Marmara",
+      "fetchedAt": "2026-10-17T10:25:28.984Z",
+      "sourceUrl": "https://durum.mavimarmara.net/feed.json",
+      "announcements": [
+        {
+          "id": "mavi-marmara-durum-iptal",
+          "operator": "Mavi Marmara",
+          "title": "İptal Seferler",
+          "body": "İptal Seferler:\nBeşiktaş-Kabataş\nKabataş-Büyükada\nSirkeci-Büyükada",
+          "type": "CANCELLED_TRIPS",
+          "sourceUrl": "https://durum.mavimarmara.net/",
           "sourceVerified": true
         }
       ]

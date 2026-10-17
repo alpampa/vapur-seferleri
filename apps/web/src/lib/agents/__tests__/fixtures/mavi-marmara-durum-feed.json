@@ -1,0 +1,31 @@
+{
+  "updated_at": "2026-10-16T06:18:38Z",
+  "revision": 11,
+  "routes": {
+    "bostanci": {
+      "status": "running",
+      "note": "",
+      "updated_at": "2026-09-30T07:01:27Z"
+    },
+    "eminonu": {
+      "status": "running",
+      "note": "",
+      "updated_at": "2026-09-30T07:05:20Z"
+    },
+    "besiktas": {
+      "status": "cancelled",
+      "note": "",
+      "updated_at": "2026-10-16T06:18:38Z"
+    },
+    "kabatas": {
+      "status": "cancelled",
+      "note": "",
+      "updated_at": "2026-10-16T06:18:38Z"
+    },
+    "sirkeci": {
+      "status": "cancelled",
+      "note": "",
+      "updated_at": "2026-10-16T06:18:38Z"
+    }
+  }
+}
