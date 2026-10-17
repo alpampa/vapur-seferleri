@@ -28,6 +28,64 @@ const KNOWN_PIERS = [
 
 const TIME_RE_G = /\b([01]\d|2[0-3]):[0-5]\d\b/g;
 
+/** "İptal Seferler:" listesindeki hat satırı formatı (harf, boşluk ve tire) */
+const ROUTE_LINE_RE = /^[A-Za-zÇĞİÖŞÜçğıöşü][A-Za-zÇĞİÖŞÜçğıöşü\s-]{2,80}$/;
+
+/**
+ * Duyuru gövdesindeki "İptal Seferler:" bölümünü satır satır hat zincirlerine
+ * ayırır. Her zincir normalize edilmiş iskele token'larıdır
+ * (örn. "Maltepe-Büyükada-Heybeliada-Burgazada-Kınalıada" →
+ *  ["maltepe","buyukada","heybeliada","burgazada","kinaliada"]).
+ * Bu bölüm yoksa boş dizi döner (eski tip duyurularda iskele/saat sezgisi kullanılır).
+ */
+export function extractCancelledRouteChains(body?: string): string[][] {
+  if (!body) return [];
+  const lines = body.split(/\n+/).map((l) => l.trim()).filter(Boolean);
+  const startIdx = lines.findIndex((l) => normalizePierName(l).startsWith("iptalseferler"));
+  if (startIdx === -1) return [];
+  const chains: string[][] = [];
+  for (const line of lines.slice(startIdx + 1)) {
+    // Liste bitti: tablo başlığı veya sayı içeren satır gelirse dur
+    if (/\d/.test(line) || !ROUTE_LINE_RE.test(line)) break;
+    const tokens = line
+      .split("-")
+      .map((t) => normalizePierName(t))
+      .filter((t) => t.length >= 3);
+    if (tokens.length >= 2) chains.push(tokens);
+  }
+  return chains;
+}
+
+/** Seferin iskele imzası: kalkış + uğraklar + varış (normalize) */
+function tripSignatureTokens(trip: (typeof OFFICIAL_SCHEDULES_DATA)[number]): string[] {
+  return [trip.origin, ...(trip.stops?.map((s) => s.name) ?? []), trip.destination]
+    .map((n) => normalizePierName(n))
+    .filter((n) => n.length >= 3);
+}
+
+/**
+ * Sefer ↔ iptal edilen hat zinciri eşleşmesi (deterministik):
+ *  - Seferin TÜM iskeleleri zincirde geçiyorsa eşleşir
+ *    (örn. Maltepe→Heybeliada ⊂ Maltepe-Büyükada-Heybeliada-Burgazada-Kınalıada)
+ *  - veya zincirin tüm iskeleleri seferin güzergâhında geçiyorsa (uçlar hizalı;
+ *    iki yön kabul) eşleşir (örn. "Üsküdar-Aşiyan" ⊂ Üsküdar→Anadolu Hisarı→Aşiyan).
+ * Kısmi/tesadüfi iskele kesişimi eşleşme SAYILMAZ (yanlış iptal işaretlenmez).
+ */
+function tripMatchesCancelledChain(
+  trip: (typeof OFFICIAL_SCHEDULES_DATA)[number],
+  chain: string[]
+): boolean {
+  const sig = tripSignatureTokens(trip);
+  if (sig.length < 2 || chain.length < 2) return false;
+  if (sig.every((t) => chain.includes(t))) return true;
+  if (chain.every((t) => sig.includes(t))) {
+    const forward = chain[0] === sig[0] && chain[chain.length - 1] === sig[sig.length - 1];
+    const reverse = chain[0] === sig[sig.length - 1] && chain[chain.length - 1] === sig[0];
+    if (forward || reverse) return true;
+  }
+  return false;
+}
+
 function pierMentions(announcement: OperatorAnnouncement): string[] {
   const text = `${announcement.title ?? ""} ${announcement.body ?? ""}`;
   const norm = normalizePierName(text);
@@ -72,6 +130,25 @@ export function matchAnnouncementToTrips(
   const candidates = OFFICIAL_SCHEDULES_DATA.filter((trip) => trip.operator === opName);
 
   if (candidates.length === 0) return [];
+
+  // ÖNCELİK: "İptal Seferler:" hat listesi varsa yalnızca hat bazlı eşleştir.
+  // (Sefer saatleri/iskeleleri tek tek sayılmadan TÜM hat iptal edilir; iskele
+  // sezgisi bu duyurularda fazla geniş eşleşir.)
+  if (announcement.type === "CANCELLATION" || announcement.type === "CANCELLED_TRIPS") {
+    const chains = extractCancelledRouteChains(announcement.body);
+    if (chains.length > 0) {
+      return candidates
+        .filter((trip) => chains.some((chain) => tripMatchesCancelledChain(trip, chain)))
+        .map((trip) => ({
+          operator: opName,
+          tripId: trip.id,
+          kind,
+          announcementTitle: announcement.title,
+          announcementId: announcement.id,
+          reason: announcement.body,
+        }));
+    }
+  }
 
   // Hiç iskele bilgisi yoksa genel duyuru: seferleri işaretlemek spekülatiftir → boş
   if (piers.length === 0) return [];

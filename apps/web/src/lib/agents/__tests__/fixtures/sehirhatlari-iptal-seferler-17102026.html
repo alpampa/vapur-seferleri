@@ -1,0 +1,845 @@
+
+
+
+<!DOCTYPE html>
+
+<html lang="tr">
+<head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><link rel="shortcut icon" href="/favicon.ico" /><style type="text/css">@font-face {font-family:'Cabin';font-style:normal;font-weight:400;src:url(/cf-fonts/s/cabin/5.2.8/latin/400/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:'Cabin';font-style:normal;font-weight:400;src:url(/cf-fonts/s/cabin/5.2.8/vietnamese/400/normal.woff2);unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB;font-display:swap;}@font-face {font-family:'Cabin';font-style:normal;font-weight:400;src:url(/cf-fonts/s/cabin/5.2.8/latin-ext/400/normal.woff2);unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:'Cabin';font-style:normal;font-weight:500;src:url(/cf-fonts/s/cabin/5.2.8/latin-ext/500/normal.woff2);unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:'Cabin';font-style:normal;font-weight:500;src:url(/cf-fonts/s/cabin/5.2.8/vietnamese/500/normal.woff2);unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB;font-display:swap;}@font-face {font-family:'Cabin';font-style:normal;font-weight:500;src:url(/cf-fonts/s/cabin/5.2.8/latin/500/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:'Cabin';font-style:normal;font-weight:600;src:url(/cf-fonts/s/cabin/5.2.8/latin/600/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:'Cabin';font-style:normal;font-weight:600;src:url(/cf-fonts/s/cabin/5.2.8/vietnamese/600/normal.woff2);unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB;font-display:swap;}@font-face {font-family:'Cabin';font-style:normal;font-weight:600;src:url(/cf-fonts/s/cabin/5.2.8/latin-ext/600/normal.woff2);unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:'Cabin';font-style:normal;font-weight:700;src:url(/cf-fonts/s/cabin/5.2.8/vietnamese/700/normal.woff2);unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB;font-display:swap;}@font-face {font-family:'Cabin';font-style:normal;font-weight:700;src:url(/cf-fonts/s/cabin/5.2.8/latin/700/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:'Cabin';font-style:normal;font-weight:700;src:url(/cf-fonts/s/cabin/5.2.8/latin-ext/700/normal.woff2);unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}</style><style type="text/css">@font-face {font-family:'Poppins';font-style:normal;font-weight:300;src:url(/cf-fonts/s/poppins/5.2.7/latin-ext/300/normal.woff2);unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:'Poppins';font-style:normal;font-weight:300;src:url(/cf-fonts/s/poppins/5.2.7/latin/300/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:'Poppins';font-style:normal;font-weight:300;src:url(/cf-fonts/s/poppins/5.2.7/devanagari/300/normal.woff2);unicode-range:U+0900-097F,U+1CD0-1CF9,U+200C-200D,U+20A8,U+20B9,U+20F0,U+25CC,U+A830-A839,U+A8E0-A8FF,U+11B00-11B09;font-display:swap;}@font-face {font-family:'Poppins';font-style:normal;font-weight:400;src:url(/cf-fonts/s/poppins/5.2.7/latin-ext/400/normal.woff2);unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:'Poppins';font-style:normal;font-weight:400;src:url(/cf-fonts/s/poppins/5.2.7/latin/400/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:'Poppins';font-style:normal;font-weight:400;src:url(/cf-fonts/s/poppins/5.2.7/devanagari/400/normal.woff2);unicode-range:U+0900-097F,U+1CD0-1CF9,U+200C-200D,U+20A8,U+20B9,U+20F0,U+25CC,U+A830-A839,U+A8E0-A8FF,U+11B00-11B09;font-display:swap;}@font-face {font-family:'Poppins';font-style:normal;font-weight:500;src:url(/cf-fonts/s/poppins/5.2.7/devanagari/500/normal.woff2);unicode-range:U+0900-097F,U+1CD0-1CF9,U+200C-200D,U+20A8,U+20B9,U+20F0,U+25CC,U+A830-A839,U+A8E0-A8FF,U+11B00-11B09;font-display:swap;}@font-face {font-family:'Poppins';font-style:normal;font-weight:500;src:url(/cf-fonts/s/poppins/5.2.7/latin/500/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:'Poppins';font-style:normal;font-weight:500;src:url(/cf-fonts/s/poppins/5.2.7/latin-ext/500/normal.woff2);unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:'Poppins';font-style:normal;font-weight:600;src:url(/cf-fonts/s/poppins/5.2.7/latin-ext/600/normal.woff2);unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:'Poppins';font-style:normal;font-weight:600;src:url(/cf-fonts/s/poppins/5.2.7/devanagari/600/normal.woff2);unicode-range:U+0900-097F,U+1CD0-1CF9,U+200C-200D,U+20A8,U+20B9,U+20F0,U+25CC,U+A830-A839,U+A8E0-A8FF,U+11B00-11B09;font-display:swap;}@font-face {font-family:'Poppins';font-style:normal;font-weight:600;src:url(/cf-fonts/s/poppins/5.2.7/latin/600/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:'Poppins';font-style:normal;font-weight:700;src:url(/cf-fonts/s/poppins/5.2.7/devanagari/700/normal.woff2);unicode-range:U+0900-097F,U+1CD0-1CF9,U+200C-200D,U+20A8,U+20B9,U+20F0,U+25CC,U+A830-A839,U+A8E0-A8FF,U+11B00-11B09;font-display:swap;}@font-face {font-family:'Poppins';font-style:normal;font-weight:700;src:url(/cf-fonts/s/poppins/5.2.7/latin-ext/700/normal.woff2);unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:'Poppins';font-style:normal;font-weight:700;src:url(/cf-fonts/s/poppins/5.2.7/latin/700/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}</style><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous" /><link rel="stylesheet" href="/Media/css/jquery.fancybox.min.css" /><link rel="stylesheet" href="/Media/css/normalize.css" /><link rel="stylesheet" href="/Media/css/nice-select.css" /><link rel="stylesheet" href="/Media/css/slick.css" /><link rel="stylesheet" href="/Media/css/main.css?v1.0.3" /><link rel="stylesheet" href="/Media/css/responsive.css?v1.0.0" /><link rel="stylesheet" href="/Media/css/jquery.scroltable.min.css?v1.1" />
+<title>İptal Seferler</title><meta name="description" content="İptal Seferler duyurusu ile ilgili detaylara buradan ulaşabilirsiniz"> 
+	
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-P7Y7XFVNGS" type="04d4b5015a73bf4ec6a9098c-text/javascript"></script>
+<script type="04d4b5015a73bf4ec6a9098c-text/javascript">
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-P7Y7XFVNGS');
+</script>
+
+
+</head>
+<body>
+    <form name="aspnetForm" method="post" action="./iptal-seferler" id="aspnetForm">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKMTYyOTk3NzkxMA8WAh4TVmFsaWRhdGVSZXF1ZXN0TW9kZQIBFgJmD2QWBGYPZBYCAg8PFgIeBFRleHQFiQE8dGl0bGU+xLBwdGFsIFNlZmVybGVyPC90aXRsZT48bWV0YSBuYW1lPSJkZXNjcmlwdGlvbiIgY29udGVudD0ixLBwdGFsIFNlZmVybGVyIGR1eXVydXN1IGlsZSBpbGdpbGkgZGV0YXlsYXJhIGJ1cmFkYW4gdWxhxZ9hYmlsaXJzaW5peiI+IGQCAQ9kFgQCBQ9kFggCAQ8WAh4HVmlzaWJsZWhkAgUPFgIfAmhkAgcPFgIfAmhkAggPFCsAAg8WBB4LXyFEYXRhQm91bmRnHgtfIUl0ZW1Db3VudAIEZGQWCGYPZBYCZg8VAiMvdHIva3VydW1zYWwvdGVyc2FuZS1oaXptZXRsZXJpLTYxNxJUZXJzYW5lIEhpem1ldGxlcmlkAgEPZBYCZg8VAiQvdHIva3VydW1zYWwva2lyYWxhbWEtaGl6bWV0bGVyaS0yMDgTS2lyYWxhbWEgSGl6bWV0bGVyaWQCAg9kFgJmDxUCIC90ci9rdXJ1bXNhbC9yZWtsYW0tYWxhbmxhcmktMjA5EFJla2xhbSBBbGFubGFyxLFkAgMPZBYCZg8VAikvdHIva3VydW1zYWwvZmlsbWRpemlyZWtsYW0tY2VraW1sZXJpLTIxMBtGaWxtL0RpemkvUmVrbGFtIMOHZWtpbWxlcmlkAgcPZBYEAgEPZBYKZg8WAh8BBQ/EsHB0YWwgU2VmZXJsZXJkAgEPFgIfAQUPxLBwdGFsIFNlZmVybGVyZAICD2QWAgIBDxYCHwEFCjE3LjEwLjIwMjZkAgMPFgIfAQXobjxwPkRlxJ9lcmxpIHlvbGN1bGFyxLFtxLF6LDwvcD4NCg0KPHA+RWx2ZXJpxZ9zaXogaGF2YSBrb8WfdWxsYXLEsSBuZWRlbml5bGUgMTcgRWtpbSAyMDI2IEN1bWFydGVzaSBnJnV1bWw7biZ1dW1sOyBhxZ9hxJ/EsWRhIGJlbGlydGlsZW4gaGF0bGFyZGFraSBzZWZlcmxlcmltaXogZ2VyJmNjZWRpbDtla2xlxZ90aXJpbGVtZXllY2VrdGlyLiZuYnNwOzwvcD4NCg0KPHA+S2FkxLFrJm91bWw7eS1LYXJhayZvdW1sO3ktRW1pbiZvdW1sO24mdXVtbDssICZVdW1sO3NrJnV1bWw7ZGFyLUthcmFrJm91bWw7eS1FbWluJm91bWw7biZ1dW1sOyB2ZSBLYWTEsWsmb3VtbDt5LUJlxZ9pa3RhxZ8gaGF0bGFyxLFtxLF6ZGEgaXNlIGlraW5jaSBiaXIgZHV5dXJ1eWEga2FkYXIgdXlndWxhbmFjYWsgc2VmZXIgdGFyaWZlbGVyaSBhxZ9hxJ/EsWRhIHllciBhbG1ha3RhZMSxci48L3A+DQoNCjxwPkJpbGdpbGVyaW5pemUgc3VuYXLEsXouPC9wPg0KDQo8cD7EsHB0YWwgU2VmZXJsZXI6Jm5ic3A7PC9wPg0KDQo8cD5Cb8SfYXogR2lkacWfLUdlbGnFnzxiciAvPg0KJlV1bWw7c2smdXVtbDtkYXItSGFsaSZjY2VkaWw7PGJyIC8+DQpBbmFkb2x1a2F2YcSfxLEtUnVtZWxpa2F2YcSfxLEtU2FyxLF5ZXI8YnIgLz4NCiZDY2VkaWw7ZW5nZWxrJm91bWw7eS1CZWJlay1LYW5sxLFjYS3EsHN0aW55ZTxiciAvPg0KRW1pbiZvdW1sO24mdXVtbDstUnVtZWxpa2F2YcSfxLE8YnIgLz4NCiZVdW1sO3NrJnV1bWw7ZGFyLUFuYWRvbHVrYXZhxJ/EsTxiciAvPg0KQWRhbGFyLUJlxZ9pa3RhxZ88YnIgLz4NCkvEsXNhIEJvxJ9heiBUdXJ1PGJyIC8+DQpVenVuIEJvxJ9heiBUdXJ1PGJyIC8+DQpLYWTEsWsmb3VtbDt5LSZVdW1sO3NrJnV1bWw7ZGFyLU9ydGFrJm91bWw7eTxiciAvPg0KxLBzdGlueWUtJkNjZWRpbDt1YnVrbHU8YnIgLz4NCkJleWtvei1TYXLEsXllcjxiciAvPg0KS2FiYXRhxZ8tS2FkxLFrJm91bWw7eTxiciAvPg0KQcWfaXlhbi1BbmFkb2x1aGlzYXLEsS1LJnV1bWw7JmNjZWRpbDsmdXVtbDtrc3U8YnIgLz4NCiZVdW1sO3NrJnV1bWw7ZGFyLUHFn2l5YW48YnIgLz4NCkJlxZ9pa3RhxZ8tSGFsaSZjY2VkaWw7PGJyIC8+DQpLYWTEsWsmb3VtbDt5LUhhbGkmY2NlZGlsOzxiciAvPg0KTWFsdGVwZS1CJnV1bWw7eSZ1dW1sO2thZGEtSGV5YmVsaWFkYS1CdXJnYXphZGEtS8SxbmFsxLFhZGE8YnIgLz4NCiZDY2VkaWw7ZW5nZWxrJm91bWw7eS1LYWJhdGHFnzxiciAvPg0KT3J0YWsmb3VtbDt5LUJlxZ9pa3RhxZ8tRW1pbiZvdW1sO24mdXVtbDs8YnIgLz4NCkJvc3RhbmPEsS1Nb2RhLUthcmFrJm91bWw7eS1LYWJhdGHFnzxiciAvPg0KVHV6bGEtUGVuZGlrLUImdXVtbDt5JnV1bWw7a2FkYTwvcD4NCg0KPHRhYmxlIGFsaWduPSJjZW50ZXIiIGJvcmRlcj0iMSIgY2VsbHBhZGRpbmc9IjAiIGNlbGxzcGFjaW5nPSIwIj4NCgk8dGhlYWQ+DQoJCTx0cj4NCgkJCTx0aCBjb2xzcGFuPSIzIiByb3dzcGFuPSIxIiBzY29wZT0iY29sIiBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+S0FESUsmT3VtbDtZLUtBUkFLJk91bWw7WS1FTcSwTiZPdW1sO04mVXVtbDsgSEFUVEk8L3RoPg0KCQk8L3RyPg0KCTwvdGhlYWQ+DQoJPHRib2R5Pg0KCQk8dHI+DQoJCQk8dGQgY29sc3Bhbj0iMyIgcm93c3Bhbj0iMSIgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjxzdHJvbmc+MTcuMTAuMjAyNiBUYXJpaGkgWWFwxLFsxLFyPC9zdHJvbmc+PC90ZD4NCgkJPC90cj4NCgkJPHRyPg0KCQkJPHRkIHN0eWxlPSJ0ZXh0LWFsaWduOiBjZW50ZXI7IHZlcnRpY2FsLWFsaWduOiBtaWRkbGU7Ij48c3Ryb25nPktBRElLJk91bWw7WTxiciAvPg0KCQkJS0FMS0nFnjwvc3Ryb25nPjwvdGQ+DQoJCQk8dGQgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjxzdHJvbmc+S0FSQUsmT3VtbDtZPGJyIC8+DQoJCQlLQUxLScWePC9zdHJvbmc+PC90ZD4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+PHN0cm9uZz5FTcSwTiZPdW1sO04mVXVtbDs8YnIgLz4NCgkJCUtBTEtJxZ48L3N0cm9uZz48L3RkPg0KCQk8L3RyPg0KCQk8dHI+DQoJCQk8dGQgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjA3OjAwPC90ZD4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+MDc6MjU8L3RkPg0KCQkJPHRkIHN0eWxlPSJ0ZXh0LWFsaWduOiBjZW50ZXI7IHZlcnRpY2FsLWFsaWduOiBtaWRkbGU7Ij4wNzozNTwvdGQ+DQoJCTwvdHI+DQoJCTx0cj4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+MDg6MDA8L3RkPg0KCQkJPHRkIHN0eWxlPSJ0ZXh0LWFsaWduOiBjZW50ZXI7IHZlcnRpY2FsLWFsaWduOiBtaWRkbGU7Ij4wODoyNTwvdGQ+DQoJCQk8dGQgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjA4OjM1PC90ZD4NCgkJPC90cj4NCgkJPHRyPg0KCQkJPHRkIHN0eWxlPSJ0ZXh0LWFsaWduOiBjZW50ZXI7IHZlcnRpY2FsLWFsaWduOiBtaWRkbGU7Ij4wOTowMDwvdGQ+DQoJCQk8dGQgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjA5OjI1PC90ZD4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+MDk6MzU8L3RkPg0KCQk8L3RyPg0KCQk8dHI+DQoJCQk8dGQgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjEwOjAwPC90ZD4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+MTA6MjU8L3RkPg0KCQkJPHRkIHN0eWxlPSJ0ZXh0LWFsaWduOiBjZW50ZXI7IHZlcnRpY2FsLWFsaWduOiBtaWRkbGU7Ij4xMDozNTwvdGQ+DQoJCTwvdHI+DQoJCTx0cj4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+MTE6MDA8L3RkPg0KCQkJPHRkIHN0eWxlPSJ0ZXh0LWFsaWduOiBjZW50ZXI7IHZlcnRpY2FsLWFsaWduOiBtaWRkbGU7Ij4xMToyNTwvdGQ+DQoJCQk8dGQgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjExOjM1PC90ZD4NCgkJPC90cj4NCgkJPHRyPg0KCQkJPHRkIHN0eWxlPSJ0ZXh0LWFsaWduOiBjZW50ZXI7IHZlcnRpY2FsLWFsaWduOiBtaWRkbGU7Ij4xMjowMDwvdGQ+DQoJCQk8dGQgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjEyOjI1PC90ZD4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+MTI6MzU8L3RkPg0KCQk8L3RyPg0KCQk8dHI+DQoJCQk8dGQgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjEzOjAwPC90ZD4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+MTM6MjU8L3RkPg0KCQkJPHRkIHN0eWxlPSJ0ZXh0LWFsaWduOiBjZW50ZXI7IHZlcnRpY2FsLWFsaWduOiBtaWRkbGU7Ij4xMzozNTwvdGQ+DQoJCTwvdHI+DQoJCTx0cj4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+MTQ6MDA8L3RkPg0KCQkJPHRkIHN0eWxlPSJ0ZXh0LWFsaWduOiBjZW50ZXI7IHZlcnRpY2FsLWFsaWduOiBtaWRkbGU7Ij4xNDoyNTwvdGQ+DQoJCQk8dGQgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjE0OjM1PC90ZD4NCgkJPC90cj4NCgkJPHRyPg0KCQkJPHRkIHN0eWxlPSJ0ZXh0LWFsaWduOiBjZW50ZXI7IHZlcnRpY2FsLWFsaWduOiBtaWRkbGU7Ij4xNTowMDwvdGQ+DQoJCQk8dGQgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjE1OjI1PC90ZD4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+MTU6MzU8L3RkPg0KCQk8L3RyPg0KCQk8dHI+DQoJCQk8dGQgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjE2OjAwPC90ZD4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+MTY6MjU8L3RkPg0KCQkJPHRkIHN0eWxlPSJ0ZXh0LWFsaWduOiBjZW50ZXI7IHZlcnRpY2FsLWFsaWduOiBtaWRkbGU7Ij4xNjozNTwvdGQ+DQoJCTwvdHI+DQoJCTx0cj4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+MTc6MDA8L3RkPg0KCQkJPHRkIHN0eWxlPSJ0ZXh0LWFsaWduOiBjZW50ZXI7IHZlcnRpY2FsLWFsaWduOiBtaWRkbGU7Ij4xNzoyNTwvdGQ+DQoJCQk8dGQgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjE3OjM1PC90ZD4NCgkJPC90cj4NCgkJPHRyPg0KCQkJPHRkIHN0eWxlPSJ0ZXh0LWFsaWduOiBjZW50ZXI7IHZlcnRpY2FsLWFsaWduOiBtaWRkbGU7Ij4xODowMDwvdGQ+DQoJCQk8dGQgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjE4OjI1PC90ZD4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+MTg6MzU8L3RkPg0KCQk8L3RyPg0KCQk8dHI+DQoJCQk8dGQgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjE5OjAwPC90ZD4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+MTk6MjU8L3RkPg0KCQkJPHRkIHN0eWxlPSJ0ZXh0LWFsaWduOiBjZW50ZXI7IHZlcnRpY2FsLWFsaWduOiBtaWRkbGU7Ij4xOTozNTwvdGQ+DQoJCTwvdHI+DQoJCTx0cj4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+MjA6MDA8L3RkPg0KCQkJPHRkIHN0eWxlPSJ0ZXh0LWFsaWduOiBjZW50ZXI7IHZlcnRpY2FsLWFsaWduOiBtaWRkbGU7Ij4yMDoyNTwvdGQ+DQoJCQk8dGQgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjIwOjM1PC90ZD4NCgkJPC90cj4NCgkJPHRyPg0KCQkJPHRkIHN0eWxlPSJ0ZXh0LWFsaWduOiBjZW50ZXI7IHZlcnRpY2FsLWFsaWduOiBtaWRkbGU7Ij4yMTowMDwvdGQ+DQoJCQk8dGQgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjIxOjMwPC90ZD4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+Jm5ic3A7PC90ZD4NCgkJPC90cj4NCgkJPHRyPg0KCQkJPHRkIHN0eWxlPSJ0ZXh0LWFsaWduOiBjZW50ZXI7IHZlcnRpY2FsLWFsaWduOiBtaWRkbGU7Ij4yMjowMDwvdGQ+DQoJCQk8dGQgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjIyOjMwPC90ZD4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+Jm5ic3A7PC90ZD4NCgkJPC90cj4NCgkJPHRyPg0KCQkJPHRkIHN0eWxlPSJ0ZXh0LWFsaWduOiBjZW50ZXI7IHZlcnRpY2FsLWFsaWduOiBtaWRkbGU7Ij4yMzowMDwvdGQ+DQoJCQk8dGQgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjIzOjMwPC90ZD4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+Jm5ic3A7PC90ZD4NCgkJPC90cj4NCgkJPHRyPg0KCQkJPHRkIHN0eWxlPSJ0ZXh0LWFsaWduOiBjZW50ZXI7IHZlcnRpY2FsLWFsaWduOiBtaWRkbGU7Ij4wMDowMDwvdGQ+DQoJCQk8dGQgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjAwOjMwPC90ZD4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+Jm5ic3A7PC90ZD4NCgkJPC90cj4NCgk8L3Rib2R5Pg0KPC90YWJsZT4NCg0KPHA+Jm5ic3A7PC9wPg0KDQo8dGFibGUgYWxpZ249ImNlbnRlciIgYm9yZGVyPSIxIiBjZWxscGFkZGluZz0iMCIgY2VsbHNwYWNpbmc9IjAiPg0KCTx0aGVhZD4NCgkJPHRyPg0KCQkJPHRoIGNvbHNwYW49IjMiIHJvd3NwYW49IjEiIHNjb3BlPSJjb2wiIHN0eWxlPSJ0ZXh0LWFsaWduOiBjZW50ZXI7IHZlcnRpY2FsLWFsaWduOiBtaWRkbGU7Ij4mVXVtbDtTSyZVdW1sO0RBUi1LQVJBSyZPdW1sO1ktRU3EsE4mT3VtbDtOJlV1bWw7IEhBVFRJPC90aD4NCgkJPC90cj4NCgk8L3RoZWFkPg0KCTx0Ym9keT4NCgkJPHRyPg0KCQkJPHRkIGNvbHNwYW49IjMiIHJvd3NwYW49IjEiIHN0eWxlPSJ0ZXh0LWFsaWduOiBjZW50ZXI7IHZlcnRpY2FsLWFsaWduOiBtaWRkbGU7Ij48c3Ryb25nPjE3LjEwLjIwMjYgVGFyaWhpIFlhcMSxbMSxcjwvc3Ryb25nPjwvdGQ+DQoJCTwvdHI+DQoJCTx0cj4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+PHN0cm9uZz4mVXVtbDtTSyZVdW1sO0RBUjxiciAvPg0KCQkJS0FMS0nFnjwvc3Ryb25nPjwvdGQ+DQoJCQk8dGQgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjxzdHJvbmc+S0FSQUsmT3VtbDtZPGJyIC8+DQoJCQlLQUxLScWePC9zdHJvbmc+PC90ZD4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+PHN0cm9uZz5FTcSwTiZPdW1sO04mVXVtbDs8YnIgLz4NCgkJCUtBTEtJxZ48L3N0cm9uZz48L3RkPg0KCQk8L3RyPg0KCQk8dHI+DQoJCQk8dGQgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjc6MDA8L3RkPg0KCQkJPHRkIHN0eWxlPSJ0ZXh0LWFsaWduOiBjZW50ZXI7IHZlcnRpY2FsLWFsaWduOiBtaWRkbGU7Ij43OjIwPC90ZD4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+NzozMDwvdGQ+DQoJCTwvdHI+DQoJCTx0cj4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+ODowMDwvdGQ+DQoJCQk8dGQgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjg6MjA8L3RkPg0KCQkJPHRkIHN0eWxlPSJ0ZXh0LWFsaWduOiBjZW50ZXI7IHZlcnRpY2FsLWFsaWduOiBtaWRkbGU7Ij44OjMwPC90ZD4NCgkJPC90cj4NCgkJPHRyPg0KCQkJPHRkIHN0eWxlPSJ0ZXh0LWFsaWduOiBjZW50ZXI7IHZlcnRpY2FsLWFsaWduOiBtaWRkbGU7Ij45OjAwPC90ZD4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+OToyMDwvdGQ+DQoJCQk8dGQgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjk6MzA8L3RkPg0KCQk8L3RyPg0KCQk8dHI+DQoJCQk8dGQgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjEwOjAwPC90ZD4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+MTA6MjA8L3RkPg0KCQkJPHRkIHN0eWxlPSJ0ZXh0LWFsaWduOiBjZW50ZXI7IHZlcnRpY2FsLWFsaWduOiBtaWRkbGU7Ij4xMDozMDwvdGQ+DQoJCTwvdHI+DQoJCTx0cj4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+MTE6MDA8L3RkPg0KCQkJPHRkIHN0eWxlPSJ0ZXh0LWFsaWduOiBjZW50ZXI7IHZlcnRpY2FsLWFsaWduOiBtaWRkbGU7Ij4xMToyMDwvdGQ+DQoJCQk8dGQgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjExOjMwPC90ZD4NCgkJPC90cj4NCgkJPHRyPg0KCQkJPHRkIHN0eWxlPSJ0ZXh0LWFsaWduOiBjZW50ZXI7IHZlcnRpY2FsLWFsaWduOiBtaWRkbGU7Ij4xMjowMDwvdGQ+DQoJCQk8dGQgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjEyOjIwPC90ZD4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+MTI6MzA8L3RkPg0KCQk8L3RyPg0KCQk8dHI+DQoJCQk8dGQgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjEzOjAwPC90ZD4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+MTM6MjA8L3RkPg0KCQkJPHRkIHN0eWxlPSJ0ZXh0LWFsaWduOiBjZW50ZXI7IHZlcnRpY2FsLWFsaWduOiBtaWRkbGU7Ij4xMzozMDwvdGQ+DQoJCTwvdHI+DQoJCTx0cj4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+MTQ6MDA8L3RkPg0KCQkJPHRkIHN0eWxlPSJ0ZXh0LWFsaWduOiBjZW50ZXI7IHZlcnRpY2FsLWFsaWduOiBtaWRkbGU7Ij4xNDoyMDwvdGQ+DQoJCQk8dGQgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjE0OjMwPC90ZD4NCgkJPC90cj4NCgkJPHRyPg0KCQkJPHRkIHN0eWxlPSJ0ZXh0LWFsaWduOiBjZW50ZXI7IHZlcnRpY2FsLWFsaWduOiBtaWRkbGU7Ij4xNTowMDwvdGQ+DQoJCQk8dGQgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjE1OjIwPC90ZD4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+MTU6MzA8L3RkPg0KCQk8L3RyPg0KCQk8dHI+DQoJCQk8dGQgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjE2OjAwPC90ZD4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+MTY6MjA8L3RkPg0KCQkJPHRkIHN0eWxlPSJ0ZXh0LWFsaWduOiBjZW50ZXI7IHZlcnRpY2FsLWFsaWduOiBtaWRkbGU7Ij4xNjozMDwvdGQ+DQoJCTwvdHI+DQoJCTx0cj4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+MTc6MDA8L3RkPg0KCQkJPHRkIHN0eWxlPSJ0ZXh0LWFsaWduOiBjZW50ZXI7IHZlcnRpY2FsLWFsaWduOiBtaWRkbGU7Ij4xNzoyMDwvdGQ+DQoJCQk8dGQgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjE3OjMwPC90ZD4NCgkJPC90cj4NCgkJPHRyPg0KCQkJPHRkIHN0eWxlPSJ0ZXh0LWFsaWduOiBjZW50ZXI7IHZlcnRpY2FsLWFsaWduOiBtaWRkbGU7Ij4xODowMDwvdGQ+DQoJCQk8dGQgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjE4OjIwPC90ZD4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+MTg6MzA8L3RkPg0KCQk8L3RyPg0KCQk8dHI+DQoJCQk8dGQgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjE5OjAwPC90ZD4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+MTk6MjA8L3RkPg0KCQkJPHRkIHN0eWxlPSJ0ZXh0LWFsaWduOiBjZW50ZXI7IHZlcnRpY2FsLWFsaWduOiBtaWRkbGU7Ij4xOTozMDwvdGQ+DQoJCTwvdHI+DQoJCTx0cj4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+MjA6MDA8L3RkPg0KCQkJPHRkIHN0eWxlPSJ0ZXh0LWFsaWduOiBjZW50ZXI7IHZlcnRpY2FsLWFsaWduOiBtaWRkbGU7Ij4yMDoyMDwvdGQ+DQoJCQk8dGQgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjIwOjMwPC90ZD4NCgkJPC90cj4NCgkJPHRyPg0KCQkJPHRkIHN0eWxlPSJ0ZXh0LWFsaWduOiBjZW50ZXI7IHZlcnRpY2FsLWFsaWduOiBtaWRkbGU7Ij4yMTowMDwvdGQ+DQoJCQk8dGQgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjIxOjIwPC90ZD4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+MjE6MzA8L3RkPg0KCQk8L3RyPg0KCQk8dHI+DQoJCQk8dGQgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjIyOjAwPC90ZD4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+MjI6MjA8L3RkPg0KCQkJPHRkIHN0eWxlPSJ0ZXh0LWFsaWduOiBjZW50ZXI7IHZlcnRpY2FsLWFsaWduOiBtaWRkbGU7Ij4yMjozMDwvdGQ+DQoJCTwvdHI+DQoJPC90Ym9keT4NCjwvdGFibGU+DQoNCjxwPiZuYnNwOzwvcD4NCg0KPHRhYmxlIGFsaWduPSJjZW50ZXIiIGJvcmRlcj0iMSIgY2VsbHBhZGRpbmc9IjAiIGNlbGxzcGFjaW5nPSIwIj4NCgk8dGhlYWQ+DQoJCTx0cj4NCgkJCTx0aCBjb2xzcGFuPSIyIiByb3dzcGFuPSIxIiBzY29wZT0iY29sIiBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+S0FESUsmT3VtbDtZLUJFxZ7EsEtUQcWeIEhBVFRJPC90aD4NCgkJPC90cj4NCgk8L3RoZWFkPg0KCTx0Ym9keT4NCgkJPHRyPg0KCQkJPHRkIGNvbHNwYW49IjIiIHJvd3NwYW49IjEiIHN0eWxlPSJ0ZXh0LWFsaWduOiBjZW50ZXI7IHZlcnRpY2FsLWFsaWduOiBtaWRkbGU7Ij48c3Ryb25nPjE3LjEwLjIwMjYgVGFyaWhpIFlhcMSxbMSxcjwvc3Ryb25nPjwvdGQ+DQoJCTwvdHI+DQoJCTx0cj4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+PHN0cm9uZz5LQURJSyZPdW1sO1k8YnIgLz4NCgkJCUtBTEtJxZ48L3N0cm9uZz48L3RkPg0KCQkJPHRkIHN0eWxlPSJ0ZXh0LWFsaWduOiBjZW50ZXI7IHZlcnRpY2FsLWFsaWduOiBtaWRkbGU7Ij48c3Ryb25nPkJFxZ7EsEtUQcWePGJyIC8+DQoJCQlLQUxLScWePC9zdHJvbmc+PC90ZD4NCgkJPC90cj4NCgkJPHRyPg0KCQkJPHRkIHN0eWxlPSJ0ZXh0LWFsaWduOiBjZW50ZXI7IHZlcnRpY2FsLWFsaWduOiBtaWRkbGU7Ij4wNzoyMDwvdGQ+DQoJCQk8dGQgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjA3OjQ1PC90ZD4NCgkJPC90cj4NCgkJPHRyPg0KCQkJPHRkIHN0eWxlPSJ0ZXh0LWFsaWduOiBjZW50ZXI7IHZlcnRpY2FsLWFsaWduOiBtaWRkbGU7Ij44OjE1PC90ZD4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+ODo0NTwvdGQ+DQoJCTwvdHI+DQoJCTx0cj4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+OToxNTwvdGQ+DQoJCQk8dGQgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjk6NDU8L3RkPg0KCQk8L3RyPg0KCQk8dHI+DQoJCQk8dGQgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjEwOjE1PC90ZD4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+MTA6NDU8L3RkPg0KCQk8L3RyPg0KCQk8dHI+DQoJCQk8dGQgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjExOjE1PC90ZD4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+MTE6NDU8L3RkPg0KCQk8L3RyPg0KCQk8dHI+DQoJCQk8dGQgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjEyOjE1PC90ZD4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+MTI6NDU8L3RkPg0KCQk8L3RyPg0KCQk8dHI+DQoJCQk8dGQgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjEzOjE1PC90ZD4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+MTM6NDU8L3RkPg0KCQk8L3RyPg0KCQk8dHI+DQoJCQk8dGQgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjE0OjE1PC90ZD4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+MTQ6NDU8L3RkPg0KCQk8L3RyPg0KCQk8dHI+DQoJCQk8dGQgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjE1OjE1PC90ZD4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+MTU6NDU8L3RkPg0KCQk8L3RyPg0KCQk8dHI+DQoJCQk8dGQgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjE2OjE1PC90ZD4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+MTY6NDU8L3RkPg0KCQk8L3RyPg0KCQk8dHI+DQoJCQk8dGQgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjE3OjE1PC90ZD4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+MTc6NDU8L3RkPg0KCQk8L3RyPg0KCQk8dHI+DQoJCQk8dGQgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjE4OjE1PC90ZD4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+MTg6NDU8L3RkPg0KCQk8L3RyPg0KCQk8dHI+DQoJCQk8dGQgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjE5OjE1PC90ZD4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+MTk6NDU8L3RkPg0KCQk8L3RyPg0KCQk8dHI+DQoJCQk8dGQgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjIwOjE1PC90ZD4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+MjA6NDU8L3RkPg0KCQk8L3RyPg0KCQk8dHI+DQoJCQk8dGQgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjIxOjE1PC90ZD4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+MjE6NDU8L3RkPg0KCQk8L3RyPg0KCQk8dHI+DQoJCQk8dGQgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjIyOjE1PC90ZD4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+MjI6NDU8L3RkPg0KCQk8L3RyPg0KCQk8dHI+DQoJCQk8dGQgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlcjsgdmVydGljYWwtYWxpZ246IG1pZGRsZTsiPjIzOjE1PC90ZD4NCgkJCTx0ZCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyB2ZXJ0aWNhbC1hbGlnbjogbWlkZGxlOyI+MjM6NDU8L3RkPg0KCQk8L3RyPg0KCTwvdGJvZHk+DQo8L3RhYmxlPmQCBA9kFgJmDxQrAAIPFgQfA2cfBAIKZGQWFGYPZBYCZg8VAkIvdHIvZHV5dXJ1bGFyLzE3MTAyMDI2LWN1bWFydGVzaS1zZWZlci1pcHRhbC12ZS1kdXplbmxlbWVsZXJpLTM4MTczMTcuMTAuMjAyNiBDdW1hcnRlc2kgU2VmZXIgxLBwdGFsIHZlIETDvHplbmxlbWVsZXJpZAIBD2QWAmYPFQI4L3RyL2R1eXVydWxhci9tYWx0ZXBlYWRhbGFyLWhhdHRpLXNlZmVyLWR1emVubGVtZXNpLTM4MTEoTWFsdGVwZS1BZGFsYXIgSGF0dMSxIFNlZmVyIETDvHplbmxlbWVzaWQCAg9kFgJmDxUCSi90ci9kdXl1cnVsYXIvMTIxMy1leWx1bC0yMDI2LXRhcmlobGktaGFsaWMtaGF0dGktc2VmZXItZHV6ZW5sZW1lbGVyaS0zODAzPDEyLTEzIEV5bMO8bCAyMDI2IFRhcmlobGkgSGFsacOnIEhhdHTEsSBTZWZlciBEw7x6ZW5sZW1lbGVyaWQCAw9kFgJmDxUCNy90ci9kdXl1cnVsYXIvc2VoaXItaGF0bGFyaS1raXMtdGFyaWZlc2luZS1nZWNpeW9yLTM3ODgrxZ5FSMSwUiBIQVRMQVJJIEtJxZ4gVEFSxLBGRVPEsE5FIEdFw4fEsFlPUmQCBA9kFgJmDxUCNS90ci9kdXl1cnVsYXIvMjMtYWd1c3Rvcy1pcHRhbC1zZWZlcmxlci1kdXl1cnVzdS0zNzgzJDIzIEHEn3VzdG9zIMSwcHRhbCBTZWZlcmxlciBEdXl1cnVzdWQCBQ9kFgJmDxUCPy90ci9kdXl1cnVsYXIvMTYtYWd1c3Rvcy0yMDI2LXNlZmVyLWR1emVubGVtZWxlcmktZHV5dXJ1c3UtMzc4MS4xNiBBxJ91c3RvcyAyMDI2IFNlZmVyIETDvHplbmxlbWVsZXJpIER1eXVydXN1ZAIGD2QWAmYPFQI1L3RyL2R1eXVydWxhci9tZWh0YXAtdHVydS1iaWxnaWxlbmRpcm1lLWR1eXVydXN1LTM3NzkiTWVodGFwIFR1cnUgQmlsZ2lsZW5kaXJtZSBEdXl1cnVzdWQCBw9kFgJmDxUCOi90ci9kdXl1cnVsYXIvMjYtdGVtbXV6LTIwMjYtYWRhbGFyYm9zdGFuY2ktZWstc2VmZXJpLTM3NzcpMjYgVGVtbXV6IDIwMjYgQWRhbGFyLUJvc3RhbmPEsSBFayBTZWZlcmlkAggPZBYCZg8VAnMvdHIvZHV5dXJ1bGFyL2JlbGJpbS0lRTIlODAlOTMtZW5nZWxsaS1pc3RhbmJ1bGthcnQta3VsbGFuaWNpbGFyaW5pbi11Y3JldHNpei1nZWNpcy1oYWtraS1kb2dydWxhbWFzaS1oYWtraW5kYS0zNzcwZkJlbGJpbSDigJMgRW5nZWxsaSDEsHN0YW5idWxrYXJ0IEt1bGxhbsSxY8SxbGFyxLFuxLFuIMOcY3JldHNpeiBHZcOnacWfIEhha2vEsSBEb8SfcnVsYW1hc8SxIEhha2vEsW5kYWQCCQ9kFgJmDxUCNC90ci9kdXl1cnVsYXIvMjQtaGF6aXJhbi0yMDI2LWVrLXNlZmVyLWR1eXVydXN1LTM3NjkhMjQgSGF6aXJhbiAyMDI2IEVrIFNlZmVyIER1eXVydXN1ZAIDD2QWAgIDDxYCHwJoFgJmDxQrAAIPFgQfA2cfBAIEZGQWCGYPZBYCZg8VAikvdHIva3VydW1zYWwvZmlsbWRpemlyZWtsYW0tY2VraW1sZXJpLTIxMBtGaWxtL0RpemkvUmVrbGFtIMOHZWtpbWxlcmlkAgEPZBYCZg8VAiAvdHIva3VydW1zYWwvcmVrbGFtLWFsYW5sYXJpLTIwORBSZWtsYW0gQWxhbmxhcsSxZAICD2QWAmYPFQIkL3RyL2t1cnVtc2FsL2tpcmFsYW1hLWhpem1ldGxlcmktMjA4E0tpcmFsYW1hIEhpem1ldGxlcmlkAgMPZBYCZg8VAiMvdHIva3VydW1zYWwvdGVyc2FuZS1oaXptZXRsZXJpLTYxNxJUZXJzYW5lIEhpem1ldGxlcmlkGAMFHWN0bDAwJEZvb3RlciRsdndLdXJ1bXNhbFNhdGlzDxQrAA5kZGRkZGRkPCsABAACBGRkZGYC/////w9kBStjdGwwMCRDb250ZW50UGxhY2VIb2xkZXIxJGx2d0RpZ2VyRHV5dXJ1bGFyDxQrAA5kZGRkZGRkPCsACgACCmRkZGYC/////w9kBRZjdGwwMCRsdndLdXJ1bXNhbFNhdGlzDxQrAA5kZGRkZGRkPCsABAACBGRkZGYC/////w9ktJd7UDWW/UZZL4yJbeWvfmWq/Kc=" />
+
+
+<script src="/ScriptResource.axd?d=_2VGbejau-U2aOSd0De33uoFzCcknf74yBSY3Hgeh82fiZlJegtCp5corqdvDXvbMDRdYhKpfXyZu4QqkA99V2cpEfjuXgL5wJYDYuk4PGnoxKO-GcH7QbsI-ncaTkmBgkN4zw2&amp;t=f2cd5c5" type="04d4b5015a73bf4ec6a9098c-text/javascript"></script>
+<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="ECE2CC7D" />
+        
+        <div id="ctl00_Cookie_ctl00">
+	
+        <div id="ctl00_Cookie_DivCookie" class="cookie-content">
+            <div class="cookie-box">
+                <div class="cookie-box-left">
+                    İnternet sitemizi ziyaretiniz sırasında paylaşacağınız kişisel verileriniz, 6698 sayılı Kişisel Verilerin Korunması Kanunu kapsamında işlenmektedir. Detaylı bilgi için <a href='/tr/kurumsal/gizlilik-ve-cerez-politikasi-744' target='_blank'>Gizlilik ve Çerez Politikamızı</a> inceleyebilirsiniz. 
+                </div>
+                <div class="cookie-box-right">
+                    <a id="ctl00_Cookie_btnCerezler" class="cookie-link" href="javascript:__doPostBack(&#39;ctl00$Cookie$btnCerezler&#39;,&#39;&#39;)">Kabul Et</a>
+                </div>
+            </div>
+        </div>
+    
+</div>
+        <div id="ctl00_TopNav" class="top-nav-detail position-fixed">
+            <div class="navbar-menu">
+                <nav class="navbar navbar-default">
+                    <div class="container-fluid">
+                        <div class="navbar-header">
+                            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-menu" aria-hidden="true">
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                            <div class="menu-language-list responsive-menu-language">
+                                <ul>
+                                    <li ><a aria-label="English" href="/en">EN</a></li>
+                                    <li><span>|</span></li>
+                                    <li class="active"><a aria-label="Türkçe" >TR</a></li>
+                                </ul>
+                            </div>
+                            <a class="navbar-brand" href="/tr">
+                                <img src="/Media/img/sehir_logo.png" alt="Anasayfa"
+                                    class="img-responsive"></a>
+                        </div>
+                        <div class="collapse navbar-collapse" id="navbar-menu">
+                            <ul class="nav navbar-nav">
+                                <li class="dropdown">
+                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Hakkımızda</a>
+                                    <ul class="dropdown-menu animation slideUpIn">
+                                        
+                                            <li><a href="/tr/kurumsal/sehir-hatlari-616">Şehir Hatları</a></li>
+                                            <li><a href="/tr/kurumsal/baskanin-mesaji-720">Başkanın Mesajı</a></li>
+                                            
+                                            <li><a href="/tr/kurumsal/vizyon-ve-degerler-217">Vizyon ve Değerler</a></li>
+                                            <li style="display:none"><a href="/tr/sosyal-sorumluluk">Sosyal Sorumluluk</a></li>
+                                            <li><a href="/tr/kurumsal/yonetim-sistemleri-politikasi-364">Yönetim Sistemleri Politikası</a></li>
+                                            <li><a href="/tr/kurumsal/kvkk-aydinlatma-metni-839">KVKK Aydınlatma Metni</a></li>
+                                        
+                                        
+                                        
+                                    </ul>
+                                </li>
+                                <li class="dropdown">
+                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Seferlerimiz</a>
+                                    <ul class="dropdown-menu animation slideUpIn">
+
+                                        <li><a href="/tr/seferler/ic-hatlar">İç Hat Seferleri</a></li>
+                                       
+                                        <li><a class="category-link" href="/tr/seferler/bogaz-turlari">Boğaz Turları</a></li>
+                                        <li><a href="/tr/ucret-tarifeleri">Ücret Tarifeleri</a></li>
+                                        <li><a target="_blank" href="https://files.sehirhatlari.istanbul/Sefer-Haritasi-Line-Map.pdf">Sefer Haritası</a></li>
+
+                                    </ul>
+                                </li>
+
+                                <li class="dropdown">
+                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Bilgiler</a>
+                                    <ul class="dropdown-menu animation slideUpIn">
+
+                                        <li id="ctl00_ihaleDuyurulari"><a class="dropdown-item" href="/tr/ihale-duyurulari">İhale Duyuruları</a></li>
+                                        
+                                        <li id="ctl00_EngelliTR"><a class="dropdown-item" href="/tr/bilgiler/engelli-yolcularimiz-icin-186">Engelli Yolcularımız İçin</a></li>
+                                        
+
+                                        <li id="ctl00_TanitimFilmi"><a class="dropdown-item" href="/tr/bilgiler/tanitim-filmi-618">Tanıtım Filmi</a></li>
+                                        
+                                        
+                                        <li><a class="dropdown-item" href="/tr/sikca-sorulan-sorular">Sıkça Sorulan Sorular</a></li>
+                                        
+                                    </ul>
+                                </li>
+                                <li class="dropdown">
+                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Kurumsal Satış</a>
+                                    <ul class="dropdown-menu animation slideUpIn">
+                                        
+                                                <li><a href="/tr/kurumsal/tersane-hizmetleri-617">Tersane Hizmetleri</a></li>
+                                            
+                                                <li><a href="/tr/kurumsal/kiralama-hizmetleri-208">Kiralama Hizmetleri</a></li>
+                                            
+                                                <li><a href="/tr/kurumsal/reklam-alanlari-209">Reklam Alanları</a></li>
+                                            
+                                                <li><a href="/tr/kurumsal/filmdizireklam-cekimleri-210">Film/Dizi/Reklam Çekimleri</a></li>
+                                            
+                                    </ul>
+                                </li>
+                                <li class="dropdown">
+                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">İletişim</a>
+                                    <ul class="dropdown-menu animation slideUpIn">
+                                        <li><a class="dropdown-item" href="/tr/iletisim" aria-label="İletişim">İletişim</a></li>
+                                        <li id="ctl00_BilgiEdinme"><a href="/tr/bilgi-edinme-formu" aria-label="Bilgi Edinme Formu">Bilgi Edinme Formu</a></li>
+                                        <li id="ctl00_Kariyer"><a target="_blank" href="https://kariyer.ibb.istanbul/" aria-label="Kariyer">Kariyer</a></li>
+                                        <li id="ctl00_StajBasvurusu"><a target="_blank" href="https://kariyer.ibb.istanbul/" aria-label="Staj Başvurusu">Staj Başvurusu</a></li>
+                                        <li><a href="/tr/basvuru-kanallari" aria-label="Başvuru Kanalları">Başvuru Kanalları</a></li>
+                                    </ul>
+                                </li>
+
+                            </ul>
+                            <div class="menu-top-header">
+                                <div class="menu-social-list">
+                                    <ul>
+                                        <li><a href="https://twitter.com/sehir_hatlari" title="Twitter">
+                                            <svg height="50px" version="1.1" viewBox="0 0 50 50" width="50px" xmlns="http://www.w3.org/2000/svg"
+                                                xmlns:sketch="http://www.bohemiancoding.com/sketch/ns"
+                                                xmlns:xlink="http://www.w3.org/1999/xlink">
+                                                <title />
+                                                <defs />
+                                                <g fill="none" fill-rule="evenodd" id="Page-1" stroke="none" stroke-width="1">
+                                                    <g fill="#000000" id="Twitter">
+                                                        <path d="M25,50 C38.8071194,50 50,38.8071194 50,25 C50,11.1928806 38.8071194,0 25,0 C11.1928806,0 0,11.1928806 0,25 C0,38.8071194 11.1928806,50 25,50 Z M25,47 C37.1502651,47 47,37.1502651 47,25 C47,12.8497349 37.1502651,3 25,3 C12.8497349,3 3,12.8497349 3,25 C3,37.1502651 12.8497349,47 25,47 Z M24.6822554,20.5542975 L24.729944,21.3761011 L23.9351333,21.2754721 C21.0420225,20.8897275 18.5145246,19.5815504 16.3685358,17.3844837 L15.3193857,16.2943361 L15.0491501,17.0993681 C14.4768864,18.8939188 14.8424993,20.7890985 16.0347153,22.0637326 C16.6705638,22.7681357 16.5274979,22.8687647 15.4306592,22.4494772 C15.0491501,22.3153051 14.7153296,22.2146761 14.6835371,22.2649907 C14.5722637,22.3823912 14.9537728,23.9085978 15.2558008,24.5123719 C15.6691024,25.350947 16.5116017,26.1727505 17.433582,26.6591241 L18.2124965,27.0448686 L17.2905161,27.0616401 C16.4003282,27.0616401 16.3685358,27.0784116 16.4639131,27.4306131 C16.7818374,28.5207608 18.0376382,29.6779944 19.436505,30.1811394 L20.4220701,30.533341 L19.5636746,31.070029 C18.2919776,31.8415181 16.7977335,32.2775772 15.3034895,32.3111202 C14.5881599,32.3278916 14,32.3949776 14,32.4452922 C14,32.6130071 15.939338,33.5522113 17.0679692,33.9211843 C20.4538626,35.0113319 24.4756046,34.5417298 27.4958851,32.6800932 C29.6418739,31.3551445 31.7878628,28.7220188 32.7893242,26.1727505 C33.3297954,24.8142589 33.8702667,22.3320767 33.8702667,21.1413 C33.8702667,20.369811 33.9179553,20.269182 34.8081432,19.3467494 C35.3327183,18.8100613 35.8255009,18.2230588 35.9208782,18.0553437 C36.0798403,17.7366852 36.0639442,17.7366852 35.2532373,18.0218007 C33.9020591,18.5249458 33.7113045,18.4578598 34.3789455,17.7031422 C34.8717281,17.1664541 35.459888,16.1937071 35.459888,15.9085915 C35.459888,15.858277 35.2214448,15.9421346 34.9512092,16.093078 C34.6650773,16.2607931 34.0292288,16.5123656 33.5523424,16.6633091 L32.6939469,16.9484246 L31.9150324,16.394965 C31.4858346,16.093078 30.8817786,15.757648 30.5638543,15.657019 C29.7531474,15.422218 28.5132428,15.455761 27.7820169,15.724105 C25.7949903,16.4788226 24.5391894,18.4243168 24.6822554,20.5542975 C24.6822554,20.5542975 24.5391894,18.4243168 24.6822554,20.5542975 Z M24.6822554,20.5542975"
+                                                            id="Oval-1" />
+                                                    </g>
+                                                </g>
+                                            </svg>
+                                        </a></li>
+                                        <li><a href="https://www.facebook.com/sehirhatlari" title="Facebook">
+                                            <svg height="50px" version="1.1" viewBox="0 0 50 50" width="50px" xmlns="http://www.w3.org/2000/svg"
+                                                xmlns:sketch="http://www.bohemiancoding.com/sketch/ns"
+                                                xmlns:xlink="http://www.w3.org/1999/xlink">
+                                                <title />
+                                                <defs />
+                                                <g fill="none" fill-rule="evenodd" id="Page-1" stroke="none" stroke-width="1">
+                                                    <g fill="#000000" id="Facebook">
+                                                        <path d="M25,50 C38.8071194,50 50,38.8071194 50,25 C50,11.1928806 38.8071194,0 25,0 C11.1928806,0 0,11.1928806 0,25 C0,38.8071194 11.1928806,50 25,50 Z M25,47 C37.1502651,47 47,37.1502651 47,25 C47,12.8497349 37.1502651,3 25,3 C12.8497349,3 3,12.8497349 3,25 C3,37.1502651 12.8497349,47 25,47 Z M26.8145197,36 L26.8145197,24.998712 L30.0687449,24.998712 L30.5,21.2076072 L26.8145197,21.2076072 L26.8200486,19.3101227 C26.8200486,18.3213442 26.9207209,17.7915341 28.4425538,17.7915341 L30.4769629,17.7915341 L30.4769629,14 L27.2222769,14 C23.3128757,14 21.9368678,15.8390937 21.9368678,18.9318709 L21.9368678,21.2080366 L19.5,21.2080366 L19.5,24.9991413 L21.9368678,24.9991413 L21.9368678,36 L26.8145197,36 Z M26.8145197,36"
+                                                            id="Oval-1" />
+                                                    </g>
+                                                </g>
+                                            </svg>
+                                        </a></li>
+                                        <li><a href="https://www.instagram.com/sehir_hatlari/" title="Instagram">
+                                            <svg height="50px" version="1.1" viewBox="0 0 50 50" width="50px" xmlns="http://www.w3.org/2000/svg"
+                                                xmlns:sketch="http://www.bohemiancoding.com/sketch/ns"
+                                                xmlns:xlink="http://www.w3.org/1999/xlink">
+                                                <title />
+                                                <defs />
+                                                <g fill="none" fill-rule="evenodd" id="Page-1" stroke="none" stroke-width="1">
+                                                    <g fill="#000000" id="Intsagram">
+                                                        <path d="M25,0 C11.1928806,0 0,11.1928806 0,25 C0,38.8071194 11.1928806,50 25,50 C38.8071194,50 50,38.8071194 50,25 C50,11.1928806 38.8071194,0 25,0 Z M25,3 C12.8497349,3 3,12.8497349 3,25 C3,37.1502651 12.8497349,47 25,47 C37.1502651,47 47,37.1502651 47,25 C47,12.8497349 37.1502651,3 25,3 Z M35.9513128,34.5096659 C35.9701595,34.4075385 35.9839804,34.3037693 36,34.2013135 L36,15.7986865 C35.9846086,15.6978726 35.9714159,15.5967304 35.9525693,15.496245 C35.7600194,14.4654483 34.9467868,13.6655054 33.9482288,13.5226585 C33.9067662,13.517076 33.8662459,13.5075528 33.8254116,13.5 L16.1745884,13.5 C16.0681049,13.5200314 15.9609932,13.5351371 15.8560802,13.5600942 C14.8813947,13.7922616 14.1601965,14.6128926 14.0213595,15.6453312 C14.0157055,15.6883495 14.0072245,15.7310394 14,15.7740577 L14,34.2269275 C14.0201031,34.3438321 14.0361227,34.4617219 14.0612516,34.5779697 C14.2767315,35.5742861 15.0902783,36.3466448 16.0580534,36.4766848 C16.1048559,36.4825957 16.1519725,36.4921188 16.198775,36.5 L33.801225,36.5 C33.9155613,36.4796402 34.0302117,36.4628926 34.1432916,36.4372787 C35.0416482,36.2379497 35.775725,35.454426 35.9513128,34.5096659 Z M16.380331,33.0989292 C16.380331,33.5885494 16.7858479,34.0095374 17.254187,34.0095374 C22.4169106,34.0098658 27.5793201,34.0098658 32.7420437,34.0095374 C33.2147803,34.0095374 33.6180985,33.5892062 33.6180985,33.0959737 C33.6184126,29.6962164 33.6180985,26.2967875 33.6180985,22.8973587 L33.6180985,22.8267561 L31.5179543,22.8267561 C31.8144748,23.81749 31.9055669,24.8252998 31.7893459,25.8524843 C31.6724968,26.8799971 31.3558732,27.8362507 30.8401034,28.7192747 C30.3240195,29.6032838 29.6549637,30.3355797 28.8357629,30.9184609 C26.7123745,32.4303398 23.9167892,32.5633352 21.6636731,31.2412621 C20.5247077,30.5736579 19.6304345,29.6426899 19.0069247,28.4431039 C18.0768429,26.653084 17.9282685,24.7744003 18.4738788,22.8251142 C17.7771813,22.825771 17.0833107,22.825771 16.3800168,22.825771 L16.3800168,22.8878355 C16.3800168,26.2915334 16.3797027,29.6952313 16.380331,33.0989292 Z M24.897757,29.6581239 C27.3886549,29.7139492 29.403361,27.6333095 29.4558175,25.1027841 C29.5095304,22.4931182 27.4960808,20.3376071 25.0001571,20.339249 C22.5601451,20.3376071 20.5765359,22.3900057 20.5422979,24.9293975 C20.5071175,27.5370931 22.5039192,29.604269 24.897757,29.6581239 Z M33.6177844,18.481582 C33.6180985,17.7555254 33.6180985,17.0291405 33.6177844,16.303084 C33.6177844,15.7822673 33.2235754,15.3678469 32.7260241,15.3675186 C32.03341,15.3671902 31.3407958,15.3668618 30.6478676,15.3675186 C30.1515727,15.3681753 29.7561073,15.7835808 29.7557932,16.3043975 C29.7554791,17.0242147 29.7535944,17.744032 29.7583061,18.4641776 C29.7589343,18.5715591 29.7784092,18.6832096 29.8110767,18.7850086 C29.9354645,19.1682324 30.2712489,19.4033552 30.6824198,19.4053255 C31.0166336,19.4059823 31.3508474,19.4049971 31.6853753,19.4049971 C32.0472308,19.4007282 32.4103428,19.4079526 32.7725125,19.3987579 C33.2383386,19.3866077 33.6177844,18.9692319 33.6177844,18.481582 Z M33.6177844,18.481582"
+                                                            id="Oval-1" />
+                                                    </g>
+                                                </g>
+                                            </svg>
+                                        </a></li>
+                                        <li><a href="https://www.youtube.com/user/sehirhatlari1" title="Youtube">
+                                            <svg height="50px" version="1.1" viewBox="0 0 50 50" width="50px" xmlns="http://www.w3.org/2000/svg"
+                                                xmlns:sketch="http://www.bohemiancoding.com/sketch/ns"
+                                                xmlns:xlink="http://www.w3.org/1999/xlink">
+                                                <title />
+                                                <defs />
+                                                <g fill="none" fill-rule="evenodd" id="Page-1" stroke="none" stroke-width="1">
+                                                    <g fill="#000000" id="YouTube">
+                                                        <path d="M50,25 C50,11.1928806 38.8071194,0 25,0 C11.1928806,0 0,11.1928806 0,25 C0,38.8071194 11.1928806,50 25,50 C38.8071194,50 50,38.8071194 50,25 Z M47,25 C47,12.8497349 37.1502651,3 25,3 C12.8497349,3 3,12.8497349 3,25 C3,37.1502651 12.8497349,47 25,47 C37.1502651,47 47,37.1502651 47,25 Z M36.768327,30.7654774 C36.4698281,32.0627028 35.4087162,33.0191862 34.1319129,33.1618614 C31.1074781,33.4998058 28.0463955,33.5014844 24.9984613,33.4998058 C21.9508068,33.5014844 18.8894444,33.4998058 15.8652894,33.1618614 C14.5882064,33.0191862 13.5276539,32.0627028 13.2294348,30.7654774 C12.8047662,28.9179732 12.8047662,26.9020564 12.8047662,25.0002798 C12.8047662,23.0982233 12.8098018,21.0820268 13.2341906,19.2345226 C13.5326895,17.9372972 14.5932419,16.980534 15.8700452,16.8381386 C18.89448,16.5001942 21.9555627,16.4985156 25.0034969,16.5001942 C28.0511513,16.4985156 31.1125137,16.5001942 34.1366687,16.8381386 C35.4137518,16.980534 36.4748637,17.9372972 36.7730829,19.2345226 C37.1977514,21.0820268 37.1952336,23.0982233 37.1952336,25.0002798 C37.1952336,26.9020564 37.1927158,28.9179732 36.768327,30.7654774 Z M22.8047662,20.5 L29.5547662,24.3971143 L22.8047662,28.2942286 L22.8047662,20.5 Z M22.8047662,20.5"
+                                                            id="Oval-1" />
+                                                    </g>
+                                                </g>
+                                            </svg>
+                                        </a></li>
+                                    </ul>
+                                </div>
+                                <div class="menu-language-list">
+                                    <ul>
+                                        <li ><a aria-label="İngilizce" href="/en">EN</a></li>
+                                        <li><span>|</span></li>
+                                        <li class="active"><a aria-label="Türkçe" >TR</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+
+            </div>
+        </div>
+        <div id="ctl00_BoxFix" class="box-fix">
+            
+    <div class="page-detail-header">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="w1440">
+                    <h1 tabindex="0">Duyurular </h1>
+                    <ul class="back-to-page-link">
+                        <li><a href="#" onclick="if (!window.__cfRLUnblockHandlers) return false; window.history.go(-1); return false;" data-cf-modified-04d4b5015a73bf4ec6a9098c-=""><i class="icon-32 arrow-left-icon"></i>Geri Dön</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="breadcrumb">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="w1440">
+                    <ul>
+                        <li><a href="/tr">Anasayfa</a></li>
+                        <li aria-hidden="true"><span>|</span></li>
+                        <li><a href="/tr/duyurular">Duyurular</a></li>
+                        <li><span aria-hidden="true">|</span></li>
+                        <li class="active"><span>
+                            İptal Seferler</span></li>
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="about-us w1440 notice-detail-content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="page-text-font-navigation">
+                        <h2 aria-hidden="true">
+                            İptal Seferler</h2>
+                        <ul class="accessibility-text-list">
+                            <li><a href="#" aria-label="Yazı Küçült Buton" id="textSmallWhite" class="resizeText">A-</a></li>
+                            <li><a href="#" aria-label="Yazı Normal Buton" id="textDefualtWhite" class="resizeText">A</a></li>
+                            <li><a href="#" aria-label="Yazı Büyült Buton" id="textBigWhite" class="resizeText">A+</a></li>
+                        </ul>
+                    </div>
+                    <div class="about-us-content news-detail-content social-responsibility-text notice-detail-text-content">
+                        
+                        <p class="news-detail-date">
+                            17.10.2026
+                        </p>
+                        <p>
+                            <p>Değerli yolcularımız,</p>
+
+<p>Elverişsiz hava koşulları nedeniyle 17 Ekim 2026 Cumartesi g&uuml;n&uuml; aşağıda belirtilen hatlardaki seferlerimiz ger&ccedil;ekleştirilemeyecektir.&nbsp;</p>
+
+<p>Kadık&ouml;y-Karak&ouml;y-Emin&ouml;n&uuml;, &Uuml;sk&uuml;dar-Karak&ouml;y-Emin&ouml;n&uuml; ve Kadık&ouml;y-Beşiktaş hatlarımızda ise ikinci bir duyuruya kadar uygulanacak sefer tarifeleri aşağıda yer almaktadır.</p>
+
+<p>Bilgilerinize sunarız.</p>
+
+<p>İptal Seferler:&nbsp;</p>
+
+<p>Boğaz Gidiş-Geliş<br />
+&Uuml;sk&uuml;dar-Hali&ccedil;<br />
+Anadolukavağı-Rumelikavağı-Sarıyer<br />
+&Ccedil;engelk&ouml;y-Bebek-Kanlıca-İstinye<br />
+Emin&ouml;n&uuml;-Rumelikavağı<br />
+&Uuml;sk&uuml;dar-Anadolukavağı<br />
+Adalar-Beşiktaş<br />
+Kısa Boğaz Turu<br />
+Uzun Boğaz Turu<br />
+Kadık&ouml;y-&Uuml;sk&uuml;dar-Ortak&ouml;y<br />
+İstinye-&Ccedil;ubuklu<br />
+Beykoz-Sarıyer<br />
+Kabataş-Kadık&ouml;y<br />
+Aşiyan-Anadoluhisarı-K&uuml;&ccedil;&uuml;ksu<br />
+&Uuml;sk&uuml;dar-Aşiyan<br />
+Beşiktaş-Hali&ccedil;<br />
+Kadık&ouml;y-Hali&ccedil;<br />
+Maltepe-B&uuml;y&uuml;kada-Heybeliada-Burgazada-Kınalıada<br />
+&Ccedil;engelk&ouml;y-Kabataş<br />
+Ortak&ouml;y-Beşiktaş-Emin&ouml;n&uuml;<br />
+Bostancı-Moda-Karak&ouml;y-Kabataş<br />
+Tuzla-Pendik-B&uuml;y&uuml;kada</p>
+
+<table align="center" border="1" cellpadding="0" cellspacing="0">
+	<thead>
+		<tr>
+			<th colspan="3" rowspan="1" scope="col" style="text-align: center; vertical-align: middle;">KADIK&Ouml;Y-KARAK&Ouml;Y-EMİN&Ouml;N&Uuml; HATTI</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td colspan="3" rowspan="1" style="text-align: center; vertical-align: middle;"><strong>17.10.2026 Tarihi Yapılır</strong></td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;"><strong>KADIK&Ouml;Y<br />
+			KALKIŞ</strong></td>
+			<td style="text-align: center; vertical-align: middle;"><strong>KARAK&Ouml;Y<br />
+			KALKIŞ</strong></td>
+			<td style="text-align: center; vertical-align: middle;"><strong>EMİN&Ouml;N&Uuml;<br />
+			KALKIŞ</strong></td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">07:00</td>
+			<td style="text-align: center; vertical-align: middle;">07:25</td>
+			<td style="text-align: center; vertical-align: middle;">07:35</td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">08:00</td>
+			<td style="text-align: center; vertical-align: middle;">08:25</td>
+			<td style="text-align: center; vertical-align: middle;">08:35</td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">09:00</td>
+			<td style="text-align: center; vertical-align: middle;">09:25</td>
+			<td style="text-align: center; vertical-align: middle;">09:35</td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">10:00</td>
+			<td style="text-align: center; vertical-align: middle;">10:25</td>
+			<td style="text-align: center; vertical-align: middle;">10:35</td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">11:00</td>
+			<td style="text-align: center; vertical-align: middle;">11:25</td>
+			<td style="text-align: center; vertical-align: middle;">11:35</td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">12:00</td>
+			<td style="text-align: center; vertical-align: middle;">12:25</td>
+			<td style="text-align: center; vertical-align: middle;">12:35</td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">13:00</td>
+			<td style="text-align: center; vertical-align: middle;">13:25</td>
+			<td style="text-align: center; vertical-align: middle;">13:35</td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">14:00</td>
+			<td style="text-align: center; vertical-align: middle;">14:25</td>
+			<td style="text-align: center; vertical-align: middle;">14:35</td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">15:00</td>
+			<td style="text-align: center; vertical-align: middle;">15:25</td>
+			<td style="text-align: center; vertical-align: middle;">15:35</td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">16:00</td>
+			<td style="text-align: center; vertical-align: middle;">16:25</td>
+			<td style="text-align: center; vertical-align: middle;">16:35</td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">17:00</td>
+			<td style="text-align: center; vertical-align: middle;">17:25</td>
+			<td style="text-align: center; vertical-align: middle;">17:35</td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">18:00</td>
+			<td style="text-align: center; vertical-align: middle;">18:25</td>
+			<td style="text-align: center; vertical-align: middle;">18:35</td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">19:00</td>
+			<td style="text-align: center; vertical-align: middle;">19:25</td>
+			<td style="text-align: center; vertical-align: middle;">19:35</td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">20:00</td>
+			<td style="text-align: center; vertical-align: middle;">20:25</td>
+			<td style="text-align: center; vertical-align: middle;">20:35</td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">21:00</td>
+			<td style="text-align: center; vertical-align: middle;">21:30</td>
+			<td style="text-align: center; vertical-align: middle;">&nbsp;</td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">22:00</td>
+			<td style="text-align: center; vertical-align: middle;">22:30</td>
+			<td style="text-align: center; vertical-align: middle;">&nbsp;</td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">23:00</td>
+			<td style="text-align: center; vertical-align: middle;">23:30</td>
+			<td style="text-align: center; vertical-align: middle;">&nbsp;</td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">00:00</td>
+			<td style="text-align: center; vertical-align: middle;">00:30</td>
+			<td style="text-align: center; vertical-align: middle;">&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>&nbsp;</p>
+
+<table align="center" border="1" cellpadding="0" cellspacing="0">
+	<thead>
+		<tr>
+			<th colspan="3" rowspan="1" scope="col" style="text-align: center; vertical-align: middle;">&Uuml;SK&Uuml;DAR-KARAK&Ouml;Y-EMİN&Ouml;N&Uuml; HATTI</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td colspan="3" rowspan="1" style="text-align: center; vertical-align: middle;"><strong>17.10.2026 Tarihi Yapılır</strong></td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;"><strong>&Uuml;SK&Uuml;DAR<br />
+			KALKIŞ</strong></td>
+			<td style="text-align: center; vertical-align: middle;"><strong>KARAK&Ouml;Y<br />
+			KALKIŞ</strong></td>
+			<td style="text-align: center; vertical-align: middle;"><strong>EMİN&Ouml;N&Uuml;<br />
+			KALKIŞ</strong></td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">7:00</td>
+			<td style="text-align: center; vertical-align: middle;">7:20</td>
+			<td style="text-align: center; vertical-align: middle;">7:30</td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">8:00</td>
+			<td style="text-align: center; vertical-align: middle;">8:20</td>
+			<td style="text-align: center; vertical-align: middle;">8:30</td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">9:00</td>
+			<td style="text-align: center; vertical-align: middle;">9:20</td>
+			<td style="text-align: center; vertical-align: middle;">9:30</td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">10:00</td>
+			<td style="text-align: center; vertical-align: middle;">10:20</td>
+			<td style="text-align: center; vertical-align: middle;">10:30</td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">11:00</td>
+			<td style="text-align: center; vertical-align: middle;">11:20</td>
+			<td style="text-align: center; vertical-align: middle;">11:30</td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">12:00</td>
+			<td style="text-align: center; vertical-align: middle;">12:20</td>
+			<td style="text-align: center; vertical-align: middle;">12:30</td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">13:00</td>
+			<td style="text-align: center; vertical-align: middle;">13:20</td>
+			<td style="text-align: center; vertical-align: middle;">13:30</td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">14:00</td>
+			<td style="text-align: center; vertical-align: middle;">14:20</td>
+			<td style="text-align: center; vertical-align: middle;">14:30</td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">15:00</td>
+			<td style="text-align: center; vertical-align: middle;">15:20</td>
+			<td style="text-align: center; vertical-align: middle;">15:30</td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">16:00</td>
+			<td style="text-align: center; vertical-align: middle;">16:20</td>
+			<td style="text-align: center; vertical-align: middle;">16:30</td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">17:00</td>
+			<td style="text-align: center; vertical-align: middle;">17:20</td>
+			<td style="text-align: center; vertical-align: middle;">17:30</td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">18:00</td>
+			<td style="text-align: center; vertical-align: middle;">18:20</td>
+			<td style="text-align: center; vertical-align: middle;">18:30</td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">19:00</td>
+			<td style="text-align: center; vertical-align: middle;">19:20</td>
+			<td style="text-align: center; vertical-align: middle;">19:30</td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">20:00</td>
+			<td style="text-align: center; vertical-align: middle;">20:20</td>
+			<td style="text-align: center; vertical-align: middle;">20:30</td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">21:00</td>
+			<td style="text-align: center; vertical-align: middle;">21:20</td>
+			<td style="text-align: center; vertical-align: middle;">21:30</td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">22:00</td>
+			<td style="text-align: center; vertical-align: middle;">22:20</td>
+			<td style="text-align: center; vertical-align: middle;">22:30</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>&nbsp;</p>
+
+<table align="center" border="1" cellpadding="0" cellspacing="0">
+	<thead>
+		<tr>
+			<th colspan="2" rowspan="1" scope="col" style="text-align: center; vertical-align: middle;">KADIK&Ouml;Y-BEŞİKTAŞ HATTI</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td colspan="2" rowspan="1" style="text-align: center; vertical-align: middle;"><strong>17.10.2026 Tarihi Yapılır</strong></td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;"><strong>KADIK&Ouml;Y<br />
+			KALKIŞ</strong></td>
+			<td style="text-align: center; vertical-align: middle;"><strong>BEŞİKTAŞ<br />
+			KALKIŞ</strong></td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">07:20</td>
+			<td style="text-align: center; vertical-align: middle;">07:45</td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">8:15</td>
+			<td style="text-align: center; vertical-align: middle;">8:45</td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">9:15</td>
+			<td style="text-align: center; vertical-align: middle;">9:45</td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">10:15</td>
+			<td style="text-align: center; vertical-align: middle;">10:45</td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">11:15</td>
+			<td style="text-align: center; vertical-align: middle;">11:45</td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">12:15</td>
+			<td style="text-align: center; vertical-align: middle;">12:45</td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">13:15</td>
+			<td style="text-align: center; vertical-align: middle;">13:45</td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">14:15</td>
+			<td style="text-align: center; vertical-align: middle;">14:45</td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">15:15</td>
+			<td style="text-align: center; vertical-align: middle;">15:45</td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">16:15</td>
+			<td style="text-align: center; vertical-align: middle;">16:45</td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">17:15</td>
+			<td style="text-align: center; vertical-align: middle;">17:45</td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">18:15</td>
+			<td style="text-align: center; vertical-align: middle;">18:45</td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">19:15</td>
+			<td style="text-align: center; vertical-align: middle;">19:45</td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">20:15</td>
+			<td style="text-align: center; vertical-align: middle;">20:45</td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">21:15</td>
+			<td style="text-align: center; vertical-align: middle;">21:45</td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">22:15</td>
+			<td style="text-align: center; vertical-align: middle;">22:45</td>
+		</tr>
+		<tr>
+			<td style="text-align: center; vertical-align: middle;">23:15</td>
+			<td style="text-align: center; vertical-align: middle;">23:45</td>
+		</tr>
+	</tbody>
+</table>
+                        </p>
+                        
+                        
+                        
+                    </div>
+                    <div id="ctl00_ContentPlaceHolder1_DivTumDuyurular" class="other-social-responsibilty-list">
+                        <h2>Diğer Duyurular</h2>
+                        <ul>
+                            
+                                    <li><a href="/tr/duyurular/17102026-cumartesi-sefer-iptal-ve-duzenlemeleri-3817">17.10.2026 Cumartesi Sefer İptal ve Düzenlemeleri</a></li>
+                                
+                                    <li><a href="/tr/duyurular/maltepeadalar-hatti-sefer-duzenlemesi-3811">Maltepe-Adalar Hattı Sefer Düzenlemesi</a></li>
+                                
+                                    <li><a href="/tr/duyurular/1213-eylul-2026-tarihli-halic-hatti-sefer-duzenlemeleri-3803">12-13 Eylül 2026 Tarihli Haliç Hattı Sefer Düzenlemeleri</a></li>
+                                
+                                    <li><a href="/tr/duyurular/sehir-hatlari-kis-tarifesine-geciyor-3788">ŞEHİR HATLARI KIŞ TARİFESİNE GEÇİYOR</a></li>
+                                
+                                    <li><a href="/tr/duyurular/23-agustos-iptal-seferler-duyurusu-3783">23 Ağustos İptal Seferler Duyurusu</a></li>
+                                
+                                    <li><a href="/tr/duyurular/16-agustos-2026-sefer-duzenlemeleri-duyurusu-3781">16 Ağustos 2026 Sefer Düzenlemeleri Duyurusu</a></li>
+                                
+                                    <li><a href="/tr/duyurular/mehtap-turu-bilgilendirme-duyurusu-3779">Mehtap Turu Bilgilendirme Duyurusu</a></li>
+                                
+                                    <li><a href="/tr/duyurular/26-temmuz-2026-adalarbostanci-ek-seferi-3777">26 Temmuz 2026 Adalar-Bostancı Ek Seferi</a></li>
+                                
+                                    <li><a href="/tr/duyurular/belbim-%E2%80%93-engelli-istanbulkart-kullanicilarinin-ucretsiz-gecis-hakki-dogrulamasi-hakkinda-3770">Belbim – Engelli İstanbulkart Kullanıcılarının Ücretsiz Geçiş Hakkı Doğrulaması Hakkında</a></li>
+                                
+                                    <li><a href="/tr/duyurular/24-haziran-2026-ek-sefer-duyurusu-3769">24 Haziran 2026 Ek Sefer Duyurusu</a></li>
+                                
+                            <li><a href="/tr/duyurular">Tüm Duyurular &gt;&gt;</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+            ﻿<div id="ctl00_Footer_DivTR" class="footer">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12 text-center">
+                <div class="footer-9">
+                    <div class="footer-logo-list">
+                        <div class="ibb-tv-footer-banner">
+                            <a href="https://www.ibb.istanbul" target="_blank">
+                                <img src="/Media/img/ibb-logo-siyah.png" class="img-responsive" alt="İBB Logo"></a>
+                        </div>
+                    </div>
+                    <div class="footer-logo-list">
+                        <div class="desk">
+                        </div>
+                    </div>
+                    <div class="footer-logo-list">
+                        <div class="tv-logo">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-1">
+                    <ul class="col-sm-12 footer-list">
+                        <li class="headText">
+                            <h2>Hakkımızda</h2>
+                        </li>
+                        <li><a href="/tr/kurumsal/sehir-hatlari-616" aria-label="Şehir Hatları">Şehir Hatları</a></li>
+                        
+                        <li><a href="/tr/kurumsal/baskanin-mesaji-720" aria-label="Başkanın Mesajı">Başkanın Mesajı</a></li>
+                        
+                        <li><a href="/tr/kurumsal/vizyon-ve-degerler-217" aria-label="Vizyon ve Değerler">Vizyon ve Değerler</a></li>
+                        <li style="display:none"><a href="/tr/sosyal-sorumluluk" aria-label="Sosyal Sorumluluk">Sosyal Sorumluluk</a></li>
+                        <li><a href="/tr/kurumsal/yonetim-sistemleri-politikasi-364" aria-label="Yönetim Sistem Politikası">Yönetim Sistemleri Politikası</a></li>
+                        
+                        
+                        
+                        <li><a href="/tr/kurumsal/kvkk-aydinlatma-metni-839" aria-label="KVKK Aydınlatma Metni">KVKK Aydınlatma Metni</a></li>
+                        
+                    </ul>
+                </div>
+                <div class="footer-2">
+                    <ul class="col-sm-12 footer-list">
+                        <li class="headText">
+                            <h2>Seferlerimiz</h2>
+                        </li>
+                        <li><a href="/tr/seferler/ic-hatlar" aria-label="İç Hat Seferleri">İç Hat Seferleri</a></li>
+                        <li><a href="/tr/seferler/bogaz-turlari" aria-label="Boğaz Turları">Boğaz Turları</a></li>
+                        <li><a href="/tr/ucret-tarifeleri" aria-label="Ucret Tarifesi">Ücret Tarifeleri</a></li>
+						<li><a href="https://files.sehirhatlari.istanbul/Sefer-Haritasi-Line-Map.pdf" aria-label="Sefer Haritası">Sefer Haritası</a></li>
+
+                    </ul>
+                </div>
+                <div class="footer-3">
+                    <ul class="col-sm-12 footer-list">
+                        <li class="headText">
+                            <h2>Bilgiler</h2>
+                        </li>
+                        <li><a href="/tr/ihale-duyurulari" aria-label="İhale Duyuruları">İhale Duyuruları</a></li>
+                        <li><a href="https://www.belgemodul.com/sirket/428" target="_blank" aria-label="Bilgi Toplumu Hizmetleri">Bilgi Toplumu Hizmetleri</a></li>
+                        <li><a href="/tr/bilgiler/engelli-yolcularimiz-icin-186" aria-label="Engelli Yolcularımız İçin">Engelli Yolcularımız İçin</a></li>
+                        <li><a href="/tr/bilgiler/tanitim-filmi-618" aria-label="Tanıtım Filmi">Tanıtım Filmi</a></li>
+                        
+                        <li><a href="/tr/sikca-sorulan-sorular" aria-label="Sıkça Sorulan Sorular">Sıkça Sorulan Sorular</a></li>
+                        
+                        
+                        
+                    </ul>
+                </div>
+                <div class="footer-10">
+                    <ul>
+                        <li class="headText">
+                            <h2>Kurumsal Satış</h2>
+                        </li>
+                        <li><a href="/tr/kurumsal/tersane-hizmetleri-617" aria-label="Tersane Hizmetleri">Tersane Hizmetleri</a></li>
+                        <li><a href="/tr/kurumsal/kiralama-hizmetleri-208" aria-label="Kiralama Hizmetleri">Kiralama Hizmetleri</a></li>
+                        <li><a href="/tr/kurumsal/reklam-hizmetleri-209" aria-label="Reklam Hizmetleri">Reklam Hizmetleri</a></li>
+                        <li><a href="/tr/kurumsal/filmdizireklam-cekimleri-210" aria-label="Film / Dizi / Reklam Çekimleri">Film / Dizi / Reklam Çekimleri</a></li>
+                    </ul>
+                </div>
+                <div class="footer-4">
+                    <ul class="footer-5">
+                        <li class="headText">
+                            <h2>İletişim</h2>
+                        </li>
+                        <li><a href="/tr/iletisim" aria-label="İletişim">İletişim</a></li>
+                        <li><a href="/tr/bilgi-edinme-formu" aria-label="Bilgi Edinme Formu">Bilgi Edinme Formu</a></li>
+                        <li><a target="_blank" href="https://kariyer.ibb.istanbul/" aria-label="Kariyer">Kariyer</a></li>
+                        <li><a target="_blank" href="https://kariyer.ibb.istanbul/" aria-label="Staj Başvurusu">Staj Başvurusu</a></li>
+                        <li><a href="/tr/basvuru-kanallari" aria-label="Başvuru Kanalları">Başvuru Kanalları</a></li>
+                    </ul>
+                    <div class="footer-6">
+                        <div class="footer-7 block-footer">
+                            <a class="footer-appstore" href="https://itunes.apple.com/tr/app/%C5%9Fehir-hatlar%C4%B1/id783673371?l=tr&mt=8" target="_blank" aria-label="App Store Uygulaması">
+                                <i class="appstore-png"></i>
+                            </a>
+                        </div>
+                        <div class="footer-7 block-footer">
+                            <a class="footer-google-play" href="https://play.google.com/store/apps/details?id=com.spexco.flexcoder2.sehirhatlari.activities&hl=tr" target="_blank" aria-label="Google Play Uygulaması">
+                                <i class="google-play-png"></i>
+                            </a>
+                        </div>
+                        <div class="footer-8">
+                            <ul id="ctl00_Footer_DivSosyalMedya2" class="footer-social-list">
+                                <li><a href="https://www.facebook.com/sehirhatlari" target="_blank" aria-label="Facebook"><i class="social-icon facebook"></i></a></li>
+                                <li><a href="https://www.instagram.com/sehir_hatlari/" target="_blank" aria-label="Instagram"><i class="social-icon instagram"></i>
+                                </a></li>
+                                <li><a href="https://twitter.com/sehir_hatlari" target="_blank" aria-label="Twitter"><i class="social-icon twitter"></i>
+                                </a></li>
+                                <li><a href="https://www.youtube.com/user/sehirhatlari1" target="_blank" aria-label="Youtube"><i class="social-icon youtube"></i>
+                                </a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 footer-right-bottom-content">
+            <div class="col-sm-12 footer-baca">
+                <p>
+                     Copyright © 2025. İstanbul Şehir Hatları Turizm San. ve Tic. A.Ş | Tüm Hakları Saklıdır.
+                    
+                </p>
+                <div class="sehir-hatlari-logo-content">
+                    <!-- <a title="sehirhatlari.istanbul" href="http://sehirhatlari.istanbul/" target="_blank"></a> -->
+                        <sehirhatlari  class="sehir-hatlari-logo" alt="sehirhatlari.istanbul" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+        </div>
+    </form>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" type="04d4b5015a73bf4ec6a9098c-text/javascript"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous" type="04d4b5015a73bf4ec6a9098c-text/javascript"></script>
+    <script src="/Media/js/jquery.touchSwipe.min.js" type="04d4b5015a73bf4ec6a9098c-text/javascript"></script>
+    <script src="/Media/js/jquery.nice-select.min.js" type="04d4b5015a73bf4ec6a9098c-text/javascript"></script>
+    <script src="/Media/js/jquery.fancybox.js" type="04d4b5015a73bf4ec6a9098c-text/javascript"></script>
+    <script src="/Media/js/slick.min.js" type="04d4b5015a73bf4ec6a9098c-text/javascript"></script>
+    <script src="/Media/js/main.js" type="04d4b5015a73bf4ec6a9098c-text/javascript"></script>
+    <script src="/Media/js/modernizr.custom.js" type="04d4b5015a73bf4ec6a9098c-text/javascript"></script>
+	<script src="/Media/js/jquery.scroltable.min.js?v1.1" type="04d4b5015a73bf4ec6a9098c-text/javascript"></script>
+
+    <script type="04d4b5015a73bf4ec6a9098c-text/javascript">
+        $(document).ready(function () {
+            $(".landing-slider").slick({
+                autoplay: true,
+                autoplaySpeed: 8000,
+            });
+            $(".notice-content-carousel").slick({
+                autoplay: true,
+                autoplaySpeed: 8000,
+                accessibility: true,
+                pauseOnFocus: false,
+                pauseOnHover: false,
+                prevArrow: '<a class="left carousel-control"><span class="icon-48 arrow-left-icon"></span></a>',
+                nextArrow: '<a class="right carousel-control"><span class="icon-48 arrow-right-icon"></span></a>',
+            });
+            $(".tariff-content-carousel").slick({
+                autoplay: true,
+                autoplaySpeed: 8000,
+                accessibility: true,
+                pauseOnFocus: false,
+                pauseOnHover: false,
+                prevArrow: '<a class="left carousel-control"><span class="icon-48 arrow-left-icon"></span></a>',
+                nextArrow: '<a class="right carousel-control"><span class="icon-48 arrow-right-icon"></span></a>',
+            });
+            $(".city-gallery-content-carousel").slick({
+                autoplay: true,
+                autoplaySpeed: 8000,
+                pauseOnFocus: false,
+                pauseOnHover: false,
+                prevArrow: '<a class="left carousel-control"><span class="icon-48 arrow-left-icon"></span></a>',
+                nextArrow: '<a class="right carousel-control"><span class="icon-48 arrow-right-icon"></span></a>',
+            });
+        });
+    </script>
+    <!--<script>-->
+    <!--$(document).ready(function () {-->
+    <!--$('select').niceSelect();-->
+    <!--});-->
+    <!--</script>-->
+    <script type="04d4b5015a73bf4ec6a9098c-text/javascript">
+        $(document).ready(function () {
+            $(".responsive-collapse-content-button a").click(function () {
+                if ($('#responsive-landing-area-content').hasClass('in')) {
+                    $(".box-fix-index").css("top", "490px");
+                } else {
+                    // $(".box-fix-index").delay(1000).css("top", "0");
+                    $('.box-fix-index')
+                        .delay(300)
+                        .queue(function (next) {
+                            $(this).css("top", "0");
+                            next();
+                        });
+                }
+            });
+        });
+    </script>
+    <script type="04d4b5015a73bf4ec6a9098c-text/javascript">
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
+    
+    
+
+<script src="/cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min.js" data-cf-settings="04d4b5015a73bf4ec6a9098c-|49" defer></script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4bde3ce69aa0e9c',t:'MTc5MjIyNTI4Nw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

@@ -6,13 +6,16 @@ import {
   parseSehirHatlariAnnouncements,
   parseDenturAnnouncements,
   classifyAnnouncement,
+  extractArticleBodyText,
 } from "@/lib/agents/announcements-agent";
 import {
   matchAnnouncementToTrips,
   matchAnnouncementsToTrips,
   indexDisruptionsByTrip,
+  extractCancelledRouteChains,
 } from "@/lib/agents/announcement-trip-matcher";
 import { compareSnapshots, computeFingerprint, buildSnapshotState } from "@/lib/agents/scraper-agent";
+import { OFFICIAL_SCHEDULES_DATA } from "@/lib/data/official-schedules";
 import type { OperatorAnnouncement } from "@/lib/types/announcement";
 
 function fixture(name: string): string {
@@ -41,6 +44,79 @@ describe("Şehir Hatları duyuru ajanı (fixture)", () => {
     expect(halic).toBeTruthy();
     expect(halic?.sourceUrl).toContain("/tr/duyurular/");
     expect(halic?.sourceVerified).toBe(true);
+  });
+});
+
+describe("Şehir Hatları YENİ iptal formatı (17.10.2026 fixture — gerçek sayfa)", () => {
+  const html = fixture("sehirhatlari-iptal-seferler-17102026.html");
+
+  it("sayfa içine gömülü iptal duyurusunu (yeni format) durum olarak çözer", () => {
+    const status = parseSehirHatlariCancellationStatus(html);
+    expect(status.date).toBe("17.10.2026");
+    expect(status.hasCancellations).toBe(true);
+    expect(status.statement).toContain("gerçekleştirilemeyecektir");
+    expect(status.statement).toContain("Tuzla-Pendik-Büyükada");
+    // Tablo (düzenleme çizelgesi) gövdeye karışmamalı
+    expect(status.statement).not.toContain("Tarihi Yapılır");
+    expect(status.statement).not.toContain("<");
+  });
+
+  it("gövde çıkarıcı HTML kurdelelerini ve entity'leri temizler", () => {
+    const body = extractArticleBodyText(html);
+    expect(body).toContain("Değerli yolcularımız");
+    expect(body).toContain("İptal Seferler:");
+    expect(body).toContain("Adalar-Beşiktaş");
+    expect(body).not.toMatch(/<[a-z]/i);
+    expect(body).not.toContain("&uuml;");
+  });
+
+  it("durum kaydı CANCELLED_TRIPS olur; aynı günün liste kopyası MÜKERRER gösterilmez", () => {
+    const announcements = parseSehirHatlariAnnouncements(html);
+    const statusItem = announcements[0];
+    expect(statusItem.type).toBe("CANCELLED_TRIPS");
+    expect(statusItem.title).toContain("17.10.2026");
+    expect(statusItem.body).toContain("Adalar-Beşiktaş");
+    const duplicate = announcements.find(
+      (a) => a.title === "17.10.2026 Cumartesi Sefer İptal ve Düzenlemeleri"
+    );
+    expect(duplicate).toBeUndefined();
+  });
+
+  it("iptal hat listesi zincirlere ayrılır", () => {
+    const body = extractArticleBodyText(html);
+    const chains = extractCancelledRouteChains(body);
+    expect(chains.length).toBeGreaterThan(15);
+    expect(chains).toContainEqual(["adalar", "besiktas"]);
+    expect(chains).toContainEqual(["tuzla", "pendik", "buyukada"]);
+  });
+
+  it("KULLANICI KURALI: iptal edilen ADALAR hatları kartlarda CANCELLED olur, çalışan hat olmaz", () => {
+    const statusItem = parseSehirHatlariAnnouncements(html)[0];
+    const disruptions = matchAnnouncementToTrips(statusItem);
+    expect(disruptions.length).toBeGreaterThan(20);
+    expect(disruptions.every((d) => d.kind === "CANCELLED")).toBe(true);
+    expect(disruptions.every((d) => d.operator === "Şehir Hatları")).toBe(true);
+
+    // Maltepe-Büyükada-Heybeliada-Burgazada-Kınalıada hattı iptal → eşleşir
+    const maltepe = OFFICIAL_SCHEDULES_DATA.find(
+      (t) => t.operator === "Şehir Hatları" && t.origin === "Maltepe" && t.destination === "Heybeliada"
+    );
+    expect(maltepe).toBeTruthy();
+    expect(disruptions.some((d) => d.tripId === maltepe!.id)).toBe(true);
+
+    // Tuzla-Pendik-Büyükada hattı iptal → eşleşir
+    const tuzla = OFFICIAL_SCHEDULES_DATA.find(
+      (t) => t.operator === "Şehir Hatları" && t.origin === "Tuzla" && t.destination === "Büyükada"
+    );
+    expect(tuzla).toBeTruthy();
+    expect(disruptions.some((d) => d.tripId === tuzla!.id)).toBe(true);
+
+    // Kabataş-Büyükada hattı iptal LİSTESİNDE DEĞİL → işaretlenmemeli (yanlış iptal yok)
+    const kabatas = OFFICIAL_SCHEDULES_DATA.find(
+      (t) => t.operator === "Şehir Hatları" && t.origin === "Kabataş" && t.destination === "Büyükada"
+    );
+    expect(kabatas).toBeTruthy();
+    expect(disruptions.some((d) => d.tripId === kabatas!.id)).toBe(false);
   });
 });
 
