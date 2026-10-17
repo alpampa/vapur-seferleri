@@ -242,7 +242,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
         const disruption = disruptionByTrip.get(s.id);
         const overlaySchedule =
           disruption === "CANCELLED"
-            ? { ...s, status: "CANCELLED" as const, delayText: s.delayText || "İptal (resmi duyuru)" }
+            ? { ...s, status: "CANCELLED" as const, delayText: s.delayText || "İptal" }
             : s;
         const dyn = resolveDynamicTrip(
           overlaySchedule.origin,
@@ -804,8 +804,8 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
               <span>İPTAL SEFERLER</span>
             </div>
             
-            {/* KULLANICI KURALI: İptal seferler TEK SATIRDA kesintisiz akar (marquee) —
-                asla gizlenemez, satıra sığmadığında otomatik kayar. */}
+            {/* KULLANICI KURALI: TÜM firmaların iptalleri tek satırda akar — her chip
+                firma adıyla etiketlenir; asla gizlenemez, satıra sığmazsa otomatik kayar. */}
             <MarqueeTicker
               speedPxPerSec={60}
               ariaLabel="İptal edilen seferler"
@@ -813,9 +813,12 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
             >
               {cancelledTrips.map(({ schedule, dyn }, idx) => (
                 <span key={idx} className="inline-flex items-center gap-1.5 bg-black/20 px-2 py-0.5 rounded-md">
+                  <span className="bg-white/15 px-1.5 py-px rounded text-[9.5px] font-black tracking-wide uppercase">
+                    {schedule.operator}
+                  </span>
                   <span>🔴 {schedule.origin} ➔ {schedule.destination}</span>
                   <span className="font-mono">{dyn.currentDepartureTime}</span>
-                  <span className="text-amber-200">/ İPTAL ({schedule.delayText || "Lodos / Fırtına"})</span>
+                  <span className="text-amber-200">İPTAL</span>
                 </span>
               ))}
             </MarqueeTicker>

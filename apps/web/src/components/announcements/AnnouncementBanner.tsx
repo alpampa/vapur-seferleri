@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { AlertTriangle, Megaphone, ExternalLink, ChevronRight, ChevronLeft } from "lucide-react";
+import { AlertTriangle, Megaphone, Info, ChevronRight, ChevronLeft } from "lucide-react";
 import { OperatorLogo } from "@/components/ui/OperatorLogo";
 import { MarqueeTicker } from "@/components/ui/MarqueeTicker";
+import { AnnouncementDetailSheet } from "@/components/announcements/AnnouncementDetailSheet";
 import type { OperatorAnnouncement } from "@/lib/types/announcement";
 import { isAnnouncementCurrent } from "@/lib/utils/announcement-filter";
 
@@ -31,6 +32,9 @@ const TYPE_META: Record<
  */
 export function AnnouncementBanner({ announcements, className = "" }: AnnouncementBannerProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
+  // KULLANICI KURALI: Detay UYGULAMA İÇİNDE açılır (dış siteye yönlendirme YOK).
+  // Açıkken rotasyon donar; pencere kayan metinle birlikte değişmez.
+  const [detailItem, setDetailItem] = useState<OperatorAnnouncement | null>(null);
 
   // KULLANICI KURALI: Duyuru bandında YALNIZCA doğrulanmış, güncel ve gerçek İPTAL seferleri gösterilir.
   // Tarife değişimi, mehtap turu, genel bilgilendirme vb. haberler kesinlikle gösterilmez.
@@ -51,14 +55,15 @@ export function AnnouncementBanner({ announcements, className = "" }: Announceme
   );
 
   // Otomatik Rotasyon: Metinler kısaysa 4.5 saniyede bir sonraki duyuruya geç.
+  // Detay penceresi açıkken rotasyon durur (okunan duyuru altından kaymaz).
   // (Hook kuralı: Erken return'den ÖNCE çağrılmalı)
   useEffect(() => {
-    if (activeList.length <= 1 || hasLongText) return;
+    if (activeList.length <= 1 || hasLongText || detailItem) return;
     const timer = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % activeList.length);
     }, 4500);
     return () => clearInterval(timer);
-  }, [activeList.length, hasLongText]);
+  }, [activeList.length, hasLongText, detailItem]);
 
   if (activeList.length === 0) return null;
 
@@ -74,7 +79,8 @@ export function AnnouncementBanner({ announcements, className = "" }: Announceme
   };
 
   return (
-    <div className={`px-3 pt-1.5 animate-fadeIn ${className}`} role="region" aria-label="Firma duyuruları">
+    <>
+      <div className={`px-3 pt-1.5 animate-fadeIn ${className}`} role="region" aria-label="Firma duyuruları">
       <div
         className={`rounded-xl border px-2.5 py-1.5 shadow-2xs flex items-center justify-between gap-2 transition-all ${
           hasCancellation
@@ -102,22 +108,22 @@ export function AnnouncementBanner({ announcements, className = "" }: Announceme
           </span>
         </div>
 
-        {/* Orta: TEK SATIR KAYAN duyuru metni (iptal açıklaması harfiyen akar, asla kesilmez) */}
+        {/* Orta: TEK SATIR KAYAN duyuru metni — tıklanınca detay UYGULAMA İÇİNDE açılır */}
         <div className="min-w-0 flex-1 flex items-center gap-1.5 text-xs">
           <OperatorLogo operator={currentItem.operator} size="sm" showName={false} />
           <MarqueeTicker speedPxPerSec={55}>
-            <a
-              href={currentItem.sourceUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`font-semibold text-[11px] leading-tight hover:underline inline-flex items-center gap-1.5 min-h-10 ${
+            <button
+              type="button"
+              onClick={() => setDetailItem(currentItem)}
+              aria-label="Duyuru detayını aç"
+              className={`font-semibold text-[11px] leading-tight hover:underline inline-flex items-center gap-1 min-h-10 cursor-pointer text-left ${
                 tone === "danger"
                   ? "text-rose-700 dark:text-rose-300 font-bold"
                   : "text-slate-800 dark:text-slate-200"
               }`}
               title={`${currentItem.title} ${currentItem.body ? `- ${currentItem.body}` : ""}`}
             >
-              {/* İptal durumunda doğrudan resmi açıklama cümlesini yaz */}
+              {/* İptal durumunda doğrudan açıklama cümlesini yaz */}
               {hasCancellation && currentItem.body ? (
                 <span className="text-rose-700 dark:text-rose-200 font-extrabold">
                   {currentItem.body}
@@ -132,8 +138,8 @@ export function AnnouncementBanner({ announcements, className = "" }: Announceme
                   )}
                 </>
               )}
-              <ExternalLink size={9} className="shrink-0 opacity-60 ml-0.5" />
-            </a>
+              <Info size={10} className="shrink-0 opacity-60 ml-0.5" aria-hidden />
+            </button>
           </MarqueeTicker>
         </div>
 
@@ -167,5 +173,13 @@ export function AnnouncementBanner({ announcements, className = "" }: Announceme
         </div>
       </div>
     </div>
+
+      {/* UYGULAMA İÇİ duyuru detayı — dış siteye yönlendirme yapılmaz */}
+      <AnnouncementDetailSheet
+        announcement={detailItem}
+        isOpen={detailItem !== null}
+        onClose={() => setDetailItem(null)}
+      />
+    </>
   );
 }
