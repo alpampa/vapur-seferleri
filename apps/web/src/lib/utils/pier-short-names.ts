@@ -32,6 +32,9 @@ export function pierShortName(name: string): string {
   const trimmed = name.trim();
   const mapped = PIER_SHORT_NAMES[trimmed];
   if (mapped) return mapped;
+  // Ring/tur seferi: "Adalar Ring (Bostancı)" → ilk üç harf ("Ada") yanıltıcı;
+  // hedef net anlaşılsın diye "Ring" yazılır.
+  if (/ring/i.test(trimmed)) return "Ring";
   if (Array.from(trimmed).length <= 3) return trimmed;
   return Array.from(trimmed).slice(0, 3).join("");
 }
