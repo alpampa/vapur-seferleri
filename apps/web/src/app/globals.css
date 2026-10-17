@@ -375,3 +375,27 @@ button, a, input, select {
 html.text-scale-lg {
   font-size: 112.5%;
 }
+
+/* ==========================================================================
+   KAYAN YAZI (MARQUEE) — İptal seferler ve kritik duyurular TEK SATIRDA akar.
+   Süre, içerik genişliğine göre MarqueeTicker tarafından --marquee-duration
+   değişkeniyle verilir. Akış, içerik kapsayıcıya sığmadığında devreye girer.
+   ========================================================================== */
+@keyframes marquee-flow {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee-flow var(--marquee-duration, 60s) linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee:hover,
+.animate-marquee:focus-within {
+  animation-play-state: paused;
+}

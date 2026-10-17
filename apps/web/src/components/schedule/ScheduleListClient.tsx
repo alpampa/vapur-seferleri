@@ -24,6 +24,7 @@ import { useAnnouncements } from "@/hooks/useAnnouncements";
 import { useAnnouncementStore } from "@/store/useAnnouncementStore";
 import { AnnouncementBanner } from "@/components/announcements/AnnouncementBanner";
 import { ScheduleToolsSheet } from "@/components/schedule/ScheduleToolsSheet";
+import { MarqueeTicker } from "@/components/ui/MarqueeTicker";
 import { LastFerrySafeguardBanner } from "@/components/schedule/LastFerrySafeguardBanner";
 import { ServiceDataTrustBar } from "@/components/trust/ServiceDataTrustBar";
 import type { SourceFreshnessMeta } from "@/components/trust/ServiceDataTrustBar";
@@ -320,7 +321,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
     }
 
     return Array.from(dedupMap.values());
-  }, [effectiveSchedules, selectedCategory, selectedOrigin, searchQuery, now, serverTimeIso]);
+  }, [effectiveSchedules, selectedCategory, selectedOrigin, searchQuery, now, serverTimeIso, disruptionByTrip]);
 
   const uniqueOperators = useMemo(() => {
     return OPERATOR_REGISTRY
@@ -803,7 +804,13 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
               <span>İPTAL SEFERLER</span>
             </div>
             
-            <div className="overflow-x-auto whitespace-nowrap hide-scrollbar flex items-center gap-4 text-xs font-bold">
+            {/* KULLANICI KURALI: İptal seferler TEK SATIRDA kesintisiz akar (marquee) —
+                asla gizlenemez, satıra sığmadığında otomatik kayar. */}
+            <MarqueeTicker
+              speedPxPerSec={60}
+              ariaLabel="İptal edilen seferler"
+              className="text-xs font-bold text-white"
+            >
               {cancelledTrips.map(({ schedule, dyn }, idx) => (
                 <span key={idx} className="inline-flex items-center gap-1.5 bg-black/20 px-2 py-0.5 rounded-md">
                   <span>🔴 {schedule.origin} ➔ {schedule.destination}</span>
@@ -811,7 +818,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
                   <span className="text-amber-200">/ İPTAL ({schedule.delayText || "Lodos / Fırtına"})</span>
                 </span>
               ))}
-            </div>
+            </MarqueeTicker>
           </div>
         </div>
       )}
