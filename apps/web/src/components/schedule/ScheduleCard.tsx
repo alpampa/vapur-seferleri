@@ -87,14 +87,22 @@ export function ScheduleCard(props: ScheduleCardProps) {
     return null;
   }
 
-  // KULLANICI KURALI (Yanıltma Yasağı): Üst satırda "ŞU ANKİ durak ➔ SON durak"
-  // tam isimlerle yazılır. Sefer henüz kalkmamışken ring/tur adı ("Adalar Ring
-  // (Bostancı)") olduğu gibi kalır; seyir başlayınca ring adı yerine gerçek son
-  // durak yazılır (örn. "Kınalıada ➔ Bostancı") — kimse yanlış iskelede beklemez.
+  // KULLANICI KURALI (Ring seferleri): Kalkış iskelesinden kalkarken
+  // "Bostancı ➔ Bostancı (Ring)" yazılır — yolcu ilk kalkışta ring olduğunu
+  // görsün. Seyir başlayınca yalnız "şu anki durak ➔ kalkış iskelesi" (örn.
+  // "Büyükada ➔ Bostancı") yazılır; ring adı artık gereksiz (alt şerit zaten
+  // adaları ve dönüşü gösteriyor). Yanıltma yasağı: mid-voyage asla ilk kalkış
+  // iskelesi "şu anki durak" gibi gösterilmez.
+  const ringOriginMatch = props.destination.match(/ring\s*\(([^)]+)\)/i);
+  const ringOrigin = ringOriginMatch ? ringOriginMatch[1].trim() : null;
+  const isRing = Boolean(ringOrigin);
   const isUnderway = dynState.currentOrigin.trim() !== props.origin.trim();
-  const ringDestMatch = dynState.destination.match(/ring\s*\(([^)]+)\)/i);
   const routeDestinationDisplay =
-    isUnderway && ringDestMatch ? ringDestMatch[1].trim() : dynState.destination;
+    isUnderway && ringOrigin
+      ? ringOrigin
+      : !isUnderway && ringOrigin
+      ? `${props.origin} (Ring)`
+      : dynState.destination;
 
   const destTransit = getPierTransit(dynState.destination);
   const primaryTransit = destTransit[0];
