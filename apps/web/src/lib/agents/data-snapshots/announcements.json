@@ -1,17 +1,17 @@
 {
-  "generatedAt": "2026-10-17T08:22:41.359Z",
+  "generatedAt": "2026-10-17T08:29:09.987Z",
   "failures": [],
   "sources": [
     {
       "operator": "Şehir Hatları",
-      "fetchedAt": "2026-10-17T08:22:40.545Z",
+      "fetchedAt": "2026-10-17T08:29:08.988Z",
       "sourceUrl": "https://sehirhatlari.istanbul/tr/iptal-seferler",
       "announcements": [
         {
           "id": "sh-status-17.10.2026",
           "operator": "Şehir Hatları",
           "title": "İptal Seferler — 17.10.2026",
-          "body": "class=\"about-us-content news-detail-content social-responsibility-text notice-detail-text-content\">\n17.10.2026\nDeğerli yolcularımız,\nElverişsiz hava koşulları nedeniyle 17 Ekim 2026 Cumartesi günü aşağıda belirtilen hatlardaki seferlerimiz gerçekleştirilemeyecektir.\nKadıköy-Karaköy-Eminönü, Üsküdar-Karaköy-Eminönü ve Kadıköy-Beşiktaş hatlarımızda ise ikinci bir duyuruya kadar uygulanacak sefer tarifeleri aşağıda yer almaktadır.\nBilgilerinize sunarız.\nİptal Seferler:\nBoğaz Gidiş-Geliş\nÜsküdar-Haliç\nAnadolukavağı-Rumelikavağı-Sarıyer\nÇengelköy-Bebek-Kanlıca-İstinye\nEminönü-Rumelikavağı\nÜsküdar-Anadolukavağı\nAdalar-Beşiktaş\nKısa Boğaz Turu\nUzun Boğaz Turu\nKadıköy-Üsküdar-Ortaköy\nİstinye-Çubuklu\nBeykoz-Sarıyer\nKabataş-Kadıköy\nAşiyan-Anadoluhisarı-Küçüksu\nÜsküdar-Aşiyan\nBeşiktaş-Haliç\nKadıköy-Haliç\nMaltepe-Büyükada-Heybeliada-Burgazada-Kınalıada\nÇengelköy-Kabataş\nOrtaköy-Beşiktaş-Eminönü\nBostancı-Moda-Karaköy-Kabataş\nTuzla-Pendik-Büyükada",
+          "body": "17.10.2026\nDeğerli yolcularımız,\nElverişsiz hava koşulları nedeniyle 17 Ekim 2026 Cumartesi günü aşağıda belirtilen hatlardaki seferlerimiz gerçekleştirilemeyecektir.\nKadıköy-Karaköy-Eminönü, Üsküdar-Karaköy-Eminönü ve Kadıköy-Beşiktaş hatlarımızda ise ikinci bir duyuruya kadar uygulanacak sefer tarifeleri aşağıda yer almaktadır.\nBilgilerinize sunarız.\nİptal Seferler:\nBoğaz Gidiş-Geliş\nÜsküdar-Haliç\nAnadolukavağı-Rumelikavağı-Sarıyer\nÇengelköy-Bebek-Kanlıca-İstinye\nEminönü-Rumelikavağı\nÜsküdar-Anadolukavağı\nAdalar-Beşiktaş\nKısa Boğaz Turu\nUzun Boğaz Turu\nKadıköy-Üsküdar-Ortaköy\nİstinye-Çubuklu\nBeykoz-Sarıyer\nKabataş-Kadıköy\nAşiyan-Anadoluhisarı-Küçüksu\nÜsküdar-Aşiyan\nBeşiktaş-Haliç\nKadıköy-Haliç\nMaltepe-Büyükada-Heybeliada-Burgazada-Kınalıada\nÇengelköy-Kabataş\nOrtaköy-Beşiktaş-Eminönü\nBostancı-Moda-Karaköy-Kabataş\nTuzla-Pendik-Büyükada",
           "type": "CANCELLED_TRIPS",
           "affectedLines": [],
           "publishedAt": "17.10.2026",
@@ -94,7 +94,7 @@
     },
     {
       "operator": "Dentur Avrasya",
-      "fetchedAt": "2026-10-17T08:22:41.359Z",
+      "fetchedAt": "2026-10-17T08:29:09.987Z",
       "sourceUrl": "https://www.denturavrasya.com/tr-TR/duyurular",
       "announcements": [
         {

@@ -63,11 +63,14 @@ describe("Şehir Hatları YENİ iptal formatı (17.10.2026 fixture — gerçek s
 
   it("gövde çıkarıcı HTML kurdelelerini ve entity'leri temizler", () => {
     const body = extractArticleBodyText(html);
+    expect(body.startsWith("17.10.2026")).toBe(true);
     expect(body).toContain("Değerli yolcularımız");
     expect(body).toContain("İptal Seferler:");
     expect(body).toContain("Adalar-Beşiktaş");
     expect(body).not.toMatch(/<[a-z]/i);
     expect(body).not.toContain("&uuml;");
+    expect(body).not.toContain("news-detail-content");
+    expect(body).not.toContain('class="');
   });
 
   it("durum kaydı CANCELLED_TRIPS olur; aynı günün liste kopyası MÜKERRER gösterilmez", () => {

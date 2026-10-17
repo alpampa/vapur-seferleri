@@ -60,7 +60,9 @@ export function extractArticleBodyText(html: string): string {
     .replace(/<style[\s\S]*?<\/style>/gi, "");
   const containerMatch = cleaned.match(/class="[^"]*news-detail-content[^"]*"/);
   if (!containerMatch || containerMatch.index === undefined) return "";
-  const start = containerMatch.index;
+  const tagEnd = cleaned.indexOf(">", containerMatch.index + containerMatch[0].length);
+  if (tagEnd === -1) return "";
+  const start = tagEnd + 1;
   const endCandidates = ["Diğer Duyurular", "</main>"]
     .map((m) => cleaned.indexOf(m, start))
     .filter((i) => i > start);
