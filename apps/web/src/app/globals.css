@@ -496,7 +496,29 @@ html.text-scale-lg {
   .ferry-bob,
   .ferry-smoke,
   .ferry-wave,
-  .ferry-gull {
+  .ferry-gull,
+  .animate-time-blink {
     animation: none;
   }
+}
+
+/* ==========================================================================
+   KALKIŞ SAATİ ACİL YANIP SÖNME — son 5 dakikada saatin kendisi yanıp söner.
+   Kullanıcı kuralı: "EN YAKIN" rozeti kaldırıldı; en yakın seferi saatin
+   net biçimde yanıp sönmesi belli eder (rozet değil, zamanın kendisi).
+   ========================================================================== */
+@keyframes time-blink {
+  0%,
+  49.9% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0.28;
+  }
+}
+
+.animate-time-blink {
+  animation: time-blink 1.05s linear infinite;
+  will-change: opacity;
 }

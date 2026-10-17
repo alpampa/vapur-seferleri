@@ -3,7 +3,6 @@
 import React, { useEffect, useRef } from "react";
 import type { UnderwaySegment } from "@/lib/utils/dynamic-trip";
 import { AdaVapuruIcon } from "@/components/ui/AdaVapuruIcon";
-import { pierShortName } from "@/lib/utils/pier-short-names";
 
 interface Stop {
   name: string;
@@ -26,10 +25,12 @@ interface TransitRouteSchematicProps {
  * `underway` verilirse ada vapuru ikonu zamana göre ilerler: seyir mavi, iskeleye
  * yaklaşırken (≤ 3 dk) amber yanıp söner, varışta yeşile döner (metro mantığı).
  *
- * MOBİL (kullanıcı kuralı): 3 harflik iskele kısaltmaları + dar segmentlerle hat
- * ekrana sığdırılır; hat pencereye sığmadığında gemi görünürde kalsın diye şerit
- * yumuşakça kendiliğinden kayar. Parmakla kaydırma her zaman önceliklidir;
- * dokunuş sonrası otomatik kaydırma kısa süre duraklar.
+ * KULLANICI KURALI (mobil): Şeritteki durak adları HER ZAMAN TAM yazılır —
+ * kısaltma yalnızca üst rota satırındadır. Hat pencereye sığmadığında gemi
+ * görünürde kalsın diye şerit kademeli olarak SOLA kayar: vapur bir sonraki
+ * durağa ilerledikçe geride kalan duraklar ekranın solundan çıkar, aktif bölüm
+ * ekranda kalır. Parmakla kaydırma her zaman önceliklidir; dokunuş sonrası
+ * otomatik kaydırma 6 sn duraklar.
  */
 export function TransitRouteSchematic({
   origin,
@@ -131,17 +132,16 @@ export function TransitRouteSchematic({
                     <span className={`w-3 h-3 rounded-full border-2 transition-all shrink-0 ${dotClass}`} />
                   </div>
 
-                  {/* MOBİL: 3 harflik kısaltma — masaüstünde tam ad (title tam adı taşır) */}
+                  {/* KULLANICI KURALI: durak adları ALTTA her zaman TAM yazılır —
+                      kısaltma yalnızca ÜST rota satırındadır. */}
                   <span
-                    title={stop.name}
                     className={`text-[10px] mt-1 font-bold whitespace-nowrap leading-none ${
                       isFirst || isLast
                         ? "text-slate-900 dark:text-white font-extrabold"
                         : "text-slate-600 dark:text-slate-400 font-medium"
                     }`}
                   >
-                    <span className="hidden sm:inline">{stop.name}</span>
-                    <span className="sm:hidden">{pierShortName(stop.name)}</span>
+                    {stop.name}
                   </span>
                 </div>
 
