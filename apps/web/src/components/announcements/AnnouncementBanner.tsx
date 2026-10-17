@@ -106,7 +106,7 @@ export function AnnouncementBanner({ announcements, className = "" }: Announceme
             href={currentItem.sourceUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className={`font-semibold text-[11px] leading-tight hover:underline truncate inline-flex items-center gap-1 min-w-0 flex-1 ${
+            className={`font-semibold text-[11px] leading-tight hover:underline truncate inline-flex items-center gap-1 min-w-0 flex-1 min-h-10 ${
               tone === "danger"
                 ? "text-rose-700 dark:text-rose-300 font-bold"
                 : "text-slate-800 dark:text-slate-200"
@@ -145,17 +145,17 @@ export function AnnouncementBanner({ announcements, className = "" }: Announceme
                 type="button"
                 onClick={handlePrev}
                 aria-label="Önceki duyuru"
-                className="p-0.5 hover:text-slate-700 dark:hover:text-slate-200 cursor-pointer ml-1"
+                className="flex h-10 w-10 items-center justify-center rounded-md hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-slate-800 cursor-pointer ml-1"
               >
-                <ChevronLeft size={11} />
+                <ChevronLeft size={14} />
               </button>
               <button
                 type="button"
                 onClick={handleNext}
                 aria-label="Sonraki duyuru"
-                className="p-0.5 hover:text-slate-700 dark:hover:text-slate-200 cursor-pointer"
+                className="flex h-10 w-10 items-center justify-center rounded-md hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-slate-800 cursor-pointer"
               >
-                <ChevronRight size={11} />
+                <ChevronRight size={14} />
               </button>
             </div>
           )}
@@ -164,9 +164,9 @@ export function AnnouncementBanner({ announcements, className = "" }: Announceme
             type="button"
             onClick={dismissCurrent}
             aria-label="Duyuruyu kapat"
-            className="p-1 rounded-md hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-slate-800 cursor-pointer transition-colors"
+            className="flex h-10 w-10 items-center justify-center rounded-md hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-slate-800 cursor-pointer transition-colors"
           >
-            <X size={12} />
+            <X size={14} />
           </button>
         </div>
       </div>
