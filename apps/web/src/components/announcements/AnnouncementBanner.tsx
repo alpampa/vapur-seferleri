@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { AlertTriangle, Megaphone, Info, ChevronRight, ChevronLeft } from "lucide-react";
 import { OperatorLogo } from "@/components/ui/OperatorLogo";
 import { MarqueeTicker } from "@/components/ui/MarqueeTicker";
@@ -50,23 +50,6 @@ export function AnnouncementBanner({ announcements, className = "" }: Announceme
 
   const hasCancellation = activeList.length > 0;
 
-  // Kayan yazı okunurken rotasyonla kesilmesin: metni uzun duyuru varsa
-  // otomatik rotasyon kapanır; gezinme yalnızca oklarla yapılır.
-  const hasLongText = activeList.some(
-    (a) => Math.max((a.body || "").length, (a.title || "").length) > 140
-  );
-
-  // Otomatik Rotasyon: Metinler kısaysa 4.5 saniyede bir sonraki duyuruya geç.
-  // Detay penceresi açıkken rotasyon durur (okunan duyuru altından kaymaz).
-  // (Hook kuralı: Erken return'den ÖNCE çağrılmalı)
-  useEffect(() => {
-    if (activeList.length <= 1 || hasLongText || detailItem) return;
-    const timer = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % activeList.length);
-    }, 4500);
-    return () => clearInterval(timer);
-  }, [activeList.length, hasLongText, detailItem]);
-
   if (activeList.length === 0) return null;
 
   const currentItem = activeList[currentIndex % activeList.length] || activeList[0];
@@ -77,6 +60,15 @@ export function AnnouncementBanner({ announcements, className = "" }: Announceme
   };
 
   const handleNext = () => {
+    setCurrentIndex((prev) => (prev + 1) % activeList.length);
+  };
+
+  // KULLANICI KURALI (dönerli sistem): Her duyuru, kayan yazısı BİR TAM TUR
+  // atınca otomatik olarak sıradaki firmaya geçilir — elle oka gerek kalmaz.
+  // Detay penceresi açıkken geçiş ertelenir; pencere kapanınca sıradaki turda
+  // dönüş kaldığı yerden devam eder.
+  const handleCycleEnd = () => {
+    if (detailItem) return;
     setCurrentIndex((prev) => (prev + 1) % activeList.length);
   };
 
@@ -113,7 +105,11 @@ export function AnnouncementBanner({ announcements, className = "" }: Announceme
         {/* Orta: TEK SATIR KAYAN duyuru metni — tıklanınca detay UYGULAMA İÇİNDE açılır */}
         <div className="min-w-0 flex-1 flex items-center gap-1.5 text-xs">
           <OperatorLogo operator={currentItem.operator} size="sm" showName={false} />
-          <MarqueeTicker speedPxPerSec={55}>
+          <MarqueeTicker
+            speedPxPerSec={55}
+            cycleKey={`${currentIndex % activeList.length}:${currentItem.id}`}
+            onCycleEnd={activeList.length > 1 ? handleCycleEnd : undefined}
+          >
             <button
               type="button"
               onClick={() => setDetailItem(currentItem)}

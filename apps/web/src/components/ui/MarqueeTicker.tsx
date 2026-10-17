@@ -14,6 +14,21 @@ interface MarqueeTickerProps {
   speedPxPerSec?: number;
   className?: string;
   ariaLabel?: string;
+  /**
+   * KULLANICI KURALI (dönerli sistem): Kayan içerik BİR TAM TUR attığında
+   * çağrılır; akış yoksa (içerik sığıyor / hareket azaltma) fallbackCycleMs
+   * sonunda çağrılır. Geri çağrı her turda yeniden kurulur; üst üste
+   * çağrılar sıradaki öğeye geçişi tetikler.
+   */
+  onCycleEnd?: () => void;
+  /** Akış olmadığında tur yerine geçen okuma süresi (ms) */
+  fallbackCycleMs?: number;
+  /**
+   * Ölçüm/tur yeniden kurulumunu tetikleyen İÇERİK anahtarı. Üst bant gibi
+   * sık yeniden render edilen yerlerde verilmezse her render tur sayacını
+   * sıfırlar; verilirse tur yalnızca öğe değişince yeniden başlar.
+   */
+  cycleKey?: string | number;
 }
 
 /**
@@ -29,11 +44,19 @@ export function MarqueeTicker({
   speedPxPerSec = 50,
   className = "",
   ariaLabel,
+  onCycleEnd,
+  fallbackCycleMs = 9000,
+  cycleKey,
 }: MarqueeTickerProps) {
   const outerRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const [flowing, setFlowing] = useState(false);
   const [durationSec, setDurationSec] = useState(60);
+  // Tur sonu geri çağrısı her render'da tazelenir (bayat closure yok)
+  const onCycleEndRef = useRef<(() => void) | undefined>(onCycleEnd);
+  onCycleEndRef.current = onCycleEnd;
+  // cycleKey verilmişse ölçüm yalnızca içerik değişince yeniden yapılır
+  const effectiveKey = cycleKey ?? children;
 
   useEffect(() => {
     const outer = outerRef.current;
@@ -43,6 +66,20 @@ export function MarqueeTicker({
     const prefersReduced =
       typeof window.matchMedia === "function" &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    let cycleTimer: ReturnType<typeof setTimeout> | null = null;
+    let cancelled = false;
+    /** Tur döngüsü: tam tur (akış) veya okuma süresi (sabit) sonunda bildirir
+     *  ve bir sonraki turu kurar — üst bantta dönerli firma geçişi sağlar. */
+    const scheduleCycle = (shouldFlow: boolean, durSec: number) => {
+      if (cancelled || !onCycleEndRef.current) return;
+      const ms = shouldFlow ? durSec * 1000 + 350 : fallbackCycleMs;
+      cycleTimer = setTimeout(() => {
+        if (cancelled) return;
+        onCycleEndRef.current?.();
+        scheduleCycle(shouldFlow, durSec);
+      }, ms);
+    };
 
     const measure = () => {
       const singleCopyWidth = track.scrollWidth / 2;
@@ -54,6 +91,11 @@ export function MarqueeTicker({
           Math.max(22, Math.round(singleCopyWidth / speedPxPerSec))
         );
       }
+      if (cycleTimer) clearTimeout(cycleTimer);
+      const durSec = shouldFlow
+        ? Math.max(22, Math.round(singleCopyWidth / speedPxPerSec))
+        : 0;
+      scheduleCycle(shouldFlow, durSec);
     };
 
     measure();
@@ -67,11 +109,13 @@ export function MarqueeTicker({
     window.addEventListener("resize", measure);
 
     return () => {
+      cancelled = true;
+      if (cycleTimer) clearTimeout(cycleTimer);
       cancelAnimationFrame(raf);
       observer?.disconnect();
       window.removeEventListener("resize", measure);
     };
-  }, [children, speedPxPerSec]);
+  }, [effectiveKey, speedPxPerSec, fallbackCycleMs]);
 
   return (
     <div
