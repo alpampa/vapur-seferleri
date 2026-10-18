@@ -79,11 +79,12 @@ export function getTuryolSchedules(): RawOfficialTrip[] {
         else if (route.destination === "Kadıköy") estDurationMins = 60;
         else estDurationMins = 75; // Eminönü (Kadıköy durağının ötesi)
       } else {
-        if (route.origin === "Üsküdar" || route.destination === "Üsküdar") {
-          estDurationMins = 15;
-        } else {
-          estDurationMins = 25;
-        }
+        // Varış süresi hedef iskeleye göre; aynı dakikadaki çoklu kayıtların
+        // en uzak varışta birleşmesini (Eminönü < Karaköy, Üsküdar < Kadıköy) sağlar.
+        if (route.destination === "Eminönü") estDurationMins = 15;
+        else if (route.destination === "Üsküdar") estDurationMins = 15;
+        else if (route.destination === "Karaköy") estDurationMins = 20;
+        else estDurationMins = 25; // Kadıköy
       }
 
       const arrTime = addMinutes(depTime, estDurationMins);
@@ -124,26 +125,33 @@ export function getTuryolSchedules(): RawOfficialTrip[] {
 
   const mergedTrips: RawOfficialTrip[] = [];
   for (const group of grouped.values()) {
-    // Aynı dakikada başka kategori (boğaz hattı) varsa o ayrı gemidir, dokunulmaz.
-    const adaGroup = group.filter((t) => t.category === "ADALAR");
-    const otherGroup = group.filter((t) => t.category !== "ADALAR");
-    mergedTrips.push(...otherGroup);
-    if (adaGroup.length <= 1) {
-      mergedTrips.push(...adaGroup);
-      continue;
+    // Aynı kategorideki (Ada / Boğaz) eşleşmeler tek geminin ayrı satılan
+    // bacaklarıdır; farklı kategori (aynı dakikada ada + boğaz gemisi) ayrı gemidir.
+    const byCategory = new Map<string, RawOfficialTrip[]>();
+    for (const t of group) {
+      const cat = t.category ?? "DIGER";
+      const list = byCategory.get(cat);
+      if (list) list.push(t);
+      else byCategory.set(cat, [t]);
     }
-    const sorted = [...adaGroup].sort((a, b) =>
-      (a.arrivalTime ?? a.departureTime).localeCompare(b.arrivalTime ?? b.departureTime)
-    );
-    const target = sorted[sorted.length - 1];
-    const hopStops: RawStop[] = sorted
-      .slice(0, -1)
-      .map((t) => ({ name: t.destination, time: t.arrivalTime ?? t.departureTime }));
-    mergedTrips.push({
-      ...target,
-      stops: hopStops,
-      lineName: `Turyol ${target.origin} - ${target.destination} Hattı (${hopStops.map((s) => s.name).join(", ")} uğramalı)`
-    });
+    for (const catGroup of byCategory.values()) {
+      if (catGroup.length <= 1) {
+        mergedTrips.push(...catGroup);
+        continue;
+      }
+      const sorted = [...catGroup].sort((a, b) =>
+        (a.arrivalTime ?? a.departureTime).localeCompare(b.arrivalTime ?? b.departureTime)
+      );
+      const target = sorted[sorted.length - 1];
+      const hopStops: RawStop[] = sorted
+        .slice(0, -1)
+        .map((t) => ({ name: t.destination, time: t.arrivalTime ?? t.departureTime }));
+      mergedTrips.push({
+        ...target,
+        stops: hopStops,
+        lineName: `Turyol ${target.origin} - ${target.destination} Hattı (${hopStops.map((s) => s.name).join(", ")} uğramalı)`
+      });
+    }
   }
 
   return mergedTrips;

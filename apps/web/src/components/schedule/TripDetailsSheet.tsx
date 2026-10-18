@@ -398,7 +398,7 @@ export function TripDetailsSheet({
                       {schedule.price}
                     </div>
                     <div className="text-[10px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">
-                      Tam Ücret
+                      {/\d/.test(schedule.price) ? "Tam Ücret" : "Resmi ücret sitede yayınlanmıyor"}
                     </div>
                   </div>
                 </div>

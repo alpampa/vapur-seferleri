@@ -9,14 +9,15 @@ import { RawOfficialTrip } from "./official-schedules";
  * 
  * ÜCRET: Resmi sitede SAYISAL bilet ücreti YAYINLANMIYOR; SSS yalnız
  * "İstanbul Kart ile geçiş yapılmaktadır" der (2026-10-18 doğrulaması).
- * Kural: doğrulanamayan ücret "—" gösterilir; onaya sunulur.
+ * Kural: doğrulanamayan ücret için "—" yerine "İstanbul Kart" rozeti
+ * gösterilir (onay 2026-10-18); sayı uydurulmaz.
  * 
  * Hatlar:
  * 1. Kartal ➔ Büyükada ➔ Heybeliada
  * 2. Heybeliada ➔ Büyükada ➔ Kartal
  */
 
-const PRICE_UNVERIFIED = "—";
+const PRICE_UNVERIFIED = "İstanbul Kart";
 
 interface PrensTurDeparture {
   dep: string;

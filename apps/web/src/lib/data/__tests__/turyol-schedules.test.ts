@@ -30,11 +30,23 @@ describe("Turyol çoklu kart birleştirme (aynı iskele + saat = tek gemi)", () 
     expect(separate.length).toBe(0);
   });
 
-  it("hiçbir Ada grubunda aynı iskele+saat+bayrak kombinasyonu ikinci kez kart olmaz", () => {
+  it("boğaz hattında da aynı iskele+saat çift kayıt tek karta birleşir (Üsküdar 06:55)", () => {
+    const t = trips.find(
+      (x) => x.origin === "Üsküdar" && x.destination === "Karaköy" && x.departureTime === "06:55"
+    );
+    expect(t).toBeDefined();
+    expect(t?.stops?.map((s) => s.name)).toEqual(["Eminönü"]);
+    expect(t?.price).toBe("65 ₺");
+    const separate = trips.filter(
+      (x) => x.origin === "Üsküdar" && x.departureTime === "06:55" && x.destination === "Eminönü"
+    );
+    expect(separate.length).toBe(0);
+  });
+
+  it("hiçbir grupta aynı iskele+saat+bayrak+kategori kombinasyonu ikinci kez kart olmaz", () => {
     const seen = new Set<string>();
     for (const t of trips) {
-      if (t.category !== "ADALAR") continue;
-      const k = `${t.origin}|${t.departureTime}|${t.runsWeekday}|${t.runsSaturday}|${t.runsSunday}`;
+      const k = `${t.origin}|${t.departureTime}|${t.runsWeekday}|${t.runsSaturday}|${t.runsSunday}|${t.category}`;
       expect(seen.has(k)).toBe(false);
       seen.add(k);
     }

@@ -64,6 +64,7 @@ const SH_PAIR_CLASS: Record<string, string> = {
   // 51,81 / 71,07 — Ortaköy-Üsküdar-Kadıköy hattı
   "ortakoy|uskudar": "ortakoyUskudar",
   "kadikoy|ortakoy": "ortakoyKadikoy",
+  "eminonu|ortakoy": "bogazUgramali", // Ortaköy-Beşiktaş-Eminönü hattı (3 iskele → uğramalı; onay 2026-10-18)
 
   // 61,04 — Beykoz-Sarıyer
   "beykoz|sariyer": "beykozSariyer",
@@ -80,6 +81,7 @@ const SH_PAIR_CLASS: Record<string, string> = {
   "asiyan|kucuksu": "asiyanRing",
   "asiyan|kucuksu - anadolu hisari ring": "asiyanRing",
   "cubuklu|istinye": "asiyanRing",
+  "istinye|kucuksu": "asiyanRing", // Küçüksu-İstinye (İstinye-Çubuklu sınıfı; onay 2026-10-18)
 
   // 76,90 — BOĞAZ HATTI segmentleri + UĞRAMALI (3 iskeleden fazla) + HALİÇ + BOSTANCI-MODA
   "anadolukavagi|sariyer": "bogazUgramali",
@@ -114,8 +116,8 @@ const SH_PAIR_CLASS: Record<string, string> = {
   "cengelkoy|istinye": "bogazUgramali", // Çengelköy-İstinye ring (8 iskele → uğramalı)
   "cengelkoy|emirgan": "bogazUgramali", // Çengelköy-İstinye ring segmenti
 
-  // EŞLEŞMEYENLER (uydurma yasak — onaya sunulur): Eminönü↔Ortaköy,
-  // Küçüksu↔İstinye, Eminönü↔Kabataş, Kadıköy↔Bostancı → "—"
+  // EŞLEŞMEYENLER kalmadı; bozuk scrape kayıtları (Eminönü↔Kabataş,
+  // Kadıköy↔Bostancı) "—" gösterilir ve rapora işlendi.
 };
 
 function normPier(s: string): string {
