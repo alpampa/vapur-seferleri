@@ -9,10 +9,13 @@
  * - OFFLINE (İnternet Yok): Yalnızca ağ bağlantısı koptuğunda önbellekten sunulur.
  */
 
-const CACHE_NAME = 'vapur-cache-v4-network-first';
+const CACHE_NAME = 'vapur-cache-v5-network-first';
 
+// DİKKAT: '/' buraya EKLENMEZ. Install anındaki HTML belgesi, içine gömülü eski
+// serverTimeIso ile "donmuş" kalır ve çevrimdışı fallback'te sunulursa saat geriye
+// kayarak kalkmış seferleri diriltir. Navigasyon fallback'i yalnızca en son başarılı
+// ağ yanıtının kopyasından (aşağıdaki cache.put) karşılanır.
 const STATIC_FALLBACK_ASSETS = [
-  '/',
   '/manifest.json',
   '/favicon.ico',
   '/logos/operator-dentur.png',

@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import { ScheduleCard } from "@/components/schedule/ScheduleCard";
 import { TripDetailsSheet } from "@/components/schedule/TripDetailsSheet";
 import type { ScheduleCardDto } from "@/lib/types/schedule";
-import { Search, Navigation, ArrowLeftRight, RotateCcw, ChevronDown, ChevronUp, History, Sparkles, Wind, X, AlertOctagon, SlidersHorizontal } from "lucide-react";
+import { Search, Navigation, ArrowLeftRight, RotateCcw, ChevronDown, Sparkles, Wind, X, AlertOctagon, SlidersHorizontal } from "lucide-react";
 import { matchesTurkishSearch } from "@/lib/utils/search-normalizer";
 import { LateNightTransitModal } from "@/components/night/LateNightTransitModal";
 import { MissedFerryAssistantModal } from "@/components/planner/MissedFerryAssistantModal";
@@ -71,7 +71,6 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
   const [showPlanner, setShowPlanner] = useState<boolean>(false);
   const [onlyImminent, setOnlyImminent] = useState<boolean>(false);
   const [isCompactDensity, setIsCompactDensity] = useState<boolean>(false);
-  const [showPastTrips, setShowPastTrips] = useState<boolean>(false);
   const [isToolsOpen, setIsToolsOpen] = useState<boolean>(false);
   const toolFilterCount = (selectedOperator !== "ALL" ? 1 : 0) + (showPlanner ? 1 : 0) + (isCompactDensity ? 1 : 0);
 
@@ -493,28 +492,18 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
 
       return true;
     }).sort((a, b) => {
-      if (a.dyn.isDeparted !== b.dyn.isDeparted) {
-        return a.dyn.isDeparted ? 1 : -1;
-      }
       // HH:mm dizgisel karşılaştırma güvenilmez; gece yarısı (23:50 → 00:20)
       // geçişlerinde gün doğru taşındığı için ISO damgasına göre sırala.
+      // Kalkışını yeni geçen kart (30 sn'lik "Hareket etti" penceresi) yerinde
+      // kalır; pencere bitince liste kaymadan ekrandan tamamen silinir.
       return a.dyn.currentTargetIso.localeCompare(b.dyn.currentTargetIso);
     });
   }, [activeSchedulesWithDyn, selectedOrigin, selectedDestination, selectedOperator, searchQuery, onlyImminent, now]);
 
-  // Partition filtered voyages into Active/Upcoming vs Departed/Past
-  const { upcomingTrips, pastTrips } = useMemo(() => {
-    const upcoming: typeof filteredList = [];
-    const past: typeof filteredList = [];
-    filteredList.forEach((item) => {
-      if (item.dyn.isDeparted) {
-        past.push(item);
-      } else {
-        upcoming.push(item);
-      }
-    });
-    return { upcomingTrips: upcoming, pastTrips: past };
-  }, [filteredList]);
+  // KULLANICI KURALI: Geçmiş sefer görünümü YOKTUR. Kalkışı 30 sn'den fazla geçmiş
+  // her sefer activeSchedulesWithDyn'de (isExpired) elenir; kalkışı yeni geçen kart
+  // ise yerinde en çok 30 sn "Hareket etti" olarak görünür, sonra kendiliğinden silinir.
+  const upcomingTrips = filteredList;
 
   // KULLANICI KURALI: Gece güvenlik bandı yalnızca seçili kategoriye uyan seferleri
   // dikkate alır (Adalar seçiliyken Boğaz seferi duyurulmaz) ve listede zaten görünen
@@ -963,16 +952,6 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
                   <span>Alternatif Rota & Kurtarma Planı (Marmaray / Metro)</span>
                 </button>
               )}
-              {pastTrips.length > 0 && !showPastTrips && (
-                <button
-                  type="button"
-                  onClick={() => setShowPastTrips(true)}
-                  className="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold text-xs border border-slate-300 dark:border-slate-700 transition-all cursor-pointer inline-flex items-center gap-1.5"
-                >
-                  <History size={13} />
-                  <span>Bugünkü Tamamlanmış Seferleri Gör ({pastTrips.length})</span>
-                </button>
-              )}
               <button
                 type="button"
                 onClick={() => {
@@ -988,61 +967,6 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
                 <span>Filtreleri Sıfırla ve Tüm Seferleri Göster</span>
               </button>
             </div>
-          </div>
-        )}
-
-        {/* Kalkmış / Geçmiş Seferler Bölümü (Past Departures Section) */}
-        {pastTrips.length > 0 && (
-          <div className="mt-4 pt-3 border-t border-slate-200 dark:border-slate-800/80">
-            <button
-              type="button"
-              onClick={() => setShowPastTrips(!showPastTrips)}
-              className="w-full flex items-center justify-between px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-900/80 hover:bg-slate-200/70 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 text-xs font-bold transition-all cursor-pointer"
-            >
-              <div className="flex items-center gap-2">
-                <History size={14} className="text-slate-400" />
-                <span>Kalkmış / Geçmiş Seferler</span>
-                <span className="px-1.5 py-0.5 rounded-full text-[10px] bg-slate-200 dark:bg-slate-800 font-bold">
-                  {pastTrips.length}
-                </span>
-              </div>
-              <div className="flex items-center gap-1 text-[11px]">
-                <span>{showPastTrips ? "Gizle" : "Göster"}</span>
-                {showPastTrips ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-              </div>
-            </button>
-
-            {showPastTrips && (
-              <div className={`mt-2 flex flex-col ${isCompactDensity ? "gap-1.5" : "gap-2"} animate-fadeIn`}>
-                {pastTrips.map(({ schedule, dyn }) => (
-                  <ScheduleCard
-                    key={`past-${schedule.id}-${dyn.currentOrigin}`}
-                    id={schedule.id}
-                    origin={schedule.origin}
-                    destination={schedule.destination}
-                    operator={schedule.operator}
-                    routeTitle={schedule.routeTitle}
-                    departureTime={schedule.departureTime}
-                    departureTime12={schedule.departureTime12}
-                    status={schedule.status}
-                    targetTimeIso={schedule.targetTimeIso}
-                    serverTimeIso={serverTimeIso}
-                    nowMs={nowMs}
-                    delayText={schedule.delayText}
-                    vessel={schedule.vessel}
-                    platform={schedule.platform}
-                    price={schedule.price}
-                    progress={schedule.progress}
-                    stops={schedule.stops}
-                    arrivalTime={schedule.arrivalTime}
-                    isCompact={isCompactDensity}
-                    highlightStopName={searchQuery}
-                    onClick={() => setSelectedSchedule(schedule)}
-                    onSelectHop={(s) => setSelectedHopSchedule(s)}
-                  />
-                ))}
-              </div>
-            )}
           </div>
         )}
       </div>
