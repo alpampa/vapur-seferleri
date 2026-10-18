@@ -30,10 +30,21 @@ test("Sefer detayı: çekmece açılır, Aktarma sekmesinde yürüme takibi gör
   test.setTimeout(60000);
   await page.goto("/");
 
-  await page
-    .getByRole("button", { name: /seferi, detay için açın/ })
-    .first()
-    .click();
+  // Kalkışını yeni geçmiş kart ("HAREKET ETTİ", 30 sn'lik pencere) listede kendi
+  // kronolojik yerinde kalır ve ilk sırada olabilir; detay akışı için listedeki
+  // ilk KALKMAMIŞ seferi seç (kullanıcı da yaklaşan sefere dokunur).
+  const cards = page.getByRole("button", { name: /seferi, detay için açın/ });
+  await expect(cards.first()).toBeVisible({ timeout: 10000 });
+  const cardCount = await cards.count();
+  let targetIndex = 0;
+  for (let i = 0; i < Math.min(cardCount, 15); i++) {
+    const text = await cards.nth(i).innerText();
+    if (!text.includes("HAREKET ETTİ")) {
+      targetIndex = i;
+      break;
+    }
+  }
+  await cards.nth(targetIndex).click();
 
   const dialog = page.getByRole("dialog");
   await expect(dialog).toBeVisible({ timeout: 10000 });

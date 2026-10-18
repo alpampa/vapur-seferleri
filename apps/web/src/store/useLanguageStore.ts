@@ -31,7 +31,7 @@ export const DICTIONARY = {
     nearestPier: "En Yakın İskele",
     locating: "Aranıyor...",
     lastCall: "Son Çağrı (≤ 15 dk)",
-    departed: "GİTTİ",
+    departed: "HAREKET ETTİ",
     countdownPrefix: "⏳",
     activeTrips: "Aktif Sefer",
     nextDeparture: "Sonraki Sefer",

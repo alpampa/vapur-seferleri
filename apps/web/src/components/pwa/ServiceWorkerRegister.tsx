@@ -131,14 +131,16 @@ export function ServiceWorkerRegister() {
           console.warn("[SW] Kayıt hatası:", err);
         });
 
-      // Yeni Service Worker kontrolü aldığında sayfayı anında yenile
+      // Yalnızca ESKİ bir kontrolcü varken devir olursa yenile: ilk kurulumda
+      // controllerchange, clients.claim() yüzünden de tetiklenir ve sayfa zaten
+      // ağdan en güncel haliyle yüklendiği için gereksiz reload akışı bozar.
+      const hadController = !!navigator.serviceWorker.controller;
       let refreshing = false;
       navigator.serviceWorker.addEventListener("controllerchange", () => {
-        if (!refreshing) {
-          refreshing = true;
-          console.log("[SW] Kontrolcü değişti. En güncel sürüm için sayfa yenileniyor...");
-          window.location.reload();
-        }
+        if (!hadController || refreshing) return;
+        refreshing = true;
+        console.log("[SW] Kontrolcü değişti. En güncel sürüm için sayfa yenileniyor...");
+        window.location.reload();
       });
     }
 
