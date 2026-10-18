@@ -87,7 +87,9 @@ export function getTuryolSchedules(): RawOfficialTrip[] {
 
       const arrTime = addMinutes(depTime, estDurationMins);
       const platform = `${route.origin} Turyol İskelesi`;
-      const price = route.category === "ADALAR" ? "120 ₺" : "45 ₺";
+      // Resmi doğrulama 2026-10-18: turyol.com/Home/Tarifeler (POST) —
+      // Adalar hatları Tam 230 TL; Boğaz hatları Kurumsal Bilet 65 TL.
+      const price = route.category === "ADALAR" ? "230 ₺" : "65 ₺";
 
       trips.push({
         id: `turyol-${route.origin.toLowerCase()}-${route.destination.toLowerCase()}-${rIdx}-${tIdx}`,

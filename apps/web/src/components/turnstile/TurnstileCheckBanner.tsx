@@ -5,12 +5,12 @@ import { CreditCard, QrCode, AlertTriangle, CheckCircle2, ChevronRight, RefreshC
 import { IstanbulkartWalletModal } from "@/components/wallet/IstanbulkartWalletModal";
 
 interface TurnstileCheckBannerProps {
-  tripPrice?: string; // e.g. "27.00 ₺" or "90.00 ₺"
+  tripPrice?: string; // e.g. "65,21 ₺" or "151,23 ₺"
   originPier?: string;
   isAdalar?: boolean;
 }
 
-export function TurnstileCheckBanner({ tripPrice = "27.00 ₺", originPier = "Kadıköy", isAdalar = false }: TurnstileCheckBannerProps) {
+export function TurnstileCheckBanner({ tripPrice = "65,21 ₺", originPier = "Kadıköy", isAdalar = false }: TurnstileCheckBannerProps) {
   const [balance, setBalance] = useState<number>(35.0);
   const [isWalletOpen, setIsWalletOpen] = useState<boolean>(false);
   const [mounted, setMounted] = useState<boolean>(false);
@@ -24,7 +24,8 @@ export function TurnstileCheckBanner({ tripPrice = "27.00 ₺", originPier = "Ka
     }
   }, []);
 
-  const priceVal = parseFloat(tripPrice.replace("[^0-9.]", "")) || (isAdalar ? 90.0 : 27.0);
+  // Fiyat metni Türkçe biçimde gelebilir: "151,23 ₺", "230 ₺", "—".
+  const priceVal = parseFloat(tripPrice.replace(",", ".").replace(/[^0-9.]/g, "")) || (isAdalar ? 151.23 : 65.21);
   const isInsufficient = balance < priceVal;
 
   const handleSimulateTopup = () => {

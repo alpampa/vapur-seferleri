@@ -34,7 +34,11 @@ const DAY_TYPE_RUNS: Record<
   WEEKEND: { runsWeekday: false, runsSaturday: true, runsSunday: true },
 };
 
-const FALLBACK_FARE = "₺27.00";
+// Resmi doğrulama 2026-10-18: denturavrasya.com/api/Tour/7/routes (Heybeli Ada
+// Büyük Ada turu) → 200 ₺. Şehir içi hatların (Üsküdar-Beşiktaş/Kabataş,
+// Beşiktaş-Kadıköy) ücreti resmi sitede YAYINLANMIYOR → "—" (uydurma yasak).
+const ADA_FARE = "200 ₺";
+const CITY_FARE_UNVERIFIED = "—";
 
 function slug(s: string): string {
   return s
@@ -83,7 +87,7 @@ export function getDenturSchedules(): RawOfficialTrip[] {
       // selfHeal gerçekçi seyir süresiyle doldurur. Gerçek pencere continuousUntil'da.
       arrivalTime: isContinues ? undefined : r.arrivalTime,
       platform: `${r.origin} Dentur İskelesi`,
-      price: FALLBACK_FARE,
+      price: toCategory(lineKey) === "ADALAR" ? ADA_FARE : CITY_FARE_UNVERIFIED,
       stops: r.stops && r.stops.length > 0 ? r.stops : undefined,
       runsWeekday: runs.runsWeekday,
       runsSaturday: runs.runsSaturday,

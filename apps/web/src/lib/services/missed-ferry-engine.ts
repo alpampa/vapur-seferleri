@@ -60,7 +60,7 @@ export function calculateMissedFerryAlternatives(
         subtitle: "Kadıköy Turyol İskelesi (50 metre yürüme)",
         estimatedTravelMinutes: 20,
         walkingMinutesToOrigin: 1,
-        costEstimate: "27.00 ₺ (İstanbulkart)",
+        costEstimate: "65 ₺ (Turyol Kurumsal Bilet)",
         instructions: [
           "Şehir Hatları iskelesinden 50 metre sola, Turyol iskelesine yürüyün.",
           "Her 15 dakikada bir kalkan Eminönü / Karaköy motoruna turnikeden kartınızı basarak geçin."
@@ -95,7 +95,7 @@ export function calculateMissedFerryAlternatives(
         subtitle: "Aynı İskele • 1. Peron",
         estimatedTravelMinutes: 25,
         walkingMinutesToOrigin: 0,
-        costEstimate: "27.00 ₺",
+        costEstimate: "65,21 ₺ (İstanbulkart)",
         instructions: [
           "İskele salonundaki bekleme alanında kalın.",
           "Sonraki Beşiktaş seferi yaklaşık 20 dakika sonra aborda olacaktır."
@@ -129,7 +129,7 @@ export function calculateMissedFerryAlternatives(
         subtitle: "Üsküdar Dentur İskelesi (30m yanınızda)",
         estimatedTravelMinutes: 6,
         walkingMinutesToOrigin: 1,
-        costEstimate: "27.00 ₺",
+        costEstimate: "İstanbulkart ile geçiş",
         instructions: [
           "Hemen yan taraftaki Dentur iskelesine geçin.",
           "Boğaz'ı en dar yerinden sadece 5-6 dakikada geçerek Beşiktaş rıhtımına varın."
@@ -163,7 +163,7 @@ export function calculateMissedFerryAlternatives(
         subtitle: "Yan motor iskelesi",
         estimatedTravelMinutes: 35,
         walkingMinutesToOrigin: 1,
-        costEstimate: "90.00 ₺ (Adakart: 45.00 ₺)",
+        costEstimate: "151,23 ₺ (Adakart: 90,70 ₺)",
         instructions: [
           "Şehir Hatları iskelesinin bitişiğindeki motor iskelesine geçin.",
           "Büyükada, Heybeliada ve Kınalıada'ya direkt veya ring yapan ilk motora binin."
@@ -182,7 +182,7 @@ export function calculateMissedFerryAlternatives(
         subtitle: `${origin} Ana İskelesi`,
         estimatedTravelMinutes: 25,
         walkingMinutesToOrigin: 0,
-        costEstimate: "27.00 ₺",
+        costEstimate: "58,52–76,90 ₺ (İstanbulkart)",
         instructions: [
           "İskele peronunda bekleyin.",
           "Günün sonraki tarifeli seferi hazırlanmaktadır."

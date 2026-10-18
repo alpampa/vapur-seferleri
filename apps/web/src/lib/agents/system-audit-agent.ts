@@ -347,44 +347,44 @@ export function auditTariffsAndUKOMERules(): AuditCheckResult[] {
   return [
     {
       category: "TARİFE_VE_UKOME_KURALLARI",
-      testName: "Standart Şehir İçi Tam Bilet (27.00 ₺)",
-      status: std.fullFare === "27.00 ₺" ? "PASSED" : "FAILED",
-      details: `Resmi UKOME Şehir İçi Tam Kart Tebliği: ${std.fullFare}`
+      testName: "Standart Şehir İçi Tam Bilet (65,21 ₺)",
+      status: std.fullFare === "65,21 ₺" ? "PASSED" : "FAILED",
+      details: `Resmi UKOME Şehir Hatları Tam Kart Tarifesi: ${std.fullFare}`
     },
     {
       category: "TARİFE_VE_UKOME_KURALLARI",
-      testName: "Standart Şehir İçi Öğrenci Kartı (13.17 ₺)",
-      status: std.studentFare === "13.17 ₺" ? "PASSED" : "FAILED",
+      testName: "Standart Şehir İçi Öğrenci Kartı (31,76 ₺)",
+      status: std.studentFare === "31,76 ₺" ? "PASSED" : "FAILED",
       details: `Resmi UKOME Öğrenci Tarifesi: ${std.studentFare}`
     },
     {
       category: "TARİFE_VE_UKOME_KURALLARI",
-      testName: "Standart Şehir İçi Sosyal / Öğretmen / 60+ (19.34 ₺)",
-      status: std.socialFare === "19.34 ₺" ? "PASSED" : "FAILED",
-      details: `Resmi UKOME Sosyal Kart İndirimi: ${std.socialFare}`
+      testName: "Standart Şehir İçi İndirimli / Sosyal (46,79 ₺)",
+      status: std.socialFare === "46,79 ₺" ? "PASSED" : "FAILED",
+      details: `Resmi UKOME İndirimli Kart Tarifesi: ${std.socialFare}`
     },
     {
       category: "TARİFE_VE_UKOME_KURALLARI",
-      testName: "Standart Şehir İçi 65+ Yaş ve Engelli Kartı (0.00 ₺)",
-      status: std.freeFare.includes("0.00") ? "PASSED" : "FAILED",
+      testName: "Standart Şehir İçi 65+ Yaş ve Engelli Kartı (0,00 ₺)",
+      status: std.freeFare.includes("0,00") ? "PASSED" : "FAILED",
       details: `Ücretsiz Geçiş Hakkı: ${std.freeFare}`
     },
     {
       category: "TARİFE_VE_UKOME_KURALLARI",
-      testName: "Adalar Özel Hat Tam Bilet (90.00 ₺)",
-      status: isl.fullFare === "90.00 ₺" ? "PASSED" : "FAILED",
-      details: `Resmi UKOME Adalar Tam Ücreti: ${isl.fullFare}`
+      testName: "Adalar Özel Hat Tam Bilet (151,23 ₺)",
+      status: isl.fullFare === "151,23 ₺" ? "PASSED" : "FAILED",
+      details: `Resmi UKOME Adalar Tam Ücreti (Adakartsız): ${isl.fullFare}`
     },
     {
       category: "TARİFE_VE_UKOME_KURALLARI",
-      testName: "Adalar Özel Hat Öğrenci Kartı (45.00 ₺)",
-      status: isl.studentFare === "45.00 ₺" ? "PASSED" : "FAILED",
+      testName: "Adalar Özel Hat Öğrenci Kartı (75,64 ₺)",
+      status: isl.studentFare === "75,64 ₺" ? "PASSED" : "FAILED",
       details: `Resmi UKOME Adalar Öğrenci Ücreti: ${isl.studentFare}`
     },
     {
       category: "TARİFE_VE_UKOME_KURALLARI",
-      testName: "Adalar Özel Hat Adakart Yerleşik İkametgah İndirimi (45.00 ₺)",
-      status: isl.islandResidentFare === "45.00 ₺" ? "PASSED" : "FAILED",
+      testName: "Adalar Özel Hat Adakart Yerleşik İkametgah İndirimi (90,70 ₺)",
+      status: isl.islandResidentFare === "90,70 ₺" ? "PASSED" : "FAILED",
       details: `Ada Sakinleri Adakart İndirimi: ${isl.islandResidentFare}`
     },
     {

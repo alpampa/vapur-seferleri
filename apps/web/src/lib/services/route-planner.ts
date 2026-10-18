@@ -11,7 +11,7 @@ import {
 } from "@/lib/constants";
 
 /** Sefer verisinde fiyat yoksa gösterilen varsayılan bilet ücreti */
-const DEFAULT_TICKET_PRICE = "₺45.00";
+const DEFAULT_TICKET_PRICE = "65,21 ₺";
 
 /** Sefer verisinde platform yoksa gösterilen varsayılan rıhtım adı */
 const DEFAULT_PLATFORM = "Ana Rıhtım";
@@ -187,7 +187,7 @@ export function planJourney(
             durationMinutes: l2ArrM - l1DepM,
             transferPier: hub,
             transferWaitMinutes: waitMinutes,
-            totalPrice: "₺90.00 (2 Bilet)",
+            totalPrice: `${l1.price || DEFAULT_TICKET_PRICE} + ${l2.price || DEFAULT_TICKET_PRICE} (2 Bilet)`,
             legs: [
               {
                 origin,

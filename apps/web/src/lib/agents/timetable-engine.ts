@@ -127,6 +127,15 @@ export async function getLiveOrOfficialSchedules(): Promise<SchedulesResponse> {
     const trip = selfHealTripRecord(rawTrip);
     const [hh, mm] = trip.departureTime.split(':');
 
+    // ÜCRET KURALI: Şehir Hatları seferleri resmi İBB/ŞH tarife tablosundan
+    // (rota + gece penceresi duyarlı) fiyatlanır; diğer operatörlerde (Turyol,
+    // Mavi Marmara, Dentur, Prens Tur) operatörün kendi doğrulanmış fiyatı esastır.
+    const officialFare = getOfficialRouteFare(trip.origin, trip.destination, trip.departureTime);
+    const operatorPrice = trip.price && trip.price.trim() !== "" ? trip.price : undefined;
+    const resolvedPrice = trip.operator === "Şehir Hatları"
+      ? officialFare.fullFare
+      : (operatorPrice ?? officialFare.fullFare);
+
     // Gece seferi (00:00-04:59 kalkış) akşam saatlerinde (20:00+) görüntülenirken
     // kalkış yarına taşınır: 23:50'de 00:15 seferi "GİTTİ" değil "yaklaşan" olur.
     // Kural tek kaynaktır: nightRolloverDayOffset (istanbul-time).
@@ -176,7 +185,7 @@ export async function getLiveOrOfficialSchedules(): Promise<SchedulesResponse> {
       delayText,
       targetTimeIso: targetIso,
       platform: resolveRealisticPlatform(trip.origin, trip.destination, trip.operator),
-      price: getOfficialRouteFare(trip.origin, trip.destination).fullFare,
+      price: resolvedPrice,
       progress,
       category: trip.category || (trip.destination.includes('ada') || trip.origin.includes('ada') || trip.destination === 'Büyükada' || trip.origin === 'Büyükada' ? 'ADALAR' : 'BOGAZ'),
       stops: trip.stops && trip.stops.length > 0 ? trip.stops : undefined,

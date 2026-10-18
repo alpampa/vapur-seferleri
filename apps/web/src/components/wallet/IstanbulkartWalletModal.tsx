@@ -38,13 +38,15 @@ export function IstanbulkartWalletModal({ isOpen, onClose }: IstanbulkartWalletM
 
   if (!isOpen || !mounted) return null;
 
+  // Resmi tarife (sehirhatlari.istanbul/tr/ucret-tarifeleri, 2026-10-18):
+  // Merkez hatlar sınıfları 50,15–76,90 ₺ aralığında; Adalar 151,23 / Adakart 90,70.
   const fares = [
-    { title: "Şehir İçi Vapur (Tam)", price: "27.00 ₺", note: "İstanbulkart Tam Bilet" },
-    { title: "Öğrenci Tarifesi", price: "13.17 ₺", note: "İndirimli Öğrenci Kartı" },
-    { title: "Sosyal Kart (Öğretmen / 60+)", price: "19.34 ₺", note: "Sosyal İndirim Grubu" },
-    { title: "Adalar Hattı (Misafir)", price: "90.00 ₺", note: "Bostancı / Kabataş ➔ Adalar" },
-    { title: "Adakart (Ada Mukimi)", price: "45.00 ₺", note: "Adalar İkametgah Kartı" },
-    { title: "65+ Yaş & Engelli", price: "0.00 ₺", note: "Ücretsiz Geçiş Hakkı" }
+    { title: "Merkez Hatlar (Tam)", price: "50,15–76,90 ₺", note: "İstanbulkart Tam · hatta göre" },
+    { title: "Öğrenci Tarifesi", price: "24,43–37,61 ₺", note: "İndirimli Öğrenci Kartı" },
+    { title: "Sosyal Kart (Öğretmen / 60+)", price: "35,92–55,17 ₺", note: "Sosyal İndirim Grubu" },
+    { title: "Adalar Hattı (Misafir)", price: "151,23 ₺", note: "Adakartsız · tüm adalar hatları" },
+    { title: "Adakart (Ada Mukimi)", price: "90,70 ₺", note: "Adalar İkametgah Kartı" },
+    { title: "65+ Yaş & Engelli", price: "0,00 ₺", note: "Ücretsiz Geçiş Hakkı" }
   ];
 
   return createPortal(

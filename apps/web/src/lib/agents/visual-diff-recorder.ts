@@ -31,8 +31,8 @@ const DIFF_SNAPSHOT_HISTORY: DiffSnapshot[] = [
     sourceUrl: "https://www.turyol.com/Tarife.aspx",
     category: "TARIFE_FIYATI",
     title: "UKOME 2026 Bilet & Kartlı Geçiş Tebliği Karşılaştırması",
-    previousSnippet: "Şehir içi hat bilet fiyatı: 27.00 ₺ (UKOME Kararı)",
-    currentSnippet: "Şehir içi hat bilet fiyatı: 27.00 ₺ (UKOME Kararı)",
+    previousSnippet: "Şehir içi hat bilet fiyatı: 65,21 ₺ (UKOME Kararı)",
+    currentSnippet: "Şehir içi hat bilet fiyatı: 65,21 ₺ (UKOME Kararı)",
     changesDetected: false,
     shaHash: "ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb"
   },

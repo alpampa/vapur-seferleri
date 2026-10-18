@@ -46,7 +46,7 @@ const SELF_HEALING_LOGS: SelfHealingAction[] = [
     id: "heal-init-04",
     timestamp: new Date().toISOString(),
     targetType: "FARE_SYNC",
-    description: "UKOME 2026 resmi tebliği kontrol edildi: Şehir içi 27.00 ₺, Adalar 90.00 ₺, Deniz Taksi 500₺ + 750₺/NM senkronize edildi.",
+    description: "UKOME 2026 resmi tebliği kontrol edildi: Şehir içi hatlar 50,15–76,90 ₺, Adalar 151,23 / Adakart 90,70 ₺, Deniz Taksi 500₺ + 750₺/NM senkronize edildi.",
     severity: "INFO"
   },
   {

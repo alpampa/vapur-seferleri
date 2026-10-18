@@ -7,10 +7,16 @@ import { RawOfficialTrip } from "./official-schedules";
  * Yöntem: Hugging Face Multimodal Vision / OCR Tablo Çıkarımı
  * Doğrulama: %100 Resmi Kış Tarifesi Tablosu
  * 
+ * ÜCRET: Resmi sitede SAYISAL bilet ücreti YAYINLANMIYOR; SSS yalnız
+ * "İstanbul Kart ile geçiş yapılmaktadır" der (2026-10-18 doğrulaması).
+ * Kural: doğrulanamayan ücret "—" gösterilir; onaya sunulur.
+ * 
  * Hatlar:
  * 1. Kartal ➔ Büyükada ➔ Heybeliada
  * 2. Heybeliada ➔ Büyükada ➔ Kartal
  */
+
+const PRICE_UNVERIFIED = "—";
 
 interface PrensTurDeparture {
   dep: string;
@@ -89,7 +95,7 @@ export function getPrensTurSchedules(): RawOfficialTrip[] {
       departureTime: k.dep,
       arrivalTime: heybeliadaArr,
       platform: "Kartal Prens Tur İskelesi",
-      price: "115 ₺",
+      price: PRICE_UNVERIFIED,
       isWeekdayOnly: k.isWeekdayOnly,
       stops: [
         { name: "Büyükada", time: buyukadaArr },
@@ -107,7 +113,7 @@ export function getPrensTurSchedules(): RawOfficialTrip[] {
       departureTime: k.dep,
       arrivalTime: buyukadaArr,
       platform: "Kartal Prens Tur İskelesi",
-      price: "115 ₺",
+      price: PRICE_UNVERIFIED,
       isWeekdayOnly: k.isWeekdayOnly,
       stops: undefined,
       lineName: "Kartal - Büyükada Hattı",
@@ -126,7 +132,7 @@ export function getPrensTurSchedules(): RawOfficialTrip[] {
       departureTime: a.heybeliadaDep,
       arrivalTime: a.kartalArr,
       platform: "Heybeliada İskelesi",
-      price: "115 ₺",
+      price: PRICE_UNVERIFIED,
       isWeekdayOnly: a.isWeekdayOnly,
       stops: [
         { name: "Büyükada", time: a.buyukadaDep },
@@ -144,7 +150,7 @@ export function getPrensTurSchedules(): RawOfficialTrip[] {
       departureTime: a.buyukadaDep,
       arrivalTime: a.kartalArr,
       platform: "Büyükada Prens Tur İskelesi",
-      price: "115 ₺",
+      price: PRICE_UNVERIFIED,
       isWeekdayOnly: a.isWeekdayOnly,
       stops: undefined,
       lineName: "Büyükada - Kartal Hattı",
@@ -160,7 +166,7 @@ export function getPrensTurSchedules(): RawOfficialTrip[] {
       departureTime: a.heybeliadaDep,
       arrivalTime: a.buyukadaDep,
       platform: "Heybeliada İskelesi",
-      price: "70 ₺",
+      price: PRICE_UNVERIFIED,
       isWeekdayOnly: a.isWeekdayOnly,
       stops: undefined,
       lineName: "Heybeliada - Büyükada Ada İçi Geçiş",

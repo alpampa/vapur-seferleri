@@ -42,6 +42,10 @@ const EVERYDAY = { runsWeekday: true, runsSaturday: true, runsSunday: true };
 const NOT_SUNDAY_HOLIDAY = { runsWeekday: true, runsSaturday: true, runsSunday: false };
 const WEEKEND_ONLY = { runsWeekday: false, runsSaturday: true, runsSunday: true };
 
+// Resmi doğrulama 2026-10-18 (mavimarmara.net ana sayfa): İstanbul Kart
+// Tam 151,23 ₺ / Öğrenci 75,64 ₺ / Adakart 90,70 ₺. Kart başına Tam gösterilir.
+const MM_ADA_FARE = "151,23 ₺";
+
 /** Tek sefer kaydı üretir (stop ve arrival dakika ofsetleri ile) */
 function buildTrip(
   id: string,
@@ -64,7 +68,7 @@ function buildTrip(
     departureTime,
     arrivalTime: addMinutes(departureTime, opts.arrivalOffsetMin),
     platform: opts.platform,
-    price: "₺90.00",
+    price: MM_ADA_FARE,
     ...(opts.dayType ?? EVERYDAY),
     stops: opts.stops?.map((s) => ({
       name: s.name,
@@ -438,7 +442,7 @@ export function getMaviMarmaraSchedules(): RawOfficialTrip[] {
       departureTime: dep.time,
       arrivalTime: dep.arrival, // resmi sayfada yayınlanan varış saati
       platform: PIER_KABATAS,
-      price: "₺90.00",
+      price: MM_ADA_FARE,
       ...(dep.weekendOnly ? WEEKEND_ONLY : EVERYDAY),
       stops: [{ name: "Heybeliada", time: addMinutes(dep.time, 75) }],
     });
@@ -455,7 +459,7 @@ export function getMaviMarmaraSchedules(): RawOfficialTrip[] {
       departureTime: dep.time,
       arrivalTime: dep.arrival,
       platform: PIER_BUYUK,
-      price: "₺90.00",
+      price: MM_ADA_FARE,
       ...(dep.weekendOnly ? WEEKEND_ONLY : EVERYDAY),
       stops: [{ name: "Heybeliada", time: addMinutes(dep.time, 15) }],
     });
@@ -472,7 +476,7 @@ export function getMaviMarmaraSchedules(): RawOfficialTrip[] {
       departureTime: dep.time,
       arrivalTime: dep.arrival,
       platform: PIER_HEYBELI,
-      price: "₺90.00",
+      price: MM_ADA_FARE,
       ...(dep.weekendOnly ? WEEKEND_ONLY : EVERYDAY),
     });
   }
