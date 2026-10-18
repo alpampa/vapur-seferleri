@@ -650,6 +650,7 @@ export function ScheduleCard(props: ScheduleCardProps) {
           stops={props.stops}
           operator={props.operator}
           underway={dynState.underway}
+          soonDeparturePier={dynState.countdown && !dynState.isDeparted ? dynState.currentOrigin : null}
         />
       )}
     </div>

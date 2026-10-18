@@ -17,6 +17,8 @@ interface TransitRouteSchematicProps {
   stops?: Stop[];
   operator?: string;
   underway?: UnderwaySegment | null;
+  /** Kalkışına ≤5 dk kalan iskele — şeritte saati yanıp söner */
+  soonDeparturePier?: string | null;
 }
 
 /**
@@ -30,7 +32,11 @@ interface TransitRouteSchematicProps {
  * kenarına yaslanır: geçmiş duraklar ekrandan tamamen çıkar, yalnız
  * "şu an + ileri" görünür (elle kaydırma her zaman önceliklidir; dokunuş
  * sonrası otomatik kaydırma 6 sn duraklar). Otomatik kaydırma asla sola
- * (geçmişe) yapılmaz.
+ * (geçmişe) yapılmaz. İskelede beklemede (varış tamam) bir sonraki kalkış
+ * iskelesine yaslanır — "birazdan buradan kalkacak" odağı.
+ *
+ * KULLANICI KURALI (kalkış yaklaşıyor): Bir iskeleden kalkışa ≤5 dk kaldığında
+ * o iskelenin şeritteki saati ve adı yanıp söner (soonDeparturePier).
  */
 export function TransitRouteSchematic({
   origin,
@@ -40,6 +46,7 @@ export function TransitRouteSchematic({
   stops,
   operator,
   underway,
+  soonDeparturePier,
 }: TransitRouteSchematicProps) {
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const shipRef = useRef<HTMLDivElement | null>(null);
@@ -67,16 +74,23 @@ export function TransitRouteSchematic({
   // KULLANICI KURALI: Sefer her duraktan hareket ettiğinde o durak şeridin SOL
   // kenarına yaslanır — "şu andan itibaren ilk kalkış" görünümü. Geçmiş duraklar
   // ekrandan tamamen çıkar; isim asla kenarda kesilmez (elle kaydırma hariç).
+  // İskelede beklerken (varış tamam, kalkış bekliyor) sonraki iskeleye yaslanır.
+  const chainKey = `${origin}|${destination}|${departureTime}`;
+  useEffect(() => {
+    alignedIndexRef.current = null;
+  }, [chainKey]);
+
+  const anchorIndex = live == null ? null : live.hasArrived ? live.toIndex : live.fromIndex;
   useEffect(() => {
     const scroller = scrollRef.current;
-    if (!scroller || live == null) return;
+    if (!scroller || anchorIndex == null) return;
     if (Date.now() < pausedUntilRef.current) return;
-    if (alignedIndexRef.current === live.fromIndex) return;
-    const node = nodeRefs.current[live.fromIndex];
+    if (alignedIndexRef.current === anchorIndex) return;
+    const node = nodeRefs.current[anchorIndex];
     if (!node) return;
-    alignedIndexRef.current = live.fromIndex;
+    alignedIndexRef.current = anchorIndex;
     scroller.scrollTo({ left: Math.max(0, node.offsetLeft - 8), behavior: "smooth" });
-  }, [live?.fromIndex, live]);
+  }, [anchorIndex]);
 
   // Seyir ortasında gemi sağ banda yaklaşırsa şerit sağa kaydırılır (gemi hep
   // görünür kalır). Otomatik kaydırma ASLA sola yapılmaz → geçmiş duraklar
@@ -122,6 +136,11 @@ export function TransitRouteSchematic({
             const isFirst = index === 0;
             const isLast = index === fullChain.length - 1;
 
+            // KULLANICI KURALI: Kalkışına ≤5 dk kalan iskele — saati ve adı
+            // yanıp söner ("bak, birazdan buradan kalkacak").
+            const isSoonPier =
+              soonDeparturePier != null && stop.name.trim() === soonDeparturePier.trim();
+
             const isDoneNode =
               isFirst ||
               (live != null &&
@@ -146,20 +165,35 @@ export function TransitRouteSchematic({
                   className="flex flex-col items-center group/stop"
                 >
                   {stop.time && (
-                    <span className="text-[9px] sm:text-[9.5px] font-mono tabular-nums font-bold text-slate-500 dark:text-slate-400 leading-none mb-2">
+                    <span
+                      title={isSoonPier ? `${stop.name} kalkışı yaklaşıyor` : undefined}
+                      className={`text-[9px] sm:text-[9.5px] font-mono tabular-nums leading-none mb-2 ${
+                        isSoonPier
+                          ? "font-black text-amber-600 dark:text-amber-400 animate-pulse"
+                          : "font-bold text-slate-500 dark:text-slate-400"
+                      }`}
+                    >
                       {stop.time}
                     </span>
                   )}
 
                   <div className="relative flex items-center justify-center">
-                    <span className={`w-3 h-3 rounded-full border-2 transition-all shrink-0 ${dotClass}`} />
+                    <span
+                      className={`w-3 h-3 rounded-full border-2 transition-all shrink-0 ${
+                        isSoonPier
+                          ? "bg-amber-400 border-white dark:border-slate-900 shadow-xs ring-4 ring-amber-400/30 animate-pulse"
+                          : dotClass
+                      }`}
+                    />
                   </div>
 
                   {/* KULLANICI KURALI: durak adları ALTTA her zaman TAM yazılır —
                       kısaltma yalnızca ÜST rota satırındadır. */}
                   <span
                     className={`text-[10px] mt-1 font-bold whitespace-nowrap leading-none ${
-                      isFirst || isLast
+                      isSoonPier
+                        ? "font-black text-amber-700 dark:text-amber-300 animate-pulse"
+                        : isFirst || isLast
                         ? "text-slate-900 dark:text-white font-extrabold"
                         : "text-slate-600 dark:text-slate-400 font-medium"
                     }`}
