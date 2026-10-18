@@ -1,4 +1,4 @@
-import { RawOfficialTrip } from "./official-schedules";
+import { RawOfficialTrip, RawStop } from "./official-schedules";
 import rawTuryolData from "./turyol-scraped.json";
 
 interface ScrapedRoute {
@@ -76,7 +76,8 @@ export function getTuryolSchedules(): RawOfficialTrip[] {
         if (route.destination === "Büyükada") estDurationMins = 70;
         else if (route.destination === "Heybeliada") estDurationMins = 55;
         else if (route.destination === "Kınalıada") estDurationMins = 40;
-        else estDurationMins = 60;
+        else if (route.destination === "Kadıköy") estDurationMins = 60;
+        else estDurationMins = 75; // Eminönü (Kadıköy durağının ötesi)
       } else {
         if (route.origin === "Üsküdar" || route.destination === "Üsküdar") {
           estDurationMins = 15;
@@ -109,5 +110,41 @@ export function getTuryolSchedules(): RawOfficialTrip[] {
     });
   });
 
-  return trips;
+  // Çoklu kart düzeltmesi: Aynı iskeleden aynı saatte kalkan Ada hattı kayıtları
+  // tek fiziksel gemiye aittir (örn. Eminönü 10:40 Kınalıada+Heybeliada+Büyükada
+  // aynı seferin ayrı satılan bacaklarıdır). Gün bayrakları aynı olan kayıtlar tek
+  // kartta en uzak varışa göre birleştirilir; ara adalar alt şeritte durak olur.
+  const grouped = new Map<string, RawOfficialTrip[]>();
+  for (const trip of trips) {
+    const key = `${trip.origin}|${trip.departureTime}|${trip.runsWeekday}|${trip.runsSaturday}|${trip.runsSunday}`;
+    const list = grouped.get(key);
+    if (list) list.push(trip);
+    else grouped.set(key, [trip]);
+  }
+
+  const mergedTrips: RawOfficialTrip[] = [];
+  for (const group of grouped.values()) {
+    // Aynı dakikada başka kategori (boğaz hattı) varsa o ayrı gemidir, dokunulmaz.
+    const adaGroup = group.filter((t) => t.category === "ADALAR");
+    const otherGroup = group.filter((t) => t.category !== "ADALAR");
+    mergedTrips.push(...otherGroup);
+    if (adaGroup.length <= 1) {
+      mergedTrips.push(...adaGroup);
+      continue;
+    }
+    const sorted = [...adaGroup].sort((a, b) =>
+      (a.arrivalTime ?? a.departureTime).localeCompare(b.arrivalTime ?? b.departureTime)
+    );
+    const target = sorted[sorted.length - 1];
+    const hopStops: RawStop[] = sorted
+      .slice(0, -1)
+      .map((t) => ({ name: t.destination, time: t.arrivalTime ?? t.departureTime }));
+    mergedTrips.push({
+      ...target,
+      stops: hopStops,
+      lineName: `Turyol ${target.origin} - ${target.destination} Hattı (${hopStops.map((s) => s.name).join(", ")} uğramalı)`
+    });
+  }
+
+  return mergedTrips;
 }
