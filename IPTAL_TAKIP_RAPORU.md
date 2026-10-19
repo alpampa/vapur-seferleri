@@ -30,9 +30,12 @@ Mevcut, gerçek sayfalarla doğrulanmış parser'lar korunup izleme hattına ba�
 
 ## 3. 60 saniyelik sunucu zamanlaması ve gerçek kısıt
 
-- `vercel.json` → `{"path": "/api/cron/monitor", "schedule": "* * * * *"}` eklendi; günlük 21:05 cron'u korundu.
-- **Gerçek kısıt:** Vercel'de dakikalık cron **Pro plan** gerektirir (Hobby günde 1). Kararınız doğrultusunda Pro varsayıldı.
-- `CRON_SECRET` tanımlıysa Vercel `Authorization: Bearer <secret>` başlığını otomatik ekler. **Üretimde `CRON_SECRET` set edilmezse cron 401 alır** (güvenlik gereği bilinçli).
+- `api/cron/monitor` uç noktası 60 sn'lik turları çalıştırmaya hazırdır.
+- **Gerçek kısıt (doğrulandı):** Vercel hesabı **Hobby**; `* * * * *` cron deploy'u reddediyor ("Hobby accounts are limited to daily cron jobs"). Bu nedenle per-minute cron `vercel.json`'dan çıkarıldı ve deploy tamamlandı; günlük 21:05 taraması korundu.
+- 60 sn'lik tur için iki yol:
+  1. **Vercel Pro'ya geç** ve `vercel.json`'a `{"path": "/api/cron/monitor", "schedule": "* * * * *"}` satırını geri ekle.
+  2. **Harici tetikleyici** (Pro'suz): cron-job.org / benzeri bir servisle her 60 sn `GET https://vapur-seferleri.vercel.app/api/cron/monitor` + `Authorization: Bearer <CRON_SECRET>`. `CRON_SECRET` Vercel'de tanımlıdır; harici servise girmek için değeri sizin belirlemeniz gerekir (`vercel env rm CRON_SECRET production` → `vercel env add CRON_SECRET production`).
+- `CRON_SECRET` tanımlıysa Vercel cron `Authorization: Bearer <secret>` başlığını otomatik ekler; harici tetikleyici de aynı başlığı göndermelidir. Yetkisiz istek **401** alır.
 - Cron tetiklenmesi ile başarılı kontrol AYRI ölçülür (`checksAttempted` / `checksSucceeded` / `checksFailed`).
 - Kaynak dostu davranış: başarısız kaynak için üstel backoff (1 dk → 2 dk → 4 dk … üst sınır 15 dk). Backoff sırasında kaynak taranmaz (`skippedByBackoff`).
 
@@ -119,8 +122,8 @@ Mevcut Playwright denetim paketi (`e2e/independent-audit.spec.ts`): **20/20**. B
 ### Üretim kurulumu (zorunlu)
 1. Upstash Redis (veya Vercel KV) oluştur.
 2. Env: `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` **veya** `KV_REST_API_URL`, `KV_REST_API_TOKEN`.
-3. Env: `CRON_SECRET` (güçlü, rastgele) — cron bu olmadan 401 alır.
-4. Vercel **Pro** plan (dakikalık cron için).
+3. Env: `CRON_SECRET` — **production'a eklendi** (değer gizli).
+4. 60 sn'lik tur için **Vercel Pro** + per-minute cron satırını geri ekle **veya** harici 60 sn tetikleyici kullan (bkz. §3).
 5. Deploy sonrası doğrula:
    - `GET /api/source-health` → `persistent: true`, `lastTick.checksSucceeded > 0`
    - `GET /api/version`
