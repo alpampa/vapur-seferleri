@@ -8,6 +8,7 @@ import {
   kvGetJson,
   kvSet,
   kvSetJson,
+  kvSetNx,
 } from "@/lib/agents/kv-store";
 
 beforeEach(() => {
@@ -55,5 +56,21 @@ describe("kv-store — in-memory yedek", () => {
   it("bozuk JSON null döner (çökmez)", async () => {
     await kvSet("vapur:bozuk", "{bozuk");
     expect(await kvGetJson("vapur:bozuk")).toBeNull();
+  });
+
+  it("SET NX: ilk alan kilidi alır, ikincisi alamaz; DEL sonrası yeniden alınır", async () => {
+    expect(await kvSetNx("vapur:kilit", "a", 70)).toBe(true);
+    expect(await kvSetNx("vapur:kilit", "b", 70)).toBe(false);
+    await kvDel("vapur:kilit");
+    expect(await kvSetNx("vapur:kilit", "c", 70)).toBe(true);
+  });
+
+  it("SET NX: TTL dolunca kilit yeniden alınabilir", async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-10-19T10:00:00Z"));
+    expect(await kvSetNx("vapur:kilit", "a", 60)).toBe(true);
+    expect(await kvSetNx("vapur:kilit", "b", 60)).toBe(false);
+    vi.setSystemTime(new Date("2026-10-19T10:01:01Z"));
+    expect(await kvSetNx("vapur:kilit", "c", 60)).toBe(true);
   });
 });

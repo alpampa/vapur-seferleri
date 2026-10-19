@@ -102,8 +102,29 @@ export async function kvSet(key: string, value: string, ttlSeconds?: number): Pr
   });
 }
 
-export async function kvDel(key: string): Promise<void> {
+/**
+ * Atomik "yoksa yaz" (SET NX EX) — dağıtık kilit için.
+ *
+ * KV yapılandırılmışsa ve komut başarısız olursa **false** döner (fail-closed):
+ * kilidi alamadıysak tur atlanır; böylece çift yazma/çift olay oluşmaz.
+ */
+export async function kvSetNx(key: string, value: string, ttlSeconds: number): Promise<boolean> {
   if (isKvConfigured()) {
+    try {
+      const result = await upstashCommand(["SET", key, value, "NX", "EX", ttlSeconds]);
+      return result === "OK";
+    } catch (err) {
+      console.warn(`[kv] SET NX başarısız (${key}): ${err instanceof Error ? err.message : err}`);
+      return false;
+    }
+  }
+  const entry = MEMORY.get(key);
+  if (entry && (entry.expiresAt === null || entry.expiresAt > Date.now())) return false;
+  MEMORY.set(key, { value, expiresAt: Date.now() + ttlSeconds * 1000 });
+  return true;
+}
+
+export async function kvDel(key: string): Promise<void> {  if (isKvConfigured()) {
     try {
       await upstashCommand(["DEL", key]);
       return;
