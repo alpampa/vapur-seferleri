@@ -31,9 +31,10 @@ Mevcut, gerçek sayfalarla doğrulanmış parser'lar korunup izleme hattına ba�
 ## 3. 60 saniyelik sunucu zamanlaması ve gerçek kısıt
 
 - `api/cron/monitor` uç noktası 60 sn'lik turları çalıştırmaya hazırdır.
-- **Gerçek kısıt (doğrulandı):** Vercel hesabı **Hobby**; `* * * * *` cron deploy'u reddediyor ("Hobby accounts are limited to daily cron jobs"). Bu nedenle per-minute cron `vercel.json`'dan çıkarıldı ve deploy tamamlandı; günlük 21:05 taraması korundu.
+- **Dağıtık kilit:** `SET NX EX 70`. Aynı anda gelen ikinci cron isteği `{ ok:true, skipped:"locked" }` döner ve tur çalıştırmaz. Eşzamanlı iki istekle doğrulandı: biri `skipped:"locked"`, diğeri 4/4 kaynak taradı. Kilit `finally` ile bırakılır; çökmede TTL en fazla 1 tur atlatır.
+- **Gerçek kısıt (doğrulandı):** Vercel hesabı **Hobby**; `* * * * *` cron deploy'u reddediyor ("Hobby accounts are limited to daily cron jobs"). Per-minute satır şu an `vercel.json`'dan çıkarıldı; günlük 21:05 taraması korundu. **Pro yükseltmesi tamamlanınca satır geri eklenecek.**
 - 60 sn'lik tur için iki yol:
-  1. **Vercel Pro'ya geç** ve `vercel.json`'a `{"path": "/api/cron/monitor", "schedule": "* * * * *"}` satırını geri ekle.
+  1. **Vercel Pro'ya geç** ve `vercel.json`'a `{"path": "/api/cron/monitor", "schedule": "* * * * *"}` satırını geri ekle (tek commit).
   2. **Harici tetikleyici** (Pro'suz): cron-job.org / benzeri bir servisle her 60 sn `GET https://vapur-seferleri.vercel.app/api/cron/monitor` + `Authorization: Bearer <CRON_SECRET>`. `CRON_SECRET` Vercel'de tanımlıdır; harici servise girmek için değeri sizin belirlemeniz gerekir (`vercel env rm CRON_SECRET production` → `vercel env add CRON_SECRET production`).
 - `CRON_SECRET` tanımlıysa Vercel cron `Authorization: Bearer <secret>` başlığını otomatik ekler; harici tetikleyici de aynı başlığı göndermelidir. Yetkisiz istek **401** alır.
 - Cron tetiklenmesi ile başarılı kontrol AYRI ölçülür (`checksAttempted` / `checksSucceeded` / `checksFailed`).
@@ -84,9 +85,9 @@ Davranış:
 
 ## 8. Testler (gerçek kaynak fixture'larıyla)
 
-Yeni testler (**20 yeni** → güncel toplam **230/230**):
+Yeni testler (**22 yeni** → güncel toplam **232/232**):
 
-- `src/lib/agents/__tests__/kv-store.test.ts` (5): set/get, TTL, JSON, bozuk JSON.
+- `src/lib/agents/__tests__/kv-store.test.ts` (7): set/get, TTL, JSON, bozuk JSON, SET NX kilit (ilk alan/ikinci red/ DEL sonrası yeniden), TTL dolunca yeniden alma.
 - `src/lib/agents/__tests__/announcement-monitor.test.ts` (15):
   - diff: ANNOUNCED / UPDATED / REMOVED / CANCELLATION_REMOVED / idempotent
   - hash determinizmi
@@ -124,6 +125,7 @@ Mevcut Playwright denetim paketi (`e2e/independent-audit.spec.ts`): **20/20**. B
 | `/api/version` | `200`, güncel deployment id |
 | `/api/source-health` | `200`, `persistent:false`, `storage:memory` (KV env yok) |
 | `/api/cron/monitor` (yetkisiz) | `401` |
+| Dağıtık kilit (eşzamanlı 2 istek) | biri `skipped:"locked"`, diğeri 4/4 taradı |
 | `/api/announcements` | `200`, 2 duyuru, 20 iptal |
 
 > Not: Hobby planı dakikalık cron'u reddettiği için production'da izleme turları henüz otomatik tetiklenmiyor. `CRON_SECRET` production'a eklendi; 60 sn'lik tur için Pro + cron satırı veya harici tetikleyici gerekir (§3). KV env yokken `persistent:false` — kalıcı arşiv için Upstash env şart.
@@ -155,6 +157,6 @@ Mevcut Playwright denetim paketi (`e2e/independent-audit.spec.ts`): **20/20**. B
 ```powershell
 cd apps/web
 npm run typecheck   # temiz
-npm test            # 230/230
+npm test            # 232/232
 npm run build       # başarılı
 ```
