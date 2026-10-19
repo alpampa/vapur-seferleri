@@ -5,6 +5,7 @@ import {
   parseSehirHatlariCancellationStatus,
   parseSehirHatlariAnnouncements,
   parseDenturAnnouncements,
+  parseTrLongDate,
   parseMaviMarmaraStatusFeed,
   parseTuryolAnnouncements,
   classifyAnnouncement,
@@ -136,6 +137,25 @@ describe("Dentur duyuru ajanı (fixture)", () => {
     expect(announcements.every((a) => a.operator === "Dentur Avrasya")).toBe(true);
     // URL'ler resmi
     expect(announcements.every((a) => a.sourceUrl.includes("/tr-TR/duyurular/"))).toBe(true);
+  });
+
+  it("karttan GERÇEK başlık, kaynak tarihi ve resmî özeti çıkarır", () => {
+    const announcements = parseDenturAnnouncements(fixture("dentur-duyurular.html"));
+    const item = announcements.find((a) =>
+      a.id.includes("sefer-durumu-bilgilendirmesi-8-ocak")
+    );
+    expect(item?.title).toBe("Sefer Durumu Bilgilendirmesi 8 Ocak");
+    expect(item?.publishedAt).toBe("08.01.2026");
+    expect(item?.publishedAtSource).toBe("SOURCE");
+    expect(item?.body).toContain("Hava Muhalefeti");
+    // Kaynak özeti "…" ile kesilse de yarım cümle gösterilmez.
+    expect(item?.body).not.toContain("…");
+  });
+
+  it("uzun TR tarihini GG.AA.YYYY'ye çevirir", () => {
+    expect(parseTrLongDate("19 Ekim 2026")).toBe("19.10.2026");
+    expect(parseTrLongDate("3 Ağustos 2026")).toBe("03.08.2026");
+    expect(parseTrLongDate("tarih yok")).toBeUndefined();
   });
 });
 
@@ -305,6 +325,52 @@ describe("KULLANICI KURALI: TÜM firmalar taranır (çok-firmalı tarama)", () =
     }
   });
 
+  it("Şehir Hatları 403 → allorigins yedeğinden okunur (WAF bypass)", async () => {
+    const shHtml = fixture("sehirhatlari-iptal-seferler-17102026.html");
+    const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.includes("api.allorigins.win")) return new Response(shHtml, { status: 200 });
+      if (url.includes("sehirhatlari.istanbul")) return new Response("blocked", { status: 403 });
+      throw new Error(`beklenmeyen URL: ${url}`);
+    });
+    vi.stubGlobal("fetch", fetchMock);
+    try {
+      const { coverage, snapshots } = await scrapeAllAnnouncements({
+        operators: ["Şehir Hatları"],
+      });
+      const sh = coverage.find((c) => c.operator === "Şehir Hatları");
+      expect(sh?.status).toBe("SCANNED");
+      expect(sh?.via).toBe("allorigins");
+      expect(snapshots[0].announcements.length).toBeGreaterThan(0);
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+
+  it("Mavi Marmara 403 → r.jina.ai üzerinden JSON okunur", async () => {
+    const mmFeed = fixture("mavi-marmara-durum-feed.json");
+    const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.includes("r.jina.ai")) {
+        return new Response(`Title: feed.json\n\nMarkdown Content:\n${mmFeed}`, { status: 200 });
+      }
+      if (url.includes("durum.mavimarmara.net")) return new Response("blocked", { status: 403 });
+      throw new Error(`beklenmeyen URL: ${url}`);
+    });
+    vi.stubGlobal("fetch", fetchMock);
+    try {
+      const { coverage, snapshots } = await scrapeAllAnnouncements({
+        operators: ["Mavi Marmara"],
+      });
+      const mm = coverage.find((c) => c.operator === "Mavi Marmara");
+      expect(mm?.status).toBe("SCANNED");
+      expect(mm?.via).toBe("jina");
+      expect(snapshots[0].announcements[0]?.body).toContain("Beşiktaş-Kabataş");
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+
   it("bir firma kaynağı çökerse yalnız o firma FAILED olur; diğerleri taranmaya devam eder", async () => {
     const denturHtml = fixture("dentur-duyurular.html");
     const mmFeed = fixture("mavi-marmara-durum-feed.json");
@@ -377,6 +443,28 @@ describe("duyuru → sefer eşleştirici", () => {
     expect(dis.length).toBeGreaterThan(0);
     const map = indexDisruptionsByTrip(dis);
     expect(map.size).toBe(new Set(dis.map((d) => d.tripId)).size);
+  });
+});
+
+describe("duyuru → sefer eşleştirici — açık Adalar iptali", () => {
+  it("'adalar seferlerimiz iptal edilmiştir' → Adalar seferleri KESİN iptal", () => {
+    const a: OperatorAnnouncement = {
+      id: "den-19-ekim-heybeli-ada-buyuk-ada-sefer-iptali",
+      operator: "Dentur Avrasya",
+      title: "19 Ekim Heybeli Ada - Büyük Ada Sefer İptali",
+      body:
+        "19 Ekim 2026 Değerli yolcularımız, hava muhalefeti (olumsuz hava ve deniz koşulları) nedeniyle adalar seferlerimiz gün boyu iptal edilmiştir.",
+      type: "CANCELLED_TRIPS",
+      sourceUrl: "https://www.denturavrasya.com/tr-TR/duyurular/19-ekim-heybeli-ada-buyuk-ada-sefer-iptali",
+      sourceVerified: true,
+      publishedAt: "19.10.2026",
+    };
+
+    const dis = matchAnnouncementToTrips(a);
+    expect(dis.length).toBeGreaterThan(0);
+    expect(dis.every((d) => d.confidence === "CONFIRMED")).toBe(true);
+    expect(dis.every((d) => d.operator === "Dentur Avrasya")).toBe(true);
+    expect(dis.every((d) => d.tripId.includes("adalar"))).toBe(true);
   });
 });
 

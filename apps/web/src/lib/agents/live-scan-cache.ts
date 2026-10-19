@@ -16,8 +16,11 @@ export interface LiveScanCache {
   coverage: OperatorScanReport[];
 }
 
-/** Canlı tarama önbelleği — her istemci isteğinde siteleri yormamak için 10 dk */
-const LIVE_SCAN_TTL_MS = 10 * 60 * 1000;
+/**
+ * Canlı tarama önbelleği — dakikalık iptal takibiyle aynı ritim.
+ * (Paylaşımlı önbellek: aynı örnekte dakikada en fazla 1 tarama.)
+ */
+const LIVE_SCAN_TTL_MS = 60 * 1000;
 let liveScanCache: LiveScanCache | null = null;
 
 export async function getLiveScan(opts?: { force?: boolean }): Promise<LiveScanCache | null> {

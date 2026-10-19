@@ -7,6 +7,7 @@ import { MarqueeTicker } from "@/components/ui/MarqueeTicker";
 import { AnnouncementDetailSheet } from "@/components/announcements/AnnouncementDetailSheet";
 import type { OperatorAnnouncement } from "@/lib/types/announcement";
 import { isAnnouncementCurrent } from "@/lib/utils/announcement-filter";
+import { buildCancellationBulletin } from "@/lib/utils/announcement-bulletin";
 import { useAnnouncementStore } from "@/store/useAnnouncementStore";
 
 interface AnnouncementBannerProps {
@@ -60,6 +61,8 @@ export function AnnouncementBanner({ announcements, className = "" }: Announceme
 
   const currentItem = activeList[currentIndex % activeList.length] || activeList[0];
   const tone = TYPE_META[currentItem.type]?.tone ?? "danger";
+  // KULLANICI KURALI: metnin BAŞINDA tarih, ardından iptal edilen seferler.
+  const bulletin = buildCancellationBulletin(currentItem);
   const currentHealth = sourceHealth.find((h) => h.operator === currentItem.operator);
   const sourceUnreachable = currentHealth?.status === "UNREACHABLE";
 
@@ -176,12 +179,12 @@ export function AnnouncementBanner({ announcements, className = "" }: Announceme
                   ? "text-rose-700 dark:text-rose-200 font-bold"
                   : "text-slate-800 dark:text-slate-200"
               }`}
-              title={`${currentItem.title} ${currentItem.body ? `- ${currentItem.body}` : ""}`}
+              title={bulletin.text}
             >
-              {/* İptal durumunda doğrudan açıklama cümlesini yaz */}
-              {hasCancellation && currentItem.body ? (
+              {/* İptal duyurusu: "TARİH · FİRMA · Sebep · İptal: ..." tek satır */}
+              {hasCancellation ? (
                 <span className="text-rose-700 dark:text-rose-100 font-extrabold">
-                  {currentItem.body}
+                  {bulletin.oneLine}
                 </span>
               ) : (
                 <>

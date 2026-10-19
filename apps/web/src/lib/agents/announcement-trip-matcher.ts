@@ -28,6 +28,16 @@ const KNOWN_PIERS = [
 
 const TIME_RE_G = /\b([01]\d|2[0-3]):[0-5]\d\b/g;
 
+const ISLAND_PIERS = ["heybeliada", "buyukada", "burgazada", "kinaliada", "adalar"];
+
+/** Sefer Adalar hattında mı? (uğrak/origin/destination veya kategori) */
+function isIslandTrip(trip: (typeof OFFICIAL_SCHEDULES_DATA)[number]): boolean {
+  if (trip.category === "ADALAR") return true;
+  return [trip.origin, ...(trip.stops?.map((s) => s.name) ?? []), trip.destination]
+    .map(normalizePierName)
+    .some((t) => ISLAND_PIERS.includes(t));
+}
+
 /** "İptal Seferler:" listesindeki hat satırı formatı (harf, boşluk ve tire) */
 const ROUTE_LINE_RE = /^[A-Za-zÇĞİÖŞÜçğıöşü][A-Za-zÇĞİÖŞÜçğıöşü\s-]{2,80}$/;
 
@@ -126,6 +136,13 @@ export function matchAnnouncementToTrips(
   const piers = pierMentions(announcement);
   const times = timeMentions(announcement);
   const opName = announcement.operator;
+  // KULLANICI KURALI: resmî metin "adalar seferlerimiz ... iptal edilmiştir"
+  // diyorsa TÜM Adalar seferleri kesin iptaldir (başlık yalnızca rotayı verir).
+  const fullText = normalizePierName(
+    `${announcement.title ?? ""} ${announcement.body ?? ""}`
+  );
+  const explicitAdalarCancel =
+    fullText.includes("adalar") && fullText.includes("iptal");
 
   const candidates = OFFICIAL_SCHEDULES_DATA.filter((trip) => trip.operator === opName);
 
@@ -205,7 +222,12 @@ export function matchAnnouncementToTrips(
     reason: announcement.body,
     // İskele/saat sezgisiyle kurulan bağ KESİN değildir: yolcuya "iptal"
     // diye sunulmadan önce belirsiz olarak işaretlenir (yanlış iptal önleme).
-    confidence: "UNCERTAIN" as const,
+    // İSTİSNA: resmî metin Adalar seferlerinin tamamını açıkça iptal ediyorsa
+    // Adalar hattındaki eşleşmeler kesindir.
+    confidence:
+      explicitAdalarCancel && isIslandTrip(trip)
+        ? ("CONFIRMED" as const)
+        : ("UNCERTAIN" as const),
   }));
 }
 

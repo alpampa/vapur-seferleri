@@ -25,6 +25,7 @@ import {
   type OperatorScanReport,
 } from "@/lib/agents/announcements-agent";
 import { isKvConfigured, kvBackendName, kvGetJson, kvSetJson } from "@/lib/agents/kv-store";
+import { toTrDate } from "@/lib/utils/istanbul-date";
 import type { OperatorAnnouncement } from "@/lib/types/announcement";
 import type {
   ChangeEvent,
@@ -46,12 +47,6 @@ const KEYS = {
   state: "vapur:monitor:state",
 };
 
-function toTrDate(d: Date): string {
-  const dd = String(d.getDate()).padStart(2, "0");
-  const mm = String(d.getMonth() + 1).padStart(2, "0");
-  return `${dd}.${mm}.${d.getFullYear()}`;
-}
-
 function emptyState(): MonitorPersistedState {
   return { updatedAt: "", health: {}, prev: {}, history: [], last: null, archives: {} };
 }
@@ -69,20 +64,6 @@ export function announcementHash(a: Pick<OperatorAnnouncement, "title" | "body">
 
 function isCancellationType(type: OperatorAnnouncement["type"]): boolean {
   return type === "CANCELLATION" || type === "CANCELLED_TRIPS";
-}
-
-/**
- * Tarama günü damgalanan duyuruların tarihini bugüne taşır.
- * (Arşiv yeniden kullanıldığında geçerli iptalin "dün" sayılıp kaybolmasını
- * önler; kaynaktan gerçek tarih gelenlere DOKUNMAZ.)
- */
-export function restampSyntheticDates(
-  announcements: OperatorAnnouncement[],
-  today: string = toTrDate(new Date())
-): OperatorAnnouncement[] {
-  return announcements.map((a) =>
-    a.publishedAtSource === "SCAN_DAY" ? { ...a, publishedAt: today } : a
-  );
 }
 
 /**
@@ -452,13 +433,20 @@ export interface MonitorState {
 /** API/UI için kalıcı izleme durumu (tek KV okuması) */
 export async function getMonitorState(): Promise<MonitorState> {
   const state = await readState();
-  const today = toTrDate(new Date());
   const archives = new Map<string, OperatorArchive>();
   for (const [op, archive] of Object.entries(state.archives ?? {})) {
-    archives.set(op, {
-      ...archive,
-      announcements: restampSyntheticDates(archive.announcements ?? [], today),
-    });
+    // KULLANICI KURALI: Arşivdeki tarih AYNEN korunur. Eski bir tarama gününe
+    // damgalanmış iptal, ertesi gün "bugün" sayılmaz (00:00'da biter).
+    // Eski sürümden kalan TARİHSİZ kayıtlar arşivin gözlem günüyle BİR KEZ
+    // damgalanır (bugüne taşınmaz) → bayat iptal sızmaz.
+    const fetchedMs = Date.parse(archive.fetchedAt ?? "");
+    const observedOn = Number.isNaN(fetchedMs) ? undefined : toTrDate(fetchedMs);
+    const announcements = (archive.announcements ?? []).map((a) =>
+      !a.publishedAt && observedOn
+        ? { ...a, publishedAt: observedOn, publishedAtSource: "SCAN_DAY" as const }
+        : a
+    );
+    archives.set(op, { ...archive, announcements });
   }
   return {
     storage: kvBackendName(),
@@ -476,7 +464,7 @@ export async function getOperatorHealthMap(): Promise<Record<string, OperatorHea
 
 /**
  * Son doğrulanmış duyuru arşivi (firma → arşiv).
- * Tarama günü damgalı duyuruların tarihi bugüne taşınır.
+ * Tarihler olduğu gibi döner; güncellik filtresi çağıran tarafta uygulanır.
  */
 export async function getArchivedAnnouncements(): Promise<Map<string, OperatorArchive>> {
   return (await getMonitorState()).archives;

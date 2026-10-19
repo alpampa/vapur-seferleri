@@ -20,13 +20,16 @@ Mevcut, gerçek sayfalarla doğrulanmış parser'lar korunup izleme hattına ba�
 | Firma | Kaynak | Yorumlanan ibare |
 |---|---|---|
 | Şehir Hatları | `sehirhatlari.istanbul/tr/iptal-seferler` | `iptal`, `gerçekleştirilemeyecektir`, `İptal Seferler:` hat listesi, tarih |
-| Dentur Avrasya | `denturavrasya.com/tr-TR/duyurular` | duyuru slug'ından tip sınıflandırma |
+| Dentur Avrasya | `denturavrasya.com/tr-TR/duyurular` | kart `<h2>` başlığı, `<time>` yayın tarihi, resmî `<p>` özeti |
 | Mavi Marmara | `durum.mavimarmara.net/feed.json` | `running` / `disrupted` / `cancelled` |
 | Turyol | `turyol.com/Home/AktifPopupDuyurulari` | birebir popup metni; `İPTAL EDİLMİŞTİR` |
 | Prens Tur | — | kaynak yok (`NO_SOURCE`, 404 kanıtlı) |
 
+- **Erişim fallback'i:** direct istek başarısızsa firmaya özel zincir denenir (MM → `r.jina.ai`; ŞH/Dentur/Turyol → `allorigins`, `codetabs`). Proxy yanıtı içerik doğrulamasından geçer (`isMaviMarmaraFeed`, `isSehirHatlariPage`, `isDenturPage`, `isTuryolPage`); geçersiz yanıt kabul edilmez.
 - Metin hiçbir zaman üretilmez; yalnızca resmî sayfadaki ifade işlenir.
-- Tarihsiz kaynaklar tarama günüyle damgalanır (`publishedAtSource: "SCAN_DAY"`), arşivden okunurken bugüne taşınır. Böylece geçerli iptal kaybolmaz, dünkü iptal bugüne taşınmaz.
+- Dentur duyuru kartındaki resmî özet (`adalar seferlerimiz ... iptal edilmiştir`) gövde olarak kullanılır; detay sayfasında ayrı gövde yoktur.
+- **Tarih kuralı:** kaynak tarih veriyorsa (`SOURCE`) aynen korunur; tarihsiz kaynak (MM/Turyol) yalnızca ilk görüldüğü tarama günüyle **bir kez** damgalanır (`SCAN_DAY`). Arşivden okunurken **yeniden damgalanmaz** — 00:00'dan sonra dünkü iptal bugüne taşınmaz.
+- Gün karşılaştırması **Europe/Istanbul** takvimine göredir (`istanbul-time.ts`); UTC sunucuda 00:00–03:00 kayması yoktur.
 
 ## 3. 60 saniyelik sunucu zamanlaması ve gerçek kısıt
 
@@ -43,10 +46,21 @@ Mevcut, gerçek sayfalarla doğrulanmış parser'lar korunup izleme hattına ba�
 ## 4. Duyuru → sefer eşleştirme ve güven düzeyi
 
 - `matchAnnouncementToTrips` korunarak güven etiketi eklendi:
-  - **CONFIRMED** — resmî `İptal Seferler:` hat zinciriyle birebir eşleşme.
+  - **CONFIRMED** — resmî `İptal Seferler:` hat zinciriyle birebir eşleşme **veya** resmî metin "adalar seferlerimiz ... iptal edilmiştir" diyerek hattın tamamını açıkça iptal ediyorsa Adalar hattı eşleşmeleri.
   - **UNCERTAIN** — yalnızca iskele/saat sezgisi.
 - `ScheduleListClient` artık **yalnızca CONFIRMED** eşleşmeleri kartlarda `CANCELLED` yapar. Belirsiz eşleşme yanlış iptal üretmez; duyuru metni yine bantta görünür.
 - Eşleşme yoksa boş dizi döner (uydurma yok).
+
+## 4.1 Kullanıcıya iptal gösterimi (tarih başta + okunur alt liste)
+
+- `buildCancellationBulletin`: tarih **başta**, firma, sebep ve iptal maddeleri; tek satır özet `bulletin.oneLine`.
+- Kayan şerit (`AnnouncementBanner`) özeti gösterir; kaçıran yolcu için **`CancellationBoard`** ekranın altında kaydırılamayan okunur liste sunar:
+  - tarih + firma + sebep,
+  - iptal edilen hat/sefer maddeleri,
+  - tarifede eşleşen saatli seferler `İPTAL` etiketiyle (yalnız CONFIRMED),
+  - kaynak erişilemezse **“Doğrulanamadı”** rozeti.
+- İptal duyurusu **yalnızca yayınlandığı İstanbul takvim günü** geçerlidir; 00:00'da filtre dışına çıkar ve ekrandan kalkar. Yeni tarihli duyuru geldiğinde otomatik görünür.
+- Tazelik: istemci 60 sn'de bir yeniler; canlı tarama önbelleği 60 sn; `/api/announcements` talep üzerine taze tarama yapar (`maxDuration=60`). Sağlık kaydı son 2 dk içindeyse arşiv "tam" sayılır.
 
 ## 5. Kaynak arşivi + değişiklik geçmişi
 
@@ -85,18 +99,22 @@ Davranış:
 
 ## 8. Testler (gerçek kaynak fixture'larıyla)
 
-Yeni testler (**22 yeni** → güncel toplam **232/232**):
+Testler (**250/250**):
 
 - `src/lib/agents/__tests__/kv-store.test.ts` (7): set/get, TTL, JSON, bozuk JSON, SET NX kilit (ilk alan/ikinci red/ DEL sonrası yeniden), TTL dolunca yeniden alma.
 - `src/lib/agents/__tests__/announcement-monitor.test.ts` (15):
   - diff: ANNOUNCED / UPDATED / REMOVED / CANCELLATION_REMOVED / idempotent
   - hash determinizmi
-  - `restampSyntheticDates` (SCAN_DAY → bugün, SOURCE'a dokunmaz)
+  - `getMonitorState` **tarihleri aynen korur** (yeniden damgalama yok; tarihsiz kayıt yalnız ilk gözlem günüyle damgalanır)
   - backoff: 1 dk → 2 dk, başarıda sıfırlama, NO_SOURCE başarısızlık saymaz
   - uçtan uca: 4/4 başarı, kalıcı yazım, ikinci tur idempotent
   - kaynak çökünce UNREACHABLE + backoff + sonraki tur atlanır
   - operatör filtresi
   - kaynak sonradan çökse de **arşiv korunur**
+- `src/lib/utils/__tests__/announcement-bulletin.test.ts` (7): ŞH 19.10/17.10, MM, Dentur, ISO gece yarısı, gürültü temizliği, tarih/satır çıkarımı.
+- `src/lib/utils/__tests__/istanbul-date.test.ts` (3): 20:59Z → 18.10, 21:00Z → 19.10, iptal 00:00'da elenir.
+- `src/lib/agents/__tests__/data-snapshot-store.test.ts` (3): bayat snapshot zaman damgası, tarihsiz kayıtlar, güncellik.
+- `announcements-agent.test.ts` yeni: SH 403 → `allorigins`, MM 403 → `jina` fallback; Dentur kartından **gerçek başlık + kaynak tarihi + resmî özet**; `parseTrLongDate`; “adalar seferlerimiz iptal” → Adalar seferleri **CONFIRMED**.
 
 Testler gerçek resmî sayfa fixture'larını kullanır: `sehirhatlari-iptal-seferler-17102026.html`, `dentur-duyurular.html`, `mavi-marmara-durum-feed.json`, `turyol-aktif-popup.html`.
 
@@ -121,14 +139,19 @@ Mevcut Playwright denetim paketi (`e2e/independent-audit.spec.ts`): **20/20**. B
 ### Production doğrulaması (19.10.2026)
 | Kontrol | Sonuç |
 |---|---|
-| Deploy | `READY`, alias `https://vapur-seferleri.vercel.app` |
+| Deploy | `READY`, alias `https://vapur-seferleri.vercel.app`, deployment `4Jc9XRsUWCirgUHn5XhfBBJtxGjm` |
 | `/api/version` | `200`, güncel deployment id |
 | `/api/source-health` | `200`, `persistent:false`, `storage:memory` (KV env yok) |
 | `/api/cron/monitor` (yetkisiz) | `401` |
 | Dağıtık kilit (eşzamanlı 2 istek) | biri `skipped:"locked"`, diğeri 4/4 taradı |
-| `/api/announcements` | `200`, 2 duyuru, 20 iptal |
+| `/api/announcements` (19.10 19:39Z) | `200`, **2 duyuru**, **20 iptal**; `generatedAt=19.10.2026 19:39Z` |
+| Dentur canlı | `direct`, 12.3 sn; 11 duyuru; “19 Ekim Heybeli Ada - Büyük Ada Sefer İptali” (19.10.2026) |
+| Mavi Marmara canlı | `jina`, 1.1 sn; “İptal Seferler” 3 hat satırı; **8 CONFIRMED** Adalar seferi |
+| Turyol canlı | `direct`, 317 ms; bugün iptal yok |
+| Prens Tur | `NO_SOURCE` |
+| Şehir Hatları | `FAILED`: direct **403**, `allorigins` ve `codetabs` **timeout** (Vercel'den de) → snapshot fallback, 17.10 kayıtları tarih filtresiyle elenir |
 
-> Not: Hobby planı dakikalık cron'u reddettiği için production'da izleme turları henüz otomatik tetiklenmiyor. `CRON_SECRET` production'a eklendi; 60 sn'lik tur için Pro + cron satırı veya harici tetikleyici gerekir (§3). KV env yokken `persistent:false` — kalıcı arşiv için Upstash env şart.
+> Not: Hobby planı dakikalık cron'u reddettiği için production'da izleme turları henüz otomatik tetiklenmiyor. `CRON_SECRET` production'a eklendi; 60 sn'lik tur için Pro + cron satırı veya harici tetikleyici gerekir (§3). KV env yokken `persistent:false` — kalıcı arşiv için Upstash env şart. Bu nedenle `/api/announcements` içindeki `sourceHealth` boş döner (monitor API örneğinde hiç çalışmadı); 60 sn ritim talep üzerine canlı tarama + 60 sn önbellekle sağlanır.
 
 ## 10. Kurulum, bilinen sınırlar ve yapılacaklar
 
@@ -147,16 +170,18 @@ Mevcut Playwright denetim paketi (`e2e/independent-audit.spec.ts`): **20/20**. B
 - Kaynak istek bütçesi: dakikada ~4 kaynak isteği (+ yalnızca yeni iptal gövdesi geldiğinde en fazla 3 detay isteği). Backoff ve 1 yazma/tur ile makul sınırda tutuldu.
 - Canlı başarı testi bu ortamda ağ açıkken alındı; ağ kapalı ortamda başarısızlık yolu doğrulandı.
 - Prens Tur için web'de makine-okunur iptal kaynağı yok; `NO_SOURCE` olarak kalır (uydurma yok).
-- Tarihsiz kaynaklarda (MM/Turyol) yayın günü kuralı, kaynak aynı içeriği günlerce yayınlarsa arşiv re-stamp ile korunur; yine de “kaynak gerçeği” sınırı geçerlidir.
+- **Şehir Hatları canlı erişimi kapalı:** direct **403**, ücretsiz proxy'ler (`allorigins`, `codetabs`) **timeout**, `r.jina.ai` **Cloudflare CAPTCHA**. Bugünkü gerçek ŞH iptali bu nedenle gösterilemiyor; 17.10 snapshot kayıtları doğru şekilde tarih filtresiyle elenir (yanlış güncel iptal yok).
+- **Dentur yavaş:** liste sayfası ~12 sn; `maxDuration=60` içinde kalır. Detay sayfasında ayrı gövde yoktur; kart özeti kullanılır.
+- Tarihsiz kaynaklarda (MM/Turyol) yayın günü kuralı: kayıt yalnız ilk gözlendiği gün damgalanır ve ertesi gün **yeniden damgalanmaz**; kaynak aynı içeriği günlerce yayınlarsa “kaynak gerçeği” sınırı geçerlidir.
 
 ### Bu görevde eklenen/değişen dosyalar
-**Yeni:** `src/lib/agents/kv-store.ts`, `monitor-types.ts`, `announcement-monitor.ts`, `src/app/api/cron/monitor/route.ts`, `src/app/api/source-health/route.ts`, `__tests__/kv-store.test.ts`, `__tests__/announcement-monitor.test.ts`, `IPTAL_TAKIP_RAPORU.md`.
-**Değişen:** `src/lib/agents/announcements-agent.ts`, `announcement-trip-matcher.ts`, `src/lib/types/announcement.ts`, `src/app/api/announcements/route.ts`, `src/store/useAnnouncementStore.ts`, `src/hooks/useAnnouncements.ts`, `src/components/announcements/AnnouncementBanner.tsx`, `src/components/schedule/ScheduleListClient.tsx`, `vercel.json`.
+**Yeni:** `src/lib/agents/kv-store.ts`, `monitor-types.ts`, `announcement-monitor.ts`, `src/app/api/cron/monitor/route.ts`, `src/app/api/source-health/route.ts`, `src/lib/utils/istanbul-date.ts`, `src/lib/utils/announcement-bulletin.ts`, `src/components/announcements/CancellationBoard.tsx`, `__tests__/kv-store.test.ts`, `__tests__/announcement-monitor.test.ts`, `__tests__/data-snapshot-store.test.ts`, `src/lib/utils/__tests__/announcement-bulletin.test.ts`, `src/lib/utils/__tests__/istanbul-date.test.ts`, `IPTAL_TAKIP_RAPORU.md`.
+**Değişen:** `src/lib/agents/announcements-agent.ts`, `announcement-trip-matcher.ts`, `announcement-monitor.ts`, `data-snapshot-store.ts`, `live-scan-cache.ts`, `src/lib/types/announcement.ts`, `src/lib/utils/announcement-filter.ts`, `src/app/api/announcements/route.ts`, `src/store/useAnnouncementStore.ts`, `src/hooks/useAnnouncements.ts`, `src/components/announcements/AnnouncementBanner.tsx`, `AnnouncementDetailSheet.tsx`, `src/components/schedule/ScheduleListClient.tsx`, `vercel.json`.
 
 ### Komutlar
 ```powershell
 cd apps/web
 npm run typecheck   # temiz
-npm test            # 232/232
+npm test            # 250/250
 npm run build       # başarılı
 ```

@@ -8,7 +8,8 @@ import { useAnnouncementStore } from "@/store/useAnnouncementStore";
  * - Canlı senkron (23:00 ajanı) depoya işler → endpoint en güncel veriyi döner.
  * - Başarısızsa sessizce son yüklü değeri korur (uygulama bozulmaz).
  */
-export function useAnnouncements(refreshMs = 5 * 60 * 1000) {
+/** KULLANICI KURALI: yeni iptal en geç bir dakika içinde ekrana yansır. */
+export function useAnnouncements(refreshMs = 60 * 1000) {
   const { setData, setLoading, setError } = useAnnouncementStore();
 
   useEffect(() => {

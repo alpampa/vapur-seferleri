@@ -22,8 +22,9 @@ export interface OperatorAnnouncement {
   /**
    * `publishedAt` kaynağı:
    *  - SOURCE: tarih resmî sayfadan okundu (güvenilir).
-   *  - SCAN_DAY: kaynak tarih vermediği için tarama günü damgalandı; arşivden
-   *    okunurken bugüne taşınır (bayat iptal gösterilmez, geçerli iptal kaybolmaz).
+   *  - SCAN_DAY: kaynak tarih vermediği için tarama günü damgalandı. Damga
+   *    DEĞİŞTİRİLMEZ; ertesi gün kayıt otomatik olarak "geçmiş" sayılır ve
+   *    gösterilmez (bayat iptal 00:00'dan sonra kalmaz).
    */
   publishedAtSource?: "SOURCE" | "SCAN_DAY";
   sourceUrl: string;

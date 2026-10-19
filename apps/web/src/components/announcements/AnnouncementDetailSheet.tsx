@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { X, AlertTriangle } from "lucide-react";
 import { OperatorLogo } from "@/components/ui/OperatorLogo";
 import { extractIstanbulDisiRoutes } from "@/lib/utils/announcement-body";
+import { buildCancellationBulletin } from "@/lib/utils/announcement-bulletin";
 import type { OperatorAnnouncement } from "@/lib/types/announcement";
 
 interface AnnouncementDetailSheetProps {
@@ -42,6 +43,9 @@ export function AnnouncementDetailSheet({
   }, [isOpen, onClose]);
 
   const istanbulDisi = announcement ? extractIstanbulDisiRoutes(announcement.body) : [];
+  const isCancellation =
+    announcement?.type === "CANCELLATION" || announcement?.type === "CANCELLED_TRIPS";
+  const bulletin = announcement && isCancellation ? buildCancellationBulletin(announcement) : null;
 
   return (
     <AnimatePresence>
@@ -93,7 +97,26 @@ export function AnnouncementDetailSheet({
 
             {/* Duyuru metni: kaynaktan birebir, kaydırılabilir */}
             <div className="flex-1 min-h-0 overflow-y-auto px-4 pt-2 pb-2">
-              {announcement.body ? (
+              {bulletin ? (
+                <>
+                  {/* Tarih başta + iptal maddeleri (resmî metinden düzenlenmiş) */}
+                  <div className="rounded-xl border border-rose-200 dark:border-rose-900/60 bg-rose-50 dark:bg-rose-950/25 px-3 py-2">
+                    <p className="text-[12.5px] leading-relaxed font-semibold text-rose-900 dark:text-rose-100 whitespace-pre-wrap">
+                      {bulletin.text}
+                    </p>
+                  </div>
+                  {announcement.body && announcement.body !== bulletin.text && (
+                    <details className="mt-3">
+                      <summary className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 cursor-pointer select-none">
+                        Resmî duyuru metni
+                      </summary>
+                      <p className="mt-1.5 text-[11.5px] leading-relaxed text-slate-600 dark:text-slate-400 whitespace-pre-wrap">
+                        {announcement.body}
+                      </p>
+                    </details>
+                  )}
+                </>
+              ) : announcement.body ? (
                 <p className="text-[12.5px] leading-relaxed text-slate-700 dark:text-slate-300 whitespace-pre-wrap">
                   {announcement.body}
                 </p>

@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import {
   __resetMemoryKv,
+  kvSetJson,
 } from "@/lib/agents/kv-store";
 import {
   announcementHash,
@@ -10,7 +11,6 @@ import {
   buildPrevEntry,
   diffAnnouncementSets,
   getMonitorState,
-  restampSyntheticDates,
   runMonitorTick,
 } from "@/lib/agents/announcement-monitor";
 import type { OperatorAnnouncement } from "@/lib/types/announcement";
@@ -103,13 +103,32 @@ describe("diffAnnouncementSets (saf fonksiyon)", () => {
   });
 });
 
-describe("restampSyntheticDates", () => {
-  it("SCAN_DAY damgalı tarihi bugüne taşır, SOURCE tarihine dokunmaz", () => {
-    const synthetic = ann("s", { publishedAt: "01.01.2020", publishedAtSource: "SCAN_DAY" });
-    const sourced = ann("r", { publishedAt: "01.01.2020", publishedAtSource: "SOURCE" });
-    const [a, b] = restampSyntheticDates([synthetic, sourced], "19.10.2026");
-    expect(a.publishedAt).toBe("19.10.2026");
-    expect(b.publishedAt).toBe("01.01.2020");
+describe("getMonitorState — arşiv tarihleri", () => {
+  it("SCAN_DAY damgasını bugüne TAŞIMAZ (iptal 00:00'da biter)", async () => {
+    const archived = ann("s", {
+      publishedAt: "18.10.2026",
+      publishedAtSource: "SCAN_DAY",
+    });
+    await kvSetJson("vapur:monitor:state", {
+      updatedAt: "2026-10-18T20:00:00Z",
+      health: {},
+      prev: {},
+      history: [],
+      last: null,
+      archives: {
+        "Mavi Marmara": {
+          operator: "Mavi Marmara",
+          sourceUrl: "https://durum.mavimarmara.net/feed.json",
+          fetchedAt: "2026-10-18T20:00:00Z",
+          announcements: [archived],
+        },
+      },
+    });
+
+    const state = await getMonitorState();
+    const stored = state.archives.get("Mavi Marmara")?.announcements[0];
+    expect(stored?.publishedAt).toBe("18.10.2026");
+    expect(stored?.publishedAtSource).toBe("SCAN_DAY");
   });
 });
 

@@ -1,4 +1,11 @@
 import type { OperatorAnnouncement } from "@/lib/types/announcement";
+import {
+  dateKeyToDayIndex,
+  getIstanbulDateParts,
+  parseIsoDateKey,
+  parseTrDateKey,
+  toDateKey,
+} from "@/lib/utils/istanbul-date";
 
 const TR_MONTHS: Record<string, number> = {
   ocak: 1,
@@ -30,36 +37,29 @@ export function isAnnouncementCurrent(
   nowMs: number = Date.now()
 ): boolean {
   const text = `${announcement.title || ""} ${announcement.body || ""}`.toLowerCase();
-  const dateObj = new Date(nowMs);
-  const currentYear = dateObj.getFullYear();
-  const currentMonth = dateObj.getMonth() + 1;
-  const currentDay = dateObj.getDate();
-  const curDate = new Date(currentYear, currentMonth - 1, currentDay);
+  // KULLANICI KURALI: gün 00:00'da İSTANBUL saatine göre biter. Sunucu UTC
+  // çalıştığı için takvim günü Europe/Istanbul üzerinden hesaplanır.
+  const nowParts = getIstanbulDateParts(nowMs);
+  const currentYear = nowParts.year;
+  const currentMonth = nowParts.month;
+  const curKey = toDateKey(nowParts);
+  const curDayIndex = dateKeyToDayIndex(curKey);
 
   // 1. Doğrudan yayın tarihi kontrolü (DD.MM.YYYY veya ISO format)
   if (announcement.publishedAt) {
-    let pubDate: Date | null = null;
-    if (announcement.publishedAt.includes(".")) {
-      const parts = announcement.publishedAt.split(".").map(Number);
-      if (parts.length === 3 && parts[0] && parts[1] && parts[2]) {
-        pubDate = new Date(parts[2], parts[1] - 1, parts[0]);
-      }
-    } else {
-      const parsed = Date.parse(announcement.publishedAt);
-      if (!isNaN(parsed)) pubDate = new Date(parsed);
-    }
+    const pubKey = announcement.publishedAt.includes(".")
+      ? parseTrDateKey(announcement.publishedAt)
+      : parseIsoDateKey(announcement.publishedAt);
 
-    if (pubDate) {
-      const diffDays = (curDate.getTime() - pubDate.getTime()) / (1000 * 60 * 60 * 24);
+    if (pubKey) {
+      const diffDays = curDayIndex - dateKeyToDayIndex(pubKey);
       // KULLANICI KURALI: İptal duyuruları YALNIZCA yayınlandığı GÜN geçerlidir.
       // Yayın günü dışındaki tüm iptal duyuruları elenir — bir gün öncesi dahil.
-      // (Önceki `diffDays > 1` eşiği dünün iptalini bugün de "güncel" sayıp
-      // ana ekranda gösteriyordu; iki gün sürüyordu. Artık takvim günü baz alınır.)
       if (
         announcement.type === "CANCELLATION" ||
         announcement.type === "CANCELLED_TRIPS"
       ) {
-        if (pubDate.getTime() < curDate.getTime()) return false;
+        if (pubKey < curKey) return false;
       } else {
         // Genel duyurular için makul güncellik penceresi (14 gün)
         if (diffDays > 14) return false;
@@ -77,16 +77,16 @@ export function isAnnouncementCurrent(
     const year = match[4] ? parseInt(match[4], 10) : currentYear;
 
     if (month && year && endDay) {
-      const targetDate = new Date(year, month - 1, endDay);
-      const diffDays = (curDate.getTime() - targetDate.getTime()) / (1000 * 60 * 60 * 24);
+      const targetKey = year * 10000 + month * 100 + endDay;
+      const diffDays = curDayIndex - dateKeyToDayIndex(targetKey);
 
-      // İptal veya ek sefer duyurularında belirtilen gün geçmişse (veya 1 günden eski ise) kesinlikle eskidir
+      // İptal veya ek sefer duyurularında belirtilen gün geçmişse kesinlikle eskidir
       if (
         announcement.type === "CANCELLATION" ||
         announcement.type === "CANCELLED_TRIPS" ||
         announcement.type === "EXTRA_SERVICE"
       ) {
-        if (curDate.getTime() > targetDate.getTime() || diffDays > 1) return false;
+        if (targetKey < curKey) return false;
       } else {
         // Diğer düzenleme/tarife duyuruları için belirtilen tarihin üzerinden 3 günden fazla geçmişse eskidir
         if (diffDays > 3) return false;

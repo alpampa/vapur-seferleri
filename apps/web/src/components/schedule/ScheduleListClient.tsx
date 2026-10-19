@@ -23,6 +23,7 @@ import { IMMINENT_DEPARTURE_MS, FAST_TICK_THRESHOLD_MIN, SLOW_TICK_INTERVAL_MS }
 import { useAnnouncements } from "@/hooks/useAnnouncements";
 import { useAnnouncementStore } from "@/store/useAnnouncementStore";
 import { AnnouncementBanner } from "@/components/announcements/AnnouncementBanner";
+import { CancellationBoard } from "@/components/announcements/CancellationBoard";
 import { ScheduleToolsSheet } from "@/components/schedule/ScheduleToolsSheet";
 import { MarqueeTicker } from "@/components/ui/MarqueeTicker";
 import { LastFerrySafeguardBanner } from "@/components/schedule/LastFerrySafeguardBanner";
@@ -818,6 +819,14 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
           </div>
         </div>
       )}
+
+      {/* OKUNUR İPTAL LİSTESİ — kayan şeridi kaçıran kullanıcı burada görür.
+          Tarih başta; duyurudaki iptal maddeleri + tarifede eşleşen saatli seferler. */}
+      <CancellationBoard
+        announcements={announcements}
+        disruptions={disruptions}
+        schedules={effectiveSchedules}
+      />
 
       {/* AI 2: LODOS & METEOROLOJİ ERKEN TAHMİN BİLDİRİMİ */}
       {disruptionForecast.isPredictiveAlertActive && (

@@ -12,6 +12,8 @@ import type {
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
+/** Yedek canlı tarama (WAF/proxy denemeleri) 10 sn'lik varsayılanı aşabilir. */
+export const maxDuration = 60;
 
 /**
  * İSTEMCİ DUYURU ENDPOINT'İ — ANLIK ÇOK-FİRMALI İPTAL TARAMASI
@@ -30,14 +32,20 @@ export async function GET() {
     const archive = monitor.archives;
     const healthByOperator = new Map(monitor.health.map((h) => [h.operator, h]));
 
-    // Tüm kaynaklı firmalar için taze + sağlıklı arşiv varsa canlı tarama
-    // ATLANIR (dakikalık cron zaten tazeliyor). Aksi halde canlı tarama yedek yol.
+    // Tüm kaynaklı firmalar için SON 2 DAKİKA içinde doğrulanmış arşiv varsa
+    // canlı tarama ATLANIR (dakikalık cron zaten tazeliyor). Arşiv eskiyse
+    // (Hobby'de dakikalık cron yok) canlı tarama yapılır: yeni iptal en geç
+    // birkaç dakika içinde ekrana yansır.
+    const isHealthFresh = (operator: string): boolean => {
+      const h = healthByOperator.get(operator);
+      if (h?.status !== "OK") return false;
+      const checked = Date.parse(h.lastCheckedAt);
+      return !Number.isNaN(checked) && Date.now() - checked < 2 * 60 * 1000;
+    };
     const sourceEntries = OPERATOR_SCAN_COVERAGE.filter((e) => e.hasSource);
     const archiveCoversAll =
       sourceEntries.length > 0 &&
-      sourceEntries.every(
-        (e) => archive.has(e.operator) && healthByOperator.get(e.operator)?.status === "OK"
-      );
+      sourceEntries.every((e) => archive.has(e.operator) && isHealthFresh(e.operator));
     const live = archiveCoversAll ? null : await getLiveScan();
 
     // Firma bazlı birleştirme önceliği:
@@ -69,8 +77,9 @@ export async function GET() {
       const liveReport = live?.coverage.find((c) => c.operator === entry.operator);
       const liveAnnouncements = useLive.get(entry.operator);
 
-      // 1) İzleme arşivi + kaynak sağlığı OK → paylaşımlı, dakikalık veri
-      if (archived && health?.status === "OK") {
+      // 1) İzleme arşivi + kaynak sağlığı OK; canlı tarama yoksa veya arşiv
+      //    tazeyse → paylaşımlı, dakikalık veri.
+      if (archived && health?.status === "OK" && (!live || isHealthFresh(entry.operator))) {
         coverage.push({
           operator: entry.operator,
           status: "SCANNED",
