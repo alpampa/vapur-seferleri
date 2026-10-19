@@ -19,6 +19,13 @@ export interface OperatorAnnouncement {
   /** Metinde geçen iskele / güzergâh adları */
   mentionedPiers?: string[];
   publishedAt?: string;
+  /**
+   * `publishedAt` kaynağı:
+   *  - SOURCE: tarih resmî sayfadan okundu (güvenilir).
+   *  - SCAN_DAY: kaynak tarih vermediği için tarama günü damgalandı; arşivden
+   *    okunurken bugüne taşınır (bayat iptal gösterilmez, geçerli iptal kaybolmaz).
+   */
+  publishedAtSource?: "SOURCE" | "SCAN_DAY";
   sourceUrl: string;
   /** Canlı çekimde görülen flag (uydurma değil, kaynaktan geliyor) */
   sourceVerified: boolean;
@@ -26,6 +33,23 @@ export interface OperatorAnnouncement {
 
 /** Duyuru → sefer eşleştirme sonucu (uygulamaya işlenir) */
 export type DisruptionKind = "CANCELLED" | "DELAYED" | "EXTRA" | "SCHEDULE_CHANGE";
+
+/**
+ * Eşleştirme güven düzeyi.
+ *  - CONFIRMED: duyuru resmî "İptal Seferler:" hat listesiyle birebir eşleşti.
+ *  - UNCERTAIN: yalnızca iskele/saat sezgisiyle bağlandı (belirsiz — yolcuya
+ *    "kesin iptal" gibi gösterilmez, "olası" olarak işaretlenir).
+ * YANLIŞ İPTAL ÖNLEME: belirsiz eşleşmeler kullanıcıya iptal diye sunulmaz.
+ */
+export type DisruptionConfidence = "CONFIRMED" | "UNCERTAIN";
+
+/**
+ * Bozulmanın kaynak tazeliği.
+ *  - FRESH: canlı taramadan bu turda doğrulandı.
+ *  - STALE: kaynak bu turda erişilemedi; son doğrulanmış snapshot gösteriliyor.
+ *  - UNKNOWN: tazelik bilinmiyor.
+ */
+export type DisruptionFreshness = "FRESH" | "STALE" | "UNKNOWN";
 
 export interface TripDisruption {
   operator: string;
@@ -39,6 +63,10 @@ export interface TripDisruption {
   reason?: string;
   /** Duyurunun geçerlilik tarihi/tarihi aralığı (YYYY-MM-DD) */
   validDate?: string;
+  /** Eşleştirme güveni (yoksa CONFIRMED kabul edilir) */
+  confidence?: DisruptionConfidence;
+  /** Kaynak tazeliği (yoksa UNKNOWN) */
+  freshness?: DisruptionFreshness;
 }
 
 export interface AnnouncementsSnapshot {

@@ -478,6 +478,8 @@ export interface OperatorScanReport {
   announcementCount?: number;
   error?: string;
   note?: string;
+  /** Bu firmanın kaynak okuma süresi (ms) */
+  latencyMs?: number;
 }
 
 /**
@@ -485,7 +487,17 @@ export interface OperatorScanReport {
  * Kaynaklı firmalar PARALEL canlı çekilir; kaynağı olmayanlar kanıtlı notla
  * NO_SOURCE raporlanır; hata alan firmanın önceki snapshot'ı korunur (çağıran taraf).
  */
-export async function scrapeAllAnnouncements(): Promise<{
+/** Tarama gününü TR biçiminde (GG.AA.YYYY) döndürür — tarihsiz duyuruların damgası. */
+function toTrDate(d: Date): string {
+  const dd = String(d.getDate()).padStart(2, "0");
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  return `${dd}.${mm}.${d.getFullYear()}`;
+}
+
+export async function scrapeAllAnnouncements(options?: {
+  /** Yalnızca bu firmaları tara (backoff/öncelik için). Boşsa tümü. */
+  operators?: string[];
+}): Promise<{
   snapshots: AnnouncementsSnapshot[];
   failures: { operator: string; error: string }[];
   coverage: OperatorScanReport[];
@@ -494,21 +506,45 @@ export async function scrapeAllAnnouncements(): Promise<{
   const failures: { operator: string; error: string }[] = [];
   const coverage: OperatorScanReport[] = [];
 
+  const only = options?.operators ? new Set(options.operators) : null;
+  const sources = only
+    ? ANNOUNCEMENT_SOURCES.filter((s) => only.has(s.operator))
+    : ANNOUNCEMENT_SOURCES;
+  const latencies = new Map<string, number>();
+
   const settled = await Promise.allSettled(
-    ANNOUNCEMENT_SOURCES.map(async (source) => {
-      const html = await fetchHtml(source.url, LIVE_SCRAPE_UA, {
-        timeoutMs: SOURCE_TIMEOUT_MS,
-        fresh: true,
-        extraHeaders: LIVE_SCRAPE_HEADERS,
-      });
-      const announcements = source.parser(html);
-      await enrichCancellationBodies(announcements);
-      return { source, announcements };
+    sources.map(async (source) => {
+      const started = Date.now();
+      try {
+        const html = await fetchHtml(source.url, LIVE_SCRAPE_UA, {
+          timeoutMs: SOURCE_TIMEOUT_MS,
+          fresh: true,
+          extraHeaders: LIVE_SCRAPE_HEADERS,
+        });
+        const announcements = source.parser(html);
+        // KULLANICI KURALI: Yayın tarihi vermeyen kaynakların (ör. Mavi Marmara
+        // durum akışı / Turyol aktif popup) duyuruları tarama GÜNÜYLE damgalanır.
+        // Böylece bu kayıtlar da ertesi gün otomatik "geçmiş" sayılır; bayat iptal
+        // duyurusu ana ekranda kalmaz. Sayfadan gerçek tarih gelen kayıtlar korunur.
+        const scannedOn = toTrDate(new Date());
+        for (const a of announcements) {
+          if (!a.publishedAt) {
+            a.publishedAt = scannedOn;
+            a.publishedAtSource = "SCAN_DAY";
+          } else if (!a.publishedAtSource) {
+            a.publishedAtSource = "SOURCE";
+          }
+        }
+        await enrichCancellationBodies(announcements);
+        return { source, announcements };
+      } finally {
+        latencies.set(source.operator, Date.now() - started);
+      }
     })
   );
 
   settled.forEach((result, idx) => {
-    const source = ANNOUNCEMENT_SOURCES[idx];
+    const source = sources[idx];
     if (result.status === "fulfilled") {
       const { announcements } = result.value;
       snapshots.push({
@@ -522,18 +558,27 @@ export async function scrapeAllAnnouncements(): Promise<{
         status: "SCANNED",
         url: source.url,
         announcementCount: announcements.length,
+        latencyMs: latencies.get(source.operator),
       });
     } else {
       const error = result.reason?.message || String(result.reason);
       failures.push({ operator: source.operator, error });
-      coverage.push({ operator: source.operator, status: "FAILED", url: source.url, error });
+      coverage.push({
+        operator: source.operator,
+        status: "FAILED",
+        url: source.url,
+        error,
+        latencyMs: latencies.get(source.operator),
+      });
     }
   });
 
   // Kaynağı olmayan operatörler: sessiz atlama yok, kanıtlı rapor
-  const scannedOperators = new Set(ANNOUNCEMENT_SOURCES.map((s) => s.operator));
+  const scannedOperators = new Set(sources.map((s) => s.operator));
   for (const op of OPERATOR_REGISTRY) {
     if (scannedOperators.has(op.name)) continue;
+    // Filtreli taramada kapsam yalnızca taranan kaynakları + kaynaksızları kapsar
+    if (only && !only.has(op.name)) continue;
     coverage.push({
       operator: op.name,
       status: "NO_SOURCE",

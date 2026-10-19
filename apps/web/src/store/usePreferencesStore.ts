@@ -11,10 +11,13 @@ interface PreferencesState {
   touristMode: boolean;
   proUnlocked: boolean;
   scheduleCategory: ScheduleCategory;
+  /** Kullanıcı sefer iptali bildirimlerini açık tutmak istiyor mu (tarayıcı izninden bağımsız tercih) */
+  notificationsEnabled: boolean;
   setFontScale: (scale: FontScale) => void;
   setTouristMode: (enabled: boolean) => void;
   setProUnlocked: (unlocked: boolean) => void;
   setScheduleCategory: (category: ScheduleCategory) => void;
+  setNotificationsEnabled: (enabled: boolean) => void;
 }
 
 export const usePreferencesStore = create<PreferencesState>()(
@@ -24,10 +27,12 @@ export const usePreferencesStore = create<PreferencesState>()(
       touristMode: false,
       proUnlocked: false,
       scheduleCategory: "ADALAR",
+      notificationsEnabled: false,
       setFontScale: (fontScale: FontScale) => set({ fontScale }),
       setTouristMode: (touristMode: boolean) => set({ touristMode }),
       setProUnlocked: (proUnlocked: boolean) => set({ proUnlocked }),
       setScheduleCategory: (scheduleCategory: ScheduleCategory) => set({ scheduleCategory }),
+      setNotificationsEnabled: (notificationsEnabled: boolean) => set({ notificationsEnabled }),
     }),
     {
       name: "vapur_app_prefs_v1",

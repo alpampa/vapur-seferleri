@@ -3,8 +3,12 @@ import { getStoredAnnouncements, getStoredAnnouncementsMeta } from "@/lib/agents
 import { OPERATOR_SCAN_COVERAGE, type OperatorScanReport } from "@/lib/agents/announcements-agent";
 import { getLiveScan } from "@/lib/agents/live-scan-cache";
 import { matchAnnouncementsToTrips } from "@/lib/agents/announcement-trip-matcher";
+import { getMonitorState } from "@/lib/agents/announcement-monitor";
 import { isAnnouncementCurrent } from "@/lib/utils/announcement-filter";
-import type { OperatorAnnouncement } from "@/lib/types/announcement";
+import type {
+  DisruptionFreshness,
+  OperatorAnnouncement,
+} from "@/lib/types/announcement";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -22,10 +26,24 @@ export const revalidate = 0;
 
 export async function GET() {
   try {
-    const live = await getLiveScan();
+    const monitor = await getMonitorState();
+    const archive = monitor.archives;
+    const healthByOperator = new Map(monitor.health.map((h) => [h.operator, h]));
 
-    // Firma bazlı birleştirme: canlı taranan firma → canlı veri;
-    // taranamayan firma → son doğrulanmış snapshot (varsa).
+    // Tüm kaynaklı firmalar için taze + sağlıklı arşiv varsa canlı tarama
+    // ATLANIR (dakikalık cron zaten tazeliyor). Aksi halde canlı tarama yedek yol.
+    const sourceEntries = OPERATOR_SCAN_COVERAGE.filter((e) => e.hasSource);
+    const archiveCoversAll =
+      sourceEntries.length > 0 &&
+      sourceEntries.every(
+        (e) => archive.has(e.operator) && healthByOperator.get(e.operator)?.status === "OK"
+      );
+    const live = archiveCoversAll ? null : await getLiveScan();
+
+    // Firma bazlı birleştirme önceliği:
+    //   1) Dakikalık izlemenin kalıcı arşivi (kaynak son turda OK ise)
+    //   2) Bu örnekteki canlı tarama (in-memory, 10 dk önbellek)
+    //   3) Son doğrulanmış git snapshot'ı (bayat olabilir)
     const storedByOperator = new Map<string, OperatorAnnouncement[]>();
     for (const a of getStoredAnnouncements()) {
       const list = storedByOperator.get(a.operator) ?? [];
@@ -46,26 +64,46 @@ export async function GET() {
         coverage.push({ operator: entry.operator, status: "NO_SOURCE", note: entry.note });
         continue;
       }
+      const health = healthByOperator.get(entry.operator);
+      const archived = archive.get(entry.operator);
       const liveReport = live?.coverage.find((c) => c.operator === entry.operator);
       const liveAnnouncements = useLive.get(entry.operator);
+
+      // 1) İzleme arşivi + kaynak sağlığı OK → paylaşımlı, dakikalık veri
+      if (archived && health?.status === "OK") {
+        coverage.push({
+          operator: entry.operator,
+          status: "SCANNED",
+          url: archived.sourceUrl,
+          announcementCount: archived.announcements.length,
+          note: `Dakikalık izleme arşivi (son doğrulama: ${archived.fetchedAt}).`,
+        });
+        rawAnnouncements.push(...archived.announcements);
+        continue;
+      }
+
+      // 2) Bu örnekteki canlı tarama
       if (liveReport?.status === "SCANNED" && liveAnnouncements) {
         coverage.push(liveReport);
         rawAnnouncements.push(...liveAnnouncements);
         continue;
       }
-      // Canlı tarama başarısız → son doğrulanmış snapshot korunur
-      const stored = storedByOperator.get(entry.operator);
-      if (stored && stored.length > 0) {
+
+      // 3) Son doğrulanmış veri (arşiv bayat olabilir → usedFallback)
+      const fallbackList = archived?.announcements ?? storedByOperator.get(entry.operator);
+      if (fallbackList && fallbackList.length > 0) {
         coverage.push({
           operator: entry.operator,
           status: liveReport?.status === "FAILED" ? "FAILED" : "SCANNED",
           url: entry.url,
           error: liveReport?.error,
-          announcementCount: stored.length,
+          announcementCount: fallbackList.length,
           usedFallback: true,
-          note: "Canlı tarama alınamadı; son doğrulanmış snapshot kullanıldı.",
+          note: archived
+            ? "Kaynak bu turda doğrulanamadı; dakikalık izleme arşivi (son bilinen) kullanıldı."
+            : "Canlı tarama alınamadı; son doğrulanmış snapshot kullanıldı.",
         });
-        rawAnnouncements.push(...stored);
+        rawAnnouncements.push(...fallbackList);
       } else {
         coverage.push(
           liveReport ?? {
@@ -87,9 +125,23 @@ export async function GET() {
       if (text.includes("bulunmamaktadır") || text.includes("bulunmamaktadir")) return false;
       return text.includes("iptal") || text.includes("yapılamamakta") || text.includes("yapilamamakta");
     });
-    const disruptions = matchAnnouncementsToTrips(announcements).filter(
-      (d) => d.kind === "CANCELLED"
+
+    // Kaynak sağlığı (kalıcı izleme turundan) + tazelik.
+    // Kaynağı bu turda doğrulanamayan firmanın iptali "STALE" olarak işaretlenir;
+    // yolcuya kesin güncel bilgi gibi sunulmaz.
+    const fallbackOperators = new Set(
+      coverage.filter((c) => c.usedFallback).map((c) => c.operator)
     );
+    const freshnessFor = (operator: string): DisruptionFreshness => {
+      const health = healthByOperator.get(operator);
+      if (fallbackOperators.has(operator) || health?.status === "UNREACHABLE") return "STALE";
+      if (health?.status === "OK") return "FRESH";
+      return "UNKNOWN";
+    };
+
+    const disruptions = matchAnnouncementsToTrips(announcements)
+      .filter((d) => d.kind === "CANCELLED")
+      .map((d) => ({ ...d, freshness: freshnessFor(d.operator) }));
 
     const storedMeta = getStoredAnnouncementsMeta();
 
@@ -97,6 +149,8 @@ export async function GET() {
       generatedAt: new Date().toISOString(),
       announcements,
       disruptions,
+      sourceHealth: monitor.health,
+      recentChanges: monitor.recentChanges.slice(0, 50),
       meta: {
         announcementCount: announcements.length,
         disruptionCount: disruptions.length,
@@ -105,10 +159,8 @@ export async function GET() {
         coverage,
       },
     });
-  } catch (error: any) {
-    return NextResponse.json(
-      { error: error?.message || "Duyuru verisi okunamadı" },
-      { status: 500 }
-    );
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Duyuru verisi okunamadı";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Radar, ExternalLink, ShieldCheck, Compass, Anchor, MapPin, Radio, Waves, Info } from "lucide-react";
 import { ISTANBUL_PIERS } from "@/lib/data/piers";
+import { addSeamarkLayerWithFallback } from "@/lib/utils/seamark-layer";
 
 interface PierLiveAisRadarModalProps {
   isOpen: boolean;
@@ -21,6 +22,7 @@ export function PierLiveAisRadarModal({
   const mapInstanceRef = useRef<any>(null);
   const [mounted, setMounted] = useState(false);
   const [activeZone, setActiveZone] = useState<"500M" | "250M">("500M");
+  const [seamarkUnavailable, setSeamarkUnavailable] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -63,11 +65,13 @@ export function PierLiveAisRadarModal({
         subdomains: "abcd"
       }).addTo(map);
 
-      // OpenSeaMap Nautical Beacons & Fairways
-      L.tileLayer("https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png", {
+      // OpenSeaMap Nautical Beacons & Fairways — erişilemezse dürüst notla atlanır
+      setSeamarkUnavailable(false);
+      addSeamarkLayerWithFallback(L, map, {
+        opacity: 0.7,
         maxZoom: 17,
-        opacity: 0.7
-      }).addTo(map);
+        onUnavailable: () => setSeamarkUnavailable(true),
+      });
 
       // 500m Nautical Zone Ring
       const circle500 = L.circle(pierCoord, {
@@ -174,6 +178,12 @@ export function PierLiveAisRadarModal({
           {/* Interactive Map Canvas */}
           <div className="relative flex-1 min-h-[320px] sm:min-h-[400px] bg-slate-950">
             <div ref={mapContainerRef} className="w-full h-full min-h-[320px] sm:min-h-[400px]" />
+
+            {seamarkUnavailable && (
+              <div className="absolute bottom-3 left-3 z-[400] max-w-[80%] bg-slate-900/90 backdrop-blur-md px-3 py-1.5 rounded-xl border border-amber-500/40 text-[10px] font-bold text-amber-300">
+                Deniz işaretleri katmanı şu anda kullanılamıyor — taban harita ve iskele bölgeleri aktif.
+              </div>
+            )}
 
             {/* Floating Sector Legend Box */}
             <div className="absolute top-3 right-3 z-[400] bg-slate-900/90 backdrop-blur-md p-3 rounded-2xl border border-slate-700 text-xs shadow-xl space-y-1.5 font-mono text-[11px]">

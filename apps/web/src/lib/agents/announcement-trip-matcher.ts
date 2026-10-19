@@ -146,6 +146,7 @@ export function matchAnnouncementToTrips(
           announcementTitle: announcement.title,
           announcementId: announcement.id,
           reason: announcement.body,
+          confidence: "CONFIRMED" as const,
         }));
     }
   }
@@ -202,6 +203,9 @@ export function matchAnnouncementToTrips(
     announcementTitle: announcement.title,
     announcementId: announcement.id,
     reason: announcement.body,
+    // İskele/saat sezgisiyle kurulan bağ KESİN değildir: yolcuya "iptal"
+    // diye sunulmadan önce belirsiz olarak işaretlenir (yanlış iptal önleme).
+    confidence: "UNCERTAIN" as const,
   }));
 }
 

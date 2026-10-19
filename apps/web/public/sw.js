@@ -72,14 +72,38 @@ self.addEventListener('fetch', (event) => {
         return networkResponse;
       })
       .catch(async () => {
-        // Ağ koptu (OFFLINE): Önbellekten yanıt ver
-        const cached = await caches.match(req);
+        // Ağ koptu (OFFLINE): Önbellekten yanıt ver.
+        // Navigasyon isteklerinde Next.js HTML'e "Vary: RSC, Next-Router-State-Tree..."
+        // eklediği için önbelleğe alınan belge, farklı başlıklı navigasyon isteğiyle
+        // eşleşmez. Bu yüzden navigasyonlarda ignoreVary ile ararız.
+        const isNavigate = req.mode === 'navigate';
+        const cached = await caches.match(req, { ignoreVary: isNavigate });
         if (cached) return cached;
 
         // Sayfa navigasyonu için çevrimdışı kök fallback'i
-        if (req.mode === 'navigate') {
-          const rootFallback = await caches.match('/');
+        if (isNavigate) {
+          const rootFallback =
+            (await caches.match('/', { ignoreVary: true })) ||
+            (await caches.match(new URL('/', req.url).href, { ignoreVary: true }));
           if (rootFallback) return rootFallback;
+        }
+
+        // Navigasyon için kullanıcı dostu çevrimdışı sayfa (düz metin 503 yerine)
+        if (req.mode === 'navigate') {
+          return new Response(
+            '<!doctype html><html lang="tr"><head><meta charset="utf-8">' +
+              '<meta name="viewport" content="width=device-width, initial-scale=1">' +
+              '<title>Çevrimdışı — Vapur Seferleri</title></head>' +
+              '<body style="margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;' +
+              'background:#070e1e;color:#fff;display:flex;min-height:100vh;align-items:center;justify-content:center;text-align:center">' +
+              '<main style="padding:24px;max-width:420px">' +
+              '<div style="font-size:40px">⛴️</div>' +
+              '<h1 style="font-size:18px;margin:12px 0 6px">Çevrimdışısınız</h1>' +
+              '<p style="color:#94a3b8;font-size:13px;line-height:1.6">Bu sayfa henüz cihazınızda ' +
+              'önbelleğe alınmadı. İnternet bağlantınız geri geldiğinde seferler ve harita yeniden yüklenecektir.</p>' +
+              '</main></body></html>',
+            { status: 503, statusText: 'Service Unavailable', headers: { 'Content-Type': 'text/html; charset=utf-8' } }
+          );
         }
 
         return new Response('Çevrimdışısınız ve bu içerik önbellekte bulunmuyor.', {

@@ -11,6 +11,7 @@ import { VesselSilhouetteGraphic } from "@/components/vessel/VesselSilhouetteGra
 import { ISTANBUL_FERRY_FLEET } from "@/lib/agents/fleet-registry";
 import { matchesTurkishSearch } from "@/lib/utils/search-normalizer";
 import { getDynamicMarineTrafficUrl, getDynamicVesselFinderUrl } from "@/lib/radar-links";
+import { addSeamarkLayerWithFallback } from "@/lib/utils/seamark-layer";
 
 interface MarineAisRadarModalProps {
   isOpen: boolean;
@@ -56,6 +57,7 @@ export function MarineAisRadarModal({
   const [showVesselProfile, setShowVesselProfile] = useState(false);
   const [radarTab, setRadarTab] = useState<"LIVE_AIS" | "CORRIDOR">("LIVE_AIS");
   const [fleetSearch, setFleetSearch] = useState<string>("");
+  const [seamarkUnavailable, setSeamarkUnavailable] = useState(false);
 
   const filteredFleet = ISTANBUL_FERRY_FLEET.filter((v) => {
     if (!fleetSearch.trim()) return true;
@@ -130,12 +132,13 @@ export function MarineAisRadarModal({
         attribution: ""
       }).addTo(map);
 
-      // OpenSeaMap Nautical Beacons (Fairways, buoys)
-      L.tileLayer("https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png", {
-        maxZoom: 17,
+      // OpenSeaMap Nautical Beacons (Fairways, buoys) — erişilemezse dürüst notla atlanır
+      setSeamarkUnavailable(false);
+      addSeamarkLayerWithFallback(L, map, {
         opacity: 0.65,
-        attribution: ""
-      }).addTo(map);
+        maxZoom: 17,
+        onUnavailable: () => setSeamarkUnavailable(true),
+      });
 
       // Draw active voyage nautical polyline (ONLY this trip route!)
       const routeLine = L.polyline([originCoord, destCoord], {
@@ -500,6 +503,12 @@ export function MarineAisRadarModal({
               {/* Interactive Leaflet Map Container with Wake Animation */}
               <div className="relative flex-1 min-h-[300px] sm:min-h-[360px] bg-slate-950">
                 <div ref={mapContainerRef} className="w-full h-full min-h-[300px] sm:min-h-[360px]" />
+
+                {seamarkUnavailable && (
+                  <div className="absolute bottom-3 left-3 z-[400] max-w-[80%] bg-slate-900/90 backdrop-blur-md px-3 py-1.5 rounded-xl border border-amber-500/40 text-[10px] font-bold text-amber-300">
+                    Deniz işaretleri katmanı şu anda kullanılamıyor — taban harita ve seyir hattı aktif.
+                  </div>
+                )}
 
                 {/* Floating Live Telemetry Overlay Box */}
                 <div className="absolute top-3 right-3 z-[400] bg-slate-900/90 backdrop-blur-md p-2.5 rounded-2xl border border-slate-700 text-xs shadow-lg space-y-1 font-mono text-[11px]">

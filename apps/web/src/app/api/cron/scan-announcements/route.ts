@@ -1,5 +1,6 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getLiveScan } from "@/lib/agents/live-scan-cache";
+import { verifyCronAuth } from "@/lib/utils/cron-auth";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -15,7 +16,12 @@ export const revalidate = 0;
  * /api/announcements son doğrulanmış snapshot'a düşer — bu rota yalnızca
  * taramayı tetikler ve özet rapor döner.
  */
-export async function GET() {
+export async function GET(request: NextRequest) {
+  // GÜVENLİK: Yetkisiz tetiklemeyi engelle — CRON_SECRET bearer zorunlu.
+  if (!verifyCronAuth(request)) {
+    return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  }
+
   const scan = await getLiveScan({ force: true });
   if (!scan) {
     return NextResponse.json(

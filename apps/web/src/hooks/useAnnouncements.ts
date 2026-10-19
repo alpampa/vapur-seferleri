@@ -9,7 +9,7 @@ import { useAnnouncementStore } from "@/store/useAnnouncementStore";
  * - Başarısızsa sessizce son yüklü değeri korur (uygulama bozulmaz).
  */
 export function useAnnouncements(refreshMs = 5 * 60 * 1000) {
-  const { loading, error, setData, setLoading, setError } = useAnnouncementStore();
+  const { setData, setLoading, setError } = useAnnouncementStore();
 
   useEffect(() => {
     let cancelled = false;
@@ -24,11 +24,13 @@ export function useAnnouncements(refreshMs = 5 * 60 * 1000) {
         setData({
           announcements: Array.isArray(json.announcements) ? json.announcements : [],
           disruptions: Array.isArray(json.disruptions) ? json.disruptions : [],
+          sourceHealth: Array.isArray(json.sourceHealth) ? json.sourceHealth : [],
+          recentChanges: Array.isArray(json.recentChanges) ? json.recentChanges : [],
         });
         setError(null);
-      } catch (e: any) {
+      } catch (e: unknown) {
         if (cancelled) return;
-        setError(e?.message || "Duyuru alınamadı");
+        setError(e instanceof Error ? e.message : "Duyuru alınamadı");
       } finally {
         if (!cancelled) setLoading(false);
       }

@@ -7,6 +7,7 @@ import { MarqueeTicker } from "@/components/ui/MarqueeTicker";
 import { AnnouncementDetailSheet } from "@/components/announcements/AnnouncementDetailSheet";
 import type { OperatorAnnouncement } from "@/lib/types/announcement";
 import { isAnnouncementCurrent } from "@/lib/utils/announcement-filter";
+import { useAnnouncementStore } from "@/store/useAnnouncementStore";
 
 interface AnnouncementBannerProps {
   announcements: OperatorAnnouncement[];
@@ -39,6 +40,9 @@ export function AnnouncementBanner({ announcements, className = "" }: Announceme
   // KULLANICI KURALI: Detay UYGULAMA İÇİNDE açılır (dış siteye yönlendirme YOK).
   // Açıkken rotasyon donar; pencere kayan metinle birlikte değişmez.
   const [detailItem, setDetailItem] = useState<OperatorAnnouncement | null>(null);
+  // Kaynak sağlığı: kaynağı doğrulanamayan firmanın duyurusu "DOĞRULANAMADI"
+  // olarak işaretlenir — yolcuya kesin güncel bilgi gibi sunulmaz.
+  const sourceHealth = useAnnouncementStore((s) => s.sourceHealth);
 
   // KULLANICI KURALI: Duyuru bandında YALNIZCA doğrulanmış, güncel ve gerçek İPTAL seferleri gösterilir.
   // Tarife değişimi, mehtap turu, genel bilgilendirme vb. haberler kesinlikle gösterilmez.
@@ -56,6 +60,8 @@ export function AnnouncementBanner({ announcements, className = "" }: Announceme
 
   const currentItem = activeList[currentIndex % activeList.length] || activeList[0];
   const tone = TYPE_META[currentItem.type]?.tone ?? "danger";
+  const currentHealth = sourceHealth.find((h) => h.operator === currentItem.operator);
+  const sourceUnreachable = currentHealth?.status === "UNREACHABLE";
 
   const handlePrev = () => {
     setCurrentIndex((prev) => (prev - 1 + activeList.length) % activeList.length);
@@ -134,6 +140,14 @@ export function AnnouncementBanner({ announcements, className = "" }: Announceme
             >
               {TYPE_META[currentItem.type]?.label || (hasCancellation ? "İPTAL" : "DUYURU")}
             </span>
+            {sourceUnreachable && (
+              <span
+                className="text-[8.5px] font-bold uppercase tracking-wider px-1 py-0.5 rounded-md bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-300"
+                title="Kaynağa şu an erişilemiyor; son doğrulanmış duyuru gösteriliyor."
+              >
+                DOĞRULANAMADI
+              </span>
+            )}
             {/* MOBİL: firma logosu + kısa adı rozetin yanında (bildirim kartı deseni) —
                 böylece kayan metne ALT SATIRDA tam genişlik kalır */}
             <OperatorLogo operator={currentItem.operator} size="sm" className="sm:hidden" />

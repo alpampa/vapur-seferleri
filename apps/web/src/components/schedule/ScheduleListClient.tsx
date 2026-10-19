@@ -121,12 +121,16 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
     return predictFerryDisruption(marineWeather);
   }, [marineWeather]);
 
-  // Duyuru → sefer eşleşmesi: iptal duyurusu ilgili kartı CANCELLED yapar
+  // Duyuru → sefer eşleşmesi: iptal duyurusu ilgili kartı CANCELLED yapar.
+  // YANLIŞ İPTAL ÖNLEME: yalnızca KESİN (CONFIRMED) eşleşmeler iptal sayılır;
+  // iskele/saat sezgisiyle kurulan belirsiz (UNCERTAIN) bağ kartı iptal ETMEZ.
   const disruptionByTrip = useMemo(() => {
     const map = new Map<string, "CANCELLED" | "SCHEDULE_CHANGE" | "EXTRA">();
     for (const d of disruptions) {
-      if (d.kind === "CANCELLED") map.set(d.tripId, "CANCELLED");
-      else if (d.kind === "SCHEDULE_CHANGE" && !map.has(d.tripId)) map.set(d.tripId, "SCHEDULE_CHANGE");
+      const confirmed = (d.confidence ?? "CONFIRMED") === "CONFIRMED";
+      if (d.kind === "CANCELLED" && confirmed) map.set(d.tripId, "CANCELLED");
+      else if (d.kind === "SCHEDULE_CHANGE" && confirmed && !map.has(d.tripId))
+        map.set(d.tripId, "SCHEDULE_CHANGE");
       // EXTRA (ek sefer) uyarı değil; durum değiştirmez
     }
     return map;

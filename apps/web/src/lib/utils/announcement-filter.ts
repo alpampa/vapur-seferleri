@@ -51,12 +51,15 @@ export function isAnnouncementCurrent(
 
     if (pubDate) {
       const diffDays = (curDate.getTime() - pubDate.getTime()) / (1000 * 60 * 60 * 24);
-      // İptal duyuruları anlıktır: 24 saatten eski ise gösterilmez
+      // KULLANICI KURALI: İptal duyuruları YALNIZCA yayınlandığı GÜN geçerlidir.
+      // Yayın günü dışındaki tüm iptal duyuruları elenir — bir gün öncesi dahil.
+      // (Önceki `diffDays > 1` eşiği dünün iptalini bugün de "güncel" sayıp
+      // ana ekranda gösteriyordu; iki gün sürüyordu. Artık takvim günü baz alınır.)
       if (
         announcement.type === "CANCELLATION" ||
         announcement.type === "CANCELLED_TRIPS"
       ) {
-        if (diffDays > 1) return false;
+        if (pubDate.getTime() < curDate.getTime()) return false;
       } else {
         // Genel duyurular için makul güncellik penceresi (14 gün)
         if (diffDays > 14) return false;

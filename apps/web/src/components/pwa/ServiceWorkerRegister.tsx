@@ -131,6 +131,33 @@ export function ServiceWorkerRegister() {
           console.warn("[SW] Kayıt hatası:", err);
         });
 
+      // ÇEVRİMDIŞI KABUK ISISI: SW sayfayı kontrol eder etmez, navigasyon kabuğunu
+      // (network-first) SW üzerinden bir kez çekip önbelleğe alırız. Böylece kullanıcı
+      // elle yenileme yapmadan çevrimdışı kalırsa bile ilk yenileme 503 yerine kabuğu bulur.
+      navigator.serviceWorker.ready
+        .then(() => {
+          const warmShell = () => {
+            fetch(window.location.pathname, { cache: "no-store" }).catch(() => {});
+          };
+          if (navigator.serviceWorker.controller) {
+            warmShell();
+          } else {
+            navigator.serviceWorker.addEventListener("controllerchange", warmShell, { once: true });
+          }
+          // Emniyet kemeri: kontrolcü gecikirse kısa aralıklarla tekrar dene (max ~5 sn)
+          let tries = 0;
+          const iv = setInterval(() => {
+            tries += 1;
+            if (navigator.serviceWorker.controller) {
+              warmShell();
+              clearInterval(iv);
+            } else if (tries >= 10) {
+              clearInterval(iv);
+            }
+          }, 500);
+        })
+        .catch(() => {});
+
       // Yalnızca ESKİ bir kontrolcü varken devir olursa yenile: ilk kurulumda
       // controllerchange, clients.claim() yüzünden de tetiklenir ve sayfa zaten
       // ağdan en güncel haliyle yüklendiği için gereksiz reload akışı bozar.

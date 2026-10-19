@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { verifyAdminAuth } from "@/lib/utils/admin-auth";
 import {
   getSponsoredAdsStore,
   recordAdInteraction,
@@ -10,10 +11,9 @@ import {
 
 export const dynamic = "force-dynamic";
 
+// GÜVENLİK: Ortak doğrulayıcı — gömülü varsayılan anahtar YOK; sır yalnızca env'den.
 function isAdminAuthorized(req: NextRequest): boolean {
-  const expectedKey = process.env.ADMIN_SECRET || "ZKIO-2026";
-  const headerKey = req.headers.get("x-admin-key");
-  return Boolean(headerKey && headerKey === expectedKey);
+  return verifyAdminAuth(req);
 }
 
 export async function GET(req: NextRequest) {

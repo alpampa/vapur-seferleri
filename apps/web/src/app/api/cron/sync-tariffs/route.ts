@@ -1,35 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { runNightlyTariffSync } from "@/lib/agents/daily-sync-job";
 import { OFFICIAL_SCHEDULES_DATA } from "@/lib/data/official-schedules";
+import { verifyCronAuth } from "@/lib/utils/cron-auth";
 
 export const dynamic = "force-dynamic";
 
 /**
  * GECESİ 23:00 SENKRON ENDPOINT'İ (İstanbul saati).
- * GitHub Actions workflow'u (nightly-tariff-sync.yml) 20:00 UTC = 23:00 İstanbul'da tetikler.
- * Dentur tarifesini + tüm duyuruları canlı çeker, diff yapar, değişikliği raporlar.
+ * GitHub Actions workflow'u (nightly-tariff-sync.yml) senkronu kendi içinde çalıştırır;
+ * bu uç nokta el ile/otomasyon tetiklemesi içindir.
+ * GÜVENLİK: `CRON_SECRET` bearer jetonu zorunlu (User-Agent taklidiyle atlatma yok).
  */
-function verifyCronAuth(request: NextRequest): boolean {
-  const authHeader = request.headers.get("authorization");
-  const cronSecret = process.env.CRON_SECRET;
-
-  if (cronSecret && authHeader === `Bearer ${cronSecret}`) {
-    return true;
-  }
-
-  const isVercelCron = request.headers.get("user-agent")?.includes("vercel-cron");
-  if (isVercelCron) {
-    return true;
-  }
-
-  // Geliştirme ortamında test erişimine izin ver
-  if (process.env.NODE_ENV === "development") {
-    return true;
-  }
-
-  return false;
-}
-
 export async function GET(request: NextRequest) {
   if (!verifyCronAuth(request)) {
     return NextResponse.json(
@@ -38,7 +19,9 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const isVercelCron = request.headers.get("user-agent")?.includes("vercel-cron");
+  const authenticatedBySecret = Boolean(
+    process.env.CRON_SECRET && request.headers.get("authorization") === `Bearer ${process.env.CRON_SECRET}`
+  );
 
   const now = new Date();
   const istanbulTimeStr = now.toLocaleTimeString("tr-TR", { timeZone: "Europe/Istanbul", hour12: false });
@@ -53,7 +36,7 @@ export async function GET(request: NextRequest) {
       job: "GECELIK_23_00_RESMI_TARIFE_VE_DUYURU_SENKRON_AJANI",
       executionTimestamp: now.toISOString(),
       istanbulTime: `${istanbulDateStr} ${istanbulTimeStr}`,
-      isVercelCron: Boolean(isVercelCron),
+      isVercelCron: authenticatedBySecret,
       verifiedOfficialTrips: verifiedTripCount,
       summary: result.summary,
       reports: result.reports,
