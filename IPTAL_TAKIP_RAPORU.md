@@ -117,6 +117,17 @@ Testler gerçek resmî sayfa fixture'larını kullanır: `sehirhatlari-iptal-sef
 
 Mevcut Playwright denetim paketi (`e2e/independent-audit.spec.ts`): **20/20**. Bu sırada testteki bir `.or()` birleşiminin birden fazla karta eşleşip strict-mode ihlali verdiği görüldü; `.first()` birleşimin sonuna taşındı (uygulama değil, assertion düzeltildi).
 
+### Production doğrulaması (19.10.2026)
+| Kontrol | Sonuç |
+|---|---|
+| Deploy | `READY`, alias `https://vapur-seferleri.vercel.app` |
+| `/api/version` | `200`, güncel deployment id |
+| `/api/source-health` | `200`, `persistent:false`, `storage:memory` (KV env yok) |
+| `/api/cron/monitor` (yetkisiz) | `401` |
+| `/api/announcements` | `200`, 2 duyuru, 20 iptal |
+
+> Not: Hobby planı dakikalık cron'u reddettiği için production'da izleme turları henüz otomatik tetiklenmiyor. `CRON_SECRET` production'a eklendi; 60 sn'lik tur için Pro + cron satırı veya harici tetikleyici gerekir (§3). KV env yokken `persistent:false` — kalıcı arşiv için Upstash env şart.
+
 ## 10. Kurulum, bilinen sınırlar ve yapılacaklar
 
 ### Üretim kurulumu (zorunlu)
