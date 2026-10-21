@@ -77,7 +77,9 @@ export async function saveSchedulesOffline(schedules: ScheduleCardDto[]): Promis
       tx.oncomplete = () => {
         // İkincil fallback olarak localStorage'ı da hafifçe güncel tut (küçük boyutlu kopyasıyla)
         try {
+          const savedAt = new Date().toISOString();
           localStorage.setItem("vapur_schedules_last_sync", String(Date.now()));
+          localStorage.setItem("vapur_offline_saved_at", savedAt);
         } catch {}
         resolve();
       };

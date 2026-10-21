@@ -43,8 +43,16 @@ export interface ScheduleCardDto {
   lineName?: string;
 }
 
+export type ScheduleDayType = "WEEKDAY" | "SATURDAY" | "SUNDAY";
+
 export interface SchedulesResponse {
   serverTimeIso: string;
   serverDateFormatted?: string;
+  /** Seçili tarife günü (YYYY-MM-DD, Europe/Istanbul). */
+  selectedDateIso?: string;
+  /** Seçili günün tarife tipi; resmî tatiller SUNDAY tarifesine eşlenir. */
+  dayType?: ScheduleDayType;
+  /** Seçili gün bugün mü? (canlı geri sayım yalnızca bugün için gösterilir) */
+  isToday?: boolean;
   schedules: ScheduleCardDto[];
 }

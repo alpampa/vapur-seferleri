@@ -31,7 +31,8 @@ export interface TariffWatchdogItem {
   sourceType: "LIVE_SCRAPER" | "OFFICIAL_JSON_SNAPSHOT" | "OFFICIAL_IMAGE_TARIFF";
   sourceUrl: string;
   tariffSeason: string;
-  lastVerifiedIso: string;
+  /** Bilinmiyorsa null — uydurma tarih yazılmaz. */
+  lastVerifiedIso: string | null;
   expectedHashPrefix: string;
   status: "VERIFIED_CURRENT" | "CHECK_RECOMMENDED";
   lifeSafetyNote: string;
@@ -244,9 +245,9 @@ export function getTariffWatchdogStatus(): TariffWatchdogItem[] {
       sourceType: "OFFICIAL_JSON_SNAPSHOT",
       sourceUrl: "https://sehirhatlari.istanbul/tr/sefer-saatleri",
       tariffSeason: "2026 Güncel Tarife + Canlı İptal API",
-      lastVerifiedIso: nowIso,
+      lastVerifiedIso: null,
       expectedHashPrefix: "sh-692-verified",
-      status: "VERIFIED_CURRENT",
+      status: "CHECK_RECOMMENDED",
       lifeSafetyNote: "Hafta içi, Cumartesi ve Pazar/Resmi Tatil ayrımları ile anlık iptal duyuruları aktif.",
     },
     {
@@ -254,9 +255,9 @@ export function getTariffWatchdogStatus(): TariffWatchdogItem[] {
       sourceType: "OFFICIAL_IMAGE_TARIFF",
       sourceUrl: "https://www.mavimarmara.net/sefer-saatleri/",
       tariffSeason: "2026 Sonbahar / Kış Tarifesi",
-      lastVerifiedIso: nowIso,
+      lastVerifiedIso: null,
       expectedHashPrefix: "mm-winter-2026",
-      status: "VERIFIED_CURRENT",
+      status: "CHECK_RECOMMENDED",
       lifeSafetyNote: "Yıldızlı (*) Pazar hariç sabah seferleri ve hafta sonu ek seferleri birebir doğrulandı.",
     },
     {
@@ -264,9 +265,9 @@ export function getTariffWatchdogStatus(): TariffWatchdogItem[] {
       sourceType: "LIVE_SCRAPER",
       sourceUrl: "https://www.denturavrasya.com/tr-TR/sefer_saatleri.aspx?id=38",
       tariffSeason: "Canlı Tablo Senkronizasyonu",
-      lastVerifiedIso: nowIso,
+      lastVerifiedIso: null,
       expectedHashPrefix: "da-id38-live",
-      status: "VERIFIED_CURRENT",
+      status: "CHECK_RECOMMENDED",
       lifeSafetyNote: "Hafta içi, Cumartesi ve Pazar sütunları gece otomatik senkronize edilir.",
     },
     {
@@ -274,9 +275,9 @@ export function getTariffWatchdogStatus(): TariffWatchdogItem[] {
       sourceType: "OFFICIAL_JSON_SNAPSHOT",
       sourceUrl: "https://www.turyol.com/TarifeSeferSaatleri",
       tariffSeason: "2026 Resmi Arama Motoru Verisi",
-      lastVerifiedIso: nowIso,
+      lastVerifiedIso: null,
       expectedHashPrefix: "ty-col3-patched",
-      status: "VERIFIED_CURRENT",
+      status: "CHECK_RECOMMENDED",
       lifeSafetyNote: "Hafta sonuna özel 19:15/20:15 Adalar dönüşleri hafta içi gizlenecek şekilde kilitlendi.",
     },
     {
@@ -284,9 +285,9 @@ export function getTariffWatchdogStatus(): TariffWatchdogItem[] {
       sourceType: "OFFICIAL_IMAGE_TARIFF",
       sourceUrl: "https://prenstur.com/sefer-saatleri/",
       tariffSeason: "2026-2027 Kış Tarifesi (Bostancı & Kartal)",
-      lastVerifiedIso: nowIso,
+      lastVerifiedIso: null,
       expectedHashPrefix: "pt-2026-2027-kis",
-      status: "VERIFIED_CURRENT",
+      status: "CHECK_RECOMMENDED",
       lifeSafetyNote: "06:20 Kartal ve 07:00 Heybeliada hafta içi mesai seferleri Pazar günü filtrelenir.",
     },
   ];

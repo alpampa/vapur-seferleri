@@ -940,8 +940,8 @@ export default function AdminDashboard() {
                   Hayati Sefer Verisi & Sezon Geçiş Bekçisi (Tariff Watchdog)
                 </h3>
               </div>
-              <span className="px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 text-[11px] font-bold">
-                5 / 5 Operatör Hafta İçi / Sonu Doğrulandı
+              <span className="px-2.5 py-1 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30 text-[11px] font-bold">
+                Son doğrulama zamanı kayıtlı değil — kaynaklar ayrıca kontrol edilmeli
               </span>
             </div>
 

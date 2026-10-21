@@ -46,6 +46,10 @@ export interface ScheduleCardProps {
   isFeaturedHero?: boolean;
   highlightStopName?: string;
   onSelectHop?: (schedule: ScheduleCardDto) => void;
+  /** Gelecek gün tarifesi: canlı geri sayım/durum gösterilmez. */
+  previewMode?: boolean;
+  /** Bugünün tüm gün listesi: geçmiş seferler de gösterilir (COMPLETED). */
+  showExpired?: boolean;
 }
 
 export function ScheduleCard(props: ScheduleCardProps) {
@@ -78,7 +82,7 @@ export function ScheduleCard(props: ScheduleCardProps) {
   // 1. Süresi dolan seferler render edilmez.
   // 2. Kalkış ve varış noktası aynı olan (örn: Büyükada ➔ Büyükada) anlamsız/hatalı seferler ASLA render edilemez!
   if (
-    dynState.isExpired ||
+    (!props.showExpired && dynState.isExpired) ||
     !props.origin ||
     !props.destination ||
     props.origin.trim() === props.destination.trim() ||
@@ -109,8 +113,12 @@ export function ScheduleCard(props: ScheduleCardProps) {
 
   const isDirect = !props.stops || props.stops.length === 0;
 
+  // Önizleme gününde canlı geri sayım yoktur; yalnızca tarife saati gösterilir.
+  const liveCountdown = props.previewMode ? null : dynState.countdown;
+  const liveMinutesUntilDeparture = props.previewMode ? null : dynState.minutesUntilDeparture;
+
   // KULLANICI KURALI: Son 5 dakikada sefer saati de yanıp sönsün
-  const isLast5Minutes = !!dynState.countdown && !dynState.isDeparted;
+  const isLast5Minutes = !!liveCountdown && !dynState.isDeparted;
 
   // KULLANICI KURALI: İptal Sefer Tespiti (/ İPTAL Kırmızı Yanıp Sönen Rozet) — ortak tek doğruluk kaynağı
   const isCancelled = isTripCancelled({ status: props.status, delayText: props.delayText }, dynState);
@@ -124,8 +132,8 @@ export function ScheduleCard(props: ScheduleCardProps) {
 
   // Kalan Saniyeyi Hesapla
   let remainingSec = 0;
-  if (dynState.countdown) {
-    const parts = dynState.countdown.split(':').map(Number);
+  if (liveCountdown) {
+    const parts = liveCountdown.split(':').map(Number);
     if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
       remainingSec = parts[0] * 60 + parts[1];
     }
@@ -244,7 +252,7 @@ export function ScheduleCard(props: ScheduleCardProps) {
               <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
                 {t("departed")}
               </span>
-            ) : dynState.countdown && !isCancelled ? (
+            ) : liveCountdown && !isCancelled ? (
               <span className={`text-[9px] font-mono font-black px-1.5 py-0.5 rounded tabular-nums border ${
                 remainingSec > 0 && remainingSec <= 60
                   ? "bg-rose-600 text-white border-rose-500 animate-pulse font-extrabold shadow-2xs"
@@ -252,11 +260,11 @@ export function ScheduleCard(props: ScheduleCardProps) {
                   ? "bg-amber-500 text-slate-950 border-amber-400 font-extrabold shadow-2xs"
                   : "bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 border-amber-300/60 dark:border-amber-500/30"
               }`}>
-                {remainingSec > 0 && remainingSec <= 60 ? remainingSec + "s" : dynState.countdown}
+                {remainingSec > 0 && remainingSec <= 60 ? remainingSec + "s" : liveCountdown}
               </span>
-            ) : dynState.minutesUntilDeparture != null && dynState.status === "ON_TIME" && !isCancelled ? (
+            ) : liveMinutesUntilDeparture != null && dynState.status === "ON_TIME" && !isCancelled ? (
               <span className="text-[9px] font-mono font-black px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 tabular-nums whitespace-nowrap">
-                {formatRemainingShort(dynState.minutesUntilDeparture)}
+                {formatRemainingShort(liveMinutesUntilDeparture)}
               </span>
             ) : null}
 
@@ -467,13 +475,13 @@ export function ScheduleCard(props: ScheduleCardProps) {
                 <span className="px-1.5 py-0.5 rounded text-[9px] font-black uppercase tracking-wider inline-flex items-center gap-0.5 shadow-xs animate-pulse bg-rose-600 text-white">
                   <Siren size={10} aria-hidden="true" /> SON ÇAĞRI
                 </span>
-              ) : dynState.countdown ? (
+              ) : liveCountdown ? (
                 <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-black bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-500/40 animate-pulse whitespace-nowrap inline-flex items-center gap-0.5">
-                  <Timer size={10} aria-hidden="true" /> {dynState.countdown}
+                  <Timer size={10} aria-hidden="true" /> {liveCountdown}
                 </span>
-              ) : dynState.minutesUntilDeparture != null && dynState.status === "ON_TIME" ? (
+              ) : liveMinutesUntilDeparture != null && dynState.status === "ON_TIME" ? (
                 <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-black bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 tabular-nums whitespace-nowrap inline-flex items-center gap-0.5">
-                  {formatRemainingShort(dynState.minutesUntilDeparture)}
+                  {formatRemainingShort(liveMinutesUntilDeparture)}
                 </span>
               ) : (
                 <TripStatusBadge status={dynState.status} delayText={props.delayText} />
@@ -650,7 +658,7 @@ export function ScheduleCard(props: ScheduleCardProps) {
           stops={props.stops}
           operator={props.operator}
           underway={dynState.underway}
-          soonDeparturePier={dynState.countdown && !dynState.isDeparted ? dynState.currentOrigin : null}
+          soonDeparturePier={liveCountdown && !dynState.isDeparted ? dynState.currentOrigin : null}
         />
       )}
     </div>

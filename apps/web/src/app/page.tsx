@@ -71,6 +71,7 @@ export default async function Home() {
           sourceFreshness={{
             generatedAt: announcementsMeta.generatedAt,
             sourceCount: announcementsMeta.sourceCount,
+            sourceStatus: announcementsMeta.sourceStatus,
           }}
         />
       </main>

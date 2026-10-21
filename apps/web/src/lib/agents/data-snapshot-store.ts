@@ -14,6 +14,16 @@ import type { OperatorAnnouncement } from "@/lib/types/announcement";
 import type { OperatorScanReport } from "@/lib/agents/announcements-agent";
 import { toTrDate } from "@/lib/utils/istanbul-date";
 
+export interface AnnouncementSourceStatus {
+  operator: string;
+  status: "SCANNED" | "NO_SOURCE" | "FAILED";
+  url?: string;
+  fetchedAt?: string;
+  announcementCount?: number;
+  note?: string;
+  error?: string;
+}
+
 export interface AnnouncementsSnapshotFile {
   generatedAt: string;
   failures?: { operator: string; error: string }[];
@@ -59,10 +69,48 @@ export function getStoredAnnouncements(): OperatorAnnouncement[] {
   return out;
 }
 
+/**
+ * Kaynak bazlı son kontrol durumu.
+ *
+ * `coverage` firma bazlı tarama sonucunu (SCANNED / NO_SOURCE / FAILED) taşır.
+ * `sources` ise yalnızca okunabilen kaynakların gerçek `fetchedAt` damgasını
+ * taşır. İkisi birleştirilir; bilinmeyen zaman uydurulmaz (undefined kalır).
+ */
+export function getStoredAnnouncementsSourceStatus(): AnnouncementSourceStatus[] {
+  const fetchedAtByOperator = new Map<string, string>();
+  const announcementCountByOperator = new Map<string, number>();
+  for (const s of announcementsRaw?.sources ?? []) {
+    fetchedAtByOperator.set(s.operator, s.fetchedAt);
+    announcementCountByOperator.set(s.operator, (s.announcements ?? []).length);
+  }
+
+  const coverage = announcementsRaw?.coverage ?? [];
+  if (coverage.length === 0) {
+    return Array.from(fetchedAtByOperator.entries()).map(([operator, fetchedAt]) => ({
+      operator,
+      status: "SCANNED" as const,
+      fetchedAt,
+      announcementCount: announcementCountByOperator.get(operator) ?? 0,
+    }));
+  }
+
+  return coverage.map((item) => ({
+    operator: item.operator,
+    status: item.status,
+    url: item.url,
+    fetchedAt: item.status === "SCANNED" ? fetchedAtByOperator.get(item.operator) : undefined,
+    announcementCount:
+      item.announcementCount ?? announcementCountByOperator.get(item.operator),
+    note: item.note,
+    error: item.error,
+  }));
+}
+
 export function getStoredAnnouncementsMeta() {
   return {
     generatedAt: announcementsRaw?.generatedAt,
     sourceCount: (announcementsRaw?.sources ?? []).length,
+    sourceStatus: getStoredAnnouncementsSourceStatus(),
   };
 }
 

@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import { ScheduleCard } from "@/components/schedule/ScheduleCard";
 import { TripDetailsSheet } from "@/components/schedule/TripDetailsSheet";
 import type { ScheduleCardDto } from "@/lib/types/schedule";
-import { Search, Navigation, ArrowLeftRight, RotateCcw, ChevronDown, Sparkles, Wind, X, AlertOctagon, SlidersHorizontal } from "lucide-react";
+import { Search, Navigation, ArrowLeftRight, RotateCcw, ChevronDown, Sparkles, Wind, X, AlertOctagon, SlidersHorizontal, CalendarDays, Loader2 } from "lucide-react";
 import { matchesTurkishSearch } from "@/lib/utils/search-normalizer";
 import { LateNightTransitModal } from "@/components/night/LateNightTransitModal";
 import { MissedFerryAssistantModal } from "@/components/planner/MissedFerryAssistantModal";
@@ -36,14 +36,8 @@ import type { MarineWeatherStatus } from "@/lib/services/marine-weather";
 import { parseNaturalTransitQuery } from "@/lib/services/ai-transit-assistant";
 import { predictFerryDisruption } from "@/lib/services/predictive-disruption-model";
 import { saveSchedulesOffline, loadSchedulesOffline } from "@/lib/services/offline-db";
+import { addDaysToIso, getDayTypeForIso, nextWeekdayIso, toIsoDate } from "@/lib/utils/istanbul-date";
 import { trackAppOpenOnce } from "@/lib/utils/analytics-tracker";
-import { SponsoredTripRow } from "@/components/schedule/SponsoredTripRow";
-import { AdSlot } from "@/components/commercial/AdSlot";
-import {
-  getSponsoredAdsStore,
-  selectContextualSponsoredAd,
-  type SponsoredAdOffer,
-} from "@/lib/data/sponsored-ads";
 
 interface ScheduleListClientProps {
   schedules: ScheduleCardDto[];
@@ -56,12 +50,69 @@ interface ScheduleListClientProps {
 
 export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, marineWeather, sourceFreshness }: ScheduleListClientProps) {
   const { t, language } = useLanguageStore();
-  const { touristMode, setTouristMode, proUnlocked, scheduleCategory, setScheduleCategory } = usePreferencesStore();
+  const { touristMode, setTouristMode, scheduleCategory, setScheduleCategory } = usePreferencesStore();
   // Y4 — İKİ KADEME TICK: canlı MM:SS penceresine giren görünür sefer varken 1 sn,
   // aksi halde 15 sn (dakika hassasiyeti yeterli). Kademe geçişi aşağıdaki effect ile yönetilir.
   const [tickMs, setTickMs] = useState(1000);
   const { nowMs } = useTransitClock(tickMs, { serverTimeIso });
   const now = nowMs;
+
+  // GÜN/TARİFE SEÇİMİ: varsayılan bugün. Bugün dışındaki günler /api/schedules
+  // üzerinden sunucudan alınır; canlı geri sayım yalnızca bugün için gösterilir.
+  const todayIso = useMemo(() => toIsoDate(nowMs), [nowMs]);
+  const [selectedDateIso, setSelectedDateIso] = useState<string>(() => toIsoDate());
+  const [showAllDay, setShowAllDay] = useState<boolean>(false);
+  const [daySchedules, setDaySchedules] = useState<ScheduleCardDto[] | null>(null);
+  const [dayMeta, setDayMeta] = useState<{
+    dayType: "WEEKDAY" | "SATURDAY" | "SUNDAY";
+    isToday: boolean;
+    serverDateFormatted?: string;
+  } | null>(null);
+  const [dayLoading, setDayLoading] = useState<boolean>(false);
+  const [dayError, setDayError] = useState<string | null>(null);
+  const isTodaySelected = selectedDateIso === todayIso;
+
+  useEffect(() => {
+    if (isTodaySelected) {
+      setDaySchedules(null);
+      setDayMeta(null);
+      setDayError(null);
+      setDayLoading(false);
+      return;
+    }
+
+    let cancelled = false;
+    setDayLoading(true);
+    setDayError(null);
+
+    fetch(`/api/schedules?date=${encodeURIComponent(selectedDateIso)}`, { cache: "no-store" })
+      .then((res) => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      })
+      .then((data) => {
+        if (cancelled) return;
+        setDaySchedules(Array.isArray(data?.schedules) ? data.schedules : []);
+        setDayMeta({
+          dayType: data?.dayType ?? getDayTypeForIso(selectedDateIso),
+          isToday: false,
+          serverDateFormatted: data?.serverDateFormatted
+        });
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setDaySchedules([]);
+        setDayMeta(null);
+        setDayError("Seçili günün tarifesi alınamadı. Bağlantınızı kontrol edin.");
+      })
+      .finally(() => {
+        if (!cancelled) setDayLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isTodaySelected, selectedDateIso]);
 
   const [selectedSchedule, setSelectedSchedule] = useState<ScheduleCardDto | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<"ADALAR" | "BOGAZ" | "ALL">(scheduleCategory);
@@ -139,30 +190,11 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
 
   // Native IndexedDB Non-blocking Caching
   const [effectiveSchedules, setEffectiveSchedules] = useState<ScheduleCardDto[]>(schedules);
-  const [sponsoredAds, setSponsoredAds] = useState<SponsoredAdOffer[]>(() => getSponsoredAdsStore());
 
-  // Anonim oturum & telemetri açılış kaydı + Canlı Sponsorlu Satır Senkronizasyonu
+  // Anonim oturum & telemetri açılış kaydı
   useEffect(() => {
     trackAppOpenOnce();
-    fetch("/api/ads")
-      .then((r) => (r.ok ? r.json() : null))
-      .then((json) => {
-        if (json && Array.isArray(json.ads)) {
-          setSponsoredAds(json.ads);
-        }
-      })
-      .catch(() => {});
   }, []);
-
-  const activeSponsoredAd = useMemo(() => {
-    if (proUnlocked) return null;
-    return selectContextualSponsoredAd(sponsoredAds, {
-      selectedCategory,
-      selectedOrigin,
-      selectedDestination,
-      searchQuery,
-    });
-  }, [sponsoredAds, selectedCategory, selectedOrigin, selectedDestination, searchQuery, proUnlocked]);
 
   useEffect(() => {
     let isCancelled = false;
@@ -184,6 +216,29 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
       isCancelled = true;
     };
   }, [schedules]);
+
+  const displayedSchedules = !isTodaySelected && daySchedules ? daySchedules : effectiveSchedules;
+  const selectedDayType = isTodaySelected
+    ? getDayTypeForIso(todayIso)
+    : (dayMeta?.dayType ?? getDayTypeForIso(selectedDateIso));
+
+  const tomorrowIso = addDaysToIso(todayIso, 1);
+  const nextSaturdayIso = nextWeekdayIso(todayIso, 6);
+  const nextSundayIso = nextWeekdayIso(todayIso, 0);
+  const dayTypeLabel =
+    selectedDayType === "SUNDAY" ? "Pazar / Tatil" : selectedDayType === "SATURDAY" ? "Cumartesi" : "Hafta içi";
+  const selectedDateLabel = new Intl.DateTimeFormat("tr-TR", {
+    timeZone: "Europe/Istanbul",
+    weekday: "short",
+    day: "2-digit",
+    month: "long"
+  }).format(new Date(`${selectedDateIso}T12:00:00+03:00`));
+
+  const selectDay = (dateIso: string) => {
+    setSelectedDateIso(dateIso);
+    setShowAllDay(false);
+    triggerHaptic("light");
+  };
 
   // Geolocation states
   const [nearestPier, setNearestPier] = useState<{ name: string; distanceKm: number } | null>(null);
@@ -241,9 +296,10 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
 
   // 1. Filter and resolve dynamic state for active trips
   const activeSchedulesWithDyn = useMemo(() => {
-    const rawList = effectiveSchedules
+    const rawList = displayedSchedules
       .map((s) => {
-        const disruption = disruptionByTrip.get(s.id);
+        // İptal duyuruları yalnızca yayınlandığı İstanbul günü geçerlidir.
+        const disruption = isTodaySelected ? disruptionByTrip.get(s.id) : undefined;
         const overlaySchedule =
           disruption === "CANCELLED"
             ? { ...s, status: "CANCELLED" as const, delayText: s.delayText || "İptal" }
@@ -264,7 +320,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
         };
       })
       .filter(({ dyn, schedule }) => {
-        if (dyn.isExpired) return false;
+        if (dyn.isExpired && !(isTodaySelected && showAllDay)) return false;
         // KULLANICI KURALI & SIFIR TOLERANS: Kalkış ve varış noktası aynı olan hatalı seferler (örn: Büyükada -> Büyükada) kesinlikle kabul edilmez
         if (dyn.currentOrigin.trim() === dyn.destination.trim()) return false;
         if (schedule.origin.trim() === schedule.destination.trim()) return false;
@@ -325,7 +381,7 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
     }
 
     return Array.from(dedupMap.values());
-  }, [effectiveSchedules, selectedCategory, selectedOrigin, searchQuery, now, serverTimeIso, disruptionByTrip]);
+  }, [displayedSchedules, selectedCategory, selectedOrigin, searchQuery, now, serverTimeIso, disruptionByTrip, isTodaySelected, showAllDay]);
 
   const uniqueOperators = useMemo(() => {
     return OPERATOR_REGISTRY
@@ -547,28 +603,15 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
       {/* CANLI FIRMA DUYURU BANDI (iptal / tarife / ek sefer) */}
       <AnnouncementBanner announcements={announcements} />
 
-      {/* ÇEVRİMDIŞI PWA GÖSTERGESİ (Metro / Deniz Tünelinde Kesintisiz Hafıza Modu) */}
-      {!isOnline && (
-        <div className="px-3 pt-1.5 animate-fadeIn">
-          <div className="px-3 py-1.5 rounded-xl bg-slate-900/90 text-slate-200 border border-slate-700/80 text-[11px] font-bold flex items-center justify-between shadow-xs">
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse shrink-0" />
-              <span>Çevrimdışı Mod — Kayıtlı Resmi Tarife Gösteriliyor</span>
-            </div>
-            <span className="text-[9.5px] font-mono px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 font-bold shrink-0">
-              PWA Çevrimdışı
-            </span>
-          </div>
-        </div>
+      {/* 0. GECE GÜVENCESİ: SON VAPURU KAÇIRMA ASİSTANI (yalnızca bugün) */}
+      {isTodaySelected && (
+        <LastFerrySafeguardBanner
+          schedules={safeguardSchedules}
+          visibleSchedules={upcomingTrips.map((t) => t.schedule)}
+          serverTimeIso={serverTimeIso}
+          onOpenNightTransit={() => setIsNightTransitOpen(true)}
+        />
       )}
-
-      {/* 0. GECE GÜVENCESİ: SON VAPURU KAÇIRMA ASİSTANI (23:45 Sonrası Aktif) */}
-      <LastFerrySafeguardBanner
-        schedules={safeguardSchedules}
-        visibleSchedules={upcomingTrips.map((t) => t.schedule)}
-        serverTimeIso={serverTimeIso}
-        onOpenNightTransit={() => setIsNightTransitOpen(true)}
-      />
 
       {/* 1. TEK KART: İSKELE SEÇİCİ + MİKRO FİLTRELER (Birleşik Kart) */}
       <div className="px-3 pt-1.5">
@@ -728,6 +771,106 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
         </div>
       </div>
 
+      {/* GÜN / TARİH SEÇİCİ: Bugün, yarın, hafta sonu veya belirli bir tarih.
+          Bugün dışındaki günlerde canlı geri sayım gösterilmez (tarife önizlemesi). */}
+      <div className="px-3 pt-1.5">
+        <div className="w-full rounded-2xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 shadow-2xs px-1.5 py-1.5">
+          <div className="flex items-center gap-1.5 overflow-x-auto hide-scrollbar">
+            <span className="shrink-0 inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wide text-slate-500 dark:text-slate-400 px-1">
+              <CalendarDays size={12} />
+              <span>Gün</span>
+            </span>
+
+            <button
+              type="button"
+              onClick={() => selectDay(todayIso)}
+              aria-pressed={isTodaySelected}
+              className={`${chipBase} gap-1 shrink-0 ${isTodaySelected ? chipOn : chipOff}`}
+            >
+              Bugün
+            </button>
+
+            <button
+              type="button"
+              onClick={() => selectDay(tomorrowIso)}
+              aria-pressed={selectedDateIso === tomorrowIso}
+              className={`${chipBase} gap-1 shrink-0 ${selectedDateIso === tomorrowIso ? chipOn : chipOff}`}
+            >
+              Yarın
+            </button>
+
+            <button
+              type="button"
+              onClick={() => selectDay(nextSaturdayIso)}
+              aria-pressed={selectedDateIso === nextSaturdayIso}
+              className={`${chipBase} gap-1 shrink-0 ${selectedDateIso === nextSaturdayIso ? chipOn : chipOff}`}
+            >
+              Cumartesi
+            </button>
+
+            <button
+              type="button"
+              onClick={() => selectDay(nextSundayIso)}
+              aria-pressed={selectedDateIso === nextSundayIso}
+              className={`${chipBase} gap-1 shrink-0 ${selectedDateIso === nextSundayIso ? chipOn : chipOff}`}
+            >
+              Pazar / Tatil
+            </button>
+
+            {isTodaySelected && (
+              <button
+                type="button"
+                onClick={() => {
+                  setShowAllDay((prev) => !prev);
+                  triggerHaptic("light");
+                }}
+                aria-pressed={showAllDay}
+                title="Bugünün geçmiş seferleri dahil tüm tarifesini göster"
+                className={`${chipBase} gap-1 shrink-0 ${showAllDay ? chipOn : chipOff}`}
+              >
+                Tüm gün
+              </button>
+            )}
+
+            <label className="shrink-0 inline-flex items-center gap-1 text-[10px] font-bold text-slate-500 dark:text-slate-400">
+              <span className="sr-only">Tarih seçin</span>
+              <input
+                type="date"
+                value={selectedDateIso}
+                min={todayIso}
+                onChange={(e) => {
+                  if (e.target.value) selectDay(e.target.value);
+                }}
+                className="min-h-8 px-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[11px] font-bold text-slate-700 dark:text-slate-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+              />
+            </label>
+          </div>
+
+          <div className="flex items-center gap-2 px-1 pt-1 text-[10px] font-bold text-slate-500 dark:text-slate-400">
+            <span className="truncate">
+              {selectedDateLabel} · {dayTypeLabel} tarifesi
+            </span>
+            {dayLoading && (
+              <span className="inline-flex items-center gap-1 text-blue-600 dark:text-blue-300 shrink-0">
+                <Loader2 size={10} className="animate-spin" />
+                Yükleniyor
+              </span>
+            )}
+            {!isTodaySelected && !dayLoading && (
+              <span className="shrink-0 text-amber-700 dark:text-amber-300">
+                Önizleme — canlı geri sayım yok
+              </span>
+            )}
+          </div>
+
+          {dayError && (
+            <div className="mx-1 mt-1 px-2 py-1 rounded-lg bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-[10px] font-bold text-rose-700 dark:text-rose-300">
+              {dayError}
+            </div>
+          )}
+        </div>
+      </div>
+
       {/* GPS Konumu Bildirim Rozeti (En Yakın İskele Seçildiğinde) */}
       {nearestPier && geoStatus === "ACTIVE" && selectedOrigin === nearestPier.name && (
         <div className="px-3 pt-1.5 animate-fadeIn">
@@ -881,10 +1024,6 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
       <div className={`px-3 flex flex-col ${isCompactDensity ? "gap-1.5" : "gap-2"} pb-36 sm:pb-28 mt-1`}>
         {upcomingTrips.length > 0 ? (
           upcomingTrips.map(({ schedule, dyn }, idx) => {
-            const shouldShowSponsoredRowHere =
-              activeSponsoredAd != null &&
-              ((upcomingTrips.length >= 2 && idx === 1) || (upcomingTrips.length === 1 && idx === 0));
-
             return (
               <div key={`${schedule.id}-${dyn.currentOrigin}`} className="contents">
                 <ScheduleCard
@@ -910,16 +1049,12 @@ export function ScheduleListClient({ schedules, serverTimeIso, initialOrigin, ma
                   continuousUntil={schedule.continuousUntil}
                   isCompact={isCompactDensity}
                   isFeaturedHero={idx === 0}
+                  previewMode={!isTodaySelected}
+                  showExpired={isTodaySelected && showAllDay}
                   highlightStopName={searchQuery}
                   onClick={() => setSelectedSchedule(schedule)}
                   onSelectHop={(s) => setSelectedHopSchedule(s)}
                 />
-                {shouldShowSponsoredRowHere && (
-                  <SponsoredTripRow ad={activeSponsoredAd} isCompact={isCompactDensity} />
-                )}
-                {idx === 7 && upcomingTrips.length > 10 && (
-                  <AdSlot slotId="sefer-listesi" className="pt-1" />
-                )}
               </div>
             );
           })
