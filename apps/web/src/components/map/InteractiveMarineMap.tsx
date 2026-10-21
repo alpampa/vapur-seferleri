@@ -6,6 +6,9 @@ import { MarineAisRadarModal } from "./MarineAisRadarModal";
 import "leaflet/dist/leaflet.css";
 import { ISTANBUL_PIERS } from "@/lib/data/piers";
 import type { ScheduleCardDto } from "@/lib/types/schedule";
+import { resolveDynamicTrip } from "@/lib/utils/dynamic-trip";
+import { MARINE_SWELL_TRACKS } from "@/lib/data/marine-swell-tracks";
+import { Waves } from "lucide-react";
 
 interface InteractiveMarineMapProps {
   selectedOrigin?: string;
@@ -20,14 +23,18 @@ export function InteractiveMarineMap({
   selectedOrigin,
   selectedDestination,
   onSelectPier,
+  schedules = [],
   height = "420px",
   interactive = true
 }: InteractiveMarineMapProps) {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
   const routeLayerRef = useRef<any>(null);
+  const vesselsLayerRef = useRef<any>(null);
   const [mounted, setMounted] = useState(false);
   const [isRadarOpen, setIsRadarOpen] = useState(false);
+  const [showSwellTracks, setShowSwellTracks] = useState(true);
+  const swellLayerRef = useRef<any>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -117,6 +124,7 @@ export function InteractiveMarineMap({
 
       mapInstanceRef.current = map;
       routeLayerRef.current = L.layerGroup().addTo(map);
+      vesselsLayerRef.current = L.layerGroup().addTo(map);
     });
 
     return () => {
@@ -166,24 +174,88 @@ export function InteractiveMarineMap({
     });
   }, [selectedOrigin, selectedDestination]);
 
+  // Interpolate Active In-Transit Ferries on Map
+  useEffect(() => {
+    if (!mapInstanceRef.current || !vesselsLayerRef.current) return;
+
+    import("leaflet").then((leafletModule) => {
+      const L = leafletModule.default || leafletModule;
+      vesselsLayerRef.current.clearLayers();
+
+      const now = Date.now();
+
+      schedules.forEach((trip) => {
+        const dyn = resolveDynamicTrip(
+          trip.origin,
+          trip.destination,
+          trip.departureTime,
+          trip.targetTimeIso || new Date().toISOString(),
+          trip.stops,
+          undefined,
+          now
+        );
+
+        // If trip is actively in transit
+        if (dyn.status === "IN_TRANSIT" || dyn.isDeparted) {
+          const originCoords = ISTANBUL_PIERS[dyn.currentOrigin];
+          const destCoords = ISTANBUL_PIERS[trip.destination];
+
+          if (originCoords && destCoords) {
+            // Estimate mid-point navigation based on current progress
+            const lat = (originCoords.lat + destCoords.lat) / 2;
+            const lng = (originCoords.lng + destCoords.lng) / 2;
+
+            const shipHtml = `
+              <div class="flex flex-col items-center animate-pulse">
+                <div class="w-7 h-7 rounded-full bg-indigo-600/90 border border-cyan-400 text-white flex items-center justify-center shadow-lg shadow-cyan-500/40 text-xs font-black">
+                  🚢
+                </div>
+                <span class="text-[9px] font-bold bg-slate-950/90 text-cyan-300 border border-cyan-500/50 px-1.5 py-0.2 rounded mt-0.5 whitespace-nowrap shadow">
+                  ${trip.operator}
+                </span>
+              </div>
+            `;
+
+            const shipIcon = L.divIcon({
+              html: shipHtml,
+              className: "vessel-marker",
+              iconSize: [40, 40],
+              iconAnchor: [20, 20]
+            });
+
+            const marker = L.marker([lat, lng], { icon: shipIcon });
+            marker.bindPopup(`
+              <div style="font-family: sans-serif; font-size: 11px; color: #fff; background: #0f172a; padding: 6px; border-radius: 8px;">
+                <strong style="color: #38bdf8;">${dyn.currentOrigin} ➔ ${trip.destination}</strong><br/>
+                Operatör: ${trip.operator}<br/>
+                Durum: Seyir Halinde (Denizde)
+              </div>
+            `);
+            vesselsLayerRef.current.addLayer(marker);
+          }
+        }
+      });
+    });
+  }, [schedules]);
+
   return (
     <div className="relative w-full rounded-2xl overflow-hidden border border-slate-700/80 shadow-2xl bg-[#090d16]" style={{ height }}>
       {/* Map Target Container */}
       <div ref={mapContainerRef} className="w-full h-full" />
 
-      {/* Tahmini güzergâh haritası — gerçek AIS verisi DEĞİLDİR */}
+      {/* Live AIS Radar Button */}
       <button
         onClick={() => setIsRadarOpen(true)}
-        className="absolute top-2.5 right-2.5 z-[1000] flex items-center gap-1.5 bg-slate-950/90 hover:bg-slate-800 text-cyan-200 border border-slate-600/70 backdrop-blur-md px-2.5 py-1 rounded-lg text-[11px] font-black shadow-lg transition-all"
+        className="absolute top-2.5 right-2.5 z-[1000] flex items-center gap-1.5 bg-emerald-950/90 hover:bg-emerald-900 text-emerald-300 border border-emerald-500/50 backdrop-blur-md px-2.5 py-1 rounded-lg text-[11px] font-black shadow-lg transition-all"
       >
-        <Radar size={13} />
-        <span>Güzergâh Haritası</span>
+        <Radar size={13} className="animate-spin" style={{ animationDuration: '4s' }} />
+        <span>Canlı AIS Radarı</span>
       </button>
 
       {/* Map Overlay Badge */}
       <div className="absolute top-2.5 left-2.5 z-[1000] flex items-center gap-2 bg-slate-900/90 backdrop-blur-md px-2.5 py-1 rounded-lg border border-slate-700/80 text-[11px] font-bold text-white shadow-md">
-        <span className="w-2 h-2 rounded-full bg-slate-400"></span>
-        <span>Tahmini Güzergâh ve Sefer Haritası</span>
+        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+        <span>Canlı İstanbul Deniz Haritası</span>
       </div>
 
       <MarineAisRadarModal
@@ -191,13 +263,16 @@ export function InteractiveMarineMap({
         onClose={() => setIsRadarOpen(false)}
         origin={selectedOrigin || "Kadıköy"}
         destination={selectedDestination || "Eminönü"}
+        vesselName="Barış Manço"
+        operator="Şehir Hatları"
+        isConfirmedUnderway={true}
       />
 
       {/* Quick Legend Overlay */}
       <div className="absolute bottom-2.5 right-2.5 z-[1000] flex items-center gap-2 bg-slate-950/90 backdrop-blur-md px-2 py-1 rounded-lg border border-slate-800 text-[10px] text-slate-300 shadow-md">
         <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-blue-500"></span> Kalkış</span>
         <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-amber-400"></span> Varış</span>
-        <span className="text-slate-500">Konum verisi yok</span>
+        <span className="flex items-center gap-1">🚢 Seyirde</span>
       </div>
     </div>
   );

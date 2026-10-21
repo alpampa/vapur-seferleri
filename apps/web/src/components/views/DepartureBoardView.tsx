@@ -14,10 +14,9 @@ interface DepartureBoardViewProps {
 
 /**
  * PANO GÖRÜNÜMÜ: terminal FIDS tarzı iskele kalkış panosu.
- * Kullanıcı iskeleyi seçer, sıradaki 3 vapuru tek ekranda görür;
+ * Kullanıcı iskeleyi seçer, sıradaki kalkışları tek ekranda görür;
  * bir sefere dokununca normal sefer detayı (TripDetailsSheet) açılır.
- * Panonun kendi detay çekmecesini tutması, sefer listesine bağımlılığı sıfırlar.
- * `?tv=1` ile tam ekran B2B TV modu açılır (reklamsız işletme ekranı).
+ * `?tv=1` ile tam ekran B2B TV Kiosk modu açılır (reklamsız işletme ekranı).
  */
 export function DepartureBoardView({ schedules, serverTimeIso }: DepartureBoardViewProps) {
   const [selectedPier, setSelectedPier] = useState<string>("ALL");
@@ -28,8 +27,9 @@ export function DepartureBoardView({ schedules, serverTimeIso }: DepartureBoardV
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get("tv") === "1") {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- ?tv=1 yalnızca ilk yüklemede bir kez okunur (SSR'da window yok)
       setIsTvMode(true);
+      const pierParam = params.get("pier");
+      if (pierParam) setSelectedPier(pierParam);
     }
   }, []);
 
@@ -38,6 +38,7 @@ export function DepartureBoardView({ schedules, serverTimeIso }: DepartureBoardV
       <BoardTvMode
         schedules={schedules}
         serverTimeIso={serverTimeIso}
+        defaultPier={selectedPier !== "ALL" ? selectedPier : undefined}
         onExit={() => setIsTvMode(false)}
       />
     );
@@ -65,7 +66,7 @@ export function DepartureBoardView({ schedules, serverTimeIso }: DepartureBoardV
           className="shrink-0 min-h-[36px] px-3 rounded-xl border border-amber-400/50 bg-amber-400/10 text-amber-700 dark:text-amber-300 text-[11px] font-black flex items-center gap-1.5 hover:bg-amber-400/20 transition-colors cursor-pointer"
         >
           <Monitor size={14} aria-hidden="true" />
-          <span>TV Modu</span>
+          <span>TV Modu (Kiosk)</span>
         </button>
       </div>
 

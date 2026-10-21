@@ -318,7 +318,7 @@ describe("KULLANICI KURALI: TÜM firmalar taranır (çok-firmalı tarama)", () =
         "Şehir Hatları",
       ]);
       const noSource = coverage.filter((c) => c.status === "NO_SOURCE");
-      expect(noSource.map((c) => c.operator)).toEqual(["Prens Tur"]);
+      expect(noSource.map((c) => c.operator).sort()).toEqual(["Prens Tur", "İDO"].sort());
       expect(noSource.every((c) => !!c.note)).toBe(true);
     } finally {
       vi.unstubAllGlobals();

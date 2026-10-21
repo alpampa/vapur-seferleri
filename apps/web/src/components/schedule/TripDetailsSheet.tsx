@@ -52,6 +52,9 @@ import { getPierWalkGuide } from "@/lib/data/pier-walks";
 import { transitAnnouncer } from "@/lib/services/tts-announcer";
 
 import { MissedFerryAssistantModal } from "@/components/planner/MissedFerryAssistantModal";
+import { VesselHeritageModal } from "@/components/vessel/VesselHeritageModal";
+import { PierCulturalAtlasModal } from "@/components/piers/PierCulturalAtlasModal";
+import { getDefaultVesselForTrip } from "@/lib/data/vessel-heritage";
 import { SharedSeaTaxiModal } from "@/components/taxishare/SharedSeaTaxiModal";
 
 interface TripDetailsSheetProps {
@@ -92,6 +95,9 @@ export function TripDetailsSheet({
   const [activeDetailTab, setActiveDetailTab] = useState<"TICKET" | "TRANSIT" | "GUIDE">("TICKET");
   const { t } = useLanguageStore();
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isVesselHeritageOpen, setIsVesselHeritageOpen] = useState(false);
+  const [isPierAtlasOpen, setIsPierAtlasOpen] = useState(false);
+  const [customVesselName, setCustomVesselName] = useState<string>("");
 
   // Escape tuşu ile kapatma (klavye erişilebilirliği)
   useEffect(() => {
@@ -280,12 +286,13 @@ export function TripDetailsSheet({
                     const org = dynState?.currentOrigin || schedule.origin;
                     const dst = dynState?.destination || schedule.destination;
                     const dep = dynState?.currentDepartureTime || schedule.departureTime;
-                    const shareText = `⛴️ ${dep} ${org} ➔ ${dst} (${schedule.operator}) vapurunda buluşalım! Canlı sefer ve iskele durumu: https://adalar-sefer-asistani.vercel.app`;
+                    const deepLinkUrl = `https://adalar-sefer-asistani.vercel.app/?from=${encodeURIComponent(org)}&to=${encodeURIComponent(dst)}`;
+                    const shareText = `⛴️ ${dep} ${org} ➔ ${dst} (${schedule.operator}) vapurunda buluşalım! Sefer ve iskele durumu: ${deepLinkUrl}`;
                     if (typeof navigator !== "undefined" && navigator.share) {
                       navigator.share({
                         title: `${dep} ${org} - ${dst} Vapuru`,
                         text: shareText,
-                        url: "https://adalar-sefer-asistani.vercel.app"
+                        url: deepLinkUrl
                       }).catch(() => {});
                     } else {
                       window.open(`https://wa.me/?text=${encodeURIComponent(shareText)}`, "_blank", "noopener,noreferrer");
@@ -451,6 +458,35 @@ export function TripDetailsSheet({
                       </p>
                     </div>
                   )}
+                </div>
+
+                {/* KÜLTÜREL VAPUR KİMLİĞİ VE İSKELE ATLASI BUTONLARI */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                  <button
+                    type="button"
+                    onClick={() => setIsVesselHeritageOpen(true)}
+                    className="py-2.5 px-3 rounded-xl bg-blue-50 dark:bg-blue-950/40 hover:bg-blue-100 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 text-xs font-bold flex items-center justify-between cursor-pointer transition-all shadow-2xs"
+                  >
+                    <span className="flex items-center gap-1.5 truncate">
+                      <Ship size={14} className="text-blue-500 shrink-0" />
+                      <span className="truncate">🚢 Vapur Kültürü & Seyir Rehberi</span>
+                    </span>
+                    <span className="text-[10px] bg-blue-200 dark:bg-blue-900/60 px-1.5 py-0.2 rounded font-mono">
+                      {customVesselName || getDefaultVesselForTrip(schedule.origin, schedule.destination, schedule.operator).name}
+                    </span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setIsPierAtlasOpen(true)}
+                    className="py-2.5 px-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 text-xs font-bold flex items-center justify-between cursor-pointer transition-all shadow-2xs"
+                  >
+                    <span className="flex items-center gap-1.5 truncate">
+                      <Landmark size={14} className="text-emerald-500 shrink-0" />
+                      <span className="truncate">🏛️ {dynState?.destination || schedule.destination} Semt Atlası</span>
+                    </span>
+                    <span className="text-[10px] bg-emerald-200 dark:bg-emerald-900/60 px-1.5 py-0.2 rounded font-mono">15 Dk</span>
+                  </button>
                 </div>
 
                 {/* AI 3: SESLİ İSKELE ANONSU (Neural Text-to-Speech / Accessibility) */}
@@ -766,6 +802,19 @@ export function TripDetailsSheet({
         onClose={() => setIsSeaTaxiOpen(false)}
         defaultOrigin={dynState?.currentOrigin || schedule?.origin || "Kadıköy"}
         defaultDestination={dynState?.destination || schedule?.destination || "Karaköy"}
+      />
+
+      <VesselHeritageModal
+        isOpen={isVesselHeritageOpen}
+        onClose={() => setIsVesselHeritageOpen(false)}
+        initialVesselName={customVesselName || getDefaultVesselForTrip(schedule.origin, schedule.destination, schedule.operator).name}
+        onSelectVessel={(vName) => setCustomVesselName(vName)}
+      />
+
+      <PierCulturalAtlasModal
+        isOpen={isPierAtlasOpen}
+        onClose={() => setIsPierAtlasOpen(false)}
+        initialPierName={dynState?.destination || schedule.destination}
       />
     </AnimatePresence>
   );

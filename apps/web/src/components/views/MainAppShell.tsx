@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { ScheduleListClient } from "@/components/schedule/ScheduleListClient";
 import { DepartureBoardView } from "@/components/views/DepartureBoardView";
 import { PiersDirectoryView } from "@/components/views/PiersDirectoryView";
@@ -23,6 +23,12 @@ interface MainAppShellProps {
 export function MainAppShell({ schedules, serverTimeIso, marineWeather, sourceFreshness }: MainAppShellProps) {
   const [activeTab, setActiveTab] = useState<string>("schedules");
   const [forcedPierFilter, setForcedPierFilter] = useState<string | null>(null);
+
+  // Pano, İskeleler ve Favoriler sekmeleri varsayılan olarak bugünün aktif seferlerini kullanır
+  const todaySchedules = useMemo(
+    () => schedules.filter((s) => s.runsToday !== false),
+    [schedules]
+  );
 
   // PWA App Shortcuts (Hızlı Kısayollar) Entegrasyonu (?view=piers, ?view=weather, vb.)
   useEffect(() => {
@@ -56,14 +62,14 @@ export function MainAppShell({ schedules, serverTimeIso, marineWeather, sourceFr
 
       {activeTab === "board" && (
         <DepartureBoardView
-          schedules={schedules}
+          schedules={todaySchedules}
           serverTimeIso={serverTimeIso}
         />
       )}
 
       {activeTab === "piers" && (
         <PiersDirectoryView
-          schedules={schedules}
+          schedules={todaySchedules}
           onSelectPierForSchedules={handleSelectPierForSchedules}
         />
       )}
@@ -76,7 +82,7 @@ export function MainAppShell({ schedules, serverTimeIso, marineWeather, sourceFr
 
       {activeTab === "favorites" && (
         <FavoritesAlarmsView
-          schedules={schedules}
+          schedules={todaySchedules}
           serverTimeIso={serverTimeIso}
           onNavigateToSchedules={() => setActiveTab("schedules")}
         />

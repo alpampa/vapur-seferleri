@@ -139,14 +139,14 @@ Mevcut Playwright denetim paketi (`e2e/independent-audit.spec.ts`): **20/20**. B
 ### Production doğrulaması (19.10.2026)
 | Kontrol | Sonuç |
 |---|---|
-| Deploy | `READY`, alias `https://vapur-seferleri.vercel.app`, deployment `dpl_HbdTqcGenbB91MkeZKokxEkR66rU` (`adalar-sefer-asistani-h3dq77jks`) |
+| Deploy | `READY`, alias `https://vapur-seferleri.vercel.app`, deployment `4Jc9XRsUWCirgUHn5XhfBBJtxGjm` |
 | `/api/version` | `200`, güncel deployment id |
 | `/api/source-health` | `200`, `persistent:false`, `storage:memory` (KV env yok) |
 | `/api/cron/monitor` (yetkisiz) | `401` |
 | Dağıtık kilit (eşzamanlı 2 istek) | biri `skipped:"locked"`, diğeri 4/4 taradı |
-| `/api/announcements` (19.10 19:59Z) | `200`, **2 duyuru**, **20 iptal**; `generatedAt=19.10.2026 19:59Z` |
-| Dentur canlı | `direct`, 12.3 sn; 11 duyuru; “19 Ekim Heybeli Ada - Büyük Ada Sefer İptali” (**SOURCE 19.10.2026**); **12 CONFIRMED** (bugünün tarifesinde 4 sefer) |
-| Mavi Marmara canlı | `jina`, 1.1 sn; “İptal Seferler” 3 hat satırı; **8 CONFIRMED** (bugünün tarifesinde 4 sefer) |
+| `/api/announcements` (19.10 19:39Z) | `200`, **2 duyuru**, **20 iptal**; `generatedAt=19.10.2026 19:39Z` |
+| Dentur canlı | `direct`, 12.3 sn; 11 duyuru; “19 Ekim Heybeli Ada - Büyük Ada Sefer İptali” (19.10.2026) |
+| Mavi Marmara canlı | `jina`, 1.1 sn; “İptal Seferler” 3 hat satırı; **8 CONFIRMED** Adalar seferi |
 | Turyol canlı | `direct`, 317 ms; bugün iptal yok |
 | Prens Tur | `NO_SOURCE` |
 | Şehir Hatları | `FAILED`: direct **403**, `allorigins` ve `codetabs` **timeout** (Vercel'den de) → snapshot fallback, 17.10 kayıtları tarih filtresiyle elenir |

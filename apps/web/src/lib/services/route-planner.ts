@@ -139,9 +139,23 @@ export function planJourney(
     }
   }
 
-  // 2. Find 1-TRANSFER trips if not enough direct routes or different regions
-  // Common hub transfers: Büyükada, Kadıköy, Bostancı, Kabataş
-  const transferHubs = ["Büyükada", "Kadıköy", "Bostancı", "Kabataş"];
+  // 2. Find 1-TRANSFER trips across all major Istanbul maritime transfer hubs
+  const transferHubs = [
+    "Büyükada",
+    "Kadıköy",
+    "Bostancı",
+    "Kabataş",
+    "Eminönü",
+    "Üsküdar",
+    "Beşiktaş",
+    "Karaköy",
+    "Yenikapı",
+    "Heybeliada",
+    "Sirkeci",
+    "Bakırköy",
+  ];
+
+  const seenTransfers = new Set<string>();
 
   for (const hub of transferHubs) {
     if (hub === origin || hub === destination) continue;
@@ -163,26 +177,54 @@ export function planJourney(
     });
 
     for (const l1 of leg1Options) {
-      const l1DepM = toAbsoluteDayMinutes(l1.departureTime, currentMinutes);
+      const l1DepTime =
+        l1.origin === origin
+          ? l1.departureTime
+          : (l1.stops?.find(st => st.name === origin)?.time || l1.departureTime);
+      const l1DepM = toAbsoluteDayMinutes(l1DepTime, currentMinutes);
       if (currentMinutes > 0 && l1DepM < currentMinutes - PAST_DEPARTURE_TOLERANCE_MIN) continue;
 
-      const l1ArrM = l1DepM + TRANSFER_HUB_TRAVEL_MIN; // approx travel to hub
+      const l1StopAtHub = l1.destination !== hub ? l1.stops?.find(st => st.name === hub) : undefined;
+      let l1ArrM: number;
+      if (l1StopAtHub?.time) {
+        let stopM = timeToMinutes(l1StopAtHub.time);
+        if (stopM < timeToMinutes(l1DepTime)) stopM += MINUTES_PER_DAY;
+        l1ArrM = l1DepM + (stopM - timeToMinutes(l1DepTime));
+      } else {
+        l1ArrM = l1DepM + TRANSFER_HUB_TRAVEL_MIN;
+      }
       const l1ArrTime = minutesToTime(l1ArrM);
 
       // Find compatible leg2 within the transfer wait window
       for (const l2 of leg2Options) {
-        const l2DepM = toAbsoluteDayMinutes(l2.departureTime, currentMinutes);
+        const l2DepTime =
+          l2.origin === hub
+            ? l2.departureTime
+            : (l2.stops?.find(st => st.name === hub)?.time || l2.departureTime);
+        const l2DepM = toAbsoluteDayMinutes(l2DepTime, currentMinutes);
         const waitMinutes = l2DepM - l1ArrM;
 
         if (waitMinutes >= TRANSFER_MIN_WAIT_MIN && waitMinutes <= TRANSFER_MAX_WAIT_MIN) {
-          const l2ArrM = l2DepM + TRANSFER_HUB_TRAVEL_MIN;
+          const l2StopAtDest = l2.destination !== destination ? l2.stops?.find(st => st.name === destination) : undefined;
+          let l2ArrM: number;
+          if (l2StopAtDest?.time) {
+            let stopM = timeToMinutes(l2StopAtDest.time);
+            if (stopM < timeToMinutes(l2DepTime)) stopM += MINUTES_PER_DAY;
+            l2ArrM = l2DepM + (stopM - timeToMinutes(l2DepTime));
+          } else {
+            l2ArrM = l2DepM + TRANSFER_HUB_TRAVEL_MIN;
+          }
           const l2ArrTime = minutesToTime(l2ArrM);
+
+          const dedupKey = `${l1.operator}:${l1DepTime}->${hub}->${l2.operator}:${l2DepTime}`;
+          if (seenTransfers.has(dedupKey)) continue;
+          seenTransfers.add(dedupKey);
 
           results.push({
             type: "TRANSFER",
             origin,
             destination,
-            departureTime: l1.departureTime,
+            departureTime: l1DepTime,
             arrivalTime: l2ArrTime,
             durationMinutes: l2ArrM - l1DepM,
             transferPier: hub,
@@ -193,7 +235,7 @@ export function planJourney(
                 origin,
                 destination: hub,
                 operator: l1.operator,
-                departureTime: l1.departureTime,
+                departureTime: l1DepTime,
                 arrivalTime: l1ArrTime,
                 platform: l1.platform || DEFAULT_PLATFORM,
                 price: l1.price || DEFAULT_TICKET_PRICE,
@@ -203,7 +245,7 @@ export function planJourney(
                 origin: hub,
                 destination,
                 operator: l2.operator,
-                departureTime: l2.departureTime,
+                departureTime: l2DepTime,
                 arrivalTime: l2ArrTime,
                 platform: l2.platform || "Aktarma Rıhtımı",
                 price: l2.price || DEFAULT_TICKET_PRICE,

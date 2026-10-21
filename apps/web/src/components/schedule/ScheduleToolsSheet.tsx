@@ -48,6 +48,16 @@ export function ScheduleToolsSheet({
     setMounted(true);
   }, []);
 
+  // ESC tuşu ile kapatma (WCAG 2.1 AA klavye erişilebilirliği)
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen || !mounted) return null;
 
   return createPortal(
@@ -76,7 +86,7 @@ export function ScheduleToolsSheet({
               type="button"
               onClick={onClose}
               aria-label={t("close")}
-              className="w-10 h-10 rounded-xl text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-all cursor-pointer flex items-center justify-center"
+              className="w-10 h-10 rounded-xl text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-all cursor-pointer flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
             >
               <X size={18} />
             </button>
@@ -113,7 +123,7 @@ export function ScheduleToolsSheet({
 
             <section>
               <h4 className="text-[11px] font-black uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">
-                {t("map")} & {t("viewCompact")}
+                Tahmini Sefer Haritası & Görünüm
               </h4>
               <div className="flex flex-wrap gap-2">
                 <button
@@ -130,12 +140,15 @@ export function ScheduleToolsSheet({
 
                 <button
                   type="button"
-                  onClick={onTogglePlanner}
+                  onClick={() => {
+                    onTogglePlanner();
+                    onClose();
+                  }}
                   aria-pressed={showPlanner}
                   className={`${chipBase} min-h-11 gap-1.5 ${showPlanner ? chipOn : chipOff}`}
                 >
                   <Compass size={13} />
-                  <span>{t("map")}</span>
+                  <span>Tahmini Sefer ve Aktarma Haritası</span>
                 </button>
 
                 <button

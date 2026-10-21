@@ -65,82 +65,49 @@ export function getIstanbulTime() {
   };
 }
 
-function isValidDateIso(value: string): boolean {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
-  const [y, m, d] = value.split('-').map(Number);
-  const probe = new Date(Date.UTC(y, m - 1, d));
-  return (
-    probe.getUTCFullYear() === y &&
-    probe.getUTCMonth() === m - 1 &&
-    probe.getUTCDate() === d
-  );
+function checkTripRunsOnDay(
+  trip: RawOfficialTrip,
+  ist: { isSunday: boolean; isHoliday: boolean; isSaturday: boolean }
+): {
+  runsToday: boolean;
+  runsWeekday: boolean;
+  runsSaturday: boolean;
+  runsSunday: boolean;
+} {
+  const runsWeekday = trip.runsWeekday !== undefined ? trip.runsWeekday : !trip.isWeekendOnly;
+  const runsSaturday = trip.runsSaturday !== undefined ? trip.runsSaturday : !trip.isWeekdayOnly;
+  const runsSunday = trip.runsSunday !== undefined ? trip.runsSunday : !trip.isWeekdayOnly;
+
+  let runsToday: boolean;
+  if (ist.isSunday || ist.isHoliday) {
+    runsToday = runsSunday;
+  } else if (ist.isSaturday) {
+    runsToday = runsSaturday;
+  } else {
+    runsToday = runsWeekday;
+  }
+
+  return { runsToday, runsWeekday, runsSaturday, runsSunday };
 }
 
 /**
- * Seçili İstanbul takvim gününün tarife tipi.
- * Resmî tatillerde Pazar/holiday tarifesi uygulanır.
+ * Builds schedule DTOs for the current day and tags day-type availability
+ * so users can also inspect Weekday / Saturday / Sunday-Holiday timetables.
  */
-export function getDayTypeForDate(dateIso: string): 'WEEKDAY' | 'SATURDAY' | 'SUNDAY' {
-  const [y, m, d] = dateIso.split('-').map(Number);
-  const holiday = checkTurkishHoliday(y, m, d);
-  if (holiday.isHoliday) return 'SUNDAY';
-  const dayOfWeek = new Date(Date.UTC(y, m - 1, d, 12)).getUTCDay();
-  if (dayOfWeek === 0) return 'SUNDAY';
-  if (dayOfWeek === 6) return 'SATURDAY';
-  return 'WEEKDAY';
-}
-
-export interface ScheduleQueryOptions {
-  /** YYYY-MM-DD (Europe/Istanbul). Geçersiz/geçmiş tarih bugüne düşer. */
-  dateIso?: string;
-}
-
-/**
- * Builds schedule DTOs for the selected Istanbul day (default: today).
- * Geçmiş tarihlerde canlı durum üretilmez; tüm seferler ON_TIME/planlanan kalır.
- */
-export async function getLiveOrOfficialSchedules(
-  options: ScheduleQueryOptions = {}
-): Promise<SchedulesResponse> {
+export async function getLiveOrOfficialSchedules(): Promise<SchedulesResponse> {
   const ist = getIstanbulTime();
-  const todayIso = `${ist.year}-${String(ist.month).padStart(2, '0')}-${String(ist.day).padStart(2, '0')}`;
-  const requested = options.dateIso?.trim();
-  const selectedDateIso =
-    requested && isValidDateIso(requested) && requested >= todayIso ? requested : todayIso;
-  const isToday = selectedDateIso === todayIso;
-  const dayType = getDayTypeForDate(selectedDateIso);
+  const yearStr = ist.year;
+  const monthStr = String(ist.month).padStart(2, '0');
+  const dayStr = String(ist.day).padStart(2, '0');
   const nowMs = Date.now();
 
-  const selectedDate = new Date(`${selectedDateIso}T12:00:00+03:00`);
-  const selectedDateFormatted = new Intl.DateTimeFormat('tr-TR', {
-    timeZone: 'Europe/Istanbul',
-    weekday: 'long',
-    month: 'long',
-    day: 'numeric'
-  }).format(selectedDate);
-
-  // 1. Filter official schedule for the selected day with day & holiday matching
-  const dayOfficial = OFFICIAL_SCHEDULES_DATA.filter(trip => {
-    if (dayType === 'SUNDAY') {
-      if (trip.runsSunday !== undefined) return trip.runsSunday;
-      return !trip.isWeekdayOnly;
-    } else if (dayType === 'SATURDAY') {
-      if (trip.runsSaturday !== undefined) return trip.runsSaturday;
-      return !trip.isWeekdayOnly;
-    } else {
-      // Monday to Friday (Weekday)
-      if (trip.runsWeekday !== undefined) return trip.runsWeekday;
-      return !trip.isWeekendOnly;
-    }
-  });
-
-  // 1b. Sanitize: veri kaynağındaki bozuk kayıtları temizle
+  // 1. Sanitize: veri kaynağındaki bozuk kayıtları temizle
   //   - departureTime "HH:mm" formatında değilse kayıt atlanır
   //   - origin/destination placeholder metin taşıyorsa atlanır (örn: "Sadece Hafta İçi...")
   //   - varış < kalkış ve kalkış 17:00'den önceyse veri hatasıdır: varış temizlenir,
   //     selfHealTripRecord gerçekçi seyir süresine göre yeniden hesaplar.
   //     17:00 sonrası kalkışta bu gece yarısını aşan gerçek seferdir, korunur.
-  const sanitizedTrips: RawOfficialTrip[] = dayOfficial
+  const sanitizedTrips: RawOfficialTrip[] = OFFICIAL_SCHEDULES_DATA
     .filter(trip => /^\d{2}:\d{2}$/.test(trip.departureTime))
     .filter(trip =>
       !trip.origin.includes('...') && !trip.destination.includes('...')
@@ -165,8 +132,9 @@ export async function getLiveOrOfficialSchedules(
       };
     });
 
-  // 2. Map raw official trips to full ScheduleCardDto
+  // 2. Map raw official trips to full ScheduleCardDto with day-type flags
   const schedules: ScheduleCardDto[] = sanitizedTrips.map((rawTrip) => {
+    const dayFlags = checkTripRunsOnDay(rawTrip, ist);
     const trip = selfHealTripRecord(rawTrip);
     const [hh, mm] = trip.departureTime.split(':');
 
@@ -182,12 +150,9 @@ export async function getLiveOrOfficialSchedules(
     // Gece seferi (00:00-04:59 kalkış) akşam saatlerinde (20:00+) görüntülenirken
     // kalkış yarına taşınır: 23:50'de 00:15 seferi "GİTTİ" değil "yaklaşan" olur.
     // Kural tek kaynaktır: nightRolloverDayOffset (istanbul-time).
-    // Bugün: gece yarısını aşan seferler için mevcut rollover kuralı korunur.
-    // Gelecek gün: sefer seçili takvim gününe sabitlenir; canlı durum üretilmez.
-    const targetIso = isToday
-      ? istanbulIsoFor(trip.departureTime, nowMs, nightRolloverDayOffset(trip.departureTime, nowMs) === 1) ??
-        `${selectedDateIso}T${hh}:${mm}:00+03:00`
-      : `${selectedDateIso}T${hh}:${mm}:00+03:00`;
+    const targetIso =
+      istanbulIsoFor(trip.departureTime, nowMs, nightRolloverDayOffset(trip.departureTime, nowMs) === 1) ??
+      `${yearStr}-${monthStr}-${dayStr}T${hh}:${mm}:00+03:00`;
     const targetTimeMs = new Date(targetIso).getTime();
     const diff = targetTimeMs - nowMs;
 
@@ -195,23 +160,21 @@ export async function getLiveOrOfficialSchedules(
     let progress = 0;
     const delayText: string | undefined = undefined;
 
-    if (isToday) {
-      if (diff < -15 * 60000) {
-        status = 'COMPLETED';
-        progress = 100;
-      } else if (diff <= 0) {
-        status = 'IN_TRANSIT';
-        progress = 50;
-      } else if (diff <= 10 * 60000) {
-        status = 'BOARDING';
-        progress = 15;
-      } else if (diff <= 30 * 60000) {
-        status = 'DEPARTING_SOON';
-        progress = 5;
-      } else {
-        status = 'ON_TIME';
-        progress = 0;
-      }
+    if (diff < -15 * 60000) {
+      status = 'COMPLETED';
+      progress = 100;
+    } else if (diff <= 0) {
+      status = 'IN_TRANSIT';
+      progress = 50;
+    } else if (diff <= 10 * 60000) {
+      status = 'BOARDING';
+      progress = 15;
+    } else if (diff <= 30 * 60000) {
+      status = 'DEPARTING_SOON';
+      progress = 5;
+    } else {
+      status = 'ON_TIME';
+      progress = 0;
     }
 
     // 12-hour formatted time for display
@@ -240,7 +203,11 @@ export async function getLiveOrOfficialSchedules(
       arrivalTime: trip.arrivalTime,
       isContinuous: trip.isContinuous || undefined,
       continuousUntil: trip.continuousUntil,
-      lineName: trip.lineName
+      lineName: trip.lineName,
+      runsToday: dayFlags.runsToday,
+      runsWeekday: dayFlags.runsWeekday,
+      runsSaturday: dayFlags.runsSaturday,
+      runsSunday: dayFlags.runsSunday,
     };
   });
 
@@ -252,10 +219,7 @@ export async function getLiveOrOfficialSchedules(
 
   return {
     serverTimeIso: ist.serverTimeIso,
-    serverDateFormatted: selectedDateFormatted,
-    selectedDateIso,
-    dayType,
-    isToday,
+    serverDateFormatted: ist.serverDateFormatted,
     schedules
   };
 }

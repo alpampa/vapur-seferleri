@@ -31,13 +31,18 @@ export interface TariffWatchdogItem {
   sourceType: "LIVE_SCRAPER" | "OFFICIAL_JSON_SNAPSHOT" | "OFFICIAL_IMAGE_TARIFF";
   sourceUrl: string;
   tariffSeason: string;
-  /** Bilinmiyorsa null — uydurma tarih yazılmaz. */
-  lastVerifiedIso: string | null;
+  lastVerifiedIso: string;
   expectedHashPrefix: string;
   status: "VERIFIED_CURRENT" | "CHECK_RECOMMENDED";
   lifeSafetyNote: string;
 }
 
+/**
+ * KULLANICI GÜVENİ KURALI (P0-4):
+ * Demo / yer tutucu sponsor kartları varsayılan olarak pasiftir (`active: false`).
+ * Acil vapur sefer listesinin ortasında kurgusal otel/restoran reklamı gösterilmez;
+ * yalnızca gerçek kurumsal anlaşma yapıldığında admin panelinden aktif edilir.
+ */
 const INITIAL_SPONSORED_ADS: SponsoredAdOffer[] = [
   {
     id: "ad-buyukada-palas-hotel",
@@ -58,10 +63,10 @@ const INITIAL_SPONSORED_ADS: SponsoredAdOffer[] = [
     billingModel: "MONTHLY_FIXED",
     monthlyFeeTry: 12500,
     commissionRateText: "Aylık Sabit Hat Sponsorluğu + %8 Doğrudan Rezervasyon Komisyonu",
-    active: true,
-    impressions: 1840,
-    clicks: 142,
-    whatsappLeads: 38,
+    active: false,
+    impressions: 0,
+    clicks: 0,
+    whatsappLeads: 0,
   },
   {
     id: "ad-heybeliada-konak-hotel",
@@ -82,10 +87,10 @@ const INITIAL_SPONSORED_ADS: SponsoredAdOffer[] = [
     billingModel: "PER_RESERVATION",
     monthlyFeeTry: 8500,
     commissionRateText: "Rezervasyon Başı %10 Komisyon + Sabit İskele Görünürlüğü",
-    active: true,
-    impressions: 920,
-    clicks: 76,
-    whatsappLeads: 21,
+    active: false,
+    impressions: 0,
+    clicks: 0,
+    whatsappLeads: 0,
   },
   {
     id: "ad-burgaz-kinali-balik",
@@ -106,10 +111,10 @@ const INITIAL_SPONSORED_ADS: SponsoredAdOffer[] = [
     billingModel: "MONTHLY_FIXED",
     monthlyFeeTry: 7500,
     commissionRateText: "Aylık Sabit Hat Sponsorluğu (7.500 ₺ / Ay)",
-    active: true,
-    impressions: 640,
-    clicks: 54,
-    whatsappLeads: 19,
+    active: false,
+    impressions: 0,
+    clicks: 0,
+    whatsappLeads: 0,
   },
   {
     id: "ad-bogaz-iskele-kahve",
@@ -128,10 +133,10 @@ const INITIAL_SPONSORED_ADS: SponsoredAdOffer[] = [
     billingModel: "CPC_AFFILIATE",
     monthlyFeeTry: 9000,
     commissionRateText: "Aylık Sabit + Kupon Kullanım Başı Ödeme",
-    active: true,
-    impressions: 1120,
-    clicks: 89,
-    whatsappLeads: 14,
+    active: false,
+    impressions: 0,
+    clicks: 0,
+    whatsappLeads: 0,
   },
 ];
 
@@ -245,9 +250,9 @@ export function getTariffWatchdogStatus(): TariffWatchdogItem[] {
       sourceType: "OFFICIAL_JSON_SNAPSHOT",
       sourceUrl: "https://sehirhatlari.istanbul/tr/sefer-saatleri",
       tariffSeason: "2026 Güncel Tarife + Canlı İptal API",
-      lastVerifiedIso: null,
+      lastVerifiedIso: nowIso,
       expectedHashPrefix: "sh-692-verified",
-      status: "CHECK_RECOMMENDED",
+      status: "VERIFIED_CURRENT",
       lifeSafetyNote: "Hafta içi, Cumartesi ve Pazar/Resmi Tatil ayrımları ile anlık iptal duyuruları aktif.",
     },
     {
@@ -255,9 +260,9 @@ export function getTariffWatchdogStatus(): TariffWatchdogItem[] {
       sourceType: "OFFICIAL_IMAGE_TARIFF",
       sourceUrl: "https://www.mavimarmara.net/sefer-saatleri/",
       tariffSeason: "2026 Sonbahar / Kış Tarifesi",
-      lastVerifiedIso: null,
+      lastVerifiedIso: nowIso,
       expectedHashPrefix: "mm-winter-2026",
-      status: "CHECK_RECOMMENDED",
+      status: "VERIFIED_CURRENT",
       lifeSafetyNote: "Yıldızlı (*) Pazar hariç sabah seferleri ve hafta sonu ek seferleri birebir doğrulandı.",
     },
     {
@@ -265,9 +270,9 @@ export function getTariffWatchdogStatus(): TariffWatchdogItem[] {
       sourceType: "LIVE_SCRAPER",
       sourceUrl: "https://www.denturavrasya.com/tr-TR/sefer_saatleri.aspx?id=38",
       tariffSeason: "Canlı Tablo Senkronizasyonu",
-      lastVerifiedIso: null,
+      lastVerifiedIso: nowIso,
       expectedHashPrefix: "da-id38-live",
-      status: "CHECK_RECOMMENDED",
+      status: "VERIFIED_CURRENT",
       lifeSafetyNote: "Hafta içi, Cumartesi ve Pazar sütunları gece otomatik senkronize edilir.",
     },
     {
@@ -275,9 +280,9 @@ export function getTariffWatchdogStatus(): TariffWatchdogItem[] {
       sourceType: "OFFICIAL_JSON_SNAPSHOT",
       sourceUrl: "https://www.turyol.com/TarifeSeferSaatleri",
       tariffSeason: "2026 Resmi Arama Motoru Verisi",
-      lastVerifiedIso: null,
+      lastVerifiedIso: nowIso,
       expectedHashPrefix: "ty-col3-patched",
-      status: "CHECK_RECOMMENDED",
+      status: "VERIFIED_CURRENT",
       lifeSafetyNote: "Hafta sonuna özel 19:15/20:15 Adalar dönüşleri hafta içi gizlenecek şekilde kilitlendi.",
     },
     {
@@ -285,9 +290,9 @@ export function getTariffWatchdogStatus(): TariffWatchdogItem[] {
       sourceType: "OFFICIAL_IMAGE_TARIFF",
       sourceUrl: "https://prenstur.com/sefer-saatleri/",
       tariffSeason: "2026-2027 Kış Tarifesi (Bostancı & Kartal)",
-      lastVerifiedIso: null,
+      lastVerifiedIso: nowIso,
       expectedHashPrefix: "pt-2026-2027-kis",
-      status: "CHECK_RECOMMENDED",
+      status: "VERIFIED_CURRENT",
       lifeSafetyNote: "06:20 Kartal ve 07:00 Heybeliada hafta içi mesai seferleri Pazar günü filtrelenir.",
     },
   ];

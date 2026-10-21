@@ -526,6 +526,8 @@ export const ANNOUNCEMENT_SOURCES: AnnouncementSource[] = [
  * yayını bulunmadığı raporda NO_SOURCE olarak açıkça belirtilir (sessiz atlama yok).
  */
 const NO_SOURCE_NOTES: Record<string, string> = {
+  "İDO":
+    "ido.com.tr resmî duyuru sayfası mevcut; ancak makine-okunur iptal duyurusu ayrıştırıcısı henüz doğrulanmadığı için canlı tarama kapsamına alınmadı.",
   "Prens Tur":
     "Resmi sitede duyuru bölümü yok: prenstur.net/duyurular, /duyuru.html, /haberler.html → tümü 404. Tarife yalnızca JPEG afiş; iptal duyurusu web'de yayınlanmıyor.",
 };

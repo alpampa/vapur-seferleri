@@ -220,7 +220,7 @@ describe("runMonitorTick (uçtan uca, sahte kaynaklar)", () => {
     expect(result.checksAttempted).toBe(4);
     expect(result.checksSucceeded).toBe(4);
     expect(result.checksFailed).toBe(0);
-    expect(result.noSource).toBe(1);
+    expect(result.noSource).toBe(2);
     expect(result.skippedByBackoff).toBe(0);
     expect(result.persisted).toBe(true);
     expect(result.storage).toBe("memory");

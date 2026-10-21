@@ -53,6 +53,7 @@ describe("planJourney — direkt rota", () => {
     expect(results[0].arrivalTime).toBe("10:25");
     expect(results[0].durationMinutes).toBe(25);
     expect(results[0].legs).toHaveLength(1);
+    expect(results[0]).toBeTruthy();
     expect(results[0].legs[0]).toMatchObject({
       origin: "Kadıköy",
       destination: "Eminönü",
@@ -176,6 +177,19 @@ describe("planJourney — aktarmalı rota", () => {
     expect(transfer!.legs[0].tripId).toBe("leg-1");
     expect(transfer!.legs[1].tripId).toBe("leg-2");
     expect(transfer!.durationMinutes).toBe(85); // 10:00 → 11:25 (2×35 dk + 15 dk bekleme)
+  });
+
+  it("Eminönü, Üsküdar ve Beşiktaş gibi ana Boğaz düğümleri üzerinden aktarma hesaplar (Sarıyer ➔ Büyükada)", () => {
+    const schedules = [
+      makeSchedule({ origin: "Sarıyer", destination: "Eminönü", departureTime: "09:00", id: "sariyer-eminonu" }),
+      makeSchedule({ origin: "Eminönü", destination: "Büyükada", departureTime: "09:50", id: "eminonu-buyukada" }),
+    ];
+    const results = planJourney(schedules, "Sarıyer", "Büyükada", 500);
+    const transfer = results.find((r) => r.type === "TRANSFER");
+    expect(transfer).toBeDefined();
+    expect(transfer!.transferPier).toBe("Eminönü");
+    expect(transfer!.legs[0].tripId).toBe("sariyer-eminonu");
+    expect(transfer!.legs[1].tripId).toBe("eminonu-buyukada");
   });
 
   it("bekleme penceresi dışındaki aktarmalar önerilmez", () => {

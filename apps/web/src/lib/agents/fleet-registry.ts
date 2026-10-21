@@ -59,123 +59,64 @@ export const ISTANBUL_FERRY_FLEET: RegisteredVessel[] = [
     type: "VAPUR",
     capacityPax: 1450,
     builtYear: 1986,
-    assignedLines: ["Kadıköy - Eminönü", "Kadıköy - Karaköy", "Beşiktaş - Kadıköy"]
+    assignedLines: ["Kadıköy - Beşiktaş", "Adalar - Kabataş"]
   },
   {
-    name: "Fahri S. Korutürk",
-    mmsi: "271002498",
-    imo: "8113231",
-    callSign: "TC5438",
-    operator: "Şehir Hatları",
-    type: "VAPUR",
-    capacityPax: 1450,
-    builtYear: 1989,
-    assignedLines: ["Kabataş - Adalar", "Kadıköy - Adalar", "Kadıköy - Karaköy"]
-  },
-  {
-    name: "Prof. Dr. Aykut Barka",
-    mmsi: "271002508",
-    imo: "8985115",
-    callSign: "TCA2528",
-    operator: "Şehir Hatları",
-    type: "VAPUR",
-    capacityPax: 1450,
-    builtYear: 2008,
-    assignedLines: ["Kabataş - Adalar", "Bostancı - Adalar", "Kadıköy - Eminönü"]
-  },
-  {
-    name: "Ahmet Hulusi Yıldırım",
-    mmsi: "271002507",
-    imo: "8985127",
-    callSign: "TCA2529",
-    operator: "Şehir Hatları",
-    type: "VAPUR",
-    capacityPax: 1450,
-    builtYear: 2008,
-    assignedLines: ["Kadıköy - Karaköy", "Üsküdar - Beşiktaş", "Adalar"]
-  },
-  {
-    name: "Şehit Mustafa Aydoğdu",
-    mmsi: "271002525",
-    imo: "8113267",
-    callSign: "TC5440",
+    name: "Fenerbahçe",
+    mmsi: "271002512",
+    imo: "5113709",
+    callSign: "TC5432",
     operator: "Şehir Hatları",
     type: "VAPUR",
     capacityPax: 1450,
     builtYear: 1987,
-    assignedLines: ["Üsküdar - Eminönü", "Kadıköy - Karaköy"]
-  },
-  {
-    name: "Şehit İlker Karter",
-    mmsi: "271002526",
-    imo: "8113279",
-    callSign: "TC5441",
-    operator: "Şehir Hatları",
-    type: "VAPUR",
-    capacityPax: 1450,
-    builtYear: 1988,
-    assignedLines: ["Kadıköy - Karaköy", "Kadıköy - Eminönü"]
-  },
-  {
-    name: "Nurettin Alptoğan",
-    mmsi: "271002509",
-    imo: "8985139",
-    callSign: "TCA2530",
-    operator: "Şehir Hatları",
-    type: "VAPUR",
-    capacityPax: 1450,
-    builtYear: 2008,
-    assignedLines: ["Kabataş - Adalar", "Kadıköy - Karaköy"]
+    assignedLines: ["Kadıköy - Karaköy", "Eminönü - Kadıköy"]
   },
 
-
-  // --- TURYOL MOTORLARI ---
+  // --- İDO (İSTANBUL DENİZ OTOBÜSLERİ) HIZLI DENİZ OTOBÜSÜ FİLOSU ---
   {
-    name: "Turyol 1",
-    mmsi: "271001801",
-    operator: "Turyol",
+    name: "Kemal Reis",
+    mmsi: "271000621",
+    imo: "9158513",
+    callSign: "TC6211",
+    operator: "İDO",
+    type: "DENIZ_OTOBUSU",
+    capacityPax: 449,
+    builtYear: 1997,
+    assignedLines: ["Bostancı - Adalar", "Kabataş - Adalar", "Kadıköy - Adalar"]
+  },
+  {
+    name: "Oruç Reis",
+    mmsi: "271000622",
+    imo: "9158525",
+    callSign: "TC6212",
+    operator: "İDO",
+    type: "DENIZ_OTOBUSU",
+    capacityPax: 449,
+    builtYear: 1997,
+    assignedLines: ["Bostancı - Adalar", "Yenikapı - Kadıköy - Adalar"]
+  },
+  {
+    name: "Piyale Paşa",
+    mmsi: "271000623",
+    imo: "9165786",
+    callSign: "TC6213",
+    operator: "İDO",
+    type: "DENIZ_OTOBUSU",
+    capacityPax: 449,
+    builtYear: 1998,
+    assignedLines: ["Kabataş - Kadıköy - Adalar"]
+  },
+
+  // --- MAVİ MARMARA YOLCU MOTORLARI ---
+  {
+    name: "Yener C",
+    mmsi: "271001928",
+    operator: "Mavi Marmara",
     type: "MOTOR",
-    capacityPax: 650,
+    capacityPax: 500,
     builtYear: 2012,
-    assignedLines: ["Eminönü - Kadıköy", "Karaköy - Kadıköy", "Karaköy - Adalar"]
-  },
-  {
-    name: "Turyol 3",
-    mmsi: "271001803",
-    operator: "Turyol",
-    type: "MOTOR",
-    capacityPax: 650,
-    builtYear: 2014,
-    assignedLines: ["Eminönü - Üsküdar", "Karaköy - Üsküdar"]
-  },
-  {
-    name: "Turyol 5",
-    mmsi: "271001805",
-    operator: "Turyol",
-    type: "MOTOR",
-    capacityPax: 700,
-    builtYear: 2016,
-    assignedLines: ["Eminönü - Adalar", "Bakırköy - Adalar"]
-  },
-
-  // --- MAVİ MARMARA MOTORLARI ---
-  {
-    name: "Mavi Marmara 1",
-    mmsi: "271001921",
-    operator: "Mavi Marmara",
-    type: "MOTOR",
-    capacityPax: 600,
-    builtYear: 2015,
-    assignedLines: ["Bostancı - Adalar", "Kabataş - Adalar"]
-  },
-  {
-    name: "Şevket Mert",
-    mmsi: "271001925",
-    operator: "Mavi Marmara",
-    type: "MOTOR",
-    capacityPax: 550,
-    builtYear: 2016,
-    assignedLines: ["Bostancı - Adalar", "Yeşilköy - Adalar"]
+    assignedLines: ["Bostancı - Büyükada", "Bostancı - Heybeliada", "Bostancı - Adalar"]
   },
   {
     name: "Cansu",
@@ -245,8 +186,7 @@ export interface LiveVesselResolution {
 
 /**
  * Resolves the real vessel name and maritime telemetry:
- * Note: City Lines ferries are allocated via daily duty rotation from the fleet pool.
- * We cross-reference authentic MMSI / IMO registrations with the active corridor.
+ * Note: City Lines and private maritime operators allocate vessels via daily duty rotation from the fleet pool.
  */
 export function resolveLiveVesselName(
   origin: string,
@@ -259,7 +199,8 @@ export function resolveLiveVesselName(
 ): LiveVesselResolution {
   const normOp = (operator || "").toLowerCase();
   const isVapur = normOp.includes("şehir") || normOp.includes("sehir");
-  const fleetType: "VAPUR" | "MOTOR" = isVapur ? "VAPUR" : "MOTOR";
+  const isIdo = normOp.includes("ido") || normOp.includes("İdo");
+  const fleetType: "VAPUR" | "MOTOR" | "DENIZ_OTOBUSU" = isVapur ? "VAPUR" : isIdo ? "DENIZ_OTOBUSU" : "MOTOR";
   const opLabel = operator || "Resmi İşletmeci";
 
   const liveBosphorusRadarUrl = `https://www.marinetraffic.com/en/ais/home/centerx:29.02/centery:41.01/zoom:13`;
@@ -268,7 +209,7 @@ export function resolveLiveVesselName(
     ? `${opLabel} Seferi • Seyirde`
     : `${opLabel} Seferi • Rıhtımda`;
 
-  const fleetDisclaimer = "Resmi Denizcilik Bilgilendirmesi: İBB Şehir Hatları ve yolcu motorları sefer tarifelerinde fiziksel gemi adları peşinen yayımlanmaz; seferler iskeledeki rıhtım amirliği nöbetçi filosundan sevk edilir. Doğrulanmamış hiçbir hayali tekne adı yayınlanmaz.";
+  const fleetDisclaimer = "Resmi Denizcilik Bilgilendirmesi: İstanbul vapur ve motor işletmeleri sefer tarifelerinde fiziksel gemi adlarını peşinen yayımlamaz; seferler iskele amirliklerince nöbetçi filo havuzundan sevk edilir. Doğrulanmamış hiçbir hayali tekne adı yayınlanmaz.";
 
   return {
     vesselName: `${opLabel} Filosu`,
@@ -278,7 +219,7 @@ export function resolveLiveVesselName(
     radarUrl: liveBosphorusRadarUrl,
     liveBosphorusRadarUrl,
     vesselType: fleetType,
-    capacityPax: isVapur ? 1450 : 450,
+    capacityPax: isVapur ? 1450 : isIdo ? 450 : 500,
     builtYear: 0,
     callSign: undefined,
     isRotationalFleetPool: true,

@@ -1,6 +1,6 @@
 "use client";
 
-import { Ship, Moon, Ban, Siren, Timer, AlertTriangle } from "lucide-react";
+import { Ship, Moon, Ban, Siren, Timer, AlertTriangle, Calendar } from "lucide-react";
 import { OperatorLogo } from "@/components/ui/OperatorLogo";
 import { resolveDynamicTrip, isTripCancelled, DynamicTripResolution } from "@/lib/utils/dynamic-trip";
 import { formatRemainingShort } from "@/lib/utils/istanbul-time";
@@ -46,10 +46,10 @@ export interface ScheduleCardProps {
   isFeaturedHero?: boolean;
   highlightStopName?: string;
   onSelectHop?: (schedule: ScheduleCardDto) => void;
-  /** Gelecek gün tarifesi: canlı geri sayım/durum gösterilmez. */
-  previewMode?: boolean;
-  /** Bugünün tüm gün listesi: geçmiş seferler de gösterilir (COMPLETED). */
-  showExpired?: boolean;
+  /** Tüm gün görünümü veya farklı gün tipi (Hafta İçi / Cumartesi / Pazar) önizlemesi */
+  isTimetablePreview?: boolean;
+  /** Farklı gün tipi seçildiğinde gösterilecek etiket (ör. "Cumartesi Tarifesi") */
+  dayPreviewLabel?: string;
 }
 
 export function ScheduleCard(props: ScheduleCardProps) {
@@ -66,8 +66,9 @@ export function ScheduleCard(props: ScheduleCardProps) {
   const occupancy = predictTripOccupancy(props.origin, props.destination, props.departureTime);
 
   const accurateNow = props.nowMs || Date.now();
+  const isOtherDayPreview = Boolean(props.dayPreviewLabel);
 
-  const dynState: DynamicTripResolution = resolveDynamicTrip(
+  const rawDynState: DynamicTripResolution = resolveDynamicTrip(
     props.origin,
     props.destination,
     props.departureTime,
@@ -78,11 +79,29 @@ export function ScheduleCard(props: ScheduleCardProps) {
     props.serverTimeIso
   );
 
+  // Eğer kullanıcı başka bir günün tarifesini (ör. Cumartesi veya Pazar) inceliyorsa,
+  // o seferi "Hareket Etti" veya "6 dk kaldı" gibi canlı göstermek yanıltıcı olur.
+  const dynState: DynamicTripResolution = isOtherDayPreview
+    ? {
+        ...rawDynState,
+        currentOrigin: props.origin,
+        destination: props.destination,
+        currentDepartureTime: props.departureTime,
+        status: "ON_TIME",
+        countdown: null,
+        minutesUntilDeparture: null,
+        isDeparted: false,
+        isExpired: false,
+        underway: null,
+        boardingDeadline: null,
+      }
+    : rawDynState;
+
   // KULLANICI KURALI & SIFIR TOLERANS (SIFIR HALÜSİNASYON / MÜKERRER ENGELİ):
-  // 1. Süresi dolan seferler render edilmez.
+  // 1. Süresi dolan seferler normal canlı modda render edilmez (ancak Tüm Gün / Gün Tipi önizlemesinde gösterilir).
   // 2. Kalkış ve varış noktası aynı olan (örn: Büyükada ➔ Büyükada) anlamsız/hatalı seferler ASLA render edilemez!
   if (
-    (!props.showExpired && dynState.isExpired) ||
+    (!props.isTimetablePreview && dynState.isExpired) ||
     !props.origin ||
     !props.destination ||
     props.origin.trim() === props.destination.trim() ||
@@ -91,15 +110,8 @@ export function ScheduleCard(props: ScheduleCardProps) {
     return null;
   }
 
-  // KULLANICI KURALI (Ring seferleri): Kalkış iskelesinden kalkarken
-  // "Bostancı ➔ Bostancı (Ring)" yazılır — yolcu ilk kalkışta ring olduğunu
-  // görsün. Seyir başlayınca yalnız "şu anki durak ➔ kalkış iskelesi" (örn.
-  // "Büyükada ➔ Bostancı") yazılır; ring adı artık gereksiz (alt şerit zaten
-  // adaları ve dönüşü gösteriyor). Yanıltma yasağı: mid-voyage asla ilk kalkış
-  // iskelesi "şu anki durak" gibi gösterilmez.
   const ringOriginMatch = props.destination.match(/ring\s*\(([^)]+)\)/i);
   const ringOrigin = ringOriginMatch ? ringOriginMatch[1].trim() : null;
-  const isRing = Boolean(ringOrigin);
   const isUnderway = dynState.currentOrigin.trim() !== props.origin.trim();
   const routeDestinationDisplay =
     isUnderway && ringOrigin
@@ -113,34 +125,29 @@ export function ScheduleCard(props: ScheduleCardProps) {
 
   const isDirect = !props.stops || props.stops.length === 0;
 
-  // Önizleme gününde canlı geri sayım yoktur; yalnızca tarife saati gösterilir.
-  const liveCountdown = props.previewMode ? null : dynState.countdown;
-  const liveMinutesUntilDeparture = props.previewMode ? null : dynState.minutesUntilDeparture;
-
   // KULLANICI KURALI: Son 5 dakikada sefer saati de yanıp sönsün
-  const isLast5Minutes = !!liveCountdown && !dynState.isDeparted;
+  const isLast5Minutes = !isOtherDayPreview && !!dynState.countdown && !dynState.isDeparted;
 
   // KULLANICI KURALI: İptal Sefer Tespiti (/ İPTAL Kırmızı Yanıp Sönen Rozet) — ortak tek doğruluk kaynağı
-  const isCancelled = isTripCancelled({ status: props.status, delayText: props.delayText }, dynState);
+  const isCancelled = !isOtherDayPreview && isTripCancelled({ status: props.status, delayText: props.delayText }, dynState);
 
   // YETİŞME MODU: Tahmini son giriş penceresi (turnike + rampa güvenlik payı).
-  // DİKKAT: Resmî kapı kapanış saati DEĞİLDİR → "~" ile "tahmini" etiketlenir.
-  const boarding = dynState.boardingDeadline ?? null;
-  const canBoard = !isCancelled && !dynState.isDeparted;
+  const boarding = !isOtherDayPreview ? (dynState.boardingDeadline ?? null) : null;
+  const canBoard = !isOtherDayPreview && !isCancelled && !dynState.isDeparted;
   const showLastEntrySoon = canBoard && boarding?.isWithinWarningWindow === true;
   const showLastEntryPassed = canBoard && boarding?.isPastLastEntry === true;
 
   // Kalan Saniyeyi Hesapla
   let remainingSec = 0;
-  if (liveCountdown) {
-    const parts = liveCountdown.split(':').map(Number);
+  if (dynState.countdown) {
+    const parts = dynState.countdown.split(':').map(Number);
     if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
       remainingSec = parts[0] * 60 + parts[1];
     }
   }
 
   // KULLANICI KURALI: Son 60 Saniye Dairesel Kalan Saniye Geri Sayım Göstergesi
-  const isLastMinute = !isCancelled && !dynState.isDeparted && remainingSec > 0 && remainingSec <= 60;
+  const isLastMinute = !isOtherDayPreview && !isCancelled && !dynState.isDeparted && remainingSec > 0 && remainingSec <= 60;
   const ringRatio = isLastMinute ? Math.max(0, Math.min(1, remainingSec / 60)) : 1;
   const ringCircumference = 94.2; // 2 * PI * 15
   const ringOffset = ringCircumference * (1 - ringRatio);
@@ -188,6 +195,30 @@ export function ScheduleCard(props: ScheduleCardProps) {
     toggleAlarm(props.id);
   };
 
+  const handleShareTrip = () => {
+    triggerHaptic("light");
+    const org = dynState.currentOrigin || props.origin;
+    const dst = routeDestinationDisplay || props.destination;
+    const dep = dynState.currentDepartureTime || props.departureTime;
+    const shareUrl =
+      typeof window !== "undefined"
+        ? `${window.location.origin}/?from=${encodeURIComponent(org)}&to=${encodeURIComponent(props.destination)}`
+        : "https://adalar-sefer-asistani.vercel.app";
+    const shareText = `⛴️ ${dep} ${org} ➔ ${dst} (${props.operator}) vapur seferi · ${shareUrl}`;
+
+    if (typeof navigator !== "undefined" && navigator.share) {
+      navigator
+        .share({
+          title: `${dep} ${org} ➔ ${dst} Vapuru`,
+          text: shareText,
+          url: shareUrl,
+        })
+        .catch(() => {});
+    } else if (typeof navigator !== "undefined" && navigator.clipboard) {
+      navigator.clipboard.writeText(shareText).catch(() => {});
+    }
+  };
+
   const handleCardClick = () => {
     setActiveVoyage({
       id: props.id,
@@ -216,7 +247,7 @@ export function ScheduleCard(props: ScheduleCardProps) {
               handleCardClick();
             }
           }}
-          className={`rounded-xl px-2.5 py-1.5 flex items-center justify-between gap-2 transition-all cursor-pointer border group shadow-2xs ${
+          className={`rounded-xl px-2.5 py-1.5 flex items-center justify-between gap-2 transition-all cursor-pointer border group shadow-2xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
             isCancelled
               ? "border-rose-500/70 bg-rose-50/50 dark:bg-rose-950/20 text-slate-800 dark:text-slate-200"
               : dynState.isDeparted
@@ -248,11 +279,15 @@ export function ScheduleCard(props: ScheduleCardProps) {
               {dynState.currentDepartureTime}
             </span>
 
-            {dynState.isDeparted ? (
+            {isOtherDayPreview ? (
+              <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
+                {props.dayPreviewLabel}
+              </span>
+            ) : dynState.isDeparted ? (
               <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
                 {t("departed")}
               </span>
-            ) : liveCountdown && !isCancelled ? (
+            ) : dynState.countdown && !isCancelled ? (
               <span className={`text-[9px] font-mono font-black px-1.5 py-0.5 rounded tabular-nums border ${
                 remainingSec > 0 && remainingSec <= 60
                   ? "bg-rose-600 text-white border-rose-500 animate-pulse font-extrabold shadow-2xs"
@@ -260,15 +295,15 @@ export function ScheduleCard(props: ScheduleCardProps) {
                   ? "bg-amber-500 text-slate-950 border-amber-400 font-extrabold shadow-2xs"
                   : "bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 border-amber-300/60 dark:border-amber-500/30"
               }`}>
-                {remainingSec > 0 && remainingSec <= 60 ? remainingSec + "s" : liveCountdown}
+                {remainingSec > 0 && remainingSec <= 60 ? remainingSec + "s" : dynState.countdown}
               </span>
-            ) : liveMinutesUntilDeparture != null && dynState.status === "ON_TIME" && !isCancelled ? (
+            ) : dynState.minutesUntilDeparture != null && dynState.status === "ON_TIME" && !isCancelled ? (
               <span className="text-[9px] font-mono font-black px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 tabular-nums whitespace-nowrap">
-                {formatRemainingShort(liveMinutesUntilDeparture)}
+                {formatRemainingShort(dynState.minutesUntilDeparture)}
               </span>
             ) : null}
 
-            {/* YETİŞME MODU: son giriş penceresi — resmî kapı kapanış saati değil, tahmini güvenlik payı */}
+            {/* YETİŞME MODU: son giriş penceresi */}
             {showLastEntryPassed ? (
               <span
                 title="Tahmini: turnike + rampa geçiş payı. Resmî kapı kapanış saati değildir."
@@ -367,6 +402,7 @@ export function ScheduleCard(props: ScheduleCardProps) {
             hasAlarm={hasAlarm}
             onToggleFavorite={handleToggleFavorite}
             onToggleAlarm={handleToggleAlarm}
+            onShareTrip={handleShareTrip}
           />
         </div>
       </>
@@ -385,7 +421,7 @@ export function ScheduleCard(props: ScheduleCardProps) {
           handleCardClick();
         }
       }}
-      className={`theme-card rounded-xl px-3 py-2.5 flex flex-col gap-1.5 text-slate-900 dark:text-white shadow-xs dark:shadow-none transition-all duration-150 cursor-pointer group border active:scale-[0.99] touch-manipulation ${
+      className={`theme-card rounded-xl px-3 py-2.5 flex flex-col gap-1.5 text-slate-900 dark:text-white shadow-xs dark:shadow-none transition-all duration-150 cursor-pointer group border active:scale-[0.99] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
         props.isFeaturedHero
           ? "border-blue-500/90 dark:border-blue-400 ring-2 ring-blue-500/25 bg-linear-to-b from-blue-50/60 via-white to-white dark:from-blue-950/40 dark:via-[#141d2e] dark:to-[#141d2e] shadow-sm"
           : isCancelled
@@ -462,7 +498,12 @@ export function ScheduleCard(props: ScheduleCardProps) {
               </span>
             )}
             <div className="mt-1">
-              {isCancelled ? (
+              {isOtherDayPreview ? (
+                <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 inline-flex items-center gap-0.5 border border-blue-200 dark:border-blue-800 whitespace-nowrap">
+                  <Calendar size={9} aria-hidden="true" />
+                  <span>{props.dayPreviewLabel}</span>
+                </span>
+              ) : isCancelled ? (
                 <span className="px-1.5 py-0.5 rounded text-[9px] font-black bg-rose-600 text-white animate-pulse inline-flex items-center gap-0.5 shadow-xs">
                   <Ban size={10} aria-hidden="true" /> İPTAL
                 </span>
@@ -475,30 +516,23 @@ export function ScheduleCard(props: ScheduleCardProps) {
                 <span className="px-1.5 py-0.5 rounded text-[9px] font-black uppercase tracking-wider inline-flex items-center gap-0.5 shadow-xs animate-pulse bg-rose-600 text-white">
                   <Siren size={10} aria-hidden="true" /> SON ÇAĞRI
                 </span>
-              ) : liveCountdown ? (
+              ) : dynState.countdown ? (
                 <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-black bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-500/40 animate-pulse whitespace-nowrap inline-flex items-center gap-0.5">
-                  <Timer size={10} aria-hidden="true" /> {liveCountdown}
+                  <Timer size={10} aria-hidden="true" /> {dynState.countdown}
                 </span>
-              ) : liveMinutesUntilDeparture != null && dynState.status === "ON_TIME" ? (
+              ) : dynState.minutesUntilDeparture != null && dynState.status === "ON_TIME" ? (
                 <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-black bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 tabular-nums whitespace-nowrap inline-flex items-center gap-0.5">
-                  {formatRemainingShort(liveMinutesUntilDeparture)}
+                  {formatRemainingShort(dynState.minutesUntilDeparture)}
                 </span>
               ) : (
                 <TripStatusBadge status={dynState.status} delayText={props.delayText} />
               )}
             </div>
-
-            {/* NOT: "Son giriş" uyarıları masaüstü şeridinde yaşar; mobilde
-                tamamen gizlenir (kullanıcı kuralı: fazladan satır yemesin). */}
           </div>
         </div>
 
         {/* 2. Orta: Dinamik Güzergah & Hafif Temel Bilgiler */}
         <div className="flex flex-col min-w-0 flex-1 pr-1">
-          {/* Güzergah — KULLANICI KURALI: TAM isimler (mobil dahil), "şu anki durak
-              ➔ son durak". Yanıltma yasağı: mid-voyage asla ilk kalkış gösterilmez;
-              ring adı yerine gerçek son durak yazılır. Uzun adlar mobilde İKİNCİ
-              SATIRA sarılır — isim asla "Bo..." gibi kesilmez; masaüstü tek satır. */}
           <div className="flex flex-wrap sm:flex-nowrap items-center gap-x-1.5 gap-y-0.5 font-black text-[13px] sm:text-base leading-tight min-w-0">
             <span
               title={dynState.currentOrigin}
@@ -514,7 +548,6 @@ export function ScheduleCard(props: ScheduleCardProps) {
               {routeDestinationDisplay}
             </span>
 
-            {/* İptal Rozeti — mobilde sol kolondaki rozet yeterli; burada yalnız sm+ */}
             {isCancelled && (
               <span className="hidden sm:inline-flex items-center gap-0.5 px-1 py-0.5 rounded bg-rose-600 text-white text-[9px] font-black uppercase tracking-wider animate-pulse shrink-0">
                 <AlertTriangle size={9} aria-hidden="true" /> İPTAL
@@ -522,27 +555,21 @@ export function ScheduleCard(props: ScheduleCardProps) {
             )}
           </div>
 
-          {/* İptal Nedeni Varsa */}
           {isCancelled && props.delayText && (
             <div className="text-[10px] font-bold text-rose-600 dark:text-rose-400 mt-0.5 truncate">
               <AlertTriangle size={10} className="inline mr-0.5" aria-hidden="true" /> {props.delayText}
             </div>
           )}
 
-          {/* Sadeleştirilmiş Temel Bilgi Satırı — GECE rozeti burada yaşar
-              (rota satırına girip iskele adlarını ezmesin) */}
           <div className="flex items-center gap-1.5 mt-1 text-[11px] text-slate-500 dark:text-slate-400 min-w-0">
             <OperatorLogo operator={props.operator} size="sm" showName={false} />
 
             <span className="hidden sm:inline text-slate-300 dark:text-slate-600 font-bold">•</span>
 
-            {/* Direkt veya Durak Sayısı */}
             <span className="text-slate-600 dark:text-slate-300 text-[10px] font-semibold shrink-0">
               {isDirect ? t("direct") : `${props.stops?.length} ${t("stops")}`}
             </span>
 
-            {/* Gece Seferi — KULLANICI KURALI: metin yerine yalnızca ay sembolü
-                (isimleri/rota satırını asla ezmez) */}
             {isNightTrip && !isCancelled && (
               <span
                 title="Gece seferi"
@@ -553,7 +580,6 @@ export function ScheduleCard(props: ScheduleCardProps) {
               </span>
             )}
 
-            {/* Doluluk Durumu & Turnike Yoğunluğu */}
             <span className="text-slate-300 dark:text-slate-600 font-bold hidden xs:inline">•</span>
             <span
               className={`items-center gap-1 text-[9.5px] font-bold px-1.5 py-0.5 rounded border hidden xs:inline-flex shrink-0 ${
@@ -579,19 +605,18 @@ export function ScheduleCard(props: ScheduleCardProps) {
           </div>
         </div>
 
-        {/* 3. Sağ: Hızlı Eylemler (Favori, Alarm, Detay Oku) */}
+        {/* 3. Sağ: Hızlı Eylemler (Paylaş, Favori, Alarm, Detay Oku) */}
         <ScheduleCardActions
           variant="full"
           isFav={isFav}
           hasAlarm={hasAlarm}
           onToggleFavorite={handleToggleFavorite}
           onToggleAlarm={handleToggleAlarm}
+          onShareTrip={handleShareTrip}
         />
       </div>
 
-      {/* YETİŞME MODU: son giriş penceresi — TAM GENİŞLİK şerit (tahmini güvenlik payı).
-          KULLANICI KURALI: mobilde gösterilmez — fazladan satır yiyip bir sefer
-          daha görmeyi engelliyordu; ekstra bilgi masaüstünde yaşar. */}
+      {/* YETİŞME MODU: son giriş penceresi — TAM GENİŞLİK şerit */}
       {canBoard && boarding && (showLastEntryPassed || showLastEntrySoon) && (
         <div className="hidden sm:block w-full">
           {showLastEntryPassed ? (
@@ -612,7 +637,7 @@ export function ScheduleCard(props: ScheduleCardProps) {
         </div>
       )}
 
-      {/* 2. YEDEK GÜZERGAH ŞERİDİ: Yalnızca şematik çizilemediğinde (ara durak listesi yokken) gösterilir — mükerrer tekrar önlenir */}
+      {/* 2. YEDEK GÜZERGAH ŞERİDİ */}
       {!props.isCompact && (!props.stops || props.stops.length === 0) && dynState.activeChain && dynState.activeChain.length > 1 && (
         <div className="w-full pt-1.5 mt-0.5 border-t border-slate-100 dark:border-slate-800/80">
           <div className="flex flex-wrap items-center gap-1 text-[11px]">
@@ -648,7 +673,7 @@ export function ScheduleCard(props: ScheduleCardProps) {
         </div>
       )}
 
-      {/* 3. TRANSIT ROTA ÇİZGİSİ ŞEMASI: Metro hatları tarzı görsel durak şeması */}
+      {/* 3. TRANSIT ROTA ÇİZGİSİ ŞEMASI */}
       {!props.isCompact && props.stops && props.stops.length > 0 && (
         <TransitRouteSchematic
           origin={props.origin}
@@ -658,7 +683,7 @@ export function ScheduleCard(props: ScheduleCardProps) {
           stops={props.stops}
           operator={props.operator}
           underway={dynState.underway}
-          soonDeparturePier={liveCountdown && !dynState.isDeparted ? dynState.currentOrigin : null}
+          soonDeparturePier={!isOtherDayPreview && dynState.countdown && !dynState.isDeparted ? dynState.currentOrigin : null}
         />
       )}
     </div>

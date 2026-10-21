@@ -5,6 +5,7 @@ import { Search, MapPin, Train, Navigation, Ship, ChevronRight, Landmark, Tag } 
 import { ISTANBUL_PIERS } from "@/lib/data/piers";
 import { getPierTransit } from "@/lib/data/pier-transit-connections";
 import { AdalarHeritageModal } from "@/components/adalar/AdalarHeritageModal";
+import { PierCulturalAtlasModal } from "@/components/piers/PierCulturalAtlasModal";
 import { SponsoredDealsModal } from "@/components/commercial/SponsoredDealsModal";
 import type { ScheduleCardDto } from "@/lib/types/schedule";
 
@@ -18,6 +19,7 @@ export function PiersDirectoryView({ schedules, onSelectPierForSchedules }: Pier
   const [selectedRegion, setSelectedRegion] = useState<"ALL" | "Adalar" | "Avrupa" | "Anadolu">("ALL");
   const [isAdalarHeritageOpen, setIsAdalarHeritageOpen] = useState(false);
   const [isSponsoredDealsOpen, setIsSponsoredDealsOpen] = useState(false);
+  const [selectedAtlasPier, setSelectedAtlasPier] = useState<string | null>(null);
 
   const piersList = useMemo(() => {
     return Object.values(ISTANBUL_PIERS).filter(pier => {
@@ -215,6 +217,15 @@ export function PiersDirectoryView({ schedules, onSelectPierForSchedules }: Pier
                     <Navigation size={13} />
                     <span>Yol Tarifi</span>
                   </a>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedAtlasPier(pier.name)}
+                    className="px-2.5 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 hover:bg-emerald-100 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 text-xs font-bold flex items-center gap-1 transition-all cursor-pointer"
+                    title="Tarihi Mimari ve Semt Kültür Atlasını Aç"
+                  >
+                    <Landmark size={13} />
+                    <span>Kültür Atlası</span>
+                  </button>
                 </div>
 
                 {onSelectPierForSchedules && (
@@ -242,6 +253,13 @@ export function PiersDirectoryView({ schedules, onSelectPierForSchedules }: Pier
       <SponsoredDealsModal
         isOpen={isSponsoredDealsOpen}
         onClose={() => setIsSponsoredDealsOpen(false)}
+      />
+
+      <PierCulturalAtlasModal
+        isOpen={!!selectedAtlasPier}
+        onClose={() => setSelectedAtlasPier(null)}
+        initialPierName={selectedAtlasPier || "Moda"}
+        onSelectPierForSchedules={onSelectPierForSchedules}
       />
     </div>
   );

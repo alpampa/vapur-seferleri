@@ -1,17 +1,18 @@
 "use client";
 
-import { Bell, BellRing, ChevronRight, Star } from "lucide-react";
+import { Bell, BellRing, ChevronRight, Share2, Star } from "lucide-react";
 
 export interface ScheduleCardActionsProps {
   isFav: boolean;
   hasAlarm: boolean;
   onToggleFavorite: () => void;
   onToggleAlarm: () => void;
+  onShareTrip?: () => void;
   variant: "compact" | "full";
 }
 
 /**
- * Sefer kartı hızlı eylemleri: favori, alarm (hatırlatıcı) ve detay oku.
+ * Sefer kartı hızlı eylemleri: paylaş, favori, alarm (hatırlatıcı) ve detay oku.
  * Kompakt ve tam görünümde aynı davranış, farklı ölçek.
  */
 export function ScheduleCardActions({
@@ -19,6 +20,7 @@ export function ScheduleCardActions({
   hasAlarm,
   onToggleFavorite,
   onToggleAlarm,
+  onShareTrip,
   variant,
 }: ScheduleCardActionsProps) {
   const isCompact = variant === "compact";
@@ -43,7 +45,23 @@ export function ScheduleCardActions({
     : "hidden sm:block text-slate-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 group-hover:translate-x-0.5 transition-all shrink-0 ml-0.5";
 
   return (
-    <div className={`flex items-center gap-1 shrink-0${isCompact ? " text-right" : ""}`}>
+    <div className={`flex items-center gap-0.5 sm:gap-1 shrink-0${isCompact ? " text-right" : ""}`}>
+      {/* Paylaş */}
+      {onShareTrip && (
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onShareTrip();
+          }}
+          title="Seferi Paylaş (WhatsApp / Bağlantı Kopyala)"
+          aria-label="Seferi paylaş"
+          className={`w-10 h-10 flex items-center justify-center rounded-xl transition-all ${activeScale} touch-manipulation cursor-pointer text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-slate-100 dark:hover:bg-slate-800`}
+        >
+          <Share2 size={iconSize} />
+        </button>
+      )}
+
       {/* Favori */}
       <button
         type="button"

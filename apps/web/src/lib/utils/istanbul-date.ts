@@ -8,7 +8,6 @@
  */
 
 import { getIstanbulParts } from "@/lib/utils/istanbul-time";
-import { checkTurkishHoliday } from "@/lib/utils/holiday-calendar";
 
 export interface IstanbulDateParts {
   year: number;
@@ -62,35 +61,4 @@ export function dateKeyToDayIndex(key: number): number {
   const month = Math.floor((key % 10000) / 100);
   const day = key % 100;
   return Math.floor(Date.UTC(year, month - 1, day) / 86400000);
-}
-
-/** İstanbul takvim gününü YYYY-MM-DD olarak döner. */
-export function toIsoDate(nowMs: number = Date.now()): string {
-  const { year, month, day } = getIstanbulDateParts(nowMs);
-  return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-}
-
-/** ISO güne gün ekler/çıkarır (takvim günü bazında, saat dilimi kaymasız). */
-export function addDaysToIso(dateIso: string, days: number): string {
-  const [y, m, d] = dateIso.split("-").map(Number);
-  const next = new Date(Date.UTC(y, m - 1, d + days, 12));
-  return `${next.getUTCFullYear()}-${String(next.getUTCMonth() + 1).padStart(2, "0")}-${String(next.getUTCDate()).padStart(2, "0")}`;
-}
-
-/** Verilen ISO günün tarife tipi (resmî tatiller Pazar tarifesine eşlenir). */
-export function getDayTypeForIso(dateIso: string): "WEEKDAY" | "SATURDAY" | "SUNDAY" {
-  const [y, m, d] = dateIso.split("-").map(Number);
-  if (checkTurkishHoliday(y, m, d).isHoliday) return "SUNDAY";
-  const dow = new Date(Date.UTC(y, m - 1, d, 12)).getUTCDay();
-  if (dow === 0) return "SUNDAY";
-  if (dow === 6) return "SATURDAY";
-  return "WEEKDAY";
-}
-
-/** Bugünden itibaren sonraki belirli hafta gününün ISO tarihi (0=Pazar). */
-export function nextWeekdayIso(fromIso: string, targetDow: number): string {
-  const [y, m, d] = fromIso.split("-").map(Number);
-  const current = new Date(Date.UTC(y, m - 1, d, 12)).getUTCDay();
-  const delta = (targetDow - current + 7) % 7;
-  return addDaysToIso(fromIso, delta);
 }

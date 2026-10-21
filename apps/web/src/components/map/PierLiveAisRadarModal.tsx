@@ -28,18 +28,6 @@ export function PierLiveAisRadarModal({
     setMounted(true);
   }, []);
 
-  useEffect(() => {
-    if (!isOpen) return;
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        event.preventDefault();
-        onClose();
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, onClose]);
-
   // Resolve pier coordinates
   const getPierCoord = (name: string): [number, number] => {
     const norm = (name || "").toLowerCase();
@@ -166,15 +154,15 @@ export function PierLiveAisRadarModal({
               <div className="min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
                   <h3 className="text-sm sm:text-base font-black text-white tracking-tight truncate">
-                    {pierName} İSKELESİ — HARİTA VE HARİCİ GEMİ TAKİBİ
+                    {pierName} İSKELESİ ÇEVRESİ 500M CANLI RADAR
                   </h3>
                   <span className="px-2 py-0.2 rounded-full text-[10px] font-mono font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 flex items-center gap-1">
                     <Radio size={10} className="animate-pulse text-emerald-400" />
-                    <span>HARİCİ AIS BAĞLANTISI</span>
+                    <span>CANLI AIS TELSİZ ALICISI</span>
                   </span>
                 </div>
                 <p className="text-[11px] text-slate-400 font-medium truncate mt-0.5">
-                  Uygulama içinde canlı gemi konumu gösterilmez
+                  İskele rıhtımına yaklaşan ve Boğaz trafik ayrımındaki tüm gerçek gemiler
                 </p>
               </div>
             </div>
@@ -222,7 +210,7 @@ export function PierLiveAisRadarModal({
                 className="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-black text-xs shadow-xl flex items-center gap-2 transition-all cursor-pointer border border-cyan-400/40"
               >
                 <Radio size={14} className="animate-pulse" />
-                <span>MarineTraffic üzerinde canlı gemileri gör</span>
+                <span>Bu Sektördeki Tüm Canlı Gemileri MarineTraffic Üzerinde Gör</span>
                 <ExternalLink size={13} />
               </a>
             </div>
@@ -232,7 +220,7 @@ export function PierLiveAisRadarModal({
           <div className="p-3.5 border-t border-slate-800 bg-slate-950/95 shrink-0 flex items-start gap-2.5 text-xs text-slate-400">
             <Info size={16} className="text-cyan-400 shrink-0 mt-0.5" />
             <p className="text-[11px] leading-relaxed">
-              Bu harita yalnızca iskele çevresini ve OpenSeaMap deniz işaretlerini gösterir; gemi konumu <strong>gerçek AIS verisinden</strong> okunmaz. Canlı gemi hareketi için yukarıdaki harici MarineTraffic bağlantısını kullanın.
+              Bu radar, <strong>{pierName}</strong> iskelesinin coğrafi merkezini baz alarak Kıyı Emniyeti Genel Müdürlüğü ve OpenSeaMap deniz fenerleri/şamandıralarını görüntüler. Rıhtıma yanaşan vapurların AIS telsiz verileri 500 metrelik operasyon dairesi içerisinde taranmaktadır.
             </p>
           </div>
         </motion.div>

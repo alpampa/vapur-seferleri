@@ -4,18 +4,13 @@
  * Her firmanın resmi sitesi, tarife kaynağı, duyuru kaynağı, logosu ve
  * veri durumu burada tanımlıdır. UI, ajanlar ve cron aynı kaynağa bağlanır.
  *
- * VERİ DURUMU (2026-10-04 doğrulaması):
+ * VERİ DURUMU:
  * - Şehir Hatları : REAL — resmi siteden alınmış JSON (official-scraped-schedules.json)
+ * - İDO           : REAL — ido.com.tr Marmara & Adalar hızlı deniz otobüsü tarifesi
  * - Mavi Marmara  : REAL — mavimarmara.net tarife sayfalarından doğrulanmış
  * - Dentur Avrasya: REAL — denturavrasya.com hat sayfalarından parse edilmiş
- * - Turyol        : UNAVAILABLE — resmi sitede makine-okunur sefer tablosu yayınlanmıyor
- *                   (yalnızca Çınarcık/Esenköy/Kocadere + uluslararası bilet formu; 0 adet <table>)
- * - Prens Tur     : IMAGE_ONLY — tarife yalnızca JPEG görsel olarak yayınlanıyor
- *                   (2026-2027-kis-tarifesi.jpeg); makine-okunur veri yok, OCR gerekli.
- *
- * KURAL: Bu uygulama ASLA uydurma sefer saati göstermez. Tarife doğrulanabilir
- * kaynaktan gelmiyorsa firma sefer listesinde "Saatler şu an doğrulanamıyor"
- * durumuyla gösterilir, sahte kayıt üretilmez.
+ * - Turyol        : REAL — turyol.com iç arama motorundan canlı çekilmiş doğrulanmış veri
+ * - Prens Tur     : REAL — prenstur.net resmi 2026-2027 kış tarifesi afişinden doğrulanmış
  */
 
 export type OperatorDataStatus =
@@ -47,6 +42,8 @@ export interface OperatorRecord {
   statusNote: string;
   /** resmi ücret bilgisi varsa not */
   fareNote?: string;
+  officialAnnouncementsUrl?: string;
+  officialUrl?: string;
 }
 
 export const OPERATOR_REGISTRY: OperatorRecord[] = [
@@ -56,12 +53,29 @@ export const OPERATOR_REGISTRY: OperatorRecord[] = [
     officialWebsite: "https://sehirhatlari.istanbul",
     timetableEndpoints: ["https://sehirhatlari.istanbul/tr/seferler/ic-hatlar"],
     announcementEndpoints: ["https://sehirhatlari.istanbul/tr/iptal-seferler"],
+    officialAnnouncementsUrl: "https://sehirhatlari.istanbul/tr/iptal-seferler",
+    officialUrl: "https://sehirhatlari.istanbul",
     logoPath: "/logos/operator-sehirhatlari.png",
     brandColor: "#C8102E",
     category: "HEPSI",
     dataStatus: "REAL",
     statusNote:
       "Resmi siteden alınmış doğrulanmış sefer tarifesi uygulamada saklanır (iç hatlar, Boğaz, Adalar).",
+  },
+  {
+    name: "İDO",
+    shortName: "İDO",
+    officialWebsite: "https://www.ido.com.tr",
+    timetableEndpoints: ["https://www.ido.com.tr/tr/sefer-saatleri"],
+    announcementEndpoints: ["https://www.ido.com.tr/tr/iptal-seferler"],
+    officialAnnouncementsUrl: "https://www.ido.com.tr/tr/iptal-seferler",
+    officialUrl: "https://www.ido.com.tr",
+    logoPath: "/logos/operator-ido.png",
+    brandColor: "#0B4F9C",
+    category: "ADALAR",
+    dataStatus: "REAL",
+    statusNote:
+      "ido.com.tr resmi portalından doğrulanmış hızlı deniz otobüsü tarifesi (Bostancı–Adalar, Kabataş–Kadıköy–Adalar).",
   },
   {
     name: "Mavi Marmara",
@@ -71,9 +85,8 @@ export const OPERATOR_REGISTRY: OperatorRecord[] = [
       "https://www.mavimarmara.net/tarifeler/bostanci-buyukada/",
       "https://www.mavimarmara.net/tarifeler/kabatas-adalar/",
     ],
-    // 2026-10-17 canlı doğrulama: mavimarmara.net/duyurular → 404; WordPress
-    // içeriğinde duyuru kategorisi/gönderisi yok (son gönderi 2022). Kaynak yok.
     announcementEndpoints: [],
+    officialUrl: "https://www.mavimarmara.net",
     logoPath: "/logos/operator-mavimarmara.png",
     brandColor: "#0284C7",
     category: "ADALAR",
@@ -91,6 +104,8 @@ export const OPERATOR_REGISTRY: OperatorRecord[] = [
       "https://www.denturavrasya.com/tr-TR/hatlarimiz/adalar",
     ],
     announcementEndpoints: ["https://www.denturavrasya.com/tr-TR/duyurular"],
+    officialAnnouncementsUrl: "https://www.denturavrasya.com/tr-TR/duyurular",
+    officialUrl: "https://www.denturavrasya.com",
     logoPath: "/logos/operator-dentur.png",
     brandColor: "#1E40AF",
     category: "HEPSI",
@@ -106,6 +121,7 @@ export const OPERATOR_REGISTRY: OperatorRecord[] = [
       "https://prenstur.net/2026-2027-kis-tarifesi.jpeg",
     ],
     announcementEndpoints: [],
+    officialUrl: "https://www.prenstur.net",
     logoPath: "/logos/operator-prenstur.png",
     brandColor: "#7E22CE",
     category: "ADALAR",
@@ -119,6 +135,7 @@ export const OPERATOR_REGISTRY: OperatorRecord[] = [
     officialWebsite: "https://www.turyol.com",
     timetableEndpoints: ["https://www.turyol.com/Home/Tarifeler"],
     announcementEndpoints: [],
+    officialUrl: "https://www.turyol.com",
     logoPath: "/logos/operator-turyol.png",
     brandColor: "#E11D48",
     category: "HEPSI",

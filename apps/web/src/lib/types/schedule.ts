@@ -41,18 +41,16 @@ export interface ScheduleCardDto {
   continuousUntil?: string;
   /** Hat adı */
   lineName?: string;
-}
 
-export type ScheduleDayType = "WEEKDAY" | "SATURDAY" | "SUNDAY";
+  /** Gün tipi uygunluk bayrakları (Hafta İçi / Cumartesi / Pazar-Tatil seçici için) */
+  runsToday?: boolean;
+  runsWeekday?: boolean;
+  runsSaturday?: boolean;
+  runsSunday?: boolean;
+}
 
 export interface SchedulesResponse {
   serverTimeIso: string;
   serverDateFormatted?: string;
-  /** Seçili tarife günü (YYYY-MM-DD, Europe/Istanbul). */
-  selectedDateIso?: string;
-  /** Seçili günün tarife tipi; resmî tatiller SUNDAY tarifesine eşlenir. */
-  dayType?: ScheduleDayType;
-  /** Seçili gün bugün mü? (canlı geri sayım yalnızca bugün için gösterilir) */
-  isToday?: boolean;
   schedules: ScheduleCardDto[];
 }

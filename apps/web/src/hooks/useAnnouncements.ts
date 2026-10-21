@@ -27,6 +27,8 @@ export function useAnnouncements(refreshMs = 60 * 1000) {
           disruptions: Array.isArray(json.disruptions) ? json.disruptions : [],
           sourceHealth: Array.isArray(json.sourceHealth) ? json.sourceHealth : [],
           recentChanges: Array.isArray(json.recentChanges) ? json.recentChanges : [],
+          coverage: Array.isArray(json.meta?.coverage) ? json.meta.coverage : [],
+          liveScanAt: json.meta?.liveScanAt ?? json.generatedAt ?? new Date().toISOString(),
         });
         setError(null);
       } catch (e: unknown) {
