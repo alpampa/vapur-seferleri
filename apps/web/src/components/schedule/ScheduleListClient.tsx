@@ -1,6 +1,19 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
+import dynamic from "next/dynamic";
+
+const InteractiveMarineMap = dynamic(
+  () => import("@/components/map/InteractiveMarineMap").then((m) => m.InteractiveMarineMap),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-[210px] bg-slate-900 rounded-2xl animate-pulse flex items-center justify-center text-slate-400 text-xs font-bold">
+        Harita Yükleniyor...
+      </div>
+    ),
+  }
+);
 import { ScheduleCard } from "@/components/schedule/ScheduleCard";
 import { TripDetailsSheet } from "@/components/schedule/TripDetailsSheet";
 import type { ScheduleCardDto } from "@/lib/types/schedule";
@@ -1181,6 +1194,28 @@ export function ScheduleListClient({
                       onClick={() => setSelectedSchedule(schedule)}
                       onSelectHop={(s) => setSelectedHopSchedule(s)}
                     />
+                    {idx === 0 && !isTimetablePreviewMode && !isCompactDensity && (
+                      <div className="my-1.5 space-y-2">
+                        <div className="rounded-2xl overflow-hidden border border-slate-300 dark:border-slate-700/90 shadow-lg bg-slate-950">
+                          <InteractiveMarineMap
+                            selectedOrigin={selectedOrigin !== "ALL" ? selectedOrigin : schedule.origin}
+                            selectedDestination={selectedDestination !== "ALL" ? selectedDestination : schedule.destination}
+                            schedules={upcomingTrips.slice(0, 8).map((u) => u.schedule)}
+                            height="210px"
+                          />
+                        </div>
+                        {upcomingTrips.length > 1 && (
+                          <div className="pt-1 px-1 flex items-center justify-between">
+                            <h3 className="text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-200">
+                              Diğer Seferler ({upcomingTrips.length - 1} Alternatif)
+                            </h3>
+                            <span className="text-[10px] font-bold text-slate-400">
+                              Şehir Hatları • İDO • Mavi Marmara • Turyol • Dentur
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    )}
                     {shouldShowSponsoredRowHere && (
                       <SponsoredTripRow ad={activeSponsoredAd} isCompact={isCompactDensity} />
                     )}

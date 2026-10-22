@@ -1,77 +1,44 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { Anchor, BookOpen, Compass, Footprints, Landmark, MapPin, X } from "lucide-react";
-import { ADALAR_HERITAGE_DATA, type IslandProfile } from "@/lib/data/adalar-heritage";
-import { BOSPHORUS_LANDMARKS, type BosphorusLandmark } from "@/lib/data/bosphorus-landmarks";
-import { ISTANBUL_PIERS, PIER_GEO_COORDINATES } from "@/lib/data/piers";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Landmark,
+  X,
+  MapPin,
+  Clock,
+  Compass,
+  Tag,
+  Building,
+  Coffee,
+  Ship,
+  Sparkles,
+  ExternalLink,
+  ChevronRight,
+  Gift,
+} from "lucide-react";
+import {
+  PIER_CULTURAL_ATLAS,
+  PierCulturalAtlas,
+  getPierCulturalAtlas,
+} from "@/lib/data/pier-cultural-heritage";
 
 interface PierCulturalAtlasModalProps {
   isOpen: boolean;
   onClose: () => void;
-  initialPierName: string;
+  initialPierName?: string;
   onSelectPierForSchedules?: (pierName: string) => void;
-}
-
-interface PierCoordinate {
-  lat: number;
-  lng: number;
-}
-
-function normalize(value: string): string {
-  return value
-    .toLocaleLowerCase("tr-TR")
-    .replaceAll("ı", "i")
-    .replaceAll("ş", "s")
-    .replaceAll("ğ", "g")
-    .replaceAll("ü", "u")
-    .replaceAll("ö", "o")
-    .replaceAll("ç", "c")
-    .replace(/[^a-z0-9]+/g, " ")
-    .trim();
-}
-
-function findIsland(pierName: string): IslandProfile | undefined {
-  const target = normalize(pierName);
-  return ADALAR_HERITAGE_DATA.find((island) => {
-    const name = normalize(island.name);
-    return name === target || target.includes(name) || name.includes(target) || island.id === target;
-  });
-}
-
-function findCoordinate(pierName: string): PierCoordinate | undefined {
-  const target = normalize(pierName);
-  const entry = Object.entries(ISTANBUL_PIERS).find(
-    ([key, value]) => normalize(key) === target || normalize(value.name) === target
-  );
-  if (entry) return entry[1];
-
-  const geoEntry = Object.entries(PIER_GEO_COORDINATES).find(
-    ([key]) => normalize(key) === target
-  );
-  return geoEntry?.[1];
-}
-
-function distanceKm(a: PierCoordinate, b: PierCoordinate): number {
-  const toRad = (value: number) => (value * Math.PI) / 180;
-  const earthRadius = 6371;
-  const dLat = toRad(b.lat - a.lat);
-  const dLng = toRad(b.lng - a.lng);
-  const lat1 = toRad(a.lat);
-  const lat2 = toRad(b.lat);
-  const h =
-    Math.sin(dLat / 2) ** 2 +
-    Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLng / 2) ** 2;
-  return 2 * earthRadius * Math.asin(Math.sqrt(h));
 }
 
 export function PierCulturalAtlasModal({
   isOpen,
   onClose,
-  initialPierName,
+  initialPierName = "Moda",
   onSelectPierForSchedules,
 }: PierCulturalAtlasModalProps) {
+  const [selectedPierName, setSelectedPierName] = useState<string>(initialPierName);
+  const [activeTab, setActiveTab] = useState<"HERITAGE" | "DISTRICT" | "PERKS">("HERITAGE");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -79,193 +46,327 @@ export function PierCulturalAtlasModal({
   }, []);
 
   useEffect(() => {
+    if (initialPierName) {
+      setSelectedPierName(initialPierName);
+    }
+  }, [initialPierName]);
+
+  useEffect(() => {
     if (!isOpen) return;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
     };
     window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      window.removeEventListener("keydown", handleKeyDown);
-    };
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose]);
-
-  const island = useMemo(() => findIsland(initialPierName), [initialPierName]);
-  const coordinate = useMemo(() => findCoordinate(initialPierName), [initialPierName]);
-
-  const nearbyLandmarks = useMemo<BosphorusLandmark[]>(() => {
-    if (!coordinate) return BOSPHORUS_LANDMARKS.slice(0, 4);
-    return [...BOSPHORUS_LANDMARKS]
-      .map((landmark) => ({
-        landmark,
-        distance: distanceKm(coordinate, { lat: landmark.lat, lng: landmark.lng }),
-      }))
-      .sort((a, b) => a.distance - b.distance)
-      .slice(0, 4)
-      .map((item) => item.landmark);
-  }, [coordinate]);
 
   if (!isOpen || !mounted) return null;
 
-  const pierRegion = ISTANBUL_PIERS[initialPierName]?.region;
+  const currentAtlas: PierCulturalAtlas =
+    getPierCulturalAtlas(selectedPierName) || PIER_CULTURAL_ATLAS["Moda"];
+
+  const pierKeys = Object.keys(PIER_CULTURAL_ATLAS);
+
+  const handleGoToSchedules = () => {
+    if (onSelectPierForSchedules) {
+      onSelectPierForSchedules(currentAtlas.pierName);
+    }
+    onClose();
+  };
 
   return createPortal(
-    <div
-      className="fixed inset-0 z-[99990] bg-black/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-5"
-      onClick={onClose}
-      role="presentation"
-    >
-      <div
-        role="dialog"
-        aria-modal="true"
-        aria-label={`${initialPierName} Semt Atlası`}
-        onClick={(event) => event.stopPropagation()}
-        className="w-full max-w-2xl max-h-[90vh] overflow-hidden rounded-3xl bg-white dark:bg-[#0c1322] border border-slate-200 dark:border-slate-800 shadow-2xl text-slate-900 dark:text-white flex flex-col"
-      >
-        <div className="flex items-start justify-between gap-3 px-5 py-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/60">
-          <div className="flex items-center gap-2.5 min-w-0">
-            <div className="w-10 h-10 rounded-2xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 flex items-center justify-center shrink-0">
-              <Landmark size={20} />
-            </div>
-            <div className="min-w-0">
-              <h2 className="text-sm sm:text-base font-black tracking-tight truncate">
-                {initialPierName} Semt Atlası
-              </h2>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400 flex items-center gap-1">
-                <MapPin size={11} />
-                {pierRegion ? `${pierRegion} yakası` : "İstanbul"} • Kültürel miras rehberi
-              </p>
-            </div>
-          </div>
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Kapat"
-            className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-300 cursor-pointer shrink-0"
-          >
-            <X size={16} />
-          </button>
-        </div>
+    <AnimatePresence>
+      <div className="fixed inset-0 z-[99999] overflow-y-auto bg-black/80 backdrop-blur-md p-3 sm:p-5 flex min-h-full items-start sm:items-center justify-center">
+        <div className="fixed inset-0" onClick={onClose} />
 
-        <div className="p-4 sm:p-5 overflow-y-auto space-y-4">
-          {island ? (
-            <>
-              <div className="rounded-2xl border border-emerald-200 dark:border-emerald-900/70 bg-emerald-50/60 dark:bg-emerald-950/30 p-3.5 space-y-1.5">
+        <motion.div
+          initial={{ scale: 0.94, opacity: 0, y: 20 }}
+          animate={{ scale: 1, opacity: 1, y: 0 }}
+          exit={{ scale: 0.94, opacity: 0, y: 20 }}
+          transition={{ type: "spring", damping: 26, stiffness: 280 }}
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${currentAtlas.pierName} İskelesi ve Semt Kültür Atlası`}
+          className="relative my-auto w-full max-w-3xl bg-white dark:bg-[#0c1324] border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl text-slate-900 dark:text-white z-10 flex flex-col max-h-[92vh] overflow-hidden"
+        >
+          {/* ÜST BAŞLIK */}
+          <div className="flex items-center justify-between px-5 py-3.5 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/80 shrink-0">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="w-10 h-10 rounded-2xl bg-emerald-600/20 border border-emerald-500/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 font-bold shadow-md shrink-0">
+                <Landmark size={20} />
+              </div>
+              <div className="min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-xs font-black text-emerald-800 dark:text-emerald-300">
-                    {island.name}
-                  </span>
-                  <span className="px-2 py-0.5 rounded-full bg-white/80 dark:bg-emerald-900/60 text-[9px] font-bold text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
-                    {island.badge}
-                  </span>
-                  <span className="text-[10px] text-emerald-700/80 dark:text-emerald-400/80 font-medium">
-                    {island.greekName}
+                  <h3 className="text-sm sm:text-base font-black tracking-tight text-slate-900 dark:text-white truncate">
+                    {currentAtlas.pierName.toUpperCase()} İSKELESİ & SEMT ATLASI
+                  </h3>
+                  <span className="px-2 py-0.5 rounded-full text-[9.5px] font-mono font-bold bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30">
+                    {currentAtlas.region} BÖLGESİ
                   </span>
                 </div>
-                <p className="text-[11px] text-slate-700 dark:text-slate-300 leading-relaxed">
-                  {island.overview}
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium truncate mt-0.5">
+                  {currentAtlas.architect ? `${currentAtlas.architect} • ` : ""}
+                  {currentAtlas.builtYear ? `${currentAtlas.builtYear} Yapımı • ` : ""}
+                  {currentAtlas.architecturalStyle}
                 </p>
               </div>
-
-              <div className="space-y-2">
-                <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500 flex items-center gap-1.5">
-                  <BookOpen size={12} /> Tarihi Duraklar
-                </span>
-                {island.heritagePoints.map((point) => (
-                  <div
-                    key={point.id}
-                    className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 p-3 space-y-1"
-                  >
-                    <div className="flex items-center justify-between gap-2 flex-wrap">
-                      <span className="text-xs font-black text-slate-900 dark:text-white">
-                        {point.name}
-                      </span>
-                      <span className="text-[9px] font-bold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded">
-                        {point.era}
-                      </span>
-                    </div>
-                    <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed">
-                      {point.description}
-                    </p>
-                    <div className="flex items-center gap-3 text-[10px] font-bold text-emerald-700 dark:text-emerald-400">
-                      <span className="inline-flex items-center gap-1">
-                        <Footprints size={11} /> {point.walkingMinutes} dk yürüme
-                      </span>
-                      <span className="inline-flex items-center gap-1">
-                        <Anchor size={11} /> {point.distanceFromPierKm} km
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="space-y-2">
-                <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500 flex items-center gap-1.5">
-                  <Compass size={12} /> Ulaşım Notu
-                </span>
-                {island.transitRoutes.map((route) => (
-                  <div
-                    key={`${route.departurePier}-${route.approxDurationMin}`}
-                    className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/60 p-3 text-[11px] text-slate-600 dark:text-slate-400"
-                  >
-                    <strong className="text-slate-900 dark:text-white">
-                      {route.departurePier}
-                    </strong>{" "}
-                    • {route.operators.join(", ")} • ~{route.approxDurationMin} dk
-                    <p className="mt-1 leading-relaxed">{route.tip}</p>
-                  </div>
-                ))}
-              </div>
-            </>
-          ) : (
-            <div className="space-y-2">
-              <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                {initialPierName} iskelesine en yakın tarihi noktalar. Mesafeler kuş uçuşu
-                yaklaşık değerlerdir.
-              </p>
-              {nearbyLandmarks.map((landmark) => (
-                <div
-                  key={landmark.id}
-                  className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 p-3 space-y-1"
-                >
-                  <div className="flex items-center justify-between gap-2 flex-wrap">
-                    <span className="text-xs font-black text-slate-900 dark:text-white">
-                      {landmark.name}
-                    </span>
-                    <span className="text-[9px] font-bold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded">
-                      {landmark.builtYear}
-                    </span>
-                  </div>
-                  <p className="text-[10px] font-bold text-emerald-700 dark:text-emerald-400">
-                    {landmark.sideLabel}
-                  </p>
-                  <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed">
-                    {landmark.shortDesc}
-                  </p>
-                </div>
-              ))}
             </div>
-          )}
-        </div>
 
-        {onSelectPierForSchedules ? (
-          <div className="px-4 sm:px-5 py-3 border-t border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/60">
             <button
-              type="button"
-              onClick={() => {
-                onSelectPierForSchedules(initialPierName);
-                onClose();
-              }}
-              className="w-full py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black cursor-pointer transition-colors"
+              onClick={onClose}
+              aria-label="Kapat"
+              className="w-9 h-9 rounded-xl bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center transition-colors shrink-0 cursor-pointer"
             >
-              {initialPierName} kalkışlı seferleri gör
+              <X size={16} />
             </button>
           </div>
-        ) : null}
+
+          {/* İSKELE DEĞİŞTİRME SEÇİCİSİ */}
+          <div className="px-4 py-2 bg-slate-100 dark:bg-slate-900/90 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between gap-2 overflow-x-auto hide-scrollbar shrink-0">
+            <span className="text-[10px] font-black uppercase tracking-wider text-slate-500 dark:text-slate-400 shrink-0 flex items-center gap-1">
+              <MapPin size={11} />
+              <span>İskele Atlası:</span>
+            </span>
+
+            <div className="flex items-center gap-1.5">
+              {pierKeys.map((name) => (
+                <button
+                  key={name}
+                  type="button"
+                  onClick={() => setSelectedPierName(name)}
+                  className={`px-2.5 py-1 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
+                    currentAtlas.pierName === name
+                      ? "bg-emerald-600 text-white shadow-xs font-black"
+                      : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700"
+                  }`}
+                >
+                  {name}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* MİMARİ TANITIM KARTI */}
+          <div className="p-4 sm:p-5 bg-linear-to-r from-emerald-500/10 via-teal-500/5 to-blue-500/10 border-b border-slate-200 dark:border-slate-800/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shrink-0">
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <Sparkles size={14} className="text-amber-500" />
+                <span className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-wider">
+                  {currentAtlas.architecturalStyle}
+                </span>
+              </div>
+              <p className="text-xs text-slate-600 dark:text-slate-300 max-w-xl leading-relaxed">
+                {currentAtlas.heritageStory}
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={handleGoToSchedules}
+              className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-black flex items-center gap-1.5 shrink-0 shadow-sm cursor-pointer"
+            >
+              <Ship size={14} />
+              <span>{currentAtlas.pierName} Seferlerini Gör</span>
+              <ChevronRight size={13} />
+            </button>
+          </div>
+
+          {/* SEKME ÇUBUĞU */}
+          <div className="flex items-center gap-1 p-2 bg-slate-50 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 shrink-0">
+            <button
+              type="button"
+              onClick={() => setActiveTab("HERITAGE")}
+              className={`flex-1 py-2 px-3 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                activeTab === "HERITAGE"
+                  ? "bg-white dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 shadow-xs"
+                  : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
+              }`}
+            >
+              <Building size={13} />
+              <span>İskele Mimarisi & Tarih</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveTab("DISTRICT")}
+              className={`flex-1 py-2 px-3 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                activeTab === "DISTRICT"
+                  ? "bg-white dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 shadow-xs"
+                  : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
+              }`}
+            >
+              <Compass size={13} />
+              <span>15 Dk Yürüme Çemberi</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveTab("PERKS")}
+              className={`flex-1 py-2 px-3 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                activeTab === "PERKS"
+                  ? "bg-white dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 shadow-xs"
+                  : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
+              }`}
+            >
+              <Gift size={13} className="text-amber-500" />
+              <span>Semt İşletmeleri</span>
+            </button>
+          </div>
+
+          {/* SEKME İÇERİKLERİ */}
+          <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4">
+            {activeTab === "HERITAGE" && (
+              <div className="space-y-4 animate-fadeIn">
+                <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 space-y-2">
+                  <span className="text-[10px] font-black uppercase text-slate-400 tracking-wider block">
+                    Öne Çıkan Mimari Detaylar
+                  </span>
+                  <ul className="space-y-2 text-xs text-slate-700 dark:text-slate-300">
+                    {currentAtlas.architectureHighlights.map((hl, idx) => (
+                      <li key={idx} className="flex items-start gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-1.5 shrink-0" />
+                        <span className="leading-snug">{hl}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-xs font-mono">
+                  <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800">
+                    <span className="text-slate-400 block text-[9px] uppercase font-sans">İnşa Yılı</span>
+                    <strong className="text-slate-900 dark:text-white text-sm">{currentAtlas.builtYear ?? "—"}</strong>
+                  </div>
+                  <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800">
+                    <span className="text-slate-400 block text-[9px] uppercase font-sans">Mimarı</span>
+                    <strong className="text-slate-900 dark:text-white text-xs truncate block" title={currentAtlas.architect}>
+                      {currentAtlas.architect ?? "—"}
+                    </strong>
+                  </div>
+                  <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800">
+                    <span className="text-slate-400 block text-[9px] uppercase font-sans">Konum Bölgesi</span>
+                    <strong className="text-emerald-600 dark:text-emerald-400 text-sm">{currentAtlas.region} Yakası</strong>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeTab === "DISTRICT" && (
+              <div className="space-y-3 animate-fadeIn">
+                <span className="text-[10px] font-black uppercase text-slate-500 dark:text-slate-400 tracking-wider block px-1">
+                  İskeleden İndiğinizde 15 Dakika İçinde Keşfedebileceğiniz Tarihi ve Kültürel Duraklar:
+                </span>
+
+                <div className="space-y-2.5">
+                  {currentAtlas.districtHighlights.map((item) => (
+                    <div
+                      key={item.id}
+                      className="p-3.5 rounded-2xl bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 flex items-start justify-between gap-3 shadow-2xs hover:border-emerald-500/40 transition-colors"
+                    >
+                      <div className="min-w-0 space-y-1">
+                        <div className="flex items-center gap-2">
+                          <strong className="text-xs sm:text-sm font-black text-slate-900 dark:text-white">
+                            {item.title}
+                          </strong>
+                          <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+                            {item.highlightBadge}
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-600 dark:text-slate-300 leading-snug">
+                          {item.description}
+                        </p>
+                      </div>
+
+                      <div className="shrink-0 flex flex-col items-end justify-center text-right">
+                        <span className="text-xs font-mono font-black text-emerald-600 dark:text-emerald-400 whitespace-nowrap flex items-center gap-0.5">
+                          🚶 ~{item.walkMinutes} dk
+                        </span>
+                        <span className="text-[9px] text-slate-400">Yürüme mesafesi</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {activeTab === "PERKS" && (
+              <div className="space-y-3 animate-fadeIn">
+                <span className="text-[10px] font-black uppercase text-amber-700 dark:text-amber-400 tracking-wider block px-1">
+                  {currentAtlas.pierName} İskelesi çıkışı yerel işletme avantajları:
+                </span>
+
+                {currentAtlas.curatedLocalPartners.length > 0 ? (
+                  <div className="space-y-2.5">
+                    {currentAtlas.curatedLocalPartners.map((partner) => (
+                      <div
+                        key={partner.id}
+                        className="p-4 rounded-2xl bg-gradient-to-br from-amber-500/10 via-amber-600/5 to-transparent border border-amber-300 dark:border-amber-500/30 space-y-2"
+                      >
+                        <div className="flex items-center justify-between gap-2">
+                          <div>
+                            <span className="text-[9.5px] font-bold text-amber-600 dark:text-amber-400 block uppercase">
+                              {partner.badge} • İskeleden ~{partner.distanceMeters} m
+                            </span>
+                            <strong className="text-xs sm:text-sm font-black text-slate-900 dark:text-white block">
+                              {partner.businessName}
+                            </strong>
+                          </div>
+                          <span className="px-2 py-1 rounded-xl bg-amber-400 text-slate-950 font-mono font-black text-xs">
+                            {partner.couponCode}
+                          </span>
+                        </div>
+
+                        <p className="text-xs text-slate-700 dark:text-slate-300 leading-snug">
+                          {partner.dealDescription}
+                        </p>
+
+                        <div className="pt-2 border-t border-amber-200 dark:border-amber-900/50 flex items-center justify-between text-[11px]">
+                          <span className="font-bold text-slate-800 dark:text-slate-200">
+                            {partner.offerTitle}
+                          </span>
+                          {partner.phoneOrWhatsapp && (
+                            <a
+                              href={`https://wa.me/${partner.phoneOrWhatsapp}?text=${encodeURIComponent(
+                                `Merhaba, Vapur Canlı uygulamasındaki #${partner.couponCode} ayrıcalığıyla bilgi almak istiyorum.`
+                              )}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-emerald-600 dark:text-emerald-400 font-bold hover:underline inline-flex items-center gap-1"
+                            >
+                              <span>WhatsApp Rezervasyon</span>
+                              <ExternalLink size={11} />
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="p-8 text-center bg-slate-50 dark:bg-slate-900/40 rounded-2xl border border-slate-200 dark:border-slate-800 text-slate-500 text-xs">
+                    <Coffee size={24} className="mx-auto text-amber-500 mb-2 opacity-60" />
+                    <p className="font-bold">Bu iskele için doğrulanmış yerel işletme kaydı henüz yok.</p>
+                    <p className="text-[11px] mt-1">Doğrulanmış işletme ve avantaj bilgisi eklendiğinde burada listelenecektir.</p>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* ALT BİLGİ */}
+          <div className="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 flex items-center justify-between gap-3 shrink-0">
+            <span className="text-[11px] text-slate-500 font-medium">
+              İstanbul İskeleleri & Yaşayan Semt Kültürü Atlası
+            </span>
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-black transition-colors cursor-pointer"
+            >
+              Kapat
+            </button>
+          </div>
+        </motion.div>
       </div>
-    </div>,
+    </AnimatePresence>,
     document.body
   );
 }

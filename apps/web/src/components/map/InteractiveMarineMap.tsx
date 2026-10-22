@@ -1,14 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Radar } from "lucide-react";
+import { Radar, Satellite, Waves } from "lucide-react";
 import { MarineAisRadarModal } from "./MarineAisRadarModal";
 import "leaflet/dist/leaflet.css";
 import { ISTANBUL_PIERS } from "@/lib/data/piers";
 import type { ScheduleCardDto } from "@/lib/types/schedule";
 import { resolveDynamicTrip } from "@/lib/utils/dynamic-trip";
 import { MARINE_SWELL_TRACKS } from "@/lib/data/marine-swell-tracks";
-import { Waves } from "lucide-react";
 
 interface InteractiveMarineMapProps {
   selectedOrigin?: string;
@@ -31,10 +30,14 @@ export function InteractiveMarineMap({
   const mapInstanceRef = useRef<any>(null);
   const routeLayerRef = useRef<any>(null);
   const vesselsLayerRef = useRef<any>(null);
+  const satelliteTileRef = useRef<any>(null);
+  const satelliteLabelsRef = useRef<any>(null);
+  const darkTileRef = useRef<any>(null);
+  const darkLabelsRef = useRef<any>(null);
+
   const [mounted, setMounted] = useState(false);
   const [isRadarOpen, setIsRadarOpen] = useState(false);
-  const [showSwellTracks, setShowSwellTracks] = useState(true);
-  const swellLayerRef = useRef<any>(null);
+  const [mapMode, setMapMode] = useState<"SATELLITE" | "DARK">("SATELLITE");
 
   useEffect(() => {
     setMounted(true);
@@ -44,18 +47,20 @@ export function InteractiveMarineMap({
   useEffect(() => {
     if (!mounted || !mapContainerRef.current) return;
 
-    let L: any;
-    import("leaflet").then((leafletModule) => {
-      L = leafletModule.default || leafletModule;
+    let isCancelled = false;
 
-      if (!mapContainerRef.current) return;
+    import("leaflet").then((leafletModule) => {
+      const L = leafletModule.default || leafletModule;
+      if (isCancelled || !mapContainerRef.current) return;
+
       if (mapInstanceRef.current) {
         mapInstanceRef.current.remove();
+        mapInstanceRef.current = null;
       }
 
       // Center between Historic Peninsula, Kadıköy and Prince Islands
       const map = L.map(mapContainerRef.current, {
-        center: [40.94, 29.04],
+        center: [40.92, 29.08],
         zoom: 11,
         zoomControl: interactive,
         attributionControl: false,
@@ -64,16 +69,34 @@ export function InteractiveMarineMap({
         touchZoom: interactive
       });
 
-      // High-performance Esri Dark Maritime Base + Reference tiles (Zero API key, zero watermarks)
-      L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}", {
-        maxZoom: 16,
-        attribution: ""
-      }).addTo(map);
+      // 1. Satellite Layers (Esri World Imagery)
+      satelliteTileRef.current = L.tileLayer(
+        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+        { maxZoom: 19 }
+      );
+      satelliteLabelsRef.current = L.tileLayer(
+        "https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}",
+        { maxZoom: 19, opacity: 0.85 }
+      );
 
-      L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}", {
-        maxZoom: 16,
-        attribution: ""
-      }).addTo(map);
+      // 2. Dark Maritime Base Layers
+      darkTileRef.current = L.tileLayer(
+        "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+        { maxZoom: 16 }
+      );
+      darkLabelsRef.current = L.tileLayer(
+        "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}",
+        { maxZoom: 16 }
+      );
+
+      // Default to Satellite
+      if (mapMode === "SATELLITE") {
+        satelliteTileRef.current.addTo(map);
+        satelliteLabelsRef.current.addTo(map);
+      } else {
+        darkTileRef.current.addTo(map);
+        darkLabelsRef.current.addTo(map);
+      }
 
       // Create Pier Markers
       Object.values(ISTANBUL_PIERS).forEach((pier) => {
@@ -95,7 +118,7 @@ export function InteractiveMarineMap({
             <span class="text-[10px] font-black mt-1 px-1.5 py-0.5 rounded shadow-md whitespace-nowrap ${
               isSelected
                 ? "bg-slate-950 text-white border border-blue-400/60 font-black"
-                : "bg-slate-900/90 text-slate-300 border border-slate-800"
+                : "bg-slate-900/90 text-slate-200 border border-slate-700 backdrop-blur-sm"
             }">
               ${pier.name}
             </span>
@@ -128,12 +151,31 @@ export function InteractiveMarineMap({
     });
 
     return () => {
+      isCancelled = true;
       if (mapInstanceRef.current) {
         mapInstanceRef.current.remove();
         mapInstanceRef.current = null;
       }
     };
   }, [mounted, interactive]);
+
+  // Handle Map Mode Switch (Satellite vs Dark)
+  useEffect(() => {
+    if (!mapInstanceRef.current || !satelliteTileRef.current || !darkTileRef.current) return;
+    const map = mapInstanceRef.current;
+
+    if (mapMode === "SATELLITE") {
+      map.removeLayer(darkTileRef.current);
+      if (darkLabelsRef.current) map.removeLayer(darkLabelsRef.current);
+      satelliteTileRef.current.addTo(map);
+      if (satelliteLabelsRef.current) satelliteLabelsRef.current.addTo(map);
+    } else {
+      map.removeLayer(satelliteTileRef.current);
+      if (satelliteLabelsRef.current) map.removeLayer(satelliteLabelsRef.current);
+      darkTileRef.current.addTo(map);
+      if (darkLabelsRef.current) darkLabelsRef.current.addTo(map);
+    }
+  }, [mapMode]);
 
   // Update Route Polyline when origin or destination changes
   useEffect(() => {
@@ -148,7 +190,6 @@ export function InteractiveMarineMap({
         const p2 = ISTANBUL_PIERS[selectedDestination];
 
         if (p1 && p2) {
-          // Draw Glowing Sea Corridor Line
           const polyline = L.polyline(
             [
               [p1.lat, p1.lng],
@@ -157,13 +198,12 @@ export function InteractiveMarineMap({
             {
               color: "#38bdf8",
               weight: 4,
-              opacity: 0.85,
+              opacity: 0.9,
               dashArray: "6, 10"
             }
           );
           routeLayerRef.current.addLayer(polyline);
 
-          // Fit Bounds
           const bounds = L.latLngBounds([
             [p1.lat, p1.lng],
             [p2.lat, p2.lng]
@@ -174,106 +214,64 @@ export function InteractiveMarineMap({
     });
   }, [selectedOrigin, selectedDestination]);
 
-  // Interpolate Active In-Transit Ferries on Map
-  useEffect(() => {
-    if (!mapInstanceRef.current || !vesselsLayerRef.current) return;
-
-    import("leaflet").then((leafletModule) => {
-      const L = leafletModule.default || leafletModule;
-      vesselsLayerRef.current.clearLayers();
-
-      const now = Date.now();
-
-      schedules.forEach((trip) => {
-        const dyn = resolveDynamicTrip(
-          trip.origin,
-          trip.destination,
-          trip.departureTime,
-          trip.targetTimeIso || new Date().toISOString(),
-          trip.stops,
-          undefined,
-          now
-        );
-
-        // If trip is actively in transit
-        if (dyn.status === "IN_TRANSIT" || dyn.isDeparted) {
-          const originCoords = ISTANBUL_PIERS[dyn.currentOrigin];
-          const destCoords = ISTANBUL_PIERS[trip.destination];
-
-          if (originCoords && destCoords) {
-            // Estimate mid-point navigation based on current progress
-            const lat = (originCoords.lat + destCoords.lat) / 2;
-            const lng = (originCoords.lng + destCoords.lng) / 2;
-
-            const shipHtml = `
-              <div class="flex flex-col items-center animate-pulse">
-                <div class="w-7 h-7 rounded-full bg-indigo-600/90 border border-cyan-400 text-white flex items-center justify-center shadow-lg shadow-cyan-500/40 text-xs font-black">
-                  🚢
-                </div>
-                <span class="text-[9px] font-bold bg-slate-950/90 text-cyan-300 border border-cyan-500/50 px-1.5 py-0.2 rounded mt-0.5 whitespace-nowrap shadow">
-                  ${trip.operator}
-                </span>
-              </div>
-            `;
-
-            const shipIcon = L.divIcon({
-              html: shipHtml,
-              className: "vessel-marker",
-              iconSize: [40, 40],
-              iconAnchor: [20, 20]
-            });
-
-            const marker = L.marker([lat, lng], { icon: shipIcon });
-            marker.bindPopup(`
-              <div style="font-family: sans-serif; font-size: 11px; color: #fff; background: #0f172a; padding: 6px; border-radius: 8px;">
-                <strong style="color: #38bdf8;">${dyn.currentOrigin} ➔ ${trip.destination}</strong><br/>
-                Operatör: ${trip.operator}<br/>
-                Durum: Seyir Halinde (Denizde)
-              </div>
-            `);
-            vesselsLayerRef.current.addLayer(marker);
-          }
-        }
-      });
-    });
-  }, [schedules]);
-
   return (
     <div className="relative w-full rounded-2xl overflow-hidden border border-slate-700/80 shadow-2xl bg-[#090d16]" style={{ height }}>
       {/* Map Target Container */}
       <div ref={mapContainerRef} className="w-full h-full" />
 
-      {/* Live AIS Radar Button */}
-      <button
-        onClick={() => setIsRadarOpen(true)}
-        className="absolute top-2.5 right-2.5 z-[1000] flex items-center gap-1.5 bg-emerald-950/90 hover:bg-emerald-900 text-emerald-300 border border-emerald-500/50 backdrop-blur-md px-2.5 py-1 rounded-lg text-[11px] font-black shadow-lg transition-all"
-      >
-        <Radar size={13} className="animate-spin" style={{ animationDuration: '4s' }} />
-        <span>Canlı AIS Radarı</span>
-      </button>
+      {/* Top Controls Bar */}
+      <div className="absolute top-2.5 right-2.5 z-[1000] flex items-center gap-2">
+        {/* Layer Mode Toggle */}
+        <div className="p-0.5 rounded-xl bg-slate-950/90 border border-slate-700 backdrop-blur-md flex items-center text-xs font-bold shadow-lg">
+          <button
+            type="button"
+            onClick={() => setMapMode("SATELLITE")}
+            className={`px-2.5 py-1 rounded-lg transition-all flex items-center gap-1 cursor-pointer ${
+              mapMode === "SATELLITE"
+                ? "bg-cyan-600 text-white font-black shadow-xs"
+                : "text-slate-400 hover:text-white"
+            }`}
+          >
+            <Satellite size={12} />
+            <span>Gerçek Uydu</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setMapMode("DARK")}
+            className={`px-2.5 py-1 rounded-lg transition-all flex items-center gap-1 cursor-pointer ${
+              mapMode === "DARK"
+                ? "bg-cyan-600 text-white font-black shadow-xs"
+                : "text-slate-400 hover:text-white"
+            }`}
+          >
+            <Waves size={12} />
+            <span>Deniz Haritası</span>
+          </button>
+        </div>
 
-      {/* Map Overlay Badge */}
-      <div className="absolute top-2.5 left-2.5 z-[1000] flex items-center gap-2 bg-slate-900/90 backdrop-blur-md px-2.5 py-1 rounded-lg border border-slate-700/80 text-[11px] font-bold text-white shadow-md">
-        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-        <span>Canlı İstanbul Deniz Haritası</span>
+        {/* Live AIS Radar Modal Trigger */}
+        <button
+          onClick={() => setIsRadarOpen(true)}
+          className="flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-xl text-xs font-black shadow-lg transition-all cursor-pointer"
+        >
+          <Radar size={13} className="animate-spin" style={{ animationDuration: '4s' }} />
+          <span>Gemi Sicili & Harici Takip</span>
+        </button>
       </div>
 
+      {/* Map Overlay Badge */}
+      <div className="absolute top-2.5 left-2.5 z-[1000] flex items-center gap-2 bg-slate-900/90 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-700/80 text-xs font-bold text-white shadow-md">
+        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+        <span>{mapMode === "SATELLITE" ? "İstanbul Uydu Görüntüsü" : "🌊 Vektörel Deniz Haritası"}</span>
+      </div>
+
+      {/* Radar Modal */}
       <MarineAisRadarModal
         isOpen={isRadarOpen}
         onClose={() => setIsRadarOpen(false)}
-        origin={selectedOrigin || "Kadıköy"}
-        destination={selectedDestination || "Eminönü"}
-        vesselName="Barış Manço"
-        operator="Şehir Hatları"
-        isConfirmedUnderway={true}
+        origin={selectedOrigin || "Bostancı"}
+        destination={selectedDestination || "Büyükada"}
       />
-
-      {/* Quick Legend Overlay */}
-      <div className="absolute bottom-2.5 right-2.5 z-[1000] flex items-center gap-2 bg-slate-950/90 backdrop-blur-md px-2 py-1 rounded-lg border border-slate-800 text-[10px] text-slate-300 shadow-md">
-        <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-blue-500"></span> Kalkış</span>
-        <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-amber-400"></span> Varış</span>
-        <span className="flex items-center gap-1">🚢 Seyirde</span>
-      </div>
     </div>
   );
 }
