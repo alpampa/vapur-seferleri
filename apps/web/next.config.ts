@@ -14,6 +14,7 @@ const nextConfig: NextConfig = {
   transpilePackages: ['react-map-gl', 'mapbox-gl', 'zustand', 'framer-motion', 'lucide-react'],
   experimental: {
     cpus: 2,
+    agentUpgrade: "security",
   },
   async headers() {
     return [
