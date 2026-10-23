@@ -8,7 +8,7 @@ const BUILD_TIMESTAMP =
   process.env.VERCEL_DEPLOYMENT_ID ||
   process.env.BUILD_ID ||
   process.env.NEXT_PUBLIC_BUILD_ID ||
-  "vapur-build-20261023-1400";
+  "vapur-build-20261023-1630";
 
 export async function GET() {
   return NextResponse.json(

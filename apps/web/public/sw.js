@@ -8,7 +8,7 @@
  * 4. Eski tüm önbellekler derhal temizlenir ve clients.claim() ile yeni SW hemen kontrolü alır.
  */
 
-const CACHE_NAME = 'vapur-cache-v11-zero-stale';
+const CACHE_NAME = 'vapur-cache-v12-clean';
 
 const STATIC_FALLBACK_ASSETS = [
   '/manifest.json',

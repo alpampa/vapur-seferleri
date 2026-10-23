@@ -45,22 +45,20 @@ export default async function Home() {
   const announcementsMeta = getStoredAnnouncementsMeta();
 
   return (
-    <div className="min-h-screen w-full bg-[#040914] text-slate-100 flex justify-center">
-      <div className="flex flex-col min-h-screen w-full max-w-2xl theme-app-shell bg-[#070e1e] text-[#f8fafc] border-x border-slate-800/80 shadow-2xl relative">
-        <TopBar />
-
-        <main className="flex-1 relative pb-24">
-          <MainAppShell
-            schedules={schedules}
-            serverTimeIso={serverTimeIso}
-            marineWeather={weather}
-            sourceFreshness={{
-              generatedAt: announcementsMeta.generatedAt,
-              sourceCount: announcementsMeta.sourceCount,
-            }}
-          />
-        </main>
-      </div>
+    <div className="flex flex-col min-h-screen theme-app-shell bg-[var(--app-bg,#070e1e)] text-[var(--app-text,#f8fafc)] transition-colors duration-200">
+      <TopBar />
+      
+      <main className="flex-1 overflow-y-auto hide-scrollbar relative pb-20">
+        <MainAppShell
+          schedules={schedules}
+          serverTimeIso={serverTimeIso}
+          marineWeather={weather}
+          sourceFreshness={{
+            generatedAt: announcementsMeta.generatedAt,
+            sourceCount: announcementsMeta.sourceCount,
+          }}
+        />
+      </main>
     </div>
   );
 }

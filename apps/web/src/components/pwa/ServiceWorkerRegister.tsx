@@ -11,7 +11,7 @@ import { RotateCcw, Sparkles } from "lucide-react";
  * %100 önlemek için agresif önbellek temizleme ve anında yenileme motoru.
  */
 
-export const CURRENT_APP_BUILD_ID = "vapur-build-20261023-1400";
+export const CURRENT_APP_BUILD_ID = "vapur-build-20261023-1630";
 let currentClientVersion: string | null = null;
 
 export function purgeAllCachesAndReload() {

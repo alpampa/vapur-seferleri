@@ -1,11 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Ship, Moon, Ban, Siren, Timer, AlertTriangle, Calendar, Camera, Satellite, ShieldCheck } from "lucide-react";
-import { getVesselVisualProfile } from "@/lib/data/vessel-visuals";
-import { getDefaultVesselForTrip } from "@/lib/data/vessel-heritage";
-import { VesselHeritageModal } from "@/components/vessel/VesselHeritageModal";
-import { MarineAisRadarModal } from "@/components/map/MarineAisRadarModal";
+import { Ship, Moon, Ban, Siren, Timer, AlertTriangle, Calendar } from "lucide-react";
 import { OperatorLogo } from "@/components/ui/OperatorLogo";
 import { resolveDynamicTrip, isTripCancelled, DynamicTripResolution } from "@/lib/utils/dynamic-trip";
 import { formatRemainingShort } from "@/lib/utils/istanbul-time";
@@ -48,7 +44,6 @@ export interface ScheduleCardProps {
   continuousUntil?: string;
   onClick?: () => void;
   isCompact?: boolean;
-  isFeaturedHero?: boolean;
   highlightStopName?: string;
   onSelectHop?: (schedule: ScheduleCardDto) => void;
   /** Tüm gün görünümü veya farklı gün tipi (Hafta İçi / Cumartesi / Pazar) önizlemesi */
@@ -63,8 +58,6 @@ export function ScheduleCard(props: ScheduleCardProps) {
   const { t } = useLanguageStore();
   // Hook'lar erken return'den ÖNCE çağrılmalı (React hook sırası kuralı)
   const { setActiveVoyage } = useActiveVoyageStore();
-  const [isHeroHeritageOpen, setIsHeroHeritageOpen] = useState(false);
-  const [isHeroRadarOpen, setIsHeroRadarOpen] = useState(false);
 
   const hasAlarm = isAlarmSet(props.id);
   const routeKey = `${props.origin} ➔ ${props.destination}`;
@@ -238,9 +231,6 @@ export function ScheduleCard(props: ScheduleCardProps) {
     });
     if (props.onClick) props.onClick();
   };
-
-  const heroVessel = getDefaultVesselForTrip(props.origin, props.destination, props.operator);
-  const heroProfile = getVesselVisualProfile(props.vessel || heroVessel.name, props.operator);
 
   // KOMPAKT LİSTE GÖRÜNÜMÜ (Yüksek Yoğunluklu İsviçre Tipografisi - Swiss Transit Density)
   if (props.isCompact) {
@@ -431,11 +421,8 @@ export function ScheduleCard(props: ScheduleCardProps) {
           handleCardClick();
         }
       }}
-      className={`rounded-2xl px-3 py-2.5 flex flex-col gap-1.5 transition-all duration-150 cursor-pointer group border active:scale-[0.99] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
-        props.isFeaturedHero
-          ? "bg-[#0b1528] text-white border-slate-700/90 ring-1 ring-cyan-500/30 shadow-2xl"
-          : "theme-card text-slate-900 dark:text-white shadow-xs dark:shadow-none " + (
-          isCancelled
+      className={`rounded-2xl px-3 py-2.5 flex flex-col gap-1.5 transition-all duration-150 cursor-pointer group border active:scale-[0.99] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 theme-card text-slate-900 dark:text-white shadow-xs dark:shadow-none ${
+        isCancelled
           ? "border-rose-500/90 bg-rose-50/50 dark:bg-rose-950/25 ring-1 ring-rose-500/40 shadow-xs shadow-rose-500/10"
           : dynState.isDeparted
           ? "border-slate-200 dark:border-slate-800/80 bg-slate-50/60 dark:bg-slate-900/40 text-slate-500 dark:text-slate-400 opacity-65"
@@ -443,84 +430,9 @@ export function ScheduleCard(props: ScheduleCardProps) {
           ? "border-indigo-400/70 dark:border-indigo-500/50 bg-white dark:bg-[#141d2e]"
           : isLast5Minutes
           ? "border-amber-400 dark:border-amber-500/60 shadow-sm shadow-amber-400/20 ring-1 ring-amber-400/30 bg-white dark:bg-[#141d2e]"
-          : "border-slate-200 dark:border-slate-700/60 hover:border-blue-400 dark:hover:border-blue-500/40 bg-white dark:bg-[#141d2e]")
+          : "border-slate-200 dark:border-slate-700/60 hover:border-blue-400 dark:hover:border-blue-500/40 bg-white dark:bg-[#141d2e]"
       }`}
     >
-      {/* ARGON + APPLE HIG KAHRAMAN SEFER VITRINI (İLK AKTİF SEFER) */}
-      {props.isFeaturedHero && !props.isCompact && (
-        <div className="relative -mx-3 -mt-2.5 mb-2 rounded-t-xl overflow-hidden border-b border-slate-200/80 dark:border-slate-700/80 bg-slate-950">
-          <div className="relative h-44 sm:h-52 w-full overflow-hidden group/hero">
-            <img
-              src={heroProfile.photoUrl}
-              alt={heroProfile.photoCaption}
-              className="w-full h-full object-cover object-center transition-transform duration-700 group-hover/hero:scale-105"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#070e1e] via-[#070e1e]/45 to-black/30" />
-
-            <div className="absolute top-3 left-3 right-3 flex items-center justify-between gap-2">
-              <span className="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-slate-950/75 text-white backdrop-blur-md border border-white/20 flex items-center gap-1.5 shadow-md">
-                <Ship size={11} className="text-amber-400" />
-                <span>{props.operator} • Örnek Filo: {heroVessel.name}</span>
-              </span>
-
-              {!isCancelled && !dynState.isDeparted && (
-                <span className="px-3 py-1 rounded-full text-xs font-mono font-black bg-emerald-500 text-slate-950 shadow-lg shadow-emerald-500/40 border border-emerald-300 flex items-center gap-1 animate-pulse">
-                  <span>
-                    {dynState.countdown
-                      ? `${dynState.countdown} KALDI`
-                      : dynState.minutesUntilDeparture != null
-                      ? `${formatRemainingShort(dynState.minutesUntilDeparture)} KALDI`
-                      : "ZAMANINDA"}
-                  </span>
-                </span>
-              )}
-            </div>
-
-            <div className="absolute bottom-3 left-3 right-3 flex flex-col items-center text-center gap-1.5">
-              <div className="font-mono font-black text-2xl sm:text-3xl text-white tracking-tight drop-shadow-lg tabular-nums flex items-center gap-2">
-                <span>{dynState.currentDepartureTime}</span>
-                {props.arrivalTime && (
-                  <>
-                    <span className="text-cyan-400 text-xl">→</span>
-                    <span>{props.arrivalTime}</span>
-                  </>
-                )}
-              </div>
-
-              <div className="px-3 py-0.5 rounded-full bg-slate-900/85 backdrop-blur-md border border-emerald-400/40 text-[10px] font-mono font-bold text-emerald-300 flex items-center gap-1.5 shadow-md">
-                <ShieldCheck size={12} className="text-emerald-400 shrink-0" />
-                <span>Resmî Filo Kaydı • MMSI: {heroVessel.mmsi} (Harici AIS)</span>
-              </div>
-
-              <div className="grid grid-cols-2 gap-2 w-full max-w-md mt-1">
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setIsHeroHeritageOpen(true);
-                  }}
-                  className="py-2 px-3 rounded-xl bg-white/90 hover:bg-white text-slate-950 font-black text-xs flex items-center justify-center gap-1.5 shadow-md backdrop-blur-md transition-all active:scale-95 cursor-pointer"
-                >
-                  <Camera size={13} className="text-blue-600 shrink-0" />
-                  <span>Fotoğraf & Hikaye</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setIsHeroRadarOpen(true);
-                  }}
-                  className="py-2 px-3 rounded-xl bg-cyan-500/90 hover:bg-cyan-400 text-slate-950 font-black text-xs flex items-center justify-center gap-1.5 shadow-md backdrop-blur-md transition-all active:scale-95 cursor-pointer"
-                >
-                  <Satellite size={13} className="text-slate-950 shrink-0" />
-                  <span>Gemi Sicili & AIS</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* 1. ANA SATIR: Kalkış Zamanı, Rota, Operatör ve Eylemler */}
       <div className="flex items-center justify-between gap-2.5 w-full">
         {/* 1. Sol: Kalkış Saati & Dairesel Geri Sayım Progress Halkası */}
@@ -770,23 +682,6 @@ export function ScheduleCard(props: ScheduleCardProps) {
           operator={props.operator}
           underway={dynState.underway}
           soonDeparturePier={!isOtherDayPreview && dynState.countdown && !dynState.isDeparted ? dynState.currentOrigin : null}
-        />
-      )}
-
-      {props.isFeaturedHero && isHeroHeritageOpen && (
-        <VesselHeritageModal
-          isOpen={isHeroHeritageOpen}
-          onClose={() => setIsHeroHeritageOpen(false)}
-          initialVesselName={heroVessel.name}
-        />
-      )}
-
-      {props.isFeaturedHero && isHeroRadarOpen && (
-        <MarineAisRadarModal
-          isOpen={isHeroRadarOpen}
-          onClose={() => setIsHeroRadarOpen(false)}
-          origin={dynState.currentOrigin || props.origin}
-          destination={routeDestinationDisplay || props.destination}
         />
       )}
     </div>
