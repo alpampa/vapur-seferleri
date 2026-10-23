@@ -7,6 +7,7 @@ import { fetchLiveMarineWeather, type MarineWeatherStatus } from "@/lib/services
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
+export const fetchCache = 'force-no-store';
 
 async function getSchedules(): Promise<SchedulesResponse> {
   return await getLiveOrOfficialSchedules();

@@ -36,7 +36,32 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: "Cache-Control",
-            value: "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0",
+            value: "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0, s-maxage=0",
+          },
+          {
+            key: "Pragma",
+            value: "no-cache",
+          },
+          {
+            key: "Expires",
+            value: "0",
+          },
+        ],
+      },
+      {
+        source: "/",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0, s-maxage=0",
+          },
+          {
+            key: "Pragma",
+            value: "no-cache",
+          },
+          {
+            key: "Expires",
+            value: "0",
           },
         ],
       },
@@ -73,9 +98,9 @@ const nextConfig: NextConfig = {
               "default-src 'self'",
               `script-src ${scriptSrc.join(" ")}`,
               "style-src 'self' 'unsafe-inline'",
-              "img-src 'self' blob: data: https://server.arcgisonline.com https://*.basemaps.cartocdn.com https://*.tile.openstreetmap.org https://tiles.openseamap.org https://images.unsplash.com https:",
+              "img-src 'self' blob: data: https://*.basemaps.cartocdn.com https://*.tile.openstreetmap.org https://tiles.openseamap.org https://images.unsplash.com https:",
               "font-src 'self' data:",
-              "connect-src 'self' https://api.open-meteo.com https://server.arcgisonline.com https://*.basemaps.cartocdn.com https://*.tile.openstreetmap.org https://tiles.openseamap.org https://images.unsplash.com https://va.vercel-scripts.com https://*.vercel-insights.com",
+              "connect-src 'self' https://api.open-meteo.com https://*.basemaps.cartocdn.com https://*.tile.openstreetmap.org https://tiles.openseamap.org https://images.unsplash.com https://va.vercel-scripts.com https://*.vercel-insights.com",
               "frame-src 'self' https://www.marinetraffic.com https://www.vesselfinder.com",
               "worker-src 'self' blob:",
               "object-src 'none'",

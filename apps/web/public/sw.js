@@ -1,16 +1,14 @@
 /**
- * VAPUR PWA SERVICE WORKER — ZERO-STALE NETWORK-FIRST ENGINE (v8)
+ * VAPUR PWA SERVICE WORKER — ZERO-STALE NETWORK-FIRST ENGINE (v11)
  *
- * KULLANICI KURALI:
- * 1. Harici (cross-origin) harita karoları (Esri World Imagery, CartoDB, OpenStreetMap)
- *    ve harici görseller ASLA Service Worker tarafından yakalanmaz; tarayıcının doğal
- *    <img> yükleyicisiyle doğrudan çekilir (CSP connect-src çakışmasını ve siyah harita
- *    hatasını %100 önler).
- * 2. Yalnızca aynı origin (self.location.origin) üzerindeki GET istekleri Network-First
- *    olarak işlenir.
+ * KRİTİK MOBİL KURALLARI:
+ * 1. API istekleri (/api/*) ASLA Service Worker önbelleğine alınmaz; her zaman canlı sunucudan no-store ile çekilir.
+ * 2. Navigasyon / HTML istekleri her zaman { cache: 'no-cache' } ile canlı sunucudan çekilir (mobilde donmuş HTML kalmasını önler).
+ * 3. Harici domain karoları (CartoDB, OpenStreetMap) SW tarafından engellenmez, doğal browser fetch'ine bırakılır.
+ * 4. Eski tüm önbellekler derhal temizlenir ve clients.claim() ile yeni SW hemen kontrolü alır.
  */
 
-const CACHE_NAME = 'vapur-cache-v8-network-first';
+const CACHE_NAME = 'vapur-cache-v11-zero-stale';
 
 const STATIC_FALLBACK_ASSETS = [
   '/manifest.json',
@@ -40,6 +38,7 @@ self.addEventListener('activate', (event) => {
       return Promise.all(
         keys.map((key) => {
           if (key !== CACHE_NAME) {
+            console.log('[SW] Eski önbellek silindi:', key);
             return caches.delete(key);
           }
         })
@@ -54,18 +53,59 @@ self.addEventListener('fetch', (event) => {
   if (req.method !== 'GET') return;
   if (!req.url.startsWith('http')) return;
 
-  // KRİTİK DÜZELTME: Harici domain isteklerini (Esri uydu karoları, CartoDB, OpenStreetMap, vb.)
-  // Service Worker içinde fetch() ile yakalama! SW içindeki fetch() CSP connect-src'ye
-  // takılıp haritayı simsiyah bırakıyordu. Doğrudan tarayıcıya bırak.
+  let url;
   try {
-    const url = new URL(req.url);
-    if (url.origin !== self.location.origin) {
-      return;
-    }
+    url = new URL(req.url);
   } catch {
     return;
   }
 
+  // 1. Harici alan adları (Harita karoları, Open-Meteo, vb.) — Doğrudan tarayıcıya bırak
+  if (url.origin !== self.location.origin) {
+    return;
+  }
+
+  // 2. Canlı API uç noktaları (/api/*) — Asla önbelleğe alma, her zaman canlı sunucu
+  if (url.pathname.startsWith('/api/')) {
+    event.respondWith(
+      fetch(req, { cache: 'no-store' }).catch(() => {
+        return new Response(JSON.stringify({ error: 'Çevrimdışı', offline: true }), {
+          status: 503,
+          headers: { 'Content-Type': 'application/json' }
+        });
+      })
+    );
+    return;
+  }
+
+  // 3. Sayfa Navigasyonu (HTML) — Canlı sunucudan taze HTML çek
+  if (req.mode === 'navigate') {
+    event.respondWith(
+      fetch(req, { cache: 'no-cache' })
+        .then((networkResponse) => {
+          return networkResponse;
+        })
+        .catch(async () => {
+          // Yalnızca tamamen internetsiz kalındığında çevrimdışı sayfasını göster
+          return new Response(
+            '<!doctype html><html lang="tr"><head><meta charset="utf-8">' +
+              '<meta name="viewport" content="width=device-width, initial-scale=1">' +
+              '<title>Çevrimdışı — Vapur Seferleri</title></head>' +
+              '<body style="margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;' +
+              'background:#070e1e;color:#fff;display:flex;min-height:100vh;align-items:center;justify-content:center;text-align:center">' +
+              '<main style="padding:24px;max-width:420px">' +
+              '<div style="font-size:40px">⛴️</div>' +
+              '<h1 style="font-size:18px;margin:12px 0 6px">Çevrimdışısınız</h1>' +
+              '<p style="color:#94a3b8;font-size:13px;line-height:1.6">İnternet bağlantınız geri geldiğinde canlı seferler ve harita otomatik yüklenecektir.</p>' +
+              '</main></body></html>',
+            { status: 503, statusText: 'Service Unavailable', headers: { 'Content-Type': 'text/html; charset=utf-8' } }
+          );
+        })
+    );
+    return;
+  }
+
+  // 4. Statik Varlıklar (Logolar, manifest, vb.) — Network-First
   event.respondWith(
     fetch(req)
       .then((networkResponse) => {
@@ -76,31 +116,8 @@ self.addEventListener('fetch', (event) => {
         return networkResponse;
       })
       .catch(async () => {
-        const isNavigate = req.mode === 'navigate';
-        const cached = await caches.match(req, { ignoreVary: isNavigate });
+        const cached = await caches.match(req);
         if (cached) return cached;
-
-        if (isNavigate) {
-          const rootFallback =
-            (await caches.match('/', { ignoreVary: true })) ||
-            (await caches.match(new URL('/', req.url).href, { ignoreVary: true }));
-          if (rootFallback) return rootFallback;
-
-          return new Response(
-            '<!doctype html><html lang="tr"><head><meta charset="utf-8">' +
-              '<meta name="viewport" content="width=device-width, initial-scale=1">' +
-              '<title>Çevrimdışı — Vapur Seferleri</title></head>' +
-              '<body style="margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;' +
-              'background:#070e1e;color:#fff;display:flex;min-height:100vh;align-items:center;justify-content:center;text-align:center">' +
-              '<main style="padding:24px;max-width:420px">' +
-              '<div style="font-size:40px">⛴️</div>' +
-              '<h1 style="font-size:18px;margin:12px 0 6px">Çevrimdışısınız</h1>' +
-              '<p style="color:#94a3b8;font-size:13px;line-height:1.6">İnternet bağlantınız geri geldiğinde seferler ve harita yeniden yüklenecektir.</p>' +
-              '</main></body></html>',
-            { status: 503, statusText: 'Service Unavailable', headers: { 'Content-Type': 'text/html; charset=utf-8' } }
-          );
-        }
-
         return new Response('Çevrimdışı', {
           status: 503,
           statusText: 'Service Unavailable',
