@@ -1,11 +1,8 @@
 /**
  * İstanbul iskeleleri — tek koordinat kaynağı.
  *
- * Daha önce üç ayrı kopyada yaşayan tablo burada birleştirildi:
- *   - route-planner        → ISTANBUL_PIERS (12 iskele, bölge bilgili)
- *   - ScheduleListClient   → PIER_COORDINATES (15 iskele)
- *   - ais-corridor-tracker → PIER_GEO_COORDINATES (19 iskele)
- * Koordinat değişikliği yalnızca bu dosyada yapılır.
+ * Boğaz, Haliç, Marmara ve Adalar hatlarındaki tüm aktif iskelelerin
+ * doğrulanmış coğrafi koordinatları.
  */
 
 export interface PierLocation {
@@ -27,13 +24,27 @@ export const ISTANBUL_PIERS: Record<string, PierLocation> = {
   "Bostancı": { name: "Bostancı", lat: 40.9525, lng: 29.0944, region: "Anadolu" },
   "Kartal": { name: "Kartal", lat: 40.8872, lng: 29.1864, region: "Anadolu" },
   "Maltepe": { name: "Maltepe", lat: 40.9231, lng: 29.1306, region: "Anadolu" },
+  "Moda": { name: "Moda", lat: 40.9794, lng: 29.0242, region: "Anadolu" },
+  "Ortaköy": { name: "Ortaköy", lat: 41.0475, lng: 29.0269, region: "Avrupa" },
+  "Arnavutköy": { name: "Arnavutköy", lat: 41.0672, lng: 29.0439, region: "Avrupa" },
+  "Bebek": { name: "Bebek", lat: 41.0769, lng: 29.0442, region: "Avrupa" },
+  "Emirgan": { name: "Emirgan", lat: 41.1069, lng: 29.0561, region: "Avrupa" },
+  "İstinye": { name: "İstinye", lat: 41.1136, lng: 29.0614, region: "Avrupa" },
+  "Büyükdere": { name: "Büyükdere", lat: 41.1608, lng: 29.0461, region: "Avrupa" },
   "Sarıyer": { name: "Sarıyer", lat: 41.1685, lng: 29.0545, region: "Avrupa" },
-  "Beykoz": { name: "Beykoz", lat: 41.1311, lng: 29.0911, region: "Anadolu" },
+  "Kuzguncuk": { name: "Kuzguncuk", lat: 41.0361, lng: 29.0294, region: "Anadolu" },
   "Çengelköy": { name: "Çengelköy", lat: 41.0505, lng: 29.0522, region: "Anadolu" },
+  "Kandilli": { name: "Kandilli", lat: 41.0744, lng: 29.0581, region: "Anadolu" },
+  "Anadoluhisarı": { name: "Anadoluhisarı", lat: 41.0831, lng: 29.0669, region: "Anadolu" },
+  "Kanlıca": { name: "Kanlıca", lat: 41.1003, lng: 29.0653, region: "Anadolu" },
+  "Çubuklu": { name: "Çubuklu", lat: 41.1081, lng: 29.0803, region: "Anadolu" },
+  "Paşabahçe": { name: "Paşabahçe", lat: 41.1178, lng: 29.0919, region: "Anadolu" },
+  "Beykoz": { name: "Beykoz", lat: 41.1311, lng: 29.0911, region: "Anadolu" },
   "Kınalıada": { name: "Kınalıada", lat: 40.9103, lng: 29.0522, region: "Adalar" },
   "Burgazada": { name: "Burgazada", lat: 40.8817, lng: 29.0700, region: "Adalar" },
   "Heybeliada": { name: "Heybeliada", lat: 40.8767, lng: 29.0992, region: "Adalar" },
-  "Büyükada": { name: "Büyükada", lat: 40.8744, lng: 29.1283, region: "Adalar" }
+  "Büyükada": { name: "Büyükada", lat: 40.8744, lng: 29.1283, region: "Adalar" },
+  "Sedef Adası": { name: "Sedef Adası", lat: 40.8500, lng: 29.1417, region: "Adalar" }
 };
 
 export interface PierCoordinates {
@@ -86,4 +97,3 @@ export function isIslandPier(pierName: string): boolean {
 export function isIslandRoute(origin: string, destination: string): boolean {
   return isIslandPier(origin) || isIslandPier(destination);
 }
-

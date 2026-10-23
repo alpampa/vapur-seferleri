@@ -431,10 +431,11 @@ export function ScheduleCard(props: ScheduleCardProps) {
           handleCardClick();
         }
       }}
-      className={`theme-card rounded-xl px-3 py-2.5 flex flex-col gap-1.5 text-slate-900 dark:text-white shadow-xs dark:shadow-none transition-all duration-150 cursor-pointer group border active:scale-[0.99] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
+      className={`rounded-2xl px-3 py-2.5 flex flex-col gap-1.5 transition-all duration-150 cursor-pointer group border active:scale-[0.99] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
         props.isFeaturedHero
-          ? "border-blue-500/90 dark:border-blue-400 ring-2 ring-blue-500/25 bg-linear-to-b from-blue-50/60 via-white to-white dark:from-blue-950/40 dark:via-[#141d2e] dark:to-[#141d2e] shadow-sm"
-          : isCancelled
+          ? "bg-[#0b1528] text-white border-slate-700/90 ring-1 ring-cyan-500/30 shadow-2xl"
+          : "theme-card text-slate-900 dark:text-white shadow-xs dark:shadow-none " + (
+          isCancelled
           ? "border-rose-500/90 bg-rose-50/50 dark:bg-rose-950/25 ring-1 ring-rose-500/40 shadow-xs shadow-rose-500/10"
           : dynState.isDeparted
           ? "border-slate-200 dark:border-slate-800/80 bg-slate-50/60 dark:bg-slate-900/40 text-slate-500 dark:text-slate-400 opacity-65"
@@ -442,7 +443,7 @@ export function ScheduleCard(props: ScheduleCardProps) {
           ? "border-indigo-400/70 dark:border-indigo-500/50 bg-white dark:bg-[#141d2e]"
           : isLast5Minutes
           ? "border-amber-400 dark:border-amber-500/60 shadow-sm shadow-amber-400/20 ring-1 ring-amber-400/30 bg-white dark:bg-[#141d2e]"
-          : "border-slate-200 dark:border-slate-700/60 hover:border-blue-400 dark:hover:border-blue-500/40 bg-white dark:bg-[#141d2e]"
+          : "border-slate-200 dark:border-slate-700/60 hover:border-blue-400 dark:hover:border-blue-500/40 bg-white dark:bg-[#141d2e]")
       }`}
     >
       {/* ARGON + APPLE HIG KAHRAMAN SEFER VITRINI (İLK AKTİF SEFER) */}

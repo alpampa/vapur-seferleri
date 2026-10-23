@@ -2,8 +2,6 @@ import type { NextConfig } from "next";
 
 const isDev = process.env.NODE_ENV !== "production";
 
-// script-src: Next.js production build'i 'unsafe-eval' GEREKTİRMEZ.
-// Dev modunda HMR/React Refresh için gereklidir; prod'da kaldırılır.
 const scriptSrc = [
   "'self'",
   "'unsafe-inline'",
@@ -12,11 +10,8 @@ const scriptSrc = [
 ];
 
 const nextConfig: NextConfig = {
-  // Docker/prod dağıtımı için minimal standalone çıktı (Vercel bunu yok sayar).
   output: "standalone",
   transpilePackages: ['react-map-gl', 'mapbox-gl', 'zustand', 'framer-motion', 'lucide-react'],
-  // Düşük RAM'li makinede (7.7GB) build/OOM riskini azaltmak için
-  // paralel worker sayısını sınırla.
   experimental: {
     cpus: 2,
   },
@@ -77,9 +72,9 @@ const nextConfig: NextConfig = {
               "default-src 'self'",
               `script-src ${scriptSrc.join(" ")}`,
               "style-src 'self' 'unsafe-inline'",
-              "img-src 'self' blob: data: https:",
+              "img-src 'self' blob: data: https://server.arcgisonline.com https://*.basemaps.cartocdn.com https://*.tile.openstreetmap.org https://tiles.openseamap.org https://images.unsplash.com https:",
               "font-src 'self' data:",
-              "connect-src 'self' https://api.open-meteo.com https://va.vercel-scripts.com https://*.vercel-insights.com",
+              "connect-src 'self' https://api.open-meteo.com https://server.arcgisonline.com https://*.basemaps.cartocdn.com https://*.tile.openstreetmap.org https://tiles.openseamap.org https://images.unsplash.com https://va.vercel-scripts.com https://*.vercel-insights.com",
               "frame-src 'self' https://www.marinetraffic.com https://www.vesselfinder.com",
               "worker-src 'self' blob:",
               "object-src 'none'",

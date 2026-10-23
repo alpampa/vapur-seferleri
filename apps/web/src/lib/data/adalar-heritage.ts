@@ -72,7 +72,7 @@ export const ADALAR_HERITAGE_DATA: IslandProfile[] = [
     subtitle: 'Prens Adalarının En Büyüğü & Sürgün Krallığı',
     badge: 'Tarihi Başkent',
     overview: 'Bizans prens ve imparatoriçelerinin sürgün yeri olan Büyükada; Alexandre Vallaury imzalı ahşap köşkleri, çam ormanları, Mimar Mihran Azaryan çinili tarihi iskelesi ve kozmopolit mirasıyla Adalar zincirinin kalbidir.',
-    heroImageUrl: 'https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?auto=format&fit=crop&w=1600&q=85',
+    heroImageUrl: '/images/adalar-aerial.jpg',
     heroImageCaption: 'Büyükada Tarihi İskele Meydanı ve Kıyı Panoraması',
     heroImageCredit: 'Temsili görsel (Unsplash)',
     satelliteCoordinates: {
@@ -83,21 +83,21 @@ export const ADALAR_HERITAGE_DATA: IslandProfile[] = [
     gallery: [
       {
         id: 'buyuk-iskele',
-        url: 'https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?auto=format&fit=crop&w=1200&q=85',
+        url: '/images/pasabahce-hero.jpg',
         caption: '1899 Mimar Mihran Azaryan tasarımı tarihi Büyükada İskelesi ve Kütahya çinileri',
         category: 'LANDMARK',
         credit: 'Temsili görsel (Unsplash)'
       },
       {
         id: 'buyuk-splendid',
-        url: 'https://images.unsplash.com/photo-1527838832700-5059252407fa?auto=format&fit=crop&w=1200&q=85',
+        url: '/images/adalar-aerial.jpg',
         caption: '1908 Art Nouveau tarzı kırmızı panjurlu efsanevi Splendid Palas Oteli',
         category: 'STREET',
         credit: 'Temsili görsel (Unsplash)'
       },
       {
         id: 'buyuk-ayayorgi',
-        url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=85',
+        url: '/images/pasabahce-hero.jpg',
         caption: '204 metre rakımlı Yüce Tepe üzerindeki tarihi Aya Yorgi Kilisesi ve Marmara manzarası',
         category: 'AERIAL',
         credit: 'Temsili görsel (Unsplash)'
@@ -144,7 +144,7 @@ export const ADALAR_HERITAGE_DATA: IslandProfile[] = [
         howToWalk: 'İskeleden Çankaya Caddesi boyunca köşkleri seyrederek Hristos Tepesi’ne doğru yaklaşık 30 dakika yürünür.',
         distanceFromPierKm: 2.1,
         walkingMinutes: 32,
-        imageUrl: 'https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?auto=format&fit=crop&w=1000&q=80',
+        imageUrl: '/images/adalar-aerial.jpg',
         photoCaption: 'Prinkipo Rum Yetimhanesi Ahşap Cephesi ve Hristos Tepesi Ormanları',
         photoCredit: 'Temsili görsel (Unsplash)',
         coordinates: { lat: 40.8608, lng: 29.1239 }
@@ -159,7 +159,7 @@ export const ADALAR_HERITAGE_DATA: IslandProfile[] = [
         howToWalk: 'Lunapark Kır Kahvesi meydanına kadar yürünüp oradan yaklaşık 900 metrelik dik Arnavut kaldırımı yokuş tırmanılır.',
         distanceFromPierKm: 3.4,
         walkingMinutes: 55,
-        imageUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1000&q=80',
+        imageUrl: '/images/pasabahce-hero.jpg',
         photoCaption: 'Aya Yorgi Tepesi Manastır Bahçesi ve Marmara Ufku',
         photoCredit: 'Temsili görsel (Unsplash)',
         coordinates: { lat: 40.8512, lng: 29.1192 }
@@ -174,7 +174,7 @@ export const ADALAR_HERITAGE_DATA: IslandProfile[] = [
         howToWalk: 'İskeleden çıkıp sola dönün, 23 Nisan Caddesi boyunca 5 dakika düz yürüyün.',
         distanceFromPierKm: 0.4,
         walkingMinutes: 6,
-        imageUrl: 'https://images.unsplash.com/photo-1527838832700-5059252407fa?auto=format&fit=crop&w=1000&q=80',
+        imageUrl: '/images/adalar-aerial.jpg',
         photoCaption: 'Splendid Palas Kırmızı Panjurlu Tarihi Cephesi',
         photoCredit: 'Temsili görsel (Unsplash)',
         coordinates: { lat: 40.8745, lng: 29.1278 }
@@ -189,7 +189,7 @@ export const ADALAR_HERITAGE_DATA: IslandProfile[] = [
         howToWalk: 'Nizam yönüne doğru Çankaya Caddesi üzerinde 1.8 km yürünür (yaklaşık 25 dakika).',
         distanceFromPierKm: 1.8,
         walkingMinutes: 24,
-        imageUrl: 'https://images.unsplash.com/photo-1569288063643-5d29ad64df09?auto=format&fit=crop&w=1000&q=80',
+        imageUrl: '/images/pasabahce-hero.jpg',
         photoCaption: 'Nizam Sahilinde Tarihi Troçki Köşkü İskelesi',
         photoCredit: 'Temsili görsel (Unsplash)',
         coordinates: { lat: 40.8654, lng: 29.1165 }
@@ -204,7 +204,7 @@ export const ADALAR_HERITAGE_DATA: IslandProfile[] = [
         howToWalk: 'Maden Mahallesi, Yılmaz Türk Caddesi üzerinde iskeleden 15 dakika kuzeye doğru yürünür.',
         distanceFromPierKm: 1.1,
         walkingMinutes: 16,
-        imageUrl: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=1000&q=80',
+        imageUrl: '/images/adalar-aerial.jpg',
         photoCaption: 'Reşat Nuri Güntekin Beyaz Ahşap Edebiyat Köşkü',
         photoCredit: 'Temsili görsel (Unsplash)',
         coordinates: { lat: 40.8798, lng: 29.1332 }
@@ -218,7 +218,7 @@ export const ADALAR_HERITAGE_DATA: IslandProfile[] = [
     subtitle: 'Çam Limanı, Ruhban Mektebi & Edebiyatın Huzuru',
     badge: 'Yeşilin ve Bilgeliğin Adası',
     overview: 'Prens Adalarının ikinci büyüğü olan Heybeliada; eyer şeklindeki çam tepeleri, Türkiye’nin ilk sanatoryumu, tarihi Deniz Lisesi ve ünlü Ruhban Okulu ile bilinir.',
-    heroImageUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=85',
+    heroImageUrl: '/images/pasabahce-hero.jpg',
     heroImageCaption: 'Heybeliada Çam Limanı Koyu ve Tarihi Yel Değirmeni Burnu',
     heroImageCredit: 'Temsili görsel (Unsplash)',
     satelliteCoordinates: {
@@ -229,14 +229,14 @@ export const ADALAR_HERITAGE_DATA: IslandProfile[] = [
     gallery: [
       {
         id: 'heybeli-ruhban',
-        url: 'https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?auto=format&fit=crop&w=1200&q=85',
+        url: '/images/adalar-aerial.jpg',
         caption: 'Ümit Tepesi zirvesinde 1844 yapımı Heybeliada Rum Ortodoks Ruhban Okulu',
         category: 'LANDMARK',
         credit: 'Temsili görsel (Unsplash)'
       },
       {
         id: 'heybeli-camlimani',
-        url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=85',
+        url: '/images/pasabahce-hero.jpg',
         caption: 'Hilal şeklindeki korunaklı Çam Limanı Koyu ve yelkenliler',
         category: 'PANORAMA',
         credit: 'Temsili görsel (Unsplash)'
@@ -269,7 +269,7 @@ export const ADALAR_HERITAGE_DATA: IslandProfile[] = [
         howToWalk: 'İskeleden Ümit Tepesi tabelalarını takip ederek çam ağaçları arasından 20 dakika yürünür.',
         distanceFromPierKm: 1.4,
         walkingMinutes: 22,
-        imageUrl: 'https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?auto=format&fit=crop&w=1000&q=80',
+        imageUrl: '/images/adalar-aerial.jpg',
         photoCaption: 'Ruhban Okulu Tarihi Taş Yapısı ve Giriş Kapısı',
         photoCredit: 'Temsili görsel (Unsplash)',
         coordinates: { lat: 40.8812, lng: 29.0945 }
@@ -284,7 +284,7 @@ export const ADALAR_HERITAGE_DATA: IslandProfile[] = [
         howToWalk: 'Değirmenburnu yönüne doğru dik yokuş üzerinden yaklaşık 25 dakika yürünür.',
         distanceFromPierKm: 1.6,
         walkingMinutes: 26,
-        imageUrl: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=1000&q=80',
+        imageUrl: '/images/pasabahce-hero.jpg',
         photoCaption: 'Hüseyin Rahmi Gürpınar Evi ve Heybeli Sırtları',
         photoCredit: 'Temsili görsel (Unsplash)',
         coordinates: { lat: 40.8841, lng: 29.0911 }
@@ -299,7 +299,7 @@ export const ADALAR_HERITAGE_DATA: IslandProfile[] = [
         howToWalk: 'İskelenin hemen solunda, 2 dakikalık yürüme mesafesindedir.',
         distanceFromPierKm: 0.1,
         walkingMinutes: 2,
-        imageUrl: 'https://images.unsplash.com/photo-1527838832700-5059252407fa?auto=format&fit=crop&w=1000&q=80',
+        imageUrl: '/images/adalar-aerial.jpg',
         photoCaption: 'Heybeliada Bahriye Mektebi Rıhtımı ve Saat Kulesi',
         photoCredit: 'Temsili görsel (Unsplash)',
         coordinates: { lat: 40.8752, lng: 29.0988 }
@@ -313,7 +313,7 @@ export const ADALAR_HERITAGE_DATA: IslandProfile[] = [
     subtitle: 'Sait Faik’in Kalpazankaya’sı & Edebiyatın Sığınağı',
     badge: 'Bohem ve Edebi Rota',
     overview: 'Büyük İskender’in generali Antigonos’un adını taşıyan Burgazada; yuvarlak çam tepesi, Kalpazankaya gün batımları ve Sait Faik Abasıyanık’ın hikayeleriyle bütünleşmiştir.',
-    heroImageUrl: 'https://images.unsplash.com/photo-1569288063643-5d29ad64df09?auto=format&fit=crop&w=1600&q=85',
+    heroImageUrl: '/images/pasabahce-hero.jpg',
     heroImageCaption: 'Burgazada Kalpazankaya Koyu ve Marmara Denizi',
     heroImageCredit: 'Temsili görsel (Unsplash)',
     satelliteCoordinates: {
@@ -324,14 +324,14 @@ export const ADALAR_HERITAGE_DATA: IslandProfile[] = [
     gallery: [
       {
         id: 'burgaz-saitfaik',
-        url: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=1200&q=85',
+        url: '/images/adalar-aerial.jpg',
         caption: 'Sait Faik Abasıyanık Müzesi Beyaz Ahşap Köşkü',
         category: 'LANDMARK',
         credit: 'Temsili görsel (Unsplash)'
       },
       {
         id: 'burgaz-kalpazan',
-        url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=85',
+        url: '/images/pasabahce-hero.jpg',
         caption: 'Marmara’nın en güzel gün batımı seyir noktası: Kalpazankaya',
         category: 'PANORAMA',
         credit: 'Temsili görsel (Unsplash)'
@@ -364,7 +364,7 @@ export const ADALAR_HERITAGE_DATA: IslandProfile[] = [
         howToWalk: 'İskeleden Çarşı Caddesi boyunca 5 dakika hafif yokuş yürünür.',
         distanceFromPierKm: 0.4,
         walkingMinutes: 6,
-        imageUrl: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=1000&q=80',
+        imageUrl: '/images/adalar-aerial.jpg',
         photoCaption: 'Sait Faik Müzesi Avlusu ve Çalışma Masası',
         photoCredit: 'Temsili görsel (Unsplash)',
         coordinates: { lat: 40.8814, lng: 29.0701 }
@@ -379,7 +379,7 @@ export const ADALAR_HERITAGE_DATA: IslandProfile[] = [
         howToWalk: 'Adanın güneybatı kıyısı boyunca çam ormanları içinden yaklaşık 35 dakika keyifli yürüyüş yapılır.',
         distanceFromPierKm: 2.3,
         walkingMinutes: 35,
-        imageUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1000&q=80',
+        imageUrl: '/images/pasabahce-hero.jpg',
         photoCaption: 'Kalpazankaya Kayalıkları ve Güneşin Batışı',
         photoCredit: 'Temsili görsel (Unsplash)',
         coordinates: { lat: 40.8755, lng: 29.0552 }
@@ -393,7 +393,7 @@ export const ADALAR_HERITAGE_DATA: IslandProfile[] = [
     subtitle: 'Kızıl Kayalıklar & İstanbul’a En Yakın İlk Ada',
     badge: 'İlk Karşılama Kapısı',
     overview: 'Toprağının kızılımsı renginden (kına) adını alan Kınalıada; İstanbul anakarasına en yakın (Proti) adadır. Taşlık berrak plajları, Ayazması ve sanatsal dokusuyla öne çıkar.',
-    heroImageUrl: 'https://images.unsplash.com/photo-1527838832700-5059252407fa?auto=format&fit=crop&w=1600&q=85',
+    heroImageUrl: '/images/adalar-aerial.jpg',
     heroImageCaption: 'Kınalıada Sahili ve Tarihi Vapur İskelesi',
     heroImageCredit: 'Temsili görsel (Unsplash)',
     satelliteCoordinates: {
@@ -404,7 +404,7 @@ export const ADALAR_HERITAGE_DATA: IslandProfile[] = [
     gallery: [
       {
         id: 'kinali-iskele',
-        url: 'https://images.unsplash.com/photo-1527838832700-5059252407fa?auto=format&fit=crop&w=1200&q=85',
+        url: '/images/pasabahce-hero.jpg',
         caption: 'Kınalıada İskelesi ve Sahil Çınar Altı Kahveleri',
         category: 'STREET',
         credit: 'Temsili görsel (Unsplash)'
@@ -437,7 +437,7 @@ export const ADALAR_HERITAGE_DATA: IslandProfile[] = [
         howToWalk: 'İskeleden çıkınca sağa doğru 3 dakika yürünür.',
         distanceFromPierKm: 0.2,
         walkingMinutes: 3,
-        imageUrl: 'https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?auto=format&fit=crop&w=1000&q=80',
+        imageUrl: '/images/adalar-aerial.jpg',
         photoCaption: 'Surp Krikor Lusavoriç Kilisesi Tarihi Cephesi',
         photoCredit: 'Temsili görsel (Unsplash)',
         coordinates: { lat: 40.9112, lng: 29.0524 }
@@ -452,7 +452,7 @@ export const ADALAR_HERITAGE_DATA: IslandProfile[] = [
         howToWalk: 'İskeleden Manastır Tepesi tabelalarıyla çamlar arasından 20 dakika yürünür.',
         distanceFromPierKm: 1.2,
         walkingMinutes: 20,
-        imageUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1000&q=80',
+        imageUrl: '/images/pasabahce-hero.jpg',
         photoCaption: 'Manastır Tepesi Panoraması',
         photoCredit: 'Temsili görsel (Unsplash)',
         coordinates: { lat: 40.9065, lng: 29.0468 }
@@ -466,7 +466,7 @@ export const ADALAR_HERITAGE_DATA: IslandProfile[] = [
     subtitle: 'Menemencioğlu Mirası, Çamlar & Masmavi Koylar',
     badge: 'Gizli Cennet',
     overview: 'Prens Adalarının yerleşime açık en küçüğüdür. Adını sedef gibi parıldayan kıyılarından ve menengiç (terebinthos) ağaçlarından alır. Şehsuvar Menemencioğlu tarafından ağaçlandırılarak bugünkü doğa harikasına dönüştürülmüştür.',
-    heroImageUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=85',
+    heroImageUrl: '/images/adalar-aerial.jpg',
     heroImageCaption: 'Sedef Adası Doğal Koyu ve Sakin Plajı',
     heroImageCredit: 'Temsili görsel (Unsplash)',
     satelliteCoordinates: {
@@ -477,7 +477,7 @@ export const ADALAR_HERITAGE_DATA: IslandProfile[] = [
     gallery: [
       {
         id: 'sedef-koy',
-        url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=85',
+        url: '/images/pasabahce-hero.jpg',
         caption: 'Sedef Adası sakin koyları ve berrak turkuaz suları',
         category: 'PANORAMA',
         credit: 'Temsili görsel (Unsplash)'
@@ -510,7 +510,7 @@ export const ADALAR_HERITAGE_DATA: IslandProfile[] = [
         howToWalk: 'Küçük ada iskelesinden yürüyüş parkuruyla 5 dakikada koruluğa varılır.',
         distanceFromPierKm: 0.3,
         walkingMinutes: 5,
-        imageUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1000&q=80',
+        imageUrl: '/images/adalar-aerial.jpg',
         photoCaption: 'Sedef Adası Menemencioğlu Zeytinlikleri',
         photoCredit: 'Temsili görsel (Unsplash)',
         coordinates: { lat: 40.8510, lng: 29.1432 }

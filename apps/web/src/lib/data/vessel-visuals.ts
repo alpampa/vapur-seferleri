@@ -1,6 +1,7 @@
 /**
  * Istanbul Passenger Fleet Visual Registry & Architectural Silhouette Profiles
- * Scaled vector silhouettes and verified technical specifications for Istanbul passenger vessels.
+ * Yerel yüksek çözünürlüklü fotoğraflar (/images/pasabahce-hero.jpg ve /images/adalar-aerial.jpg)
+ * ve doğrulanmış teknik filo spesifikasyonları.
  */
 
 export type VesselCategory = "HISTORIC_STEAMER" | "MODERN_TWIN_END" | "PASSENGER_MOTOR";
@@ -44,8 +45,8 @@ export const VESSEL_VISUAL_PROFILES: Record<VesselCategory, VesselVisualProfile>
       "Çay & Simit Büfesi",
       "Geniş Rüzgaraltı Seyir Balkonları"
     ],
-    photoUrl: "https://images.unsplash.com/photo-1527838832700-5059252407fa?auto=format&fit=crop&w=1000&q=80",
-    photoCaption: "Klasik Şehir Hatları Vapuru Tarihi Yarımada & Boğaz Seyrinde"
+    photoUrl: "/images/pasabahce-hero.jpg",
+    photoCaption: "Klasik Şehir Hatları Vapuru (Paşabahçe Sınıfı) Tarihi Yarımada & Boğaz Seyrinde"
   },
   MODERN_TWIN_END: {
     id: "modern-twin-end",
@@ -67,71 +68,50 @@ export const VESSEL_VISUAL_PROFILES: Record<VesselCategory, VesselVisualProfile>
       "Düşük Emisyonlu Azimut İticiler",
       "Dijital Bilgilendirme Ekranları"
     ],
-    photoUrl: "https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?auto=format&fit=crop&w=1000&q=80",
-    photoCaption: "Yeni Nesil Panoramik Şehir Hatları Vapuru İskele Yanaşmasında"
+    photoUrl: "/images/pasabahce-hero.jpg",
+    photoCaption: "Şehir Hatları Yolcu Vapuru İstanbul Boğazı Seyrinde"
   },
   PASSENGER_MOTOR: {
     id: "passenger-motor",
     category: "PASSENGER_MOTOR",
-    categoryTitle: "Yolcu Motoru (Mavi Marmara / Turyol / Dentur)",
-    categoryBadge: "Hızlı Deniz Dolmuşu",
-    description: "Yüksek manevra kabiliyetli çift deniz dizeli motorlarıyla Adalar ve Boğaz hatlarında hızlı ve sık sefer sağlayan çevik yolcu motoru.",
+    categoryTitle: "Yolcu Motoru & Hızlı Deniz Aracı (Mavi Marmara / Turyol / Dentur / İDO)",
+    categoryBadge: "Hızlı Deniz Ulaşımı",
+    description: "Yüksek manevra kabiliyetli çift deniz dizeli motorlarıyla Adalar ve Boğaz hatlarında hızlı ve sık sefer sağlayan çevik deniz ulaşım aracı.",
     lengthMeters: 42.0,
     beamMeters: 8.5,
     draftMeters: 1.9,
-    speedKnots: 15.5,
+    speedKnots: 18.5,
     capacityPax: 650,
-    shipyard: "Karadeniz & Yalova Özel Tersaneleri",
-    hullType: "Yarı Deplasman Hızlı Çelik Yolcu Motoru",
+    shipyard: "Yalova & Karadeniz Özel Tersaneleri",
+    hullType: "Yarı Deplasman Hızlı Çelik / Alüminyum Gövde",
     features: [
       "Hızlı İskele Yanaşma & Palamar Manevrası",
       "Üst Açık Havadar Seyir Güvertesi",
       "Geniş Yolcu Giriş Kapıları",
-      "Kısa Mesafe Seri Boğaz Geçişi",
+      "Kısa Mesafe Seri Boğaz & Adalar Geçişi",
       "Yüksek Denizcilik Karinası"
     ],
-    photoUrl: "https://images.unsplash.com/photo-1569288063643-5d29ad64df09?auto=format&fit=crop&w=1000&q=80",
-    photoCaption: "Adalar ve Boğaz Hattında Seyir Eden Hızlı Yolcu Motoru"
+    photoUrl: "/images/adalar-aerial.jpg",
+    photoCaption: "Prens Adaları (Büyükada & Heybeliada) Deniz Koridorunda Seyir"
   }
 };
 
-/**
- * Resolves the visual category and profile based on vessel name and operator
- */
 export function getVesselVisualProfile(vesselName?: string, operator?: string): VesselVisualProfile {
-  const nameNorm = (vesselName || "").toLowerCase();
   const opNorm = (operator || "").toLowerCase();
-
-  // 1. Motor operators
   if (
     opNorm.includes("turyol") ||
-    opNorm.includes("mavi marmara") ||
     opNorm.includes("dentur") ||
+    opNorm.includes("mavi marmara") ||
     opNorm.includes("prens tur") ||
-    nameNorm.includes("turyol") ||
-    nameNorm.includes("mavi marmara") ||
-    nameNorm.includes("avrasya") ||
-    nameNorm.includes("prens tur") ||
-    nameNorm.includes("şevket mert") ||
-    nameNorm.includes("cansu")
+    opNorm.includes("ido")
   ) {
     return VESSEL_VISUAL_PROFILES.PASSENGER_MOTOR;
   }
 
-  // 2. Modern twin-end ferries
-  if (
-    nameNorm.includes("aykut barka") ||
-    nameNorm.includes("hulusi yıldırım") ||
-    nameNorm.includes("alptoğan") ||
-    nameNorm.includes("fatih") ||
-    nameNorm.includes("kadıköy") ||
-    nameNorm.includes("beyoğlu") ||
-    nameNorm.includes("maltepe") ||
-    nameNorm.includes("sarıyer")
-  ) {
+  const vNorm = (vesselName || "").toLowerCase();
+  if (vNorm.includes("muhsin") || vNorm.includes("durusu") || vNorm.includes("fuat")) {
     return VESSEL_VISUAL_PROFILES.MODERN_TWIN_END;
   }
 
-  // 3. Historic / classic steamers (Paşabahçe, Barış Manço, Moda, Fahri Korutürk, Sami Akbulut, etc.)
   return VESSEL_VISUAL_PROFILES.HISTORIC_STEAMER;
 }

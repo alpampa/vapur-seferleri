@@ -8,7 +8,7 @@ const InteractiveMarineMap = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="w-full h-[210px] bg-slate-900 rounded-2xl animate-pulse flex items-center justify-center text-slate-400 text-xs font-bold">
+      <div className="w-full h-[250px] bg-slate-900 rounded-2xl animate-pulse flex items-center justify-center text-slate-400 text-xs font-bold">
         Harita Yükleniyor...
       </div>
     ),
@@ -730,27 +730,80 @@ export function ScheduleListClient({
         selectedDestination={selectedDestination}
       />
 
-      {/* 1. KOMPAKT ÜST ARAMA & GÜN TİPİ / KATEGORİ ÇUBUĞU (Sticky) */}
-      <div className="px-3 pt-1.5 sticky top-[52px] z-30 bg-[var(--app-bg,#070e1e)]/95 backdrop-blur-md pb-1">
-        <div className="w-full rounded-2xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 shadow-2xs overflow-hidden">
+      {/* 1. ARGON + APPLE HIG KAHRAMAN ROTA BAŞLIĞI, HAVA KAPSÜLÜ VE GÜN SEÇİCİ */}
+      <div className="px-3 pt-3 pb-2 bg-[#070e1e] text-white space-y-2.5 relative z-20">
+        {/* Rota Başlığı ve Hava Durumu Kapsülü */}
+        <div className="flex flex-col items-center text-center gap-1.5">
+          <h2 className="text-xl sm:text-2xl font-black tracking-tight text-white flex items-center justify-center gap-2 flex-wrap">
+            <span>
+              {selectedOrigin === "ALL"
+                ? upcomingTrips[0]?.schedule.origin || "Bostancı"
+                : selectedOrigin}
+            </span>
+            <span className="text-cyan-400 font-normal">⇄</span>
+            <span>
+              {selectedDestination === "ALL"
+                ? upcomingTrips[0]?.schedule.destination || "Büyükada"
+                : selectedDestination}
+            </span>
+          </h2>
+
+          <div className="px-3.5 py-1 rounded-full bg-slate-800/90 border border-slate-700/80 text-[11px] font-bold text-slate-200 inline-flex items-center gap-1.5 shadow-sm">
+            <Wind size={12} className="text-cyan-400 shrink-0" />
+            <span>
+              {marineWeather?.temperature ?? 18}°C • {marineWeather?.windName ?? "Lodos"}{" "}
+              {marineWeather?.windSpeedKnots ?? 12}kt
+            </span>
+          </div>
+        </div>
+
+        {/* iOS Segmented Control Gün Seçici (Bugün | Hafta İçi | Cumartesi | Pazar) */}
+        <div className="w-full rounded-2xl bg-slate-900/95 p-1 border border-slate-800 grid grid-cols-4 gap-1 shadow-inner">
+          {(
+            [
+              { id: "TODAY", label: "Bugün" },
+              { id: "WEEKDAY", label: "Hafta İçi" },
+              { id: "SATURDAY", label: "Cumartesi" },
+              { id: "SUNDAY", label: "Pazar" },
+            ] as const
+          ).map((d) => (
+            <button
+              key={d.id}
+              type="button"
+              onClick={() => {
+                triggerHaptic("light");
+                setSelectedDayType(d.id);
+              }}
+              aria-pressed={selectedDayType === d.id}
+              className={`py-1.5 px-2 rounded-xl text-xs font-black transition-all cursor-pointer truncate ${
+                selectedDayType === d.id
+                  ? "bg-white text-slate-950 shadow-md"
+                  : "text-slate-300 hover:text-white"
+              }`}
+            >
+              {d.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Kalkış ⇄ Varış Seçici ve Hızlı Filtre Kapsülleri */}
+        <div className="w-full rounded-2xl bg-slate-900/90 border border-slate-800 shadow-sm overflow-hidden">
           <div className="w-full flex items-center gap-1 p-1">
-            {/* Kalkış İskelesi */}
             <div className="relative flex-1 min-w-0">
               <select
                 value={selectedOrigin}
                 onChange={(e) => handleSelectOrigin(e.target.value)}
                 aria-label="Kalkış iskelesi seçin"
-                className="w-full min-h-10 pl-3 pr-5 py-1.5 bg-transparent text-xs font-bold text-slate-800 dark:text-slate-100 appearance-none rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 cursor-pointer truncate"
+                className="w-full min-h-10 pl-3 pr-5 py-1.5 bg-slate-950/60 text-xs font-bold text-slate-100 appearance-none rounded-xl border border-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 cursor-pointer truncate"
               >
                 <option value="ALL">🟢 Nereden (Tümü)</option>
                 {allPiersInSystem.map((pier) => (
                   <option key={pier} value={pier}>{pier}</option>
                 ))}
               </select>
-              <ChevronDown size={11} className="absolute right-1.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+              <ChevronDown size={11} className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
             </div>
 
-            {/* Yön Değiştir Butonu */}
             <button
               type="button"
               onClick={() => {
@@ -759,18 +812,17 @@ export function ScheduleListClient({
               }}
               title="Kalkış ve Varış İskelesini Değiştir"
               aria-label="Kalkış ve varış iskelesini değiştir"
-              className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-amber-400 hover:text-slate-950 transition-all cursor-pointer active:scale-95 shrink-0 flex items-center justify-center touch-manipulation"
+              className="w-10 h-10 rounded-xl bg-slate-800 text-cyan-300 border border-slate-700 hover:bg-cyan-500 hover:text-slate-950 transition-all cursor-pointer active:scale-95 shrink-0 flex items-center justify-center touch-manipulation"
             >
               <ArrowLeftRight size={14} />
             </button>
 
-            {/* Varış İskelesi (Doğrudan + Aktarmalı Gruplu) */}
             <div className="relative flex-1 min-w-0">
               <select
                 value={selectedDestination}
                 onChange={(e) => handleSelectDestination(e.target.value)}
                 aria-label="Varış iskelesi seçin"
-                className="w-full min-h-10 pl-3 pr-5 py-1.5 bg-transparent text-xs font-bold text-slate-800 dark:text-slate-100 appearance-none rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 cursor-pointer truncate"
+                className="w-full min-h-10 pl-3 pr-5 py-1.5 bg-slate-950/60 text-xs font-bold text-slate-100 appearance-none rounded-xl border border-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 cursor-pointer truncate"
               >
                 <option value="ALL">🔴 Nereye (Tümü)</option>
                 {selectedOrigin === "ALL" ? (
@@ -796,10 +848,9 @@ export function ScheduleListClient({
                   </>
                 )}
               </select>
-              <ChevronDown size={11} className="absolute right-1.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+              <ChevronDown size={11} className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
             </div>
 
-            {/* Rotayı Paylaş & Filtre Temizle */}
             {(selectedOrigin !== "ALL" || selectedDestination !== "ALL") && (
               <>
                 <button
@@ -807,7 +858,7 @@ export function ScheduleListClient({
                   onClick={handleShareCurrentRoute}
                   title="Seçili rotanın bağlantısını paylaş veya kopyala"
                   aria-label="Rotayı paylaş"
-                  className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 hover:bg-emerald-100 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 transition-all cursor-pointer flex items-center justify-center shrink-0 active:scale-95"
+                  className="w-10 h-10 rounded-xl bg-emerald-950/70 hover:bg-emerald-900 text-emerald-300 border border-emerald-700/60 transition-all cursor-pointer flex items-center justify-center shrink-0 active:scale-95"
                 >
                   <Share2 size={14} />
                 </button>
@@ -820,7 +871,7 @@ export function ScheduleListClient({
                   }}
                   title="İskele seçimini temizle"
                   aria-label="İskele seçimini temizle"
-                  className="w-10 h-10 rounded-xl bg-rose-50 dark:bg-rose-950/60 hover:bg-rose-100 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-800 transition-all cursor-pointer flex items-center justify-center shrink-0 active:scale-95"
+                  className="w-10 h-10 rounded-xl bg-rose-950/70 hover:bg-rose-900 text-rose-300 border border-rose-700/60 transition-all cursor-pointer flex items-center justify-center shrink-0 active:scale-95"
                 >
                   <X size={14} />
                 </button>
@@ -828,10 +879,8 @@ export function ScheduleListClient({
             )}
           </div>
 
-          {/* KATEGORİ + GÜN TİPİ (Hafta İçi / Cumartesi / Pazar) + TÜM GÜN KAPSÜL SATIRI */}
-          <div className="border-t border-slate-200/70 dark:border-slate-800/70 px-1.5 py-0.5">
+          <div className="border-t border-slate-800/80 px-2 py-1">
             <div className="w-full overflow-x-auto hide-scrollbar flex items-center gap-1.5 py-0.5">
-              {/* Adalar */}
               <button
                 type="button"
                 onClick={() => {
@@ -848,7 +897,6 @@ export function ScheduleListClient({
                 <span>Adalar</span>
               </button>
 
-              {/* Boğaz */}
               <button
                 type="button"
                 onClick={() => {
@@ -865,36 +913,6 @@ export function ScheduleListClient({
                 <span>Boğaz</span>
               </button>
 
-              {/* Gün Tipi Seçici (Bugün / Hafta İçi / Cumartesi / Pazar-Tatil) */}
-              <div className="inline-flex items-center rounded-xl bg-slate-100 dark:bg-slate-800/90 p-0.5 border border-slate-200 dark:border-slate-700 shrink-0">
-                {(
-                  [
-                    { id: "TODAY", label: "Bugün" },
-                    { id: "WEEKDAY", label: "Hafta İçi" },
-                    { id: "SATURDAY", label: "Cumartesi" },
-                    { id: "SUNDAY", label: "Pazar/Tatil" },
-                  ] as const
-                ).map((d) => (
-                  <button
-                    key={d.id}
-                    type="button"
-                    onClick={() => {
-                      triggerHaptic("light");
-                      setSelectedDayType(d.id);
-                    }}
-                    aria-pressed={selectedDayType === d.id}
-                    className={`px-2 py-1 rounded-lg text-[10px] font-black transition-all cursor-pointer whitespace-nowrap ${
-                      selectedDayType === d.id
-                        ? "bg-blue-600 text-white shadow-2xs"
-                        : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
-                    }`}
-                  >
-                    {d.label}
-                  </button>
-                ))}
-              </div>
-
-              {/* Tüm Gün (06:00–00:30) Anahtarı */}
               <button
                 type="button"
                 onClick={() => setShowAllDay(!showAllDay)}
@@ -906,7 +924,6 @@ export function ScheduleListClient({
                 <span>Tüm Gün</span>
               </button>
 
-              {/* Acil ≤15 dk */}
               <button
                 type="button"
                 onClick={() => setOnlyImminent(!onlyImminent)}
@@ -919,7 +936,6 @@ export function ScheduleListClient({
                 <span>≤15 dk</span>
               </button>
 
-              {/* GPS En Yakın İskele */}
               <button
                 type="button"
                 onClick={requestLocation}
@@ -933,7 +949,6 @@ export function ScheduleListClient({
                 <span>{t("nearestShort")}</span>
               </button>
 
-              {/* Arama Aç/Kapa */}
               <button
                 type="button"
                 onClick={() => setIsSearchVisible(!isSearchVisible)}
@@ -946,7 +961,6 @@ export function ScheduleListClient({
                 <span>{t("search")}</span>
               </button>
 
-              {/* Harita & Rota Planlayıcı Hızlı Anahtarı */}
               <button
                 type="button"
                 onClick={() => setShowPlanner(!showPlanner)}
@@ -957,7 +971,6 @@ export function ScheduleListClient({
                 <span>Harita</span>
               </button>
 
-              {/* Filtreler & Araçlar */}
               <button
                 type="button"
                 onClick={() => setIsToolsOpen(true)}
@@ -1201,7 +1214,7 @@ export function ScheduleListClient({
                             selectedOrigin={selectedOrigin !== "ALL" ? selectedOrigin : schedule.origin}
                             selectedDestination={selectedDestination !== "ALL" ? selectedDestination : schedule.destination}
                             schedules={upcomingTrips.slice(0, 8).map((u) => u.schedule)}
-                            height="210px"
+                            height="250px"
                           />
                         </div>
                         {upcomingTrips.length > 1 && (

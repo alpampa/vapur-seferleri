@@ -55,7 +55,7 @@ export const PIER_CULTURAL_ATLAS: Record<string, PierCulturalAtlas> = {
       "Geniş balkonlu üst kat kütüphanesi ve Marmara Denizi seyir terası.",
       "Klasik Osmanlı sivri kemerleri ve pirinç döküm lamba aplikleri.",
     ],
-    photoUrl: "https://images.unsplash.com/photo-1572979261074-1422b4041d57?auto=format&fit=crop&w=1200&q=80",
+    photoUrl: "/images/adalar-aerial.jpg",
     districtHighlights: [
       {
         id: "moda-baris-manco-evi",
@@ -95,7 +95,7 @@ export const PIER_CULTURAL_ATLAS: Record<string, PierCulturalAtlas> = {
       "Rum Yetimhanesi ve Troçki Evi'ne uzanan tarihi ada dokusu.",
       "Aya Yorgi Manastırı'na çıkan yürüyüş rotasının başlangıcı.",
     ],
-    photoUrl: "https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?auto=format&fit=crop&w=1200&q=80",
+    photoUrl: "/images/pasabahce-hero.jpg",
     districtHighlights: [
       {
         id: "buyukada-saat-meydani",
@@ -143,7 +143,7 @@ export const PIER_CULTURAL_ATLAS: Record<string, PierCulturalAtlas> = {
       "İnönü Evi Müzesi ve Hüseyin Rahmi Gürpınar Müze Evi yakın çevrede.",
       "Ada meydanını çevreleyen tarihi ahşap ve taş yapı dokusu.",
     ],
-    photoUrl: "https://images.unsplash.com/photo-1559827291-72ee739d0d9a?auto=format&fit=crop&w=1200&q=80",
+    photoUrl: "/images/adalar-aerial.jpg",
     districtHighlights: [
       {
         id: "heybeli-ruhban-okulu",
@@ -183,7 +183,7 @@ export const PIER_CULTURAL_ATLAS: Record<string, PierCulturalAtlas> = {
       "Kadıköy Tarihi Balıkçılar Çarşısı'nın gündelik kent dokusu.",
       "Süreyya Operası ve Bahariye'nin kültür-sanat hattı.",
     ],
-    photoUrl: "https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?auto=format&fit=crop&w=1200&q=80",
+    photoUrl: "/images/pasabahce-hero.jpg",
     districtHighlights: [
       {
         id: "kadikoy-haydarpasa",
@@ -223,7 +223,7 @@ export const PIER_CULTURAL_ATLAS: Record<string, PierCulturalAtlas> = {
       "MSGSÜ İstanbul Resim ve Heykel Müzesi'nin sahil konumu.",
       "Beşiktaş ve Karaköy hatlarına aktarma imkânı.",
     ],
-    photoUrl: "https://images.unsplash.com/photo-1527838832700-5059252407fa?auto=format&fit=crop&w=1200&q=80",
+    photoUrl: "/images/adalar-aerial.jpg",
     districtHighlights: [
       {
         id: "kabatas-dolmabahce-sarayi",
@@ -255,7 +255,7 @@ export const PIER_CULTURAL_ATLAS: Record<string, PierCulturalAtlas> = {
       "Mısır Çarşısı'nın tarihi çarşı aksı.",
       "Rüstem Paşa Camii'nin çinili cephesi ve han sokakları.",
     ],
-    photoUrl: "https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?auto=format&fit=crop&w=1200&q=80",
+    photoUrl: "/images/pasabahce-hero.jpg",
     districtHighlights: [
       {
         id: "eminonu-misir-carsisi",
@@ -295,7 +295,7 @@ export const PIER_CULTURAL_ATLAS: Record<string, PierCulturalAtlas> = {
       "Barbaros Hayrettin Paşa Türbesi'nin iskele yakınındaki konumu.",
       "Yıldız Parkı ve Çırağan Sarayı'na uzanan sahil rotası.",
     ],
-    photoUrl: "https://images.unsplash.com/photo-1572979261074-1422b4041d57?auto=format&fit=crop&w=1200&q=80",
+    photoUrl: "/images/adalar-aerial.jpg",
     districtHighlights: [
       {
         id: "besiktas-deniz-muzesi",
@@ -335,7 +335,7 @@ export const PIER_CULTURAL_ATLAS: Record<string, PierCulturalAtlas> = {
       "Şemsi Paşa Camii ve kütüphanesinin denize sıfır konumu.",
       "Salacak sahilinden Kız Kulesi'ne bakan yürüyüş hattı.",
     ],
-    photoUrl: "https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?auto=format&fit=crop&w=1200&q=80",
+    photoUrl: "/images/pasabahce-hero.jpg",
     districtHighlights: [
       {
         id: "uskudar-kiz-kulesi",
