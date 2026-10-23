@@ -13,6 +13,35 @@ interface VesselHeritageModalProps {
   onSelectVessel?: (vesselName: string) => void;
 }
 
+
+const VERIFIED_VESSEL_HISTORY: Record<string, { shipyard: string; story: string; deckTip: string }> = {
+  "Paşabahçe": {
+    shipyard: "Cantieri Navali di Taranto (İtalya, 1952)",
+    story: "1952 yılında İtalya'nın Taranto tersanesinde inşa edilen Paşabahçe, Boğaz ve Adalar hattının en hızlı ve ikonik tarihi vapurlarındandır. Haliç Tersanesi'nde kapsamlı restorasyondan geçirilerek 2022 yılında yeniden seferlere kazandırılmıştır.",
+    deckTip: "Kıç açık güverte martı beslemek ve Tarihi Yarımada siluetini izlemek için en rüzgaraltı noktadır; iç salonda 1952 tarihli Artemis kabartması yer alır."
+  },
+  "Barış Manço": {
+    shipyard: "Camialtı Tersanesi (İstanbul, 1973)",
+    story: "1973 yılında Kasımpaşa Camialtı Tersanesi'nde inşa edilen geleneksel Şehir Hatları vapuru, sanatçı Barış Manço'nun anısını yaşatmaktadır.",
+    deckTip: "Kadıköy-Beşiktaş ve Adalar seyirlerinde üst güverte sancak ve iskele balkonları Kız Kulesi ve gün batımı fotoğrafçılığı için idealdir."
+  },
+  "Moda": {
+    shipyard: "Haliç Tersanesi (İstanbul, 1986)",
+    story: "600 yıllık Haliç Tersanesi'nde inşa edilen klasik çelik deplasman gövdeli yolcu vapurudur; adını Kadıköy'ün tarihi Moda semtinden alır.",
+    deckTip: "Geniş arka açık güvertesi lodoslu havalarda dahi dengeli bir seyir ve panoramik Marmara manzarası sunar."
+  },
+  "Şehit Sami Akbulut": {
+    shipyard: "Haliç Tersanesi (İstanbul, 1987)",
+    story: "Haliç Tersanesi yapımı 1500+ yolcu kapasiteli klasik Boğaz ve Adalar vapurudur; yüksek bordası sayesinde açık deniz seyrine dayanıklıdır.",
+    deckTip: "Adalar hattında Kınalıada ve Heybeliada yaklaşmalarını üst ön güverteden (pruva) izlemek için uygundur."
+  },
+  "İsmail Hakkı Durusu": {
+    shipyard: "Haliç Tersanesi (İstanbul, 1988)",
+    story: "Şehir Hatları filosunun klasik nesil yüksek kapasiteli yolcu vapurlarından biridir.",
+    deckTip: "İç ahşap dokulu salon pencereleri kış seyirlerinde Boğaz yalılarını izlemek için geniş görüş açısı sağlar."
+  }
+};
+
 function normalize(value: string): string {
   return value.toLocaleLowerCase("tr-TR").replace(/[^a-z0-9çğıöşü]+/g, " ").trim();
 }
@@ -147,7 +176,15 @@ export function VesselHeritageModal({
                 <strong className="text-slate-900 dark:text-white">{selected.name}</strong>{" "}
                 {selected.operator} filosunda {selected.builtYear} yılında hizmete girmiştir.
                 Kayıtlı yolcu kapasitesi {selected.capacityPax.toLocaleString("tr-TR")} kişidir.
+                {VERIFIED_VESSEL_HISTORY[selected.name] ? ` ${VERIFIED_VESSEL_HISTORY[selected.name].story}` : ""}
               </p>
+              {VERIFIED_VESSEL_HISTORY[selected.name] && (
+                <div className="p-2.5 rounded-xl bg-amber-50/70 dark:bg-amber-950/25 border border-amber-200/80 dark:border-amber-800/50 text-[11px] text-amber-900 dark:text-amber-200">
+                  <strong>Tersane:</strong> {VERIFIED_VESSEL_HISTORY[selected.name].shipyard}
+                  <br />
+                  <strong>Seyir & Güverte Notu:</strong> {VERIFIED_VESSEL_HISTORY[selected.name].deckTip}
+                </div>
+              )}
               <div className="flex flex-wrap gap-1.5">
                 {selected.assignedLines.map((line) => (
                   <span

@@ -27,7 +27,7 @@ export function MarineWeatherSafetyCenter({ weather }: MarineWeatherSafetyCenter
                   BOĞAZ & MARMARA DENİZ METEOROLOJİSİ
                 </h2>
                 <span className="text-[10px] font-mono bg-cyan-950 text-cyan-400 border border-cyan-800 px-2 py-0.5 rounded-full font-bold">
-                  CANLI AKIŞ
+                  OPEN-METEO & KLİMATOLOJİ
                 </span>
               </div>
               <p className="text-xs text-slate-400 mt-0.5">
@@ -88,10 +88,10 @@ export function MarineWeatherSafetyCenter({ weather }: MarineWeatherSafetyCenter
               <span>Boğaz Akıntısı</span>
             </div>
             <div className="text-sm sm:text-base font-black text-emerald-400 font-mono">
-              3.8 Knot
+              ~3.5 Knot (Ort.)
             </div>
             <div className="text-[11px] text-slate-400 mt-0.5">
-              Şeytan Akıntısı (Kandilli)
+              Kandilli Klimatolojik Ortalama
             </div>
           </div>
 

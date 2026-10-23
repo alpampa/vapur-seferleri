@@ -23,7 +23,7 @@ export function VesselVisualCard({
   mmsi
 }: VesselVisualCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [viewMode, setViewMode] = useState<"SILHOUETTE" | "PHOTO">("SILHOUETTE");
+  const [viewMode, setViewMode] = useState<"SILHOUETTE" | "PHOTO">("PHOTO");
 
   const profile = getVesselVisualProfile(vesselName, operator);
 
